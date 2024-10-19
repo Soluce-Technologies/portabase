@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: ../docker/dockerfile/dev/backend/Dockerfile
+    volumes:
+      - ../../backend:/src
+    command: uvicorn main:app --reload  --host 0.0.0.0 --port 80
+    ports:
+      - 8888:80
+
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: ../docker/dockerfile/dev/frontend/Dockerfile
+    ports:
+      - 8887:80
+    volumes:
+      - ../../frontend:/app
+      - /app/node_modules
+
+
