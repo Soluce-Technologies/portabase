@@ -2,6 +2,14 @@
 start-dev:
 	docker compose -f docker/compose/docker-compose.yml up
 
+.PHONY: down dev volumes
+down-dev-volumes:
+	docker compose -f docker/compose/docker-compose.yml down --volumes
+
+
+
+
+
 .PHONY: build dev
 build-dev:
 	docker compose -f docker/compose/docker-compose.yml build
