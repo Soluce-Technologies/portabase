@@ -9,14 +9,11 @@ from middleware.db_connection import get_db
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
-
 class Agent(BaseModel):
     name: str
 
-
-# Example usage:
 @router.post("/", dependencies=[Depends(get_current_active_user)])
-@permission_required(Permission.CREATE)
+@permission_required(Permission.CREATE, Permission.READ)
 async def create_agent(agent: Agent, request: Request, db: Session = Depends(get_db)):
     print(agent)
     return True

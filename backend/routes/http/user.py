@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 
 from apps.users.roles import Permission
-from apps.users.services import authenticate_user, fake_users_db, create_access_token, get_current_active_user
+from apps.users.services import authenticate_user, create_access_token, get_current_active_user
 from fastapi.security import OAuth2PasswordRequestForm
 
 from apps.users import crud, models, schemas
