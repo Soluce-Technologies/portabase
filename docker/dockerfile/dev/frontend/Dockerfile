@@ -5,8 +5,8 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 WORKDIR /app
 COPY package.json .
 
-RUN yarn install -f
+RUN npm install -f
 
-CMD ["yarn", "run", "dev"]
+CMD ["npm", "run", "dev"]
 
 

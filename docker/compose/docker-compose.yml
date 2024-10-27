@@ -6,6 +6,10 @@ services:
     volumes:
       - ../../backend:/src
     command: uvicorn main:app --reload  --host 0.0.0.0 --port 80
+    depends_on:
+      db:
+        condition: service_healthy
+
     ports:
       - 8888:80
 
@@ -19,4 +23,27 @@ services:
       - ../../frontend:/app
       - /app/node_modules
 
+  db:
+    image: postgres:15
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U devuser -d devdb -h db" ]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+    volumes:
+      - portabase-db:/var/lib/postgresql/data
+
+
+volumes:
+  portabase-db:
 

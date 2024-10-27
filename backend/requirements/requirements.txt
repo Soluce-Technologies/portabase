@@ -1,3 +1,10 @@
+SQLAlchemy
+psycopg2
+
+requests
+websockets
+python-dotenv
+
 # fastapi libraries
 fastapi[all]
 fastapi-utilities
@@ -7,3 +14,15 @@ pydantic-settings
 # deployment libraries
 uvicorn==0.27.0
 gunicorn
+
+
+# cryptographic libraries
+python-jose
+PyJWT
+passlib
+paramiko
+
+
+python-multipart==0.0.12
+filetype
+biplist

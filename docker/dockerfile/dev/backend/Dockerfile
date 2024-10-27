@@ -9,6 +9,8 @@ WORKDIR /src
 ARG DEV=false
 RUN apt-get install openssh-client -y
 RUN apt-get update
+RUN apt-get install -y postgresql postgresql-client binutils libproj-dev gdal-bin
+
 RUN pip install -r /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.dev.txt
 
