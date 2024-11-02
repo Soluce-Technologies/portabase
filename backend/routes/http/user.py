@@ -1,53 +1,39 @@
-from datetime import timedelta
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi_users import FastAPIUsers
+from fastapi_users.schemas import BaseUser
+from sqlalchemy import asc
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from typing import Annotated
 
-from apps.users.roles import Permission
-from apps.users.services import authenticate_user, create_access_token, get_current_active_user
-from fastapi.security import OAuth2PasswordRequestForm
-
-from apps.users import crud, models, schemas
+from apps.users import crud
+from apps.users.models import User
+from apps.users.schemas import UserRead, UserUpdate
+from apps.users.services import fastapi_users, current_active_user
+from database import get_user_db, get_async_session
 from middleware.db_connection import get_db
+from sqlalchemy.future import select
 
-from apps.users.schemas import User, UserCreate, Token
-from settings import config
-
+# router = APIRouter()
 router = APIRouter(prefix="/users", tags=["users"])
 
-
-@router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-                                 db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token_expires = timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    return Token(access_token=access_token, token_type="bearer")
+current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 
-@router.get("/list", response_model=list[User])
-async def list_users(db: Session = Depends(get_db)):
-    db_users = crud.get_users(db)
-    return db_users
+# @router.get("/list", response_model=list[BaseUser])
+# async def list_users(db: Session = Depends(get_db), user: User = Depends(current_superuser)):
+#     db_users = crud.get_users(db)
+#     return db_users
 
 
-@router.get("/me", response_model=User)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
-    return current_user
+@router.get("/list", response_model=List[BaseUser])
+async def get_users(skip: int = 0, limit: int = 10, session: AsyncSession = Depends(get_async_session)):
+    users = await crud.get_users(session=session, skip=skip, limit=limit)
+
+    return users
 
 
-@router.post("/", response_model=User)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
-
-
+router.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate)
+)

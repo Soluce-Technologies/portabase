@@ -1,115 +1,56 @@
-from datetime import datetime, timedelta, timezone
-from typing import Annotated
-from fastapi import Request
+import uuid
+from typing import Optional
 
-from fastapi import Depends, HTTPException, status, Security
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from sqlalchemy.orm import Session
-from functools import wraps
+from fastapi import Depends, Request
+from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi_users.authentication import (
+    AuthenticationBackend,
+    BearerTransport,
+    JWTStrategy,
+)
+from fastapi_users.db import SQLAlchemyUserDatabase
 
-from apps.users.crud import get_user_by_email
-from apps.users.roles import Permission, role_permissions
-from apps.users.schemas import TokenData, User, UserInDB
-from middleware.db_connection import get_db
-from settings import config
+from apps.users.models import User
+from database import get_user_db
 
-ALGORITHM = "HS256"
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+SECRET = "SECRET"
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
+    reset_password_token_secret = SECRET
+    verification_token_secret = SECRET
+
+    async def on_after_register(self, user: User, request: Optional[Request] = None):
+        print(f"User {user.id} has registered.")
+
+    async def on_after_forgot_password(
+            self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(f"User {user.id} has forgot their password. Reset token: {token}")
+
+    async def on_after_request_verify(
+            self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(f"Verification requested for user {user.id}. Verification token: {token}")
 
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+    yield UserManager(user_db)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
-def authenticate_user(db, username: str, password: str):
-    user = get_user_by_email(db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
+def get_jwt_strategy() -> JWTStrategy:
+    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, config.SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+auth_backend = AuthenticationBackend(
+    name="jwt",
+    transport=bearer_transport,
+    get_strategy=get_jwt_strategy,
+)
 
+fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        print(token)
-        payload = jwt.decode(token, config.SECRET_KEY, algorithms=[ALGORITHM])
-        print("payload", payload)
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = TokenData(username=username)
-    except JWTError:
-        raise credentials_exception
-    print(token_data.username)
-    user = get_user_by_email(db, email=token_data.username)
-    print(user)
-    if user is None:
-        raise credentials_exception
-    return user
-
-async def get_current_active_user(
-        current_user: Annotated[User, Depends(get_current_user)]
-):
-    if not current_user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
-
-
-def permission_required(*permissions: Permission):
-    def decorator(func):
-        @wraps(func)
-        async def decorated_function(*args, **kwargs):
-            request: Request = kwargs.get("request")
-            db: Session = kwargs.get("db")
-            if not request:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Missing request object",
-                )
-            authorization_header = request.headers.get("Authorization")
-            if not authorization_header:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Missing authorization header",
-                )
-            token = authorization_header.split(" ")[1]
-            current_user = await get_current_user(token=token, db=db)
-            for permission in permissions:
-                if permission not in role_permissions[current_user.role]:
-                    raise HTTPException(
-                        status_code=status.HTTP_403_FORBIDDEN,
-                        detail=f"You do not have the required permission: {permission.value}",
-                    )
-            return await func(*args, **kwargs)
-        return decorated_function
-    return decorator
+current_active_user = fastapi_users.current_user(active=True)
