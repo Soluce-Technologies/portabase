@@ -60,6 +60,7 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   role          String?
+  password      String?
 
   accounts Account[]
   sessions Session[]
