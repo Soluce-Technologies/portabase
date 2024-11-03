@@ -1,5 +1,0 @@
-services:
-  backup_agent:
-    image: rambok/backup-agent:rc1
-    ports:
-      - 8885:80

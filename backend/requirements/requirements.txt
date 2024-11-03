@@ -1,8 +1,0 @@
-fastapi
-fastapi-users[sqlalchemy]
-uvicorn[standard]
-aiosqlite
-gunicorn
-pydantic-settings
-asyncpg
-psycopg2

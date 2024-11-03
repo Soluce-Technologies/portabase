@@ -1,8 +1,0 @@
-services:
-  backup_agent:
-    container_name: backup_agent
-    build:
-      context: ../../
-      dockerfile: docker/dockerfile/prod/Dockerfile
-    ports:
-      - 8888:80
