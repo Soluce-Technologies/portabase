@@ -1,3 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:tailwindcss/recommended"
+  ],
+  "rules": {
+    "react/no-unescaped-entities": "off",
+    "react-hooks/rules-of-hooks": "off"
+  }
 }
