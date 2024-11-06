@@ -8,10 +8,9 @@ import {hashPassword} from "@/utils/password";
 export const registerUserAction = action
     .schema(RegisterSchema)
     .action(async ({parsedInput, ctx}) => {
-
         const user = await prisma.user.findUnique({ where: { email: parsedInput.email } });
         console.log(user);
-        if (!user) {
+        if (!user && parsedInput.password === parsedInput.confirmPassword) {
             const new_user = await prisma.user.create({
                 data: {
                     email: parsedInput.email,
@@ -22,7 +21,6 @@ export const registerUserAction = action
                 data: new_user,
             }
         }
-
         return {
             data: user,
         }
