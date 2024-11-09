@@ -1,8 +1,8 @@
 "use client";
 
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {
-    FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm
+    FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
@@ -13,8 +13,6 @@ import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider, TooltipTrigger, Tooltip, TooltipContent} from "@/components/ui/tooltip";
 import {RegisterSchema, RegisterType} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.schema";
 import {registerUserAction} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.action";
-import {Label} from "@/components/ui/label";
-import Link from "next/link";
 import {Info} from "lucide-react";
 import {PasswordInput} from "@/components/wrappers/PaswordInput/password-input";
 
@@ -27,9 +25,7 @@ export const RegisterForm = (props: registerFormProps) => {
     const form = useZodForm({
         schema: RegisterSchema,
     });
-
     const router = useRouter();
-
     const mutation = useMutation({
         mutationFn: async (values: RegisterType) => {
             console.log(values)
@@ -48,10 +44,8 @@ export const RegisterForm = (props: registerFormProps) => {
 
     return (
         <TooltipProvider>
-
             <Card>
                 <CardHeader>
-
                     <div className="grid gap-2 text-center mb-2">
                         <h1 className="text-3xl font-bold">Create an account</h1>
                         <p className="text-balance text-muted-foreground">
@@ -66,7 +60,6 @@ export const RegisterForm = (props: registerFormProps) => {
                               await mutation.mutateAsync(values);
                           }}
                     >
-
                         <FormField
                             control={form.control}
                             name="name"
@@ -77,7 +70,6 @@ export const RegisterForm = (props: registerFormProps) => {
                                         <Input
                                             placeholder="Your name" {...field} />
                                     </FormControl>
-                                    {/*<FormDescription>{t('tabs.general.data.name.description')}</FormDescription>*/}
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -92,7 +84,6 @@ export const RegisterForm = (props: registerFormProps) => {
                                         <Input
                                             placeholder="exemple@portabase.com" {...field} />
                                     </FormControl>
-                                    {/*<FormDescription>{t('tabs.general.data.name.description')}</FormDescription>*/}
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -102,7 +93,6 @@ export const RegisterForm = (props: registerFormProps) => {
                             name="password"
                             render={({field}) => (
                                 <FormItem>
-
                                     <FormLabel className="flex">Password
                                         <TooltipProvider>
                                             <Tooltip>
@@ -115,18 +105,6 @@ export const RegisterForm = (props: registerFormProps) => {
                                             </Tooltip>
                                         </TooltipProvider>
                                     </FormLabel>
-
-                                    {/*<div className="flex items-center">*/}
-                                    {/*    <FormLabel>Password</FormLabel>*/}
-                                    {/*    <Link*/}
-                                    {/*        href="/forgot-password"*/}
-                                    {/*        className="ml-auto inline-block text-sm underline"*/}
-                                    {/*    >*/}
-                                    {/*        Forgot your password?*/}
-                                    {/*    </Link>*/}
-                                    {/*</div>*/}
-
-
                                     <FormControl>
                                         <PasswordInput placeholder="Your password" {...field}/>
                                     </FormControl>
@@ -139,25 +117,11 @@ export const RegisterForm = (props: registerFormProps) => {
                             name="confirmPassword"
                             render={({field}) => (
                                 <FormItem>
-
                                     <FormLabel>Password Confirmation</FormLabel>
-
-                                    {/*<div className="flex items-center">*/}
-                                    {/*    <FormLabel>Password</FormLabel>*/}
-                                    {/*    <Link*/}
-                                    {/*        href="/forgot-password"*/}
-                                    {/*        className="ml-auto inline-block text-sm underline"*/}
-                                    {/*    >*/}
-                                    {/*        Forgot your password?*/}
-                                    {/*    </Link>*/}
-                                    {/*</div>*/}
-
-
                                     <FormControl>
                                         <PasswordInput
                                             placeholder="Conform your password" {...field} />
                                     </FormControl>
-                                    {/*<FormDescription>{t('tabs.general.data.name.description')}</FormDescription>*/}
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -165,14 +129,7 @@ export const RegisterForm = (props: registerFormProps) => {
                         <Button>
                             Sign up
                         </Button>
-                        {/*<div className="mt-4 text-center text-sm">*/}
-                        {/*    Don&apos;t have an account?{" "}*/}
-                        {/*    /!*<Link to="#" className="underline">*!/*/}
-                        {/*    /!*    Sign up*!/*/}
-                        {/*    /!*</Link>*!/*/}
-                        {/*</div>*/}
                     </Form>
-
                 </CardContent>
             </Card>
         </TooltipProvider>

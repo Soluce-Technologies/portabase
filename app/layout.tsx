@@ -19,12 +19,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <body className={cn(inter.className, "h-full")}>
-
-        <Providers>
-            {children}
-        </Providers>
-        </body>
+            <body className={cn(inter.className, "h-full")}>
+                <Providers>
+                    {children}
+                </Providers>
+            </body>
         </html>
     );
 }

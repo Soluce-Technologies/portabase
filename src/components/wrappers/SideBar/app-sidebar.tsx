@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Sidebar,
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
@@ -9,9 +11,8 @@ import {
 } from "@/components/ui/sidebar"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Calendar, ChevronDown, ChevronUp, Home, Inbox, Search, Settings, User2} from "lucide-react";
-import {Separator} from "@radix-ui/react-menu";
-import {Breadcrumb} from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import {signOutAction} from "@/features/auth/auth.action";
 
 export function AppSidebar() {
 
@@ -45,10 +46,6 @@ export function AppSidebar() {
             icon: Settings,
         },
     ]
-
-
-
-
 
     return (
         <Sidebar collapsible="icon">
@@ -113,7 +110,9 @@ export function AppSidebar() {
                                 <DropdownMenuItem>
                                     <span>Billing</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                    signOutAction()
+                                }}>
                                     <span>Sign out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

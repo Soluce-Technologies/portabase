@@ -14,7 +14,10 @@ export const env = createEnv({
         SMTP_HOST: z.string(),
         SMTP_PORT: z.string(),
         SMTP_USER: z.string(),
-        NEXT_PUBLIC_SECRET: z.string()
+        NEXT_PUBLIC_SECRET: z.string(),
+        NEXTAUTH_URL: z.string(),
+        AUTH_GOOGLE_ID: z.string(),
+        AUTH_GOOGLE_SECRET: z.string(),
     },
     /*
      * Environment variables available on the client (and server).
@@ -32,6 +35,7 @@ export const env = createEnv({
      */
     runtimeEnv: {
         NEXT_PUBLIC_SECRET: process.env.NEXT_PUBLIC_SECRET,
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
         NODE_ENV: process.env.NODE_ENV,
         NEXT_PUBLIC_DOMAIN_NAME: process.env.NEXT_PUBLIC_DOMAIN_NAME,
         DATABASE_URL: process.env.DATABASE_URL,
@@ -40,5 +44,7 @@ export const env = createEnv({
         SMTP_HOST: process.env.SMTP_HOST,
         SMTP_PORT: process.env.SMTP_PORT,
         SMTP_USER: process.env.SMTP_USER,
+        AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+        AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     },
 });

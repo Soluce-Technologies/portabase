@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import { Input, type InputProps } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
@@ -34,8 +33,6 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(({ classNam
                 )}
                 <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
             </Button>
-
-            {/* hides browsers password toggles */}
             <style>{`
 					.hide-password-toggle::-ms-reveal,
 					.hide-password-toggle::-ms-clear {
