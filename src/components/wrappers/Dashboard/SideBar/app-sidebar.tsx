@@ -3,60 +3,18 @@ import {
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu, SidebarMenuAction,
+    SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {
-    Calendar,
-    ChartArea,
-    ChevronDown,
-    ChevronUp,
-    Home,
-    Inbox,
-    Search,
-    Settings,
-    ShieldHalf,
-    User2
+    ChevronDown
 } from "lucide-react";
-import Link from "next/link";
-import {signOutAction} from "@/features/auth/auth.action";
-import {UserAvatar} from "@/components/wrappers/Dashboard/UserAvatar/UserAvatar";
-import {LoggedInDropdown} from "@/components/wrappers/Dashboard/LoggedInDropdown/LoggedInDropdown";
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
-import {Button, buttonVariants} from "@/components/ui/button"
-import {cn} from "@/lib/utils";
-
+import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBarMenu/SideBarMenu";
 
 export function AppSidebar() {
-
-
-    const BASE_URL = "/dashboard";
-
-    // Menu items.
-    const items = [
-        {
-            title: "Home",
-            url: "/",
-            icon: Home,
-        },
-        {
-            title: "Agents",
-            url: "agents",
-            icon: ShieldHalf,
-        },
-        {
-            title: "Statistic",
-            url: "kpi",
-            icon: ChartArea,
-        },
-        {
-            title: "Settings",
-            url: "settings",
-            icon: Settings,
-        },
-    ]
 
     return (
         <Sidebar collapsible="icon">
@@ -86,63 +44,17 @@ export function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild >
-                                        <Link
-                                            className={cn(buttonVariants({size: "lg", variant: "ghost"}), "justify-start p-0")}
-                                            href={`${BASE_URL}/${item.url}`}>
-                                                <item.icon/>
-                                                <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                    <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
-
-                                </SidebarMenuItem>
-
-                            ))}
-
-                        </SidebarMenu>
+                        <SidebarMenuCustom/>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        {/*<DropdownMenu>*/}
-                        {/*    <DropdownMenuTrigger asChild>*/}
-                        {/*        <SidebarMenuButton>*/}
-                        {/*            <UserAvatar/>*/}
-                        {/*            <User2 /> Username*/}
-                        {/*            <ChevronUp className="ml-auto" />*/}
-                        {/*        </SidebarMenuButton>*/}
-                        {/*    </DropdownMenuTrigger>*/}
-                        {/*    <DropdownMenuContent*/}
-                        {/*        side="top"*/}
-                        {/*        className="w-[--radix-popper-anchor-width]"*/}
-                        {/*    >*/}
-                        {/*        <DropdownMenuItem>*/}
-                        {/*            <span>Account</span>*/}
-                        {/*        </DropdownMenuItem>*/}
-                        {/*        <DropdownMenuItem>*/}
-                        {/*            <span>Billing</span>*/}
-                        {/*        </DropdownMenuItem>*/}
-                        {/*        /!*<DropdownMenuItem onClick={() => {*!/*/}
-                        {/*        /!*    signOutAction()*!/*/}
-                        {/*        /!*}}>*!/*/}
-                        {/*        /!*    <span>Sign out</span>*!/*/}
-                        {/*        /!*</DropdownMenuItem>*!/*/}
-                        {/*    </DropdownMenuContent>*/}
-                        {/*</DropdownMenu>*/}
-
-
                         <LoggedInButton/>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>
-
         </Sidebar>
-
     )
 }
