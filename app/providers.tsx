@@ -19,7 +19,7 @@ export const Providers = (props: ProviderProps) => {
                 attribute="class"
                 defaultTheme="system"
                 enableSystem
-                disableTransitionOnChange
+                // disableTransitionOnChange
             >
                 <QueryClientProvider client={queryClient}>
                     <Toaster/>

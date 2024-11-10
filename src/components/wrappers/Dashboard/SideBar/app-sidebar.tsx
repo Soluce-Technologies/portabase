@@ -1,24 +1,35 @@
-
 import {
     Sidebar,
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu,
+    SidebarMenu, SidebarMenuAction,
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {Calendar, ChevronDown, ChevronUp, Home, Inbox, Search, Settings, User2} from "lucide-react";
+import {
+    Calendar,
+    ChartArea,
+    ChevronDown,
+    ChevronUp,
+    Home,
+    Inbox,
+    Search,
+    Settings,
+    ShieldHalf,
+    User2
+} from "lucide-react";
 import Link from "next/link";
 import {signOutAction} from "@/features/auth/auth.action";
 import {UserAvatar} from "@/components/wrappers/Dashboard/UserAvatar/UserAvatar";
 import {LoggedInDropdown} from "@/components/wrappers/Dashboard/LoggedInDropdown/LoggedInDropdown";
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
+import {Button, buttonVariants} from "@/components/ui/button"
+import {cn} from "@/lib/utils";
+
 
 export function AppSidebar() {
-
-
 
 
     const BASE_URL = "/dashboard";
@@ -31,23 +42,18 @@ export function AppSidebar() {
             icon: Home,
         },
         {
-            title: "Inbox",
-            url: "/home",
-            icon: Inbox,
+            title: "Agents",
+            url: "agents",
+            icon: ShieldHalf,
         },
         {
-            title: "Calendar",
-            url: "#",
-            icon: Calendar,
-        },
-        {
-            title: "Search",
-            url: "#",
-            icon: Search,
+            title: "Statistic",
+            url: "kpi",
+            icon: ChartArea,
         },
         {
             title: "Settings",
-            url: "#",
+            url: "settings",
             icon: Settings,
         },
     ]
@@ -59,10 +65,10 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    Select Workspace
-                                    <ChevronDown className="ml-auto" />
-                                </SidebarMenuButton>
+                                    <SidebarMenuButton>
+                                        Select Workspace
+                                        <ChevronDown className="ml-auto"/>
+                                    </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
                                 <DropdownMenuItem>
@@ -83,14 +89,20 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={`${BASE_URL}/${item.url}`}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
+                                    <SidebarMenuButton asChild >
+                                        <Link
+                                            className={cn(buttonVariants({size: "lg", variant: "ghost"}), "justify-start p-0")}
+                                            href={`${BASE_URL}/${item.url}`}>
+                                                <item.icon/>
+                                                <span>{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
+                                    <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
+
                                 </SidebarMenuItem>
+
                             ))}
+
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
