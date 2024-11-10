@@ -14,7 +14,7 @@ import {TooltipProvider, TooltipTrigger, Tooltip, TooltipContent} from "@/compon
 import {RegisterSchema, RegisterType} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.schema";
 import {registerUserAction} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.action";
 import {Info} from "lucide-react";
-import {PasswordInput} from "@/components/wrappers/PaswordInput/password-input";
+import {PasswordInput} from "@/components/wrappers/Auth/PaswordInput/password-input";
 
 export type registerFormProps = {
     defaultValues?: RegisterType;

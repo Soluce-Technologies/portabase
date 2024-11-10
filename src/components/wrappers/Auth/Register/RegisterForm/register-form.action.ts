@@ -13,6 +13,7 @@ export const registerUserAction = action
         if (!user && parsedInput.password === parsedInput.confirmPassword) {
             const new_user = await prisma.user.create({
                 data: {
+                    name: parsedInput.name,
                     email: parsedInput.email,
                     password: await hashPassword(parsedInput.password),
                 },

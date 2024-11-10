@@ -1,20 +1,25 @@
-"use client"
 
 import {
     Sidebar,
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
     SidebarGroupLabel,
-    SidebarHeader, SidebarInset,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem, SidebarTrigger
+    SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Calendar, ChevronDown, ChevronUp, Home, Inbox, Search, Settings, User2} from "lucide-react";
 import Link from "next/link";
 import {signOutAction} from "@/features/auth/auth.action";
+import {UserAvatar} from "@/components/wrappers/Dashboard/UserAvatar/UserAvatar";
+import {LoggedInDropdown} from "@/components/wrappers/Dashboard/LoggedInDropdown/LoggedInDropdown";
+import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
 
 export function AppSidebar() {
+
+
+
 
     const BASE_URL = "/dashboard";
 
@@ -93,30 +98,34 @@ export function AppSidebar() {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <User2 /> Username
-                                    <ChevronUp className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                side="top"
-                                className="w-[--radix-popper-anchor-width]"
-                            >
-                                <DropdownMenuItem>
-                                    <span>Account</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Billing</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {
-                                    signOutAction()
-                                }}>
-                                    <span>Sign out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {/*<DropdownMenu>*/}
+                        {/*    <DropdownMenuTrigger asChild>*/}
+                        {/*        <SidebarMenuButton>*/}
+                        {/*            <UserAvatar/>*/}
+                        {/*            <User2 /> Username*/}
+                        {/*            <ChevronUp className="ml-auto" />*/}
+                        {/*        </SidebarMenuButton>*/}
+                        {/*    </DropdownMenuTrigger>*/}
+                        {/*    <DropdownMenuContent*/}
+                        {/*        side="top"*/}
+                        {/*        className="w-[--radix-popper-anchor-width]"*/}
+                        {/*    >*/}
+                        {/*        <DropdownMenuItem>*/}
+                        {/*            <span>Account</span>*/}
+                        {/*        </DropdownMenuItem>*/}
+                        {/*        <DropdownMenuItem>*/}
+                        {/*            <span>Billing</span>*/}
+                        {/*        </DropdownMenuItem>*/}
+                        {/*        /!*<DropdownMenuItem onClick={() => {*!/*/}
+                        {/*        /!*    signOutAction()*!/*/}
+                        {/*        /!*}}>*!/*/}
+                        {/*        /!*    <span>Sign out</span>*!/*/}
+                        {/*        /!*</DropdownMenuItem>*!/*/}
+                        {/*    </DropdownMenuContent>*/}
+                        {/*</DropdownMenu>*/}
+
+
+                        <LoggedInButton/>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>
