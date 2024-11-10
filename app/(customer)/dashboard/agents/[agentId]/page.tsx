@@ -4,10 +4,37 @@ import {Button} from "@/components/ui/button";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge"
+import {StatusBadge} from "@/components/wrappers/status-badge";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
+
+    const backups = [
+        {'id': 'backup-1', 'createdAt': '2023-11-27T11:26:54.870914Z', 'status': 'waiting'},
+        {'id': 'backup-2', 'createdAt': '2023-12-03T11:26:54.870927Z', 'status': 'failed'},
+        {'id': 'backup-3', 'createdAt': '2023-12-12T11:26:54.870937Z', 'status': 'success'},
+        {'id': 'backup-4', 'createdAt': '2023-11-23T11:26:54.870946Z', 'status': 'ongoing'},
+        {'id': 'backup-5', 'createdAt': '2023-12-09T11:26:54.870955Z', 'status': 'waiting'},
+        {'id': 'backup-6', 'createdAt': '2023-11-29T11:26:54.870964Z', 'status': 'failed'},
+        {'id': 'backup-7', 'createdAt': '2023-12-07T11:26:54.870973Z', 'status': 'success'},
+        {'id': 'backup-8', 'createdAt': '2023-11-18T11:26:54.870982Z', 'status': 'ongoing'},
+        {'id': 'backup-9', 'createdAt': '2023-12-01T11:26:54.870991Z', 'status': 'waiting'},
+        {'id': 'backup-10', 'createdAt': '2023-11-25T11:26:54.871000Z', 'status': 'failed'}
+    ]
+
+    const restores = [
+        {'id': 'restore-1', 'backupId': 'backup-1', 'createdAt': '2023-11-27T11:26:54.870914Z', 'status': 'waiting'},
+        {'id': 'restore-2', 'backupId': 'backup-2', 'createdAt': '2023-12-03T11:26:54.870927Z', 'status': 'failed'},
+        {'id': 'restore-3', 'backupId': 'backup-3', 'createdAt': '2023-12-12T11:26:54.870937Z', 'status': 'success'},
+        {'id': 'restore-4', 'backupId': 'backup-4', 'createdAt': '2023-11-23T11:26:54.870946Z', 'status': 'ongoing'},
+        {'id': 'restore-5', 'backupId': 'backup-5', 'createdAt': '2023-12-09T11:26:54.870955Z', 'status': 'waiting'},
+        {'id': 'restore-6', 'backupId': 'backup-6', 'createdAt': '2023-11-29T11:26:54.870964Z', 'status': 'failed'},
+        {'id': 'restore-7', 'backupId': 'backup-7', 'createdAt': '2023-12-07T11:26:54.870973Z', 'status': 'success'},
+        {'id': 'restore-8', 'backupId': 'backup-8', 'createdAt': '2023-11-18T11:26:54.870982Z', 'status': 'ongoing'},
+        {'id': 'restore-9', 'backupId': 'backup-9', 'createdAt': '2023-12-01T11:26:54.870991Z', 'status': 'waiting'},
+        {'id': 'restore-10', 'backupId': 'backup-10', 'createdAt': '2023-11-25T11:26:54.871000Z', 'status': 'failed'}
+    ]
+
     return (
         <Page>
             <PageHeader>
@@ -60,12 +87,15 @@ export default async function RoutePage(props: PageParams<{}>) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>azertyuiop</TableCell>
-                                    <TableCell><Badge variant="outline" className="text-orange-500 border-2 border-orange-500">ongoing</Badge></TableCell>
-                                    <TableCell>28/01/25</TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
+                                {backups.map((backup) => (
+                                    <TableRow>
+                                        <TableCell>{backup.id}</TableCell>
+                                        <TableCell>{backup.createdAt}</TableCell>
+                                        <TableCell><StatusBadge status={backup.status}/></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+
+                                ))}
                             </TableBody>
                         </Table>
                     </TabsContent>
@@ -81,12 +111,15 @@ export default async function RoutePage(props: PageParams<{}>) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>azertyuiop</TableCell>
-                                    <TableCell>ongoing</TableCell>
-                                    <TableCell>28/01/25</TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
+                                {restores.map((restore) => (
+                                    <TableRow>
+                                        <TableCell>{restore.backupId}</TableCell>
+                                        <TableCell>{restore.createdAt}</TableCell>
+                                        <TableCell><StatusBadge status={restore.status}/></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+
+                                ))}
                             </TableBody>
                         </Table>
                     </TabsContent>
