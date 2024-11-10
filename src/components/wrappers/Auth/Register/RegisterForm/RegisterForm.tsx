@@ -63,6 +63,7 @@ export const RegisterForm = (props: registerFormProps) => {
                         <FormField
                             control={form.control}
                             name="name"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
@@ -77,6 +78,7 @@ export const RegisterForm = (props: registerFormProps) => {
                         <FormField
                             control={form.control}
                             name="email"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -91,6 +93,7 @@ export const RegisterForm = (props: registerFormProps) => {
                         <FormField
                             control={form.control}
                             name="password"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel className="flex">Password
@@ -115,6 +118,7 @@ export const RegisterForm = (props: registerFormProps) => {
                         <FormField
                             control={form.control}
                             name="confirmPassword"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Password Confirmation</FormLabel>

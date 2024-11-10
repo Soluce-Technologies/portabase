@@ -1,6 +1,6 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
+import {useSearchParams} from "next/navigation"
 
 enum Error {
     Configuration = "Configuration",

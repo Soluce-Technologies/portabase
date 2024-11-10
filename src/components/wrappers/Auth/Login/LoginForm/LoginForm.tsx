@@ -59,6 +59,7 @@ export const LoginForm = (props: loginFormProps) => {
                         <FormField
                             control={form.control}
                             name="email"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -73,6 +74,7 @@ export const LoginForm = (props: loginFormProps) => {
                         <FormField
                             control={form.control}
                             name="password"
+                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
 

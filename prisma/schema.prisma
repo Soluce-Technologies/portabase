@@ -70,3 +70,42 @@ model User {
 
   @@map("users")
 }
+
+model Agent {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  lastContact DateTime? @map("last_contact")
+  createdAt   DateTime  @default(now()) @map("created_at")
+}
+
+model Database {
+  id           String   @id @default(cuid())
+  agentId      String   @map("agent_id")
+  name         String
+  description  String?
+  backupPolicy String?  @map("backup_policy")
+  createdAt    DateTime @default(now()) @map("created_at")
+}
+
+enum Status {
+  waiting
+  ongoing
+  failed
+  success
+}
+
+model Backup {
+  id         String   @id @default(cuid())
+  databaseId String   @map("database_id")
+  status     Status   @default(waiting)
+  file       String?
+  createdAt  DateTime @default(now()) @map("created_at")
+}
+
+model Restore {
+  id        String   @id @default(cuid())
+  backupId  String   @map("backup_id")
+  status    Status   @default(waiting)
+  createdAt DateTime @default(now()) @map("created_at")
+}

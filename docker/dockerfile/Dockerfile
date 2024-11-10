@@ -1,6 +1,14 @@
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+ENV YARN_VERSION=4.2.2
+
+RUN apk add --no-cache libc6-compat
+
+# install and use yarn 4.x
+RUN corepack enable && corepack prepare yarn@${YARN_VERSION}
+RUN yarn set version ${YARN_VERSION}
+
+
 FROM base AS deps
 
 WORKDIR /app
@@ -8,7 +16,7 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  if [ -f yarn.lock ]; then yarn; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
@@ -26,7 +34,6 @@ USER root
 
 RUN chmod +x /app/docker/entrypoints/app-dev-entrypoint.sh
 ENTRYPOINT ["sh","/app/docker/entrypoints/app-dev-entrypoint.sh"]
-
 
 
 # Rebuild the source code only when needed

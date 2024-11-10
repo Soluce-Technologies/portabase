@@ -1,6 +1,7 @@
 "use server"
-import {signIn, signOut} from "@/auth/auth";
+
 import {redirect} from "next/navigation";
+import {signIn, signOut} from "@/auth/auth";
 
 export const signOutAction = async () => {
     await signOut({redirectTo: '/', redirect: true})

@@ -2,7 +2,6 @@ import {redirect} from "next/navigation";
 import {currentUser} from "@/auth/current-user";
 
 
-
 export default async function Index() {
     const user = await currentUser()
     if (user) {

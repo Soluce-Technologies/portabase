@@ -1,11 +1,13 @@
 "use client"
-import {useSearchParams} from "next/navigation";
-import {LoginForm} from "@/components/wrappers/Auth/Login/LoginForm/LoginForm";
+
 import {useEffect, useRef} from "react";
+import {useSearchParams} from "next/navigation";
+
+import {LoginForm} from "@/components/wrappers/Auth/Login/LoginForm/LoginForm";
 import {toast} from "sonner";
 
 export default function SignInPage(props: {
-    searchParams: { callbackUrl: string | undefined }
+    searchParams: Promise<{ callbackUrl: string | undefined }>
 }) {
 
     const searchParams = useSearchParams();

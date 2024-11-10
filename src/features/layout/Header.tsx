@@ -1,10 +1,6 @@
-import Image from "next/image"
-import {Layout} from "@/components/layout";
-import Link from "next/link";
-import {Badge} from "@/components/ui/badge";
-import {currentUser} from "@/auth/current-user";
 import {notFound} from "next/navigation";
-import {buttonVariants} from "@/components/ui/button";
+
+import {currentUser} from "@/auth/current-user";
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {ModeToggle} from "@/features/theme/ModeToggle";

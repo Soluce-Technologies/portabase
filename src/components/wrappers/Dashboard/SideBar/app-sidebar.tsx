@@ -9,23 +9,16 @@ import {
 } from "@/components/ui/sidebar"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {
-    Calendar,
     ChartArea,
     ChevronDown,
-    ChevronUp,
     Home,
-    Inbox,
-    Search,
     Settings,
     ShieldHalf,
-    User2
 } from "lucide-react";
 import Link from "next/link";
-import {signOutAction} from "@/features/auth/auth.action";
-import {UserAvatar} from "@/components/wrappers/Dashboard/UserAvatar/UserAvatar";
-import {LoggedInDropdown} from "@/components/wrappers/Dashboard/LoggedInDropdown/LoggedInDropdown";
+
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
-import {Button, buttonVariants} from "@/components/ui/button"
+import {buttonVariants} from "@/components/ui/button"
 import {cn} from "@/lib/utils";
 
 
@@ -65,10 +58,10 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                    <SidebarMenuButton>
-                                        Select Workspace
-                                        <ChevronDown className="ml-auto"/>
-                                    </SidebarMenuButton>
+                                <SidebarMenuButton>
+                                    Select Workspace
+                                    <ChevronDown className="ml-auto"/>
+                                </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
                                 <DropdownMenuItem>
@@ -89,15 +82,18 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild >
+                                    <SidebarMenuButton asChild>
                                         <Link
-                                            className={cn(buttonVariants({size: "lg", variant: "ghost"}), "justify-start p-0")}
+                                            className={cn(buttonVariants({
+                                                size: "lg",
+                                                variant: "ghost"
+                                            }), "justify-start p-0")}
                                             href={`${BASE_URL}/${item.url}`}>
-                                                <item.icon/>
-                                                <span>{item.title}</span>
+                                            <item.icon/>
+                                            <span>{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
-                                    <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
+                                    <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100"/>
 
                                 </SidebarMenuItem>
 
