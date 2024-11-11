@@ -30,9 +30,9 @@ export function DataTableWithPagination<TData, TValue>({columns, data}: DataTabl
     })
 
     return (
-        <div className="flex flex-col justify-between h-full">
+        <div>
             <DataTable table={table}/>
-            <TablePagination table={table} pageSizeOptions={[5, 10, 20, 50, 100]}/>
+            <TablePagination table={table}/>
         </div>
     )
 }

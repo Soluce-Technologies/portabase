@@ -25,7 +25,7 @@ export const PaginationNavigation = (props: paginationNavigationProps) => {
     const {className, totalPages, currentPage, goToPage, goToPrevPage, goToNextPage, maxVisiblePages = 3} = props
 
     return (
-        <Pagination className={cn("", className)}>
+        <Pagination className={cn("w-auto m-0", className)}>
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious onClick={goToPrevPage}/>

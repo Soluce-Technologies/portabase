@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 80",
+    "dev": "next dev -p 80",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -67,6 +67,7 @@
     "sonner": "^1.6.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.3",
     "vaul": "^1.1.1",
     "zod": "^3.23.8"
   },

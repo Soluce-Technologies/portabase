@@ -17,7 +17,7 @@ export default async function Layout({children}: { children: React.ReactNode }) 
             <AppSidebar/>
             <SidebarInset>
                 <Header/>
-                <main className="h-full">
+                <main>
                     {children}
                 </main>
             </SidebarInset>

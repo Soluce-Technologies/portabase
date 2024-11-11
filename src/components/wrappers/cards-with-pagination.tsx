@@ -42,14 +42,14 @@ export const CardsWithPagination = (props: cardsWithPaginationProps) => {
 
 
     return (
-        <div className={cn("flex flex-col h-full justify-between", className)}>
-            <div className={cn(`grid h-max auto-rows-min gap-4 md:grid-cols-${numberOfColumns}`)}>
+        <div className={cn("", className)}>
+            <div className={cn(`grid auto-rows-min gap-4 md:grid-cols-${numberOfColumns}`)}>
                 {currentCards.map((card, key) => (
                     <CardItem key={key} {...card}/>
                 ))}
             </div>
             <PaginationNavigation
-                className="justify-end"
+                className="mt-8 justify-end"
                 totalPages={totalPages}
                 currentPage={currentPage}
                 goToPage={goToPage}
