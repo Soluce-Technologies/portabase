@@ -1,6 +1,6 @@
 "use client";
 
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {
     FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm
 } from "@/components/ui/form";
@@ -62,22 +62,22 @@ export const AgentForm = (props: agentFormProps) => {
                               await mutation.mutateAsync(values);
                           }}
                     >
-                                <FormField
-                                    control={form.control}
-                                    name="name"
-                                    defaultValue=""
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Name</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder={"Project 1"} {...field} />
-                                            </FormControl>
-                                            <FormDescription>{"Your agent project name"}</FormDescription>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            defaultValue=""
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder={"Project 1"} {...field} />
+                                    </FormControl>
+                                    <FormDescription>{"Your agent project name"}</FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             defaultValue=""
@@ -90,10 +90,10 @@ export const AgentForm = (props: agentFormProps) => {
                                         <Input
                                             value={field.value ?? ""}
                                             placeholder={"agent-5-project-1"} {...field}
-                                               onChange={(e) => {
-                                                   const value = e.target.value.replaceAll(" ", "-").toLowerCase()
-                                                   field.onChange(value)
-                                               }}
+                                            onChange={(e) => {
+                                                const value = e.target.value.replaceAll(" ", "-").toLowerCase()
+                                                field.onChange(value)
+                                            }}
                                         />
                                     </FormControl>
                                     <FormDescription>{'The slug is used in the url of the agent'}</FormDescription>

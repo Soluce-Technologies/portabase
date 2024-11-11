@@ -2,23 +2,32 @@
 
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import Link from "next/link";
+import {ValueIcon} from "@radix-ui/react-icons";
+import {Circle} from "lucide-react";
+import {ConnectionCircle} from "@/components/wrappers/connection-circle";
 
 export type agentCardProps = {
-    id: string;
-    name: string;
-    lastContact: string;
+    data: any
 }
 
 export const AgentCard = (props: agentCardProps) => {
 
-    const {id, name, lastContact} = props;
+    const {data: agent} = props;
 
     return (
-        <Link href={`/dashboard/agents/${id}`}>
-            <Card>
-                <CardHeader>{name}</CardHeader>
-                <CardContent>Agent's Description</CardContent>
+        <Link href={`/dashboard/agents/${agent.id}`}>
+            <Card className="flex flex-row justify-between">
+                <div className="">
+                    <CardHeader>{agent.name}</CardHeader>
+                    <CardContent>
+                        Last contact : {agent.lastContact?.toDateString() ?? "Never connected"}
+                    </CardContent>
+                </div>
+                <div className="mt-3 mr-3">
+                    <ConnectionCircle date={agent.lastContact}/>
+                </div>
             </Card>
+
         </Link>
     )
 }

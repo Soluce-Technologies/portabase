@@ -10,7 +10,8 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import {MoreHorizontal} from "lucide-react";
+import {Download, MoreHorizontal, Trash2} from "lucide-react";
+import {ReloadIcon} from "@radix-ui/react-icons";
 
 export type Restore = {
     id: string
@@ -52,14 +53,13 @@ export const restoreColumns: ColumnDef<Restore>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
-                        >
-                            Copy payment ID
+
+                        <DropdownMenuItem onClick={() => {
+                        }}>
+                            <ReloadIcon/> Rerun
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator/>
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

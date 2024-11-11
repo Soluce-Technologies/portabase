@@ -1,5 +1,5 @@
 import {PageParams} from "@/types/next";
-import {Page, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
+import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {AgentForm} from "@/components/wrappers/Agent/AgentForm/AgentForm";
 
 

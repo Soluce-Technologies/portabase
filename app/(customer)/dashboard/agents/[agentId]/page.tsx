@@ -13,18 +13,11 @@ import Link from "next/link";
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
 
-    // const agent = await prisma.agent.findUnique({
-    //     where: {
-    //         id: props.params.agentId,
-    //     },
-    // })
-
-    const agent = {
-        "id": props.params.agentId,
-        "name": "Agent 1",
-        "description": "My beautiful project!",
-        "lastContact": null,
-    }
+    const agent = await prisma.agent.findUnique({
+        where: {
+            id: props.params.agentId,
+        },
+    })
 
     const backups = [
         {'id': 'backup-1', 'createdAt': '2023-11-27T11:26:54.870914Z', 'status': 'pending'},
@@ -127,7 +120,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
 
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="backup">Backup</TabsTrigger>
-                        <TabsTrigger value="restore">Backup</TabsTrigger>
+                        <TabsTrigger value="restore">Restoration</TabsTrigger>
                     </TabsList>
 
                     <TabsContent className="h-full justify-between" value="backup">
