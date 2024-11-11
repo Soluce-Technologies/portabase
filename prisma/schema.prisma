@@ -61,35 +61,39 @@ model User {
   image         String?
   role          String?
   password      String?
+  authMethod    String?   @map("auth_method")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
-  accounts   Account[]
-  sessions   Session[]
-  authMethod String?
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
+  accounts Account[]
+  sessions Session[]
 
   @@map("users")
 }
 
 model Agent {
-  id          String     @id @default(cuid())
-  slug        String     @unique
+  id          String    @id @default(cuid())
+  slug        String    @unique
   name        String
   description String?
-  lastContact DateTime?  @map("last_contact")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  databases   Database[]
+  lastContact DateTime? @map("last_contact")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  databases Database[]
 }
 
 model Database {
-  id      String @id @default(cuid())
-  agentId String @map("agent_id")
-  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
-
+  id           String   @id @default(cuid())
   name         String
   description  String?
   backupPolicy String?  @map("backup_policy")
   createdAt    DateTime @default(now()) @map("created_at")
+
+  agentId String @map("agent_id")
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  backups       Backup[]
+  restaurations Restauration[]
 }
 
 enum Status {
@@ -100,16 +104,25 @@ enum Status {
 }
 
 model Backup {
-  id         String   @id @default(cuid())
+  id        String   @id @default(cuid())
+  status    Status   @default(waiting)
+  file      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
   databaseId String   @map("database_id")
-  status     Status   @default(waiting)
-  file       String?
-  createdAt  DateTime @default(now()) @map("created_at")
+  database   Database @relation(fields: [databaseId], references: [id], onDelete: Cascade)
+
+  restaurations Restauration[]
 }
 
-model Restore {
+model Restauration {
   id        String   @id @default(cuid())
-  backupId  String   @map("backup_id")
   status    Status   @default(waiting)
   createdAt DateTime @default(now()) @map("created_at")
+
+  backupId String @map("backup_id")
+  backup   Backup @relation(fields: [backupId], references: [id], onDelete: Cascade)
+
+  databaseId String?   @map("database_id")
+  database   Database? @relation(fields: [databaseId], references: [id], onDelete: Cascade)
 }
