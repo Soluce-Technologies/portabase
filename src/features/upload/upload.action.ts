@@ -2,7 +2,7 @@
 import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {v4 as uuidv4} from 'uuid';
-import { writeFile } from "fs/promises";
+import { writeFile, access, mkdir } from "fs/promises";
 import path from "path";
 import {env} from "@/env.mjs";
 
@@ -22,6 +22,9 @@ export const uploadImageAction = userAction
         const localDir = "public/uploads/"
 
         try {
+
+            await mkdir(path.join(process.cwd(), localDir), { recursive: true });
+
             const result = await writeFile(
                 path.join(process.cwd(), localDir + fileName),
                 buffer
