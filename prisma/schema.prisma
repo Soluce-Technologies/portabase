@@ -62,11 +62,11 @@ model User {
   role          String?
   password      String?
 
-  accounts Account[]
-  sessions Session[]
-
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  accounts   Account[]
+  sessions   Session[]
+  authMethod String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@map("users")
 }
