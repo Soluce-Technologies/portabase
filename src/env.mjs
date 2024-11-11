@@ -16,8 +16,14 @@ export const env = createEnv({
         SMTP_USER: z.string(),
         NEXT_PUBLIC_SECRET: z.string(),
         NEXTAUTH_URL: z.string(),
-        AUTH_GOOGLE_ID: z.string(),
-        AUTH_GOOGLE_SECRET: z.string(),
+        AUTH_GOOGLE_ID: z.string().optional(),
+        AUTH_GOOGLE_SECRET: z.string().optional(),
+        S3_ENDPOINT: z.string().optional(),
+        S3_ACCESS_KEY: z.string().optional(),
+        S3_SECRET_KEY: z.string().optional(),
+        S3_BUCKET_NAME: z.string().optional(),
+        S3_PORT: z.string().optional(),
+        S3_USE_SSL: z.string().optional(),
     },
     /*
      * Environment variables available on the client (and server).
@@ -46,5 +52,11 @@ export const env = createEnv({
         SMTP_USER: process.env.SMTP_USER,
         AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
         AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+        S3_ENDPOINT: process.env.S3_ENDPOINT,
+        S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+        S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+        S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+        S3_PORT: process.env.S3_PORT,
+        S3_USE_SSL: process.env.S3_USE_SSL,
     },
 });
