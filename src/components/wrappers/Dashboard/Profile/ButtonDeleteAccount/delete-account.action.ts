@@ -26,7 +26,7 @@ export const deleteUserAction = userAction
                 userId: ctx.user.id,
             }
         })
-        if(account){
+        if (account) {
             await prisma.account.delete({
                 where: {
                     id: account.id

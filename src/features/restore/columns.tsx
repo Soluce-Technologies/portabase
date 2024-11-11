@@ -18,7 +18,7 @@ export type Restore = {
     status: "pending" | "processing" | "success" | "failed"
 }
 
-export const columns: ColumnDef<Restore>[] = [
+export const restoreColumns: ColumnDef<Restore>[] = [
     {
         accessorKey: "id",
         header: "Reference",
@@ -26,6 +26,9 @@ export const columns: ColumnDef<Restore>[] = [
     {
         accessorKey: "createdAt",
         header: "Created At",
+        cell: ({row}) => {
+            return new Date(row.getValue("createdAt")).toLocaleString("fr-FR");
+        },
     },
     {
         accessorKey: "status",
