@@ -1,4 +1,3 @@
-import React from "types-react";
 import {Badge} from "@/components/ui/badge";
 
 export type cardsWithPaginationProps = {
