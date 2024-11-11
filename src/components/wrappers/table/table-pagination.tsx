@@ -8,16 +8,17 @@ interface tablePaginationProps {
     className?: string
     table: any
     maxVisiblePages?: number
+    pageSizeOptions?: number[]
 }
 
 export function TablePagination(props: tablePaginationProps) {
 
-    const {className, table, maxVisiblePages = 3} = props
+    const {className, table, maxVisiblePages = 3, pageSizeOptions = [10, 20, 30, 40, 50]} = props
 
     return (
-        <div className={cn("flex justify-between mt-8", className)}>
-            <TablePaginationSize table={table}/>
-            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages}/>
+        <div className={cn("flex mt-6", className)}>
+            <TablePaginationSize table={table} pageSizeOptions={pageSizeOptions}/>
+            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages} className="justify-end"/>
         </div>
     )
 }

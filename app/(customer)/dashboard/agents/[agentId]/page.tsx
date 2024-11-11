@@ -3,12 +3,28 @@ import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} 
 import {Button} from "@/components/ui/button";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {TablePagination} from "@/components/wrappers/table/table-pagination";
-import {columns} from "@/features/backup/columns";
+import {backupColumns} from "@/features/backup/columns";
+import {restoreColumns} from "@/features/restore/columns";
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
+import {prisma} from "@/prisma";
+import {GearIcon} from "@radix-ui/react-icons";
+import Link from "next/link";
 
 
-export default async function RoutePage(props: PageParams<{}>) {
+export default async function RoutePage(props: PageParams<{ agentId: string }>) {
+
+    // const agent = await prisma.agent.findUnique({
+    //     where: {
+    //         id: props.params.agentId,
+    //     },
+    // })
+
+    const agent = {
+        "id": props.params.agentId,
+        "name": "Agent 1",
+        "description": "My beautiful project!",
+        "lastContact": null,
+    }
 
     const backups = [
         {'id': 'backup-1', 'createdAt': '2023-11-27T11:26:54.870914Z', 'status': 'pending'},
@@ -46,58 +62,83 @@ export default async function RoutePage(props: PageParams<{}>) {
         {'id': 'restore-10', 'backupId': 'backup-10', 'createdAt': '2023-11-25T11:26:54.871000Z', 'status': 'failed'}
     ]
 
+    const databaseId = 'db-123';
+
+    const totalBackups = await prisma.backup.count({
+        where: {
+            databaseId: databaseId,
+        },
+    });
+
+    const successfulBackups = await prisma.backup.count({
+        where: {
+            databaseId: databaseId,
+            status: 'success',
+        },
+    });
+
+    const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null
+
+
     return (
         <Page>
             <PageHeader>
                 <PageTitle>
-                    Agent 1
+                    {agent.name}
+                    <Link href={`/dashboard/agents/${agent.id}/edit`}>
+                        <GearIcon className="w-7 h-7"/>
+                    </Link>
                 </PageTitle>
+
                 <PageActions>
                     <Button>Backup</Button>
                     <Button>Restore</Button>
                 </PageActions>
             </PageHeader>
 
-            <PageDescription>My beautiful project!</PageDescription>
+            <PageDescription>{agent.description}</PageDescription>
 
-            <PageContent>
-                <div className="flex flex-row sm:justify-between gap-6 mb-8">
+            <PageContent className="flex flex-col w-full h-full">
+                <div className="flex flex-row sm:justify-between gap-8 mb-6">
                     <Card className="w-full">
-                        <CardHeader>
+                        <CardHeader className="font-bold text-xl">
                             Backups
                         </CardHeader>
                         <CardContent></CardContent>
                     </Card>
                     <Card className="w-full">
-                        <CardHeader>
+                        <CardHeader className="font-bold text-xl">
                             Success rate
                         </CardHeader>
-                        <CardContent></CardContent>
+                        <CardContent>
+                            {successRate ?? "Unavailable for now."}
+                        </CardContent>
                     </Card>
                     <Card className="w-full">
-                        <CardHeader>
+                        <CardHeader className="font-bold text-xl">
                             Last contact
                         </CardHeader>
-                        <CardContent></CardContent>
+                        <CardContent>
+                            {agent.lastContact?.toDateString() ?? "Never connected"}
+                        </CardContent>
                     </Card>
                 </div>
-                <Tabs defaultValue="backup">
+                <Tabs className="flex flex-col flex-1" defaultValue="backup">
+
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="backup">Backup</TabsTrigger>
-                        <TabsTrigger value="restore">Restore</TabsTrigger>
+                        <TabsTrigger value="restore">Backup</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent className="flex flex-col gap-6" value="backup">
-                        <DataTableWithPagination columns={columns} data={backups}/>
+                    <TabsContent className="h-full justify-between" value="backup">
+                        <DataTableWithPagination columns={backupColumns} data={backups}/>
                     </TabsContent>
 
-                    <TabsContent className="flex flex-col gap-6" value="restore">
-                        <DataTableWithPagination columns={columns} data={restores}/>
+                    <TabsContent className="h-full justify-between" value="restore">
+                        <DataTableWithPagination columns={restoreColumns} data={restores}/>
                     </TabsContent>
-
                 </Tabs>
             </PageContent>
         </Page>
-    //     test
     )
 }

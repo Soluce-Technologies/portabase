@@ -36,7 +36,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 </PageActions>
             </PageHeader>
 
-            <PageContent>
+            <PageContent className="mt-10">
                 <CardsWithPagination
                     data={agents}
                     cardItem={AgentCard}
