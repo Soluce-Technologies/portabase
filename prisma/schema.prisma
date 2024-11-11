@@ -72,16 +72,20 @@ model User {
 }
 
 model Agent {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
+  slug        String     @unique
   name        String
   description String?
-  lastContact DateTime? @map("last_contact")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  lastContact DateTime?  @map("last_contact")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  databases   Database[]
 }
 
 model Database {
-  id           String   @id @default(cuid())
-  agentId      String   @map("agent_id")
+  id      String @id @default(cuid())
+  agentId String @map("agent_id")
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
   name         String
   description  String?
   backupPolicy String?  @map("backup_policy")

@@ -12,7 +12,7 @@ import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import Link from "next/link";
 import {PasswordInput} from "@/components/wrappers/Auth/PaswordInput/password-input";
-import {LoginSchema, LoginType} from "@/components/wrappers/Auth/Login/LoginForm/login-form-schema";
+import {LoginSchema, LoginType} from "@/components/wrappers/Auth/Login/LoginForm/login-form.schema";
 import {signInAction} from "@/features/auth/auth.action";
 import {SocialAuthButton} from "@/components/wrappers/Auth/Login/SocialAuth/SocialAuthButtons/SocialAuthButton";
 import Image from 'next/image';
