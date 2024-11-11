@@ -32,7 +32,7 @@ export const uploadImageAction = userAction
             if (env.NODE_ENV === "production") {
                 // url = `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`
             } else {
-                url = `http://localhost:8887/${localDir}${fileName}`
+                url = `http://localhost:8887/uploads/${fileName}`
             }
             return {
                 data: {result: result, url: url},

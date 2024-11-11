@@ -6,6 +6,9 @@ import {toast} from "sonner";
 import {uploadImageAction} from "@/features/upload/upload.action";
 import {useMutation} from "@tanstack/react-query";
 import {prisma} from "@/prisma";
+import {updateImageUserAction} from "@/components/wrappers/Dashboard/Profile/Avatar/avatar.action";
+import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 export type AvatarWithUploadProps = {
     user: User
@@ -14,6 +17,8 @@ export type AvatarWithUploadProps = {
 
 export const AvatarWithUpload = (props: AvatarWithUploadProps) => {
     const user = props.user
+    const router = useRouter();
+    const { data: session, update } = useSession();
 
 
     const submitImage = useMutation({
@@ -29,17 +34,26 @@ export const AvatarWithUpload = (props: AvatarWithUploadProps) => {
                 return;
             }
 
-            console.log(props.user.id)
-            await prisma.user.update({
-                where: {
-                    id: props.user.id,
-                },
-                data: {
-                    image: data.url
-                }
-            })
+            const updateUser = await updateImageUserAction(data.url)
+            const dataUser = updateUser?.data?.data
 
+            if (updateUser?.serverError || !dataUser) {
+                console.log(updateUser?.serverError);
+                toast.error(updateUser?.serverError);
+                return;
+            }
+
+            const newSession = {
+                ...session,
+                user: {
+                    ...session?.user,
+                    image: data.url
+                },
+            };
+
+            await update(newSession);
             toast.success("Successfully uploaded user image!");
+            router.refresh()
 
 
 
