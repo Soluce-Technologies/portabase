@@ -18,7 +18,7 @@ export type Backup = {
     status: "pending" | "processing" | "success" | "failed"
 }
 
-export const backupColumns: ColumnDef<Backup>[] = [
+export const columns: ColumnDef<Backup>[] = [
     {
         accessorKey: "id",
         header: "Reference",
@@ -26,9 +26,6 @@ export const backupColumns: ColumnDef<Backup>[] = [
     {
         accessorKey: "createdAt",
         header: "Created At",
-        cell: ({row}) => {
-            return new Date(row.getValue("createdAt")).toLocaleString("fr-FR");
-        },
     },
     {
         accessorKey: "status",
