@@ -8,12 +8,9 @@ export const Page = ({children}: PropsWithChildren<{}>) => {
     );
 };
 
-export const PageHeader = ({children}: PropsWithChildren<{}>) => {
-    return (
-        <div className="flex justify-between">{children}</div>
-    );
-};
-
+export const PageHeader = twx.div((props)=>[
+    cn(`flex justify-between`, props.className),
+])
 
 export const PageTitle = twx.h1((props)=>[
     cn(`text-3xl font-bold mb-6`, props.className),
@@ -26,11 +23,9 @@ export const PageDescription = twx.h2((props)=>[
 ])
 
 
-export const PageActions = ({children}: PropsWithChildren<{}>) => {
-    return (
-        <h1 className="flex gap-4">{children}</h1>
-    );
-};
+export const PageActions = twx.h1((props)=>[
+    cn(`flex gap-4`, props.className),
+])
 
 
 export const PageContent = ({children}: PropsWithChildren<{}>) => {
