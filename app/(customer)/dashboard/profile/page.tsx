@@ -19,17 +19,13 @@ export default async function RoutePage(props: PageParams<{}>) {
     if (!user) {
         notFound()
     }
-
     const userInfo = await prisma.user.findUnique({
         where: {
             email: user.email
         }
     })
-
-
     return (
         <Page>
-            {/*<PageHeader>*/}
                 <div className="justify-between gap-2 sm:flex">
                     <PageTitle className="flex items-center">
                         <AvatarWithUpload user={userInfo}/>
@@ -40,7 +36,6 @@ export default async function RoutePage(props: PageParams<{}>) {
                         <ButtonDeleteAccount/>
                     </PageActions>
                 </div>
-            {/*</PageHeader>*/}
             <PageContent>
                 <UserForm userId={userInfo.id} defaultValues={userInfo}/>
             </PageContent>

@@ -23,9 +23,6 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
                 }}>
                     <span>Account</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <span>Billing</span>
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                     signOutAction()
                 }}>

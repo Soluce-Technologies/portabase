@@ -18,20 +18,14 @@ export const uploadImageAction = userAction
         const fileName = uuid + "." + fileFormat
         const arrayBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
-
         const localDir = "public/uploads/"
-
         try {
-
             await mkdir(path.join(process.cwd(), localDir), { recursive: true });
-
             const result = await writeFile(
                 path.join(process.cwd(), localDir + fileName),
                 buffer
             );
-
             let url: string = "";
-
             if (env.NODE_ENV === "production") {
                 // url = `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`
             } else {
@@ -40,7 +34,6 @@ export const uploadImageAction = userAction
             return {
                 data: {result: result, url: url},
             }
-
         } catch (error) {
             console.log("Error occured ", error);
             throw new Error('An error occured while importing image');
