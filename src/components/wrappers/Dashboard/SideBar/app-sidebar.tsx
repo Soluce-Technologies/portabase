@@ -13,27 +13,31 @@ import {
 } from "lucide-react";
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
 import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBarMenu/SideBarMenu";
+import Image from 'next/image';
 
 export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
+                <div className="flex justify-center items-center ">
+                    <h1 className="font-bold text-xl">Portabase</h1>
+                </div>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <SidebarMenuButton>
-                                    Select Workspace
+                                    Select Project
                                     <ChevronDown className="ml-auto"/>
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
                                 <DropdownMenuItem>
-                                    <span>Acme Inc</span>
+                                    <span>Project 1</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    <span>Acme Corp.</span>
+                                    <span>Project 2</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -54,6 +58,9 @@ export function AppSidebar() {
                         <LoggedInButton/>
                     </SidebarMenuItem>
                 </SidebarMenu>
+                <div className="text-center">
+                    <h1 className="text-[10px]">Portabase Community Edition 1.0.0</h1>
+                </div>
             </SidebarFooter>
         </Sidebar>
     )

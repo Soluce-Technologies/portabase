@@ -1,7 +1,19 @@
 import {PageParams} from "@/types/next";
+import {Page, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
+import {AgentForm} from "@/components/wrappers/Agent/AgentForm/AgentForm";
+
 
 export default async function RoutePage(props: PageParams<{}>) {
     return (
-        <div>new agent</div>
+        <Page>
+            <PageHeader>
+                <PageTitle>
+                    Create new agent
+                </PageTitle>
+            </PageHeader>
+            <PageContent>
+                <AgentForm/>
+            </PageContent>
+        </Page>
     )
 }

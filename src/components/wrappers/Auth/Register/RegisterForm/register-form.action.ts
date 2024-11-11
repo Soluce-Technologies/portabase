@@ -22,7 +22,6 @@ export const registerUserAction = action
                 data: new_user,
             }
         }
-        return {
-            data: user,
-        }
+        throw new Error('An error occured while creating user');
+
     });

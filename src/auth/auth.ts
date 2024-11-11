@@ -52,6 +52,7 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
                     name: profile.name,
                     email: profile.email,
                     image: profile.picture,
+                    authMethod: "google",
                 }
             },
         })
@@ -64,11 +65,44 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
         error: "/error"
     },
     callbacks: {
-        session({session, user, token}) {
-            // session.user.role = user.role
-            return session
-        }
-    },
+        // session({session, user, token}) {
+        //     // session.user.role = user.role
+        //     // session.user.authMethod = user.authMethod;
+        //     return session
+        // },
+        async jwt({ token, trigger, session, user }) {
+            if (trigger === "update" && session) {
+                return { ...token, ...session?.user };
+            }
+
+            return { ...token, ...user };
+        },
+        async session({ session, token, user }) {
+            session.user = token;
+            return session;
+        },
+        async signIn({ account, user }) {
+            console.log(account)
+            // const authMethod = account.provider === 'credentials' ? 'credentials' : 'oauth';
+            user = await prisma.user.findFirst({
+                where: {
+                    email: user.email,
+                }
+            })
+            if (!user) {
+                return true
+            }
+            console.log(user)
+            // Update the user in the database with the auth method
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    authMethod: account.provider
+                },
+            });
+            return true;
+        },
+    }
 
 });
 
