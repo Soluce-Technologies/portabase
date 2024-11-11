@@ -1,4 +1,6 @@
 import {PropsWithChildren} from 'react';
+import {twx} from "@/lib/twx";
+import {cn} from "@/lib/utils";
 
 export const Page = ({children}: PropsWithChildren<{}>) => {
     return (
@@ -12,17 +14,17 @@ export const PageHeader = ({children}: PropsWithChildren<{}>) => {
     );
 };
 
-export const PageTitle = ({children}: PropsWithChildren<{}>) => {
-    return (
-        <h1 className="text-3xl font-bold mb-6">{children}</h1>
-    );
-};
 
-export const PageDescription = ({children}: PropsWithChildren<{}>) => {
-    return (
-        <h2 className="text-s mb-6 text-gray-700">{children}</h2>
-    );
-};
+export const PageTitle = twx.h1((props)=>[
+    cn(`text-3xl font-bold mb-6`, props.className),
+])
+
+
+
+export const PageDescription = twx.h2((props)=>[
+    cn(`text-s mb-6 text-gray-700`, props.className),
+])
+
 
 export const PageActions = ({children}: PropsWithChildren<{}>) => {
     return (
@@ -36,3 +38,4 @@ export const PageContent = ({children}: PropsWithChildren<{}>) => {
         <div className="">{children}</div>
     );
 };
+

@@ -8,6 +8,7 @@ import Link from "next/link";
 import {useTranslations} from "use-intl";
 import {SidebarMenuButton} from "@/components/ui/sidebar";
 import {UserAvatar} from "@/components/wrappers/Dashboard/UserAvatar/UserAvatar";
+import {redirect} from "next/navigation";
 
 export type LoggedInDropdownProps = PropsWithChildren<{}>
 
@@ -22,7 +23,9 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
             >
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                    redirect("/dashboard/profile")
+                }}>
                     <span>Account</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>

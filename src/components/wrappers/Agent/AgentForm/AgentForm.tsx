@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider} from "@/components/ui/tooltip";
-import {AgentSchema, AgentType} from "@/components/wrappers/Agent/AgentForm/action-form.schema";
+import {AgentSchema, AgentType} from "@/components/wrappers/Agent/AgentForm/agent-form.schema";
 import {toast} from "sonner";
 import {createAgentAction, updateAgentAction} from "@/components/wrappers/Agent/AgentForm/agent-form.action";
 

@@ -30,6 +30,7 @@ export const RegisterForm = (props: registerFormProps) => {
         mutationFn: async (values: RegisterType) => {
             console.log(values)
             const createUser = await registerUserAction(values);
+            console.log(createUser)
             const data = createUser?.data?.data
             if (createUser?.serverError || !data) {
                 console.log(createUser?.serverError);

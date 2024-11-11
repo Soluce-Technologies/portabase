@@ -65,10 +65,21 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
         error: "/error"
     },
     callbacks: {
-        session({session, user, token}) {
-            // session.user.role = user.role
-            // session.user.authMethod = user.authMethod;
-            return session
+        // session({session, user, token}) {
+        //     // session.user.role = user.role
+        //     // session.user.authMethod = user.authMethod;
+        //     return session
+        // },
+        async jwt({ token, trigger, session, user }) {
+            if (trigger === "update" && session) {
+                return { ...token, ...session?.user };
+            }
+
+            return { ...token, ...user };
+        },
+        async session({ session, token, user }) {
+            session.user = token;
+            return session;
         },
         async signIn({ account, user }) {
             console.log(account)
@@ -89,10 +100,9 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
                     authMethod: account.provider
                 },
             });
-
             return true;
         },
-    },
+    }
 
 });
 

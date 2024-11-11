@@ -1,7 +1,7 @@
 "use server"
 import {ActionError, userAction} from "@/safe-actions";
 import {prisma} from "@/prisma";
-import {AgentSchema} from "@/components/wrappers/Agent/AgentForm/action-form.schema";
+import {AgentSchema} from "@/components/wrappers/Agent/AgentForm/agent-form.schema";
 import {z} from "zod";
 
 
