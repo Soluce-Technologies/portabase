@@ -1,6 +1,5 @@
 "use client"
 import {useMutation} from "@tanstack/react-query";
-import {useRouter} from "next/navigation";
 import {signOutAction} from "@/features/auth/auth.action";
 import {ButtonWithConfirm} from "@/components/wrappers/Button/ButtonWithConfirm/ButtonWithConfirm";
 import {deleteUserAction} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/delete-account.action";

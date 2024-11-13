@@ -1,13 +1,18 @@
 import {LayoutAdmin} from "@/components/layout";
-import Image from 'next/image';
-import {currentUser, requiredCurrentUser} from "@/auth/current-user";
+import {currentUser} from "@/auth/current-user";
 import {redirect} from "next/navigation";
+import {prisma} from "@/prisma";
 
 export default async function Layout({children}: { children: React.ReactNode }) {
 
     const user = await currentUser()
+    const userInfo = await prisma.user.findUnique({
+        where: {
+            email: user.email
+        }
+    })
 
-    if(user){
+    if(userInfo){
         redirect('/dashboard')
     }
 

@@ -5,12 +5,20 @@ import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import {AppSidebar} from "@/components/wrappers/Dashboard/SideBar/app-sidebar";
 import {currentUser} from "@/auth/current-user";
 import {Header} from "@/features/layout/Header";
+import {prisma} from "@/prisma";
 
 
 export default async function Layout({children}: { children: React.ReactNode }) {
 
     const user = await currentUser()
-    if (!user) redirect('/login')
+
+    const userInfo = await prisma.user.findUnique({
+        where: {
+            email: user.email
+        }
+    })
+
+    if (!userInfo) redirect('/login')
 
     return (
         <SidebarProvider>

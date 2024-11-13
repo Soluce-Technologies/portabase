@@ -126,3 +126,16 @@ model Restauration {
   databaseId String?   @map("database_id")
   database   Database? @relation(fields: [databaseId], references: [id], onDelete: Cascade)
 }
+
+enum TypeStorage {
+  local
+  s3
+}
+
+model Settings {
+  id                String      @id @default(cuid())
+  storage           TypeStorage @default(local)
+  s3AccessKeyId     String?
+  s3SecretAccessKey String?
+  S3BucketName      String?
+}
