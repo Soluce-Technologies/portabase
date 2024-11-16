@@ -19,6 +19,11 @@ export default async function RoutePage(props: PageParams<{}>) {
         }
     })
 
+    const settings = await prisma.settings.findUnique({
+        where:{
+            name: "system"
+        }
+    })
 
     return (
         <Page>
@@ -31,7 +36,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 Manage your Portabase settings
             </PageDescription>
             <PageContent>
-                <SettingsTabs users={users}/>
+                <SettingsTabs settings={settings} users={users}/>
             </PageContent>
         </Page>
     )

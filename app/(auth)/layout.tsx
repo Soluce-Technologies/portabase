@@ -6,15 +6,18 @@ import {prisma} from "@/prisma";
 export default async function Layout({children}: { children: React.ReactNode }) {
 
     const user = await currentUser()
-    // const userInfo = await prisma.user.findUnique({
-    //     where: {
-    //         email: user?.email
-    //     }
-    // })
-    //
     if(user){
-        redirect('/dashboard')
+        const userInfo = await prisma.user.findUnique({
+            where: {
+                email: user?.email
+            }
+        })
+
+        if(userInfo){
+            redirect('/dashboard')
+        }
     }
+
 
     return (
         <LayoutAdmin>

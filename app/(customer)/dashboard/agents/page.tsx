@@ -16,20 +16,35 @@ export default async function RoutePage(props: PageParams<{}>) {
                 <PageTitle>
                     Agents
                 </PageTitle>
-                <PageActions>
-                    <Link href={"/dashboard/agents/new"}>
-                        <Button>+ Create Agent</Button>
-                    </Link>
-                </PageActions>
+                {agents.length > 0 && (
+                    <PageActions>
+                        <Link href={"/dashboard/agents/new"}>
+                            <Button>+ Create Agent</Button>
+                        </Link>
+                    </PageActions>
+                )}
+
             </PageHeader>
 
             <PageContent className="mt-10">
-                <CardsWithPagination
-                    data={agents}
-                    cardItem={AgentCard}
-                    cardsPerPage={4}
-                    numberOfColumns={1}
-                />
+
+                {agents.length > 0 ?
+                    <CardsWithPagination
+                        data={agents}
+                        cardItem={AgentCard}
+                        cardsPerPage={4}
+                        numberOfColumns={1}
+                    />
+                    :
+                    <Link
+                        href="/dashboard/agents/new"
+                        className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md">
+                        Create new Agent
+                    </Link>
+
+                }
+
+
             </PageContent>
         </Page>
     )
