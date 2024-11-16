@@ -135,7 +135,13 @@ enum TypeStorage {
 model Settings {
   id                String      @id @default(cuid())
   storage           TypeStorage @default(local)
+  s3EndPointUrl     String?
   s3AccessKeyId     String?
   s3SecretAccessKey String?
   S3BucketName      String?
+  smtpPassword      String?
+  smtpFrom          String?
+  smtpHost          String?
+  smtpPort          String?
+  smtpUser          String?
 }

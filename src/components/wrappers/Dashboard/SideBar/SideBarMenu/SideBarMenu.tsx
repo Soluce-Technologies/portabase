@@ -3,14 +3,16 @@ import {SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem} from
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
-import {PropsWithChildren, useState} from "react";
+import {PropsWithChildren, useEffect, useState} from "react";
 import {ChartArea, Home, Settings, ShieldHalf} from "lucide-react";
+import {usePathname} from "next/navigation";
 
 export type SidebarMenuCustomProps = {}
 
 export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
 
     const BASE_URL = "/dashboard";
+    const pathname = usePathname();
     // Menu items.
     const items = [
         {
@@ -34,6 +36,14 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
             icon: Settings,
         },
     ]
+
+    useEffect(() => {
+        const currentUrl = pathname;
+        const currentItem = items.find((item) => `${BASE_URL}/${item.url}` === currentUrl);
+        if (currentItem) {
+            setActiveItem(currentItem.title);
+        }
+    }, [pathname]);
 
     const [activeItem, setActiveItem] = useState(items[0].title);
     const handleItemClick = (title: string) => {

@@ -18,7 +18,7 @@ export function DataTableWithPagination<TData, TValue>({columns, data}: DataTabl
     const [sorting, setSorting] = useState<SortingState>([])
 
     const table = useReactTable({
-        data,
+        data: data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),

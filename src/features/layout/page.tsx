@@ -18,7 +18,7 @@ export const PageTitle = twx.h1((props) => [
 
 
 export const PageDescription = twx.h2((props) => [
-    cn(`text-s mb-6 text-gray-700`, props.className),
+    cn(`text-s mb-6 `, props.className),
 ])
 
 

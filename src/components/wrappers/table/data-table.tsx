@@ -6,7 +6,6 @@ export type dataTableProps = {
 }
 
 export const DataTable = ({table}: dataTableProps) => {
-
     return (
         <Table>
             <TableHeader>
@@ -43,7 +42,7 @@ export const DataTable = ({table}: dataTableProps) => {
                     ))
                 ) : (
                     <TableRow>
-                        <TableCell colSpan={table.columns.length} className="h-24 text-center">
+                        <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
                             No results.
                         </TableCell>
                     </TableRow>
