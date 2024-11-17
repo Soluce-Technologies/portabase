@@ -15,11 +15,11 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
     const pathname = usePathname();
     // Menu items.
     const items = [
-        {
-            title: "Home",
-            url: "/",
-            icon: Home,
-        },
+        // {
+        //     title: "Home",
+        //     url: "/",
+        //     icon: Home,
+        // },
         {
             title: "Agents",
             url: "agents",

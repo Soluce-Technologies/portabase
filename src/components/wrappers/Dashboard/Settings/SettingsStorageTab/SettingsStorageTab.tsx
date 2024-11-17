@@ -40,7 +40,7 @@ export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
                 </div>
                 {isSwitched && (
                     <div className="mt-5">
-                        <StorageS3Form/>
+                        <StorageS3Form defaultValues={props.settings.s3EndPointUrl ? props.settings : null}/>
                     </div>
                 )}
             </div>
