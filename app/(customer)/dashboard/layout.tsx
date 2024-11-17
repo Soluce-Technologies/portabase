@@ -18,7 +18,6 @@ export default async function Layout({children}: { children: React.ReactNode }) 
                 email: user?.email
             }
         })
-
         if(userInfo){
             redirect('/login')
         }
