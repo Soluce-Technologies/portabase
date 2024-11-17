@@ -22,6 +22,7 @@ export type S3FormProps = {
 export const StorageS3Form = (props: S3FormProps) => {
     const form = useZodForm({
         schema: S3FormSchema,
+        defaultValues: props.defaultValues,
     });
     const mutation = useMutation({
         mutationFn: async (values: S3FormType) => {
@@ -99,9 +100,12 @@ export const StorageS3Form = (props: S3FormProps) => {
                                 </FormItem>
                             )}
                         />
-                        <Button>
-                            Save
-                        </Button>
+                        <div className="flex justify-end gap-4">
+
+                            <Button>
+                                Save
+                            </Button>
+                        </div>
                     </Form>
                 </CardContent>
             </Card>

@@ -37,7 +37,7 @@ export const SettingsTabs = (props: SettingsTabsProps) => {
                 <DataTableWithPagination columns={usersColumns} data={props.users}/>
             </TabsContent>
             <TabsContent value="email">
-                <SettingsEmailTab/>
+                <SettingsEmailTab settings={props.settings}/>
             </TabsContent>
             <TabsContent value="storage">
                 <SettingsStorageTab settings={props.settings}/>

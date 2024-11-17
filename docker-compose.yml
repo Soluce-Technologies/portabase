@@ -18,6 +18,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    container_name: portabase-app
 
   db:
     image: postgres:16-alpine
