@@ -11,6 +11,7 @@ import {prisma} from "@/prisma";
 export default async function Layout({children}: { children: React.ReactNode }) {
 
     const user = await currentUser()
+    console.log(user)
     if(user){
         const userInfo = await prisma.user.findUnique({
             where: {
@@ -19,6 +20,7 @@ export default async function Layout({children}: { children: React.ReactNode }) 
         })
         if (!userInfo) redirect('/login')
     }
+    if (!user) redirect('/login')
 
 
     return (
