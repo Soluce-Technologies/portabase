@@ -1,25 +1,41 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {AgentForm} from "@/components/wrappers/Agent/AgentForm/AgentForm";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {prisma} from "@/prisma";
 import {notFound} from "next/navigation";
+import {RestoreForm} from "@/components/wrappers/Database/RestoreForm";
 
 
 export default async function RoutePage(props: PageParams<{
-    agentId: string;
+    databaseId: string;
 }>) {
 
-    const {agentId} = await props.params
+    const {databaseId} = await props.params
+
 
     const user = await requiredCurrentUser()
-    const agent = await prisma.agent.findUnique({
+
+    const database = await prisma.database.findUnique({
         where: {
-            id: agentId,
+            id: databaseId,
         }
     });
 
-    if (!agent) {
+
+    const databases = await prisma.database.findMany({
+        where: {
+            dbms: database.dbms,
+        }
+    })
+
+    const backups = await prisma.backup.findMany({
+        where: {
+            status: "success",
+        }
+    });
+
+
+    if (!database) {
         notFound();
     }
 
@@ -28,11 +44,11 @@ export default async function RoutePage(props: PageParams<{
         <Page>
             <PageHeader>
                 <PageTitle>
-                    Edit {agent.name}
+                    Restore {database.name}
                 </PageTitle>
             </PageHeader>
             <PageContent>
-                <AgentForm defaultValues={agent} agentId={agent.id}/>
+                <RestoreForm databaseToRestore={database} databases={databases} backups={backups}/>
             </PageContent>
         </Page>
     )

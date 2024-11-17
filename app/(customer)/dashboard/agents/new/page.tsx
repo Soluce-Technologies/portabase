@@ -4,6 +4,7 @@ import {AgentForm} from "@/components/wrappers/Agent/AgentForm/AgentForm";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
+
     return (
         <Page>
             <PageHeader>

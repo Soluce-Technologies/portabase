@@ -1,3 +1,5 @@
+import React from "react";
+
 import {LayoutAdmin} from "@/components/layout";
 import {currentUser} from "@/auth/current-user";
 import {redirect} from "next/navigation";

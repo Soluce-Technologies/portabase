@@ -80,11 +80,20 @@ model Agent {
   createdAt   DateTime  @default(now()) @map("created_at")
 
   databases Database[]
+
+  @@map("agents")
+}
+
+enum Dbms {
+  postgresql
+  mysql
+  mongodb
 }
 
 model Database {
   id           String   @id @default(cuid())
   name         String
+  dbms         Dbms
   description  String?
   backupPolicy String?  @map("backup_policy")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -94,6 +103,8 @@ model Database {
 
   backups       Backup[]
   restaurations Restauration[]
+
+  @@map("databases")
 }
 
 enum Status {
@@ -113,6 +124,8 @@ model Backup {
   database   Database @relation(fields: [databaseId], references: [id], onDelete: Cascade)
 
   restaurations Restauration[]
+
+  @@map("backups")
 }
 
 model Restauration {
@@ -125,6 +138,8 @@ model Restauration {
 
   databaseId String?   @map("database_id")
   database   Database? @relation(fields: [databaseId], references: [id], onDelete: Cascade)
+
+  @@map("restaurations")
 }
 
 enum TypeStorage {
@@ -145,4 +160,6 @@ model Settings {
   smtpHost          String?
   smtpPort          String?
   smtpUser          String?
+
+  @@map("settings")
 }

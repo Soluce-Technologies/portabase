@@ -20,7 +20,7 @@ export const AgentCard = (props: agentCardProps) => {
                 <div className="">
                     <CardHeader>{agent.name}</CardHeader>
                     <CardContent>
-                        Last contact : {agent.lastContact?.toDateString() ?? "Never connected"}
+                        Last contact : {agent.lastContact?.toDateString() ?? "Never connected."}
                     </CardContent>
                 </div>
                 <div className="mt-3 mr-3">

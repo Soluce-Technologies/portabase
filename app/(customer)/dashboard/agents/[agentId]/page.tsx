@@ -13,9 +13,11 @@ import Link from "next/link";
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
 
+    const {agentId} = await props.params
+
     const agent = await prisma.agent.findUnique({
         where: {
-            id: props.params.agentId,
+            id: agentId,
         },
     })
 
@@ -112,7 +114,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                             Last contact
                         </CardHeader>
                         <CardContent>
-                            {agent.lastContact?.toDateString() ?? "Never connected"}
+                            {agent.lastContact?.toDateString() ?? "Never connected."}
                         </CardContent>
                     </Card>
                 </div>
