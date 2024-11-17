@@ -18,6 +18,7 @@ export const deleteUserAction = userAction
             data: {
                 email: `${uuid}@portabase.com`,
                 name: `${uuid}`,
+                deleted: true
             }
         })
 

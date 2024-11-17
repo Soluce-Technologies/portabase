@@ -12,9 +12,13 @@ export default async function RoutePage(props: PageParams<{}>) {
         where:{
             id: {
                 not: user.id
-            }
+            },
+            deleted: { not: true },
+
         }
     })
+
+    console.log(users)
 
     const settings = await prisma.settings.findUnique({
         where:{

@@ -39,7 +39,7 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
     return (
         <div className="flex flex-col h-full  py-4">
             <div className="flex gap-4 h-fit justify-between">
-                <h1>Settings for Portabase storage</h1>
+                <h1>Settings for Portabase email setup</h1>
                 {props.settings.smtpFrom && (
                     <ButtonWithLoading
                         isPending={mutation.isPending}

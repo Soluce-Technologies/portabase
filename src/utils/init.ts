@@ -41,7 +41,7 @@ async function createSettingsIfNotExist() {
         console.log("====Init Setting : Create ====")
         await prisma.settings.create({
             data: {
-                name: "system",
+                ...configSettings
             }
         })
     }else{

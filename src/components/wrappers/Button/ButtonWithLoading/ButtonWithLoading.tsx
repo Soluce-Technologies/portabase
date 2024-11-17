@@ -1,6 +1,6 @@
 "use client"
 import {Button} from "@/components/ui/button";
-import {useState} from "react";
+import {ButtonHTMLAttributes, useState} from "react";
 import {Loader2} from "lucide-react";
 
 export type VariantButton = {
@@ -21,19 +21,28 @@ export type ButtonWithConfirmProps = {
     isPending? : boolean
 };
 
-export const ButtonWithLoading = (props: ButtonWithConfirmProps) => {
+export const ButtonWithLoading = ({
+                                      icon,
+                                      text,
+                                      variant,
+                                      className,
+                                      onClick,
+                                      isPending,
+                                      ...props // catch all remaining props
+                                  }: ButtonWithConfirmProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
     return(
         <Button
             onClick={() => {
-                    props.onClick()
+                onClick()
             }}
-            variant={props.variant ? props.variant : "default"}
-            className={props.className}
+            variant={variant ? variant : "default"}
+            className={className}
+            {...props} // forward the remaining props to the Button component
         >
-            {props.isPending && <Loader2 className="animate-spin mr-4" size={16}/>}
-            {props.text}
+            {isPending && <Loader2 className="animate-spin mr-4" size={16}/>}
+            {text}
             <>
-                {props.icon ? props.icon : null}
+                {icon ? icon : null}
             </>
         </Button>
     )

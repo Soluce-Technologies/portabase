@@ -6,11 +6,7 @@ import {requiredCurrentUser} from "@/auth/current-user";
 import {UserForm} from "@/components/wrappers/Dashboard/Profile/UserForm/UserForm";
 import {prisma} from "@/prisma";
 import {Badge} from "@/components/ui/badge";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
-import {ButtonWithConfirm} from "@/components/wrappers/Button/ButtonWithConfirm/ButtonWithConfirm";
 import {ButtonDeleteAccount} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import {useIsMobile} from "@/hooks/use-mobile";
 import {AvatarWithUpload} from "@/components/wrappers/Dashboard/Profile/Avatar/AvatarWithUpload";
 
 export default async function RoutePage(props: PageParams<{}>) {

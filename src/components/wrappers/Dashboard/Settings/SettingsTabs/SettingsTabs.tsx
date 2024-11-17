@@ -6,6 +6,7 @@ import {User, Settings} from "@prisma/client";
 import {backupColumns} from "@/features/backup/columns";
 import {SettingsEmailTab} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/SettingsEmailTab";
 import {SettingsStorageTab} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/SettingsStorageTab";
+import {SettingsUsersTab} from "@/components/wrappers/Dashboard/Settings/SettingsUsersTab/SettingsUsersTab";
 
 
 export type SettingsTabsProps = {
@@ -34,7 +35,7 @@ export const SettingsTabs = (props: SettingsTabsProps) => {
                 </div>
             </TabsContent>
             <TabsContent value="users" className="h-full justify-between">
-                <DataTableWithPagination columns={usersColumns} data={props.users}/>
+                <SettingsUsersTab users={props.users}/>
             </TabsContent>
             <TabsContent value="email">
                 <SettingsEmailTab settings={props.settings}/>

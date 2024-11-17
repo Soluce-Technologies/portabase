@@ -6,10 +6,6 @@ import {User} from "@prisma/client";
 
 export const usersColumns: ColumnDef<User>[] = [
     {
-        accessorKey: "id",
-        header: "Id",
-    },
-    {
         accessorKey: "name",
         header: "Name"
     },

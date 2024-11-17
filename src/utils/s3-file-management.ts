@@ -1,19 +1,38 @@
 import * as Minio from 'minio'
 import {env} from "@/env.mjs";
 import internal from "node:stream";
+import {prisma} from "@/prisma";
+
+const settings = await prisma.settings.findUnique({
+    where:{
+        name: "system"
+    }
+})
 
 
 // Create a new Minio client with the S3 endpoint, access key, and secret key
+// export const s3Client = env.NODE_ENV === "production" ?
+//     new Minio.Client({
+//         endPoint: env.S3_ENDPOINT ?? "",
+//         accessKey: env.S3_ACCESS_KEY ?? "",
+//         secretKey: env.S3_SECRET_KEY ?? "",
+//     }) : new Minio.Client({
+//         endPoint: env.S3_ENDPOINT ?? "",
+//         port: Number(env.S3_PORT ?? 0),
+//         accessKey: env.S3_ACCESS_KEY ?? "",
+//         secretKey: env.S3_SECRET_KEY ?? "",
+//         useSSL: env.S3_USE_SSL === 'true'
+//     })
 export const s3Client = env.NODE_ENV === "production" ?
     new Minio.Client({
-        endPoint: env.S3_ENDPOINT ?? "",
-        accessKey: env.S3_ACCESS_KEY ?? "",
-        secretKey: env.S3_SECRET_KEY ?? "",
+        endPoint: settings.s3EndPointUrl ?? "",
+        accessKey: settings.s3AccessKeyId ?? "",
+        secretKey: settings.s3SecretAccessKey ?? "",
     }) : new Minio.Client({
-        endPoint: env.S3_ENDPOINT ?? "",
+        endPoint: settings.s3EndPointUrl ?? "",
         port: Number(env.S3_PORT ?? 0),
-        accessKey: env.S3_ACCESS_KEY ?? "",
-        secretKey: env.S3_SECRET_KEY ?? "",
+        accessKey: settings.s3AccessKeyId ?? "",
+        secretKey: settings.s3SecretAccessKey ?? "",
         useSSL: env.S3_USE_SSL === 'true'
     })
 
@@ -22,8 +41,11 @@ export async function checkMinioAlive() {
         // Try to list buckets to check connectivity
         const buckets = await s3Client.listBuckets();
         console.log('MinIO is up and running. Buckets:', buckets);
+        return {message: true}
     } catch (error) {
         console.error('Error connecting to MinIO:', error);
+        return {error: error}
+
     }
 }
 

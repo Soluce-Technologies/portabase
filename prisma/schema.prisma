@@ -64,9 +64,9 @@ model User {
   authMethod    String?   @map("auth_method")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime? @updatedAt @map("updated_at")
-
-  accounts Account[]
-  sessions Session[]
+  deleted       Boolean?  @default(false)
+  accounts      Account[]
+  sessions      Session[]
 
   @@map("users")
 }
