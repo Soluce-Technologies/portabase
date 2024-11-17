@@ -2,13 +2,11 @@
 import {prisma} from "@/prisma";
 import nodemailer from "nodemailer";
 
-
 type Payload = {
     to: string;
     subject: string;
     html: any
 };
-
 
 export const sendEmail = async (data: Payload) => {
 
@@ -17,7 +15,6 @@ export const sendEmail = async (data: Payload) => {
             name: "system"
         }
     })
-
 
     const smtpSettings = {
         host: settings.smtpHost,
@@ -28,14 +25,10 @@ export const sendEmail = async (data: Payload) => {
         },
     };
 
-
     // Create a transporter object using nodemailer
     const transporter = nodemailer.createTransport({
         ...smtpSettings
     });
-
-    // Render the React component to HTML
-    // const emailHtml = await render(HelloEmail(), {});
 
     // Set up email options
     const mailOptions = {

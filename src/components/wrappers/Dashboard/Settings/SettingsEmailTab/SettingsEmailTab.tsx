@@ -7,6 +7,7 @@ import {sendEmail} from "@/utils/email-helper";
 import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
 import {render} from "@react-email/render";
 import {toast} from "sonner";
+import HelloEmail from "../../../../../../emails/HelloEmail";
 
 
 
@@ -20,8 +21,8 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
         mutationFn: async () => {
             const email = await sendEmail({
                 to: props.settings.smtpUser,
-                subject: "Portabase email test !",
-                html: await render(TestEmailSettings(), {})
+                subject: "Portabase",
+                html: await render(TestEmailSettings(),{})
             });
             if(email.response){
                 toast.success("Test Email Successfully sent !");
@@ -32,7 +33,6 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
 
 
     const handleSendMailTest = async () => {
-        console.log("Sending email test...");
         await mutation.mutateAsync()
     }
 

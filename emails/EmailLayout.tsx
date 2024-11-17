@@ -1,15 +1,12 @@
 import {
     Body,
-    Button,
     Container,
     Head,
     Html,
     Img,
-    Link,
     Preview,
     Section,
     Tailwind,
-    Text,
 } from "@react-email/components";
 import * as React from "react";
 import { PropsWithChildren } from "react";
@@ -31,7 +28,7 @@ export const EmailLayout = ({ children, preview }: PropsWithChildren<{ preview?:
                     <Container className="bg-white border border-gray-200 p-12">
                         <Img
                             src={`${baseUrl}/logo-title-black.png`}
-                            width="400"
+                            width="200"
                             height="auto"
                             alt="Logo"
                         />

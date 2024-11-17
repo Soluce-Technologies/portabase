@@ -6,7 +6,9 @@
     "dev": "next dev -p 80",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "email": "email dev"
+
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",

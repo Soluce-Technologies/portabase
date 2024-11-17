@@ -11,6 +11,8 @@ export const env = createEnv({
         DATABASE_URL: z.string().url(),
         NEXT_PUBLIC_SECRET: z.string(),
         NEXTAUTH_URL: z.string(),
+        NEXT_PUBLIC_DOMAIN_NAME: z.string(),
+
 
         SMTP_PASSWORD: z.string().optional(),
         SMTP_FROM: z.string().optional(),
@@ -29,6 +31,7 @@ export const env = createEnv({
         S3_USE_SSL: z.string().optional(),
 
         STORAGE_TYPE: z.string().optional(),
+
     },
     /*
      * Environment variables available on the client (and server).

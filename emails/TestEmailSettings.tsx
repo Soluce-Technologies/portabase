@@ -3,25 +3,39 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import EmailLayout from "./EmailLayout";
+import {Button} from "@react-email/button";
 
 
 export const TestEmailSettings = () => {
     return (
         <EmailLayout
-            preview="Test Email"
+            preview="Email Setup"
         >
+
             <Text
                 className="text-base font-light leading-8 text-green-800 "
+
             >
-                Hi, this is a test email for settings and alerts !
+                Hi, your email settings are setup !
             </Text>
+
+
             <Text
-                className="text-base font-light leading-8 text-green-800 ">
-                Soluce Technologies | Portabase
-            </Text>
+                className="text-base font-light leading-8 text-green-800 "
+
+            >
+                Best regard,
+            </Text>            <Text
+            className="text-base font-light leading-8 text-green-800 "
+
+        >
+            Portabase
+        </Text>
+
         </EmailLayout>
     );
 };
+
 
 
 
