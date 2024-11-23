@@ -3,11 +3,11 @@ import {env} from "@/env.mjs";
 import internal from "node:stream";
 import {prisma} from "@/prisma";
 
-const settings = await prisma.settings.findUnique({
-    where:{
-        name: "system"
-    }
-})
+// const settings = await prisma.settings.findUnique({
+//     where:{
+//         name: "system"
+//     }
+// })
 
 
 // Create a new Minio client with the S3 endpoint, access key, and secret key
@@ -23,21 +23,47 @@ const settings = await prisma.settings.findUnique({
 //         secretKey: env.S3_SECRET_KEY ?? "",
 //         useSSL: env.S3_USE_SSL === 'true'
 //     })
-export const s3Client = env.NODE_ENV === "production" ?
-    new Minio.Client({
-        endPoint: settings.s3EndPointUrl ?? "",
-        accessKey: settings.s3AccessKeyId ?? "",
-        secretKey: settings.s3SecretAccessKey ?? "",
-    }) : new Minio.Client({
-        endPoint: settings.s3EndPointUrl ?? "",
-        port: Number(env.S3_PORT ?? 0),
-        accessKey: settings.s3AccessKeyId ?? "",
-        secretKey: settings.s3SecretAccessKey ?? "",
-        useSSL: env.S3_USE_SSL === 'true'
+// export const s3Client = env.NODE_ENV === "production" ?
+//     new Minio.Client({
+//         endPoint: settings.s3EndPointUrl ?? "",
+//         accessKey: settings.s3AccessKeyId ?? "",
+//         secretKey: settings.s3SecretAccessKey ?? "",
+//     }) : new Minio.Client({
+//         endPoint: settings.s3EndPointUrl ?? "",
+//         port: Number(env.S3_PORT ?? 0),
+//         accessKey: settings.s3AccessKeyId ?? "",
+//         secretKey: settings.s3SecretAccessKey ?? "",
+//         useSSL: env.S3_USE_SSL === 'true'
+//     })
+
+
+async function gets3Client() {
+
+    const settings = await prisma.settings.findUnique({
+        where: {
+            name: "system"
+        }
     })
+
+    const s3Client = env.NODE_ENV === "production" ?
+        new Minio.Client({
+            endPoint: settings.s3EndPointUrl ?? "",
+            accessKey: settings.s3AccessKeyId ?? "",
+            secretKey: settings.s3SecretAccessKey ?? "",
+        }) : new Minio.Client({
+            endPoint: settings.s3EndPointUrl ?? "",
+            port: Number(env.S3_PORT ?? 0),
+            accessKey: settings.s3AccessKeyId ?? "",
+            secretKey: settings.s3SecretAccessKey ?? "",
+            useSSL: env.S3_USE_SSL === 'true'
+        })
+    return s3Client
+}
 
 export async function checkMinioAlive() {
     try {
+        console.log("Check MinioAlive");
+        const s3Client = await gets3Client()
         // Try to list buckets to check connectivity
         const buckets = await s3Client.listBuckets();
         console.log('MinIO is up and running. Buckets:', buckets);
@@ -50,6 +76,8 @@ export async function checkMinioAlive() {
 }
 
 export async function createBucketIfNotExists(bucketName: string) {
+    const s3Client = await gets3Client()
+
     const bucketExists = await s3Client.bucketExists(bucketName)
     if (!bucketExists) {
         console.log(`Creating bucket ${bucketName}`);
@@ -88,6 +116,7 @@ export async function saveFileInBucket({
     if (fileExists) {
         throw new Error('File already exists')
     }
+    const s3Client = await gets3Client()
 
     // Upload image to S3 bucket
     const result = await s3Client.putObject(bucketName, fileName, file)
@@ -101,6 +130,8 @@ export async function saveFileInBucket({
  * @returns true if file exists, false if not
  */
 export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
+    const s3Client = await gets3Client()
+
     try {
         await s3Client.statObject(bucketName, fileName)
     } catch (error) {
@@ -125,6 +156,7 @@ export async function createPresignedUrlToUpload({
 }) {
     // Create bucket if it doesn't exist
     await createBucketIfNotExists(bucketName)
+    const s3Client = await gets3Client()
 
     return await s3Client.presignedPutObject(bucketName, fileName, expiry)
 }
@@ -132,6 +164,8 @@ export async function createPresignedUrlToUpload({
 
 // Function to create a bucket and make it public
 export async function createPublicBucket({bucketName}: { bucketName: string }) {
+    const s3Client = await gets3Client()
+
     try {
         // Check if the bucket already exists
         const exists = await s3Client.bucketExists(bucketName);

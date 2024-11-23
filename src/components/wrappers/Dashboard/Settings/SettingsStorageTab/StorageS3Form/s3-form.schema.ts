@@ -8,3 +8,10 @@ export const S3FormSchema = z.object({
 });
 
 export type S3FormType = z.infer<typeof S3FormSchema>;
+
+
+export const StorageSwitchSchema = z.object({
+    storage: z.string(),
+})
+
+export type StorageType= z.infer<typeof StorageSwitchSchema>;

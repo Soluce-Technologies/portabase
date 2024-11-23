@@ -9,6 +9,11 @@ import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/
 import {useMutation} from "@tanstack/react-query";
 import {checkConnexionToS3} from "@/features/upload/upload.action";
 import {toast} from "sonner";
+import {updateUserAction} from "@/components/wrappers/Dashboard/Profile/UserForm/user-form.action";
+import {useRouter} from "next/navigation";
+import {
+    updateStorageSettingsAction
+} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.action";
 
 
 export type SettingsStorageTabProps = {
@@ -16,19 +21,37 @@ export type SettingsStorageTabProps = {
 }
 
 export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
+    const router = useRouter()
 
     const mutation = useMutation({
         mutationFn: async () => {
             const result = await checkConnexionToS3()
             if(result.error){
                 toast.error("An error occured during the connexion !")
+            }else{
+                toast.success("Connexion succeed!")
             }
-            toast.success("Connexion succeed!")
         }
     })
 
     const [isSwitched, setIsSwitched] = useState<boolean>(props.settings.storage !== "local");
 
+    const updateMutation = useMutation({
+        mutationFn: () => updateStorageSettingsAction({name: "system", data: {storage: isSwitched ? "s3": "local"}}),
+        onSuccess: () => {
+            toast.success(`Settings updated successfully.`);
+            router.refresh()
+        },
+        onError: () => {
+            toast.error(`An error occurred while updating settings information.`);
+        },
+    });
+
+
+    const HandleSwitchStorage = async () => {
+        setIsSwitched(!isSwitched);
+        await updateMutation.mutateAsync()
+    }
 
     return (
         <div className="flex flex-col h-full  py-4">
@@ -47,8 +70,8 @@ export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
                     <Label htmlFor="storage-mode">Storage Mode (Local/s3 compatible)</Label>
                     <Switch
                         checked={isSwitched}
-                        onCheckedChange={() => {
-                            setIsSwitched(!isSwitched);
+                        onCheckedChange={async () => {
+                            await HandleSwitchStorage()
                         }}
                         id="storage-mode"/>
                     </div>

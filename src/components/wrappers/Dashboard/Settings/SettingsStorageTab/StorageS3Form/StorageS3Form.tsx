@@ -14,6 +14,11 @@ import {
     S3FormSchema,
     S3FormType
 } from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.schema";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {
+    updateS3SettingsAction
+} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.action";
 
 export type S3FormProps = {
     defaultValues?: S3FormType;
@@ -24,9 +29,21 @@ export const StorageS3Form = (props: S3FormProps) => {
         schema: S3FormSchema,
         defaultValues: props.defaultValues,
     });
+
+    const router = useRouter();
+
     const mutation = useMutation({
         mutationFn: async (values: S3FormType) => {
-
+            console.log(values)
+            const updateS3Settings = await updateS3SettingsAction({name: "system", data: values})
+            const data = updateS3Settings?.data?.data
+            if (updateS3Settings?.serverError || !data) {
+                console.log(updateS3Settings?.serverError);
+                toast.error(updateS3Settings?.serverError);
+                return;
+            }
+            toast.success(`Success updating storage informations`);
+            router.refresh()
         }
     })
 
