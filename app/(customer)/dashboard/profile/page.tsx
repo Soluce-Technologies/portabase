@@ -27,13 +27,18 @@ export default async function RoutePage(props: PageParams<{}>) {
                         <AvatarWithUpload user={userInfo}/>
                         {user.name}
                         <Badge className="ml-3 hidden lg:block">{userInfo.authMethod}</Badge>
+                        <Badge className="ml-3 hidden lg:block">{userInfo.role}</Badge>
                     </PageTitle>
-                    <PageActions className={"mt-2"}>
+                    <PageActions className="mt-2 hidden sm:block">
                         <ButtonDeleteAccount text="Delete my account"/>
                     </PageActions>
                 </div>
             <PageContent>
-                <UserForm userId={userInfo.id} defaultValues={userInfo}/>
+                <UserForm  userId={userInfo.id} defaultValues={userInfo}/>
+                <div className="mt-4 sm:hidden">
+                    <ButtonDeleteAccount text="Delete my account" />
+                </div>
+
             </PageContent>
         </Page>
     )

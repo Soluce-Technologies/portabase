@@ -17,12 +17,13 @@ export type SettingsTabsProps = {
 export const SettingsTabs = (props: SettingsTabsProps) => {
 
     return(
+
         <Tabs defaultValue="informations" >
-            <TabsList className="w-full" >
-                <TabsTrigger className="w-full" value="informations">Informations</TabsTrigger>
-                <TabsTrigger className="w-full" value="users">Users</TabsTrigger>
-                <TabsTrigger className="w-full" value="email">Email</TabsTrigger>
-                <TabsTrigger className="w-full" value="storage">Storage</TabsTrigger>
+            <TabsList className="w-full">
+                <TabsTrigger className="w-full " value="informations">Info</TabsTrigger>
+                <TabsTrigger className="w-full " value="users">Users</TabsTrigger>
+                <TabsTrigger className="w-full " value="email">Email</TabsTrigger>
+                <TabsTrigger className="w-full " value="storage">Storage</TabsTrigger>
             </TabsList>
             <TabsContent value="informations">
                 <div className="flex flex-1 flex-col gap-4 py-4">
@@ -34,7 +35,7 @@ export const SettingsTabs = (props: SettingsTabsProps) => {
                     <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"/>
                 </div>
             </TabsContent>
-            <TabsContent value="users" className="h-full justify-between">
+            <TabsContent value="users" >
                 <SettingsUsersTab users={props.users}/>
             </TabsContent>
             <TabsContent value="email">
@@ -44,5 +45,6 @@ export const SettingsTabs = (props: SettingsTabsProps) => {
                 <SettingsStorageTab settings={props.settings}/>
             </TabsContent>
         </Tabs>
+
     )
 }

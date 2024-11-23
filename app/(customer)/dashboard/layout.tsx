@@ -12,7 +12,7 @@ export default async function Layout({children}: { children: React.ReactNode }) 
 
     const user = await currentUser()
     console.log(user)
-    if(user){
+    if (user) {
         const userInfo = await prisma.user.findUnique({
             where: {
                 email: user?.email
@@ -25,13 +25,15 @@ export default async function Layout({children}: { children: React.ReactNode }) 
 
     return (
         <SidebarProvider>
-            <AppSidebar/>
-            <SidebarInset>
-                <Header/>
-                <main className="h-full">
-                    {children}
-                </main>
-            </SidebarInset>
+            <div className="flex flex-col lg:flex-row w-full">
+                <AppSidebar/>
+                <SidebarInset>
+                    <Header/>
+                    <main className="h-full">
+                        {children}
+                    </main>
+                </SidebarInset>
+            </div>
         </SidebarProvider>
     )
 }

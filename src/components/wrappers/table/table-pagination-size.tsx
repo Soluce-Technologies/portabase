@@ -8,26 +8,24 @@ export type tablePaginationSizeProps = {
     pageSizeOptions?: number[]
 }
 
-
 export const TablePaginationSize = (props: tablePaginationSizeProps) => {
-
-    const {className, table, pageSizeOptions = [10, 20, 30, 40, 50]} = props
+    const { className, table, pageSizeOptions = [10, 20, 30, 40, 50] } = props;
 
     useEffect(() => {
-        table.setPageSize(Number(pageSizeOptions[0]))
+        table.setPageSize(Number(pageSizeOptions[0]));
     }, []);
 
     return (
-        <div className={cn("flex items-center justify-center space-x-2", className)}>
+        <div className={cn("flex items-center justify-end sm:justify-center space-x-2", className)}>
             <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
             <Select
                 value={`${table.getState().pagination.pageSize}`}
                 onValueChange={(value) => {
-                    table.setPageSize(Number(value))
+                    table.setPageSize(Number(value));
                 }}
             >
                 <SelectTrigger className="h-8 w-[4.5rem]">
-                    <SelectValue placeholder={table.getState().pagination.pageSize}/>
+                    <SelectValue placeholder={table.getState().pagination.pageSize} />
                 </SelectTrigger>
                 <SelectContent side="top">
                     {pageSizeOptions.map((pageSize) => (
@@ -38,6 +36,5 @@ export const TablePaginationSize = (props: tablePaginationSizeProps) => {
                 </SelectContent>
             </Select>
         </div>
-    )
-
-}
+    );
+};
