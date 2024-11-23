@@ -86,7 +86,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                               href={`/dashboard/agents/${agent.id}/edit`}>
                             <GearIcon className="w-7 h-7"/>
                         </Link>
-                        <AgentModalKey>
+                        <AgentModalKey agent={agent}>
                             <Button variant="outline">
                                 <KeyRound/>
                             </Button>

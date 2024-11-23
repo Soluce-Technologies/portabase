@@ -16,13 +16,17 @@ import {generateEdgeKey} from "@/utils/edge_key";
 import {Copy} from "lucide-react";
 import {useState} from "react";
 import {CopyButton} from "@/components/wrappers/copy-button";
+import {Agent} from "@prisma/client";
+import {getServerUrl} from "@/utils/get-server-url";
 
-export type agentRegistrationDialogProps = PropsWithChildren<{}>
+export type agentRegistrationDialogProps = PropsWithChildren<{
+    agent: Agent
+}>
 
 
 export function AgentModalKey(props: agentRegistrationDialogProps) {
 
-    const edge_key = generateEdgeKey('https://ok.com', '1234567');
+    const edge_key = generateEdgeKey(getServerUrl(), props.agent.id);
     const code = `EDGE_KEY = ${edge_key}`;
 
     return (

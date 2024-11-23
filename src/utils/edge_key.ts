@@ -4,6 +4,7 @@ export function generateEdgeKey(serverUrl: string, agentId: string): string {
         serverUrl,
         agentId,
     };
+    console.log(edgeKeyData);
     const edgeKeyJson = JSON.stringify(edgeKeyData);
     const edgeKeyBuffer = Buffer.from(edgeKeyJson, 'utf-8');
     const edgeKeyBase64 = edgeKeyBuffer.toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
