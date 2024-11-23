@@ -48,6 +48,7 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
                         }}
                         icon={<Send/>}
                         text="Send email test"
+                        size="default"
                     />
                 )}
 

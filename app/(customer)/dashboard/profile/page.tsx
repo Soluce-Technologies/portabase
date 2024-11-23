@@ -29,7 +29,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                         <Badge className="ml-3 hidden lg:block">{userInfo.authMethod}</Badge>
                     </PageTitle>
                     <PageActions className={"mt-2"}>
-                        <ButtonDeleteAccount/>
+                        <ButtonDeleteAccount text="Delete my account"/>
                     </PageActions>
                 </div>
             <PageContent>

@@ -5,7 +5,9 @@ import {ButtonWithConfirm} from "@/components/wrappers/Button/ButtonWithConfirm/
 import {deleteUserAction} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/delete-account.action";
 import {Trash2} from "lucide-react";
 
-export type ButtonDeleteAccountProps = {}
+export type ButtonDeleteAccountProps = {
+    text? : string
+}
 
 export const ButtonDeleteAccount = (props: ButtonDeleteAccountProps) => {
 
@@ -18,7 +20,7 @@ export const ButtonDeleteAccount = (props: ButtonDeleteAccountProps) => {
 
     return (
         <ButtonWithConfirm
-            text={"Delete my account"}
+            text={props.text ? props.text : ""}
             onClick={() => {
                 mutation.mutate()
             }}

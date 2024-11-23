@@ -11,14 +11,21 @@ export type VariantButton = {
     link: string
     destructive: string
 }
+export type sizeButton = {
+    default :string,
+    icon: string
+    sm: string
+    lg: string
+}
 
 export type ButtonWithConfirmProps = {
     icon?: any,
     text: string,
-    variant?:  keyof VariantButton ,
+    variant?: keyof VariantButton,
     className?: string,
     onClick: () => void,
-    isPending? : boolean
+    isPending?: boolean
+    size: keyof sizeButton
 };
 
 export const ButtonWithLoading = ({
@@ -28,9 +35,10 @@ export const ButtonWithLoading = ({
                                       className,
                                       onClick,
                                       isPending,
+                                      size,
                                       ...props // catch all remaining props
                                   }: ButtonWithConfirmProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
-    return(
+    return (
         <Button
             onClick={() => {
                 onClick()
@@ -38,6 +46,8 @@ export const ButtonWithLoading = ({
             variant={variant ? variant : "default"}
             className={className}
             {...props} // forward the remaining props to the Button component
+            size={size || "default"}
+
         >
             {isPending && <Loader2 className="animate-spin mr-4" size={16}/>}
             {text}

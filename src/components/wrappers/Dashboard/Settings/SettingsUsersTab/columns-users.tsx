@@ -8,6 +8,13 @@ import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {Trash2} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {ButtonDeleteAccount} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
+import {deleteUserAction} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/delete-account.action";
+import {signOutAction} from "@/features/auth/auth.action";
+import {ButtonWithConfirm} from "@/components/wrappers/Button/ButtonWithConfirm/ButtonWithConfirm";
+import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
 
 export const usersColumns: ColumnDef<User>[] = [
     {
@@ -64,5 +71,36 @@ export const usersColumns: ColumnDef<User>[] = [
         cell: ({row}) => {
             return <Badge variant="outline">{row.getValue("authMethod")}</Badge>
         },
-    }
+    },
+    {
+        header: "Action",
+        id: "actions",
+        cell: ({ row, table }) => {
+
+            const router = useRouter();
+            const mutation = useMutation({
+                mutationFn: () => deleteUserAction(row.original.id),
+                onSuccess: async () => {
+                   toast.success('User deleted successfully.');
+                   router.refresh()
+                },
+            })
+
+
+            return (
+                <div className="flex items-center gap-2">
+                    <ButtonWithLoading
+                        variant="outline"
+                        text=""
+                        icon={<Trash2 color="red" size={15} />}
+                        onClick={async () => {
+                            await mutation.mutateAsync();
+                        }}
+                        size="icon"
+                    />
+
+                </div>
+            );
+        },
+    },
 ]
