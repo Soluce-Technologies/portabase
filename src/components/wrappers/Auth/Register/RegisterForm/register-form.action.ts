@@ -11,11 +11,20 @@ export const registerUserAction = action
         const user = await prisma.user.findUnique({ where: { email: parsedInput.email } });
         console.log(user);
         if (!user && parsedInput.password === parsedInput.confirmPassword) {
+
+            const users = await prisma.user.findMany({
+                where:{
+                    deleted: { not: true },
+                }
+            })
+            const role = users.length > 0 ? "pending" : "admin"
+
             const new_user = await prisma.user.create({
                 data: {
                     name: parsedInput.name,
                     email: parsedInput.email,
                     password: await hashPassword(parsedInput.password),
+                    role: role
                 },
             });
             return {

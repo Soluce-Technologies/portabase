@@ -1,5 +1,5 @@
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
-import {usersColumns} from "@/components/wrappers/Dashboard/Settings/SettingsTabs/columns-users";
+import {usersColumns} from "@/components/wrappers/Dashboard/Settings/SettingsUsersTab/columns-users";
 import {User} from "@prisma/client";
 
 

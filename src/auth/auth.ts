@@ -5,9 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import {env} from "@/env.mjs";
 import GoogleProvider from "next-auth/providers/google";
 
-class InvalidLoginError extends CredentialsSignin {
-    code = "Invalid identifier or password"
-}
+
 
 export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -32,7 +30,7 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
                         email: credentials.email,
                     }
                 })
-                if (!user) {
+                if (!user || user.role === "pending") {
                     return null
                 }
                 const isValid = await argon2.verify(user.password, credentials.password)
@@ -46,12 +44,22 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
             clientId: env.AUTH_GOOGLE_ID,
             clientSecret: env.AUTH_GOOGLE_SECRET,
             allowDangerousEmailAccountLinking: true,
-            profile(profile) {
+            async profile(profile) {
+
+                const users = await prisma.user.findMany({
+                    where: {
+                        deleted: {not: true},
+                    }
+                })
+                const role = users.length > 0 ? "pending" : "admin"
+
+
                 return {
-                    // role: profile.email === "soluce.technologies@gmail.com" ? "admin" : "user",
+                    role: role,
                     name: profile.name,
                     email: profile.email,
                     image: profile.picture,
+                    email_verified: profile.email_verified,
                     authMethod: "google",
                 }
             },
@@ -81,26 +89,38 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
             session.user = token;
             return session;
         },
-        async signIn({ account, user }) {
-            console.log(account)
-            // const authMethod = account.provider === 'credentials' ? 'credentials' : 'oauth';
-            user = await prisma.user.findFirst({
-                where: {
-                    email: user.email,
-                }
-            })
-            if (!user) {
-                return true
+        async signIn({ account, user, profile }) {
+            const existingUser = await prisma.user.findFirst({
+                where: { email: user.email },
+            });
+
+            if (!existingUser) {
+                // Create a new user with a pending role
+                await prisma.user.create({
+                    data: {
+                        email: user.email,
+                        name: user.name,
+                        image: user.image,
+                        role: "pending",
+                        authMethod: account.provider,
+                    },
+                });
+                return false; // Prevent login if role is pending
             }
-            console.log(user)
-            // Update the user in the database with the auth method
+
+            if (existingUser.role === "pending") {
+                return false; // Prevent login if role is pending
+            }
+
+            // Update auth method if user exists
             await prisma.user.update({
-                where: { id: user.id },
+                where: { id: existingUser.id },
                 data: {
-                    authMethod: account.provider
+                    authMethod: account.provider,
                 },
             });
-            return true;
+
+            return true; // Allow login
         },
     }
 

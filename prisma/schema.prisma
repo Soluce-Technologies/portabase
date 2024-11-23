@@ -59,7 +59,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  role          String?
+  role          Role
   password      String?
   authMethod    String?   @map("auth_method")
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -69,6 +69,12 @@ model User {
   sessions      Session[]
 
   @@map("users")
+}
+
+enum Role {
+  pending
+  user
+  admin
 }
 
 model Agent {

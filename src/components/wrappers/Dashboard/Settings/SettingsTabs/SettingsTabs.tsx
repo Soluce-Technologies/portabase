@@ -1,7 +1,7 @@
 "use client"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
-import {usersColumns} from "@/components/wrappers/Dashboard/Settings/SettingsTabs/columns-users";
+import {usersColumns} from "@/components/wrappers/Dashboard/Settings/SettingsUsersTab/columns-users";
 import {User, Settings} from "@prisma/client";
 import {backupColumns} from "@/features/backup/columns";
 import {SettingsEmailTab} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/SettingsEmailTab";
