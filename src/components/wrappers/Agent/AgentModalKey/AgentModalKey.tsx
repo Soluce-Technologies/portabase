@@ -10,11 +10,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-import {PropsWithChildren} from "types-react";
 import {CodeSnippet} from "@/components/wrappers/CodeSnippet/CodeSnippet";
 import {generateEdgeKey} from "@/utils/edge_key";
 import {Copy} from "lucide-react";
-import {useState} from "react";
+import {PropsWithChildren, useState} from "react";
 import {CopyButton} from "@/components/wrappers/copy-button";
 import {Agent} from "@prisma/client";
 import {getServerUrl} from "@/utils/get-server-url";
@@ -38,10 +37,10 @@ export function AgentModalKey(props: agentRegistrationDialogProps) {
                 <DialogHeader>
                     <DialogTitle>Agent Edge Key</DialogTitle>
                 </DialogHeader>
-                <div className="sm:max-w-[375px] w-full text-center">
+                <div className="sm:max-w-[375px] w-full">
                     <CodeSnippet
                         code={code}
-                        className="w-full overflow-x-auto break-words"
+                        // className="w-full overflow-x-auto break-words"
                     />
                 </div>
                 <DialogFooter>
