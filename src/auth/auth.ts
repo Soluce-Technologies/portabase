@@ -51,6 +51,7 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
                         deleted: {not: true},
                     }
                 })
+                console.log(users.length)
                 const role = users.length > 0 ? "pending" : "admin"
 
 
@@ -96,16 +97,26 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
 
             if (!existingUser) {
                 // Create a new user with a pending role
+
+
+                const users = await prisma.user.findMany({
+                    where: {
+                        deleted: {not: true},
+                    }
+                })
+                const role = users.length > 0 ? "pending" : "admin"
+
                 await prisma.user.create({
                     data: {
                         email: user.email,
                         name: user.name,
                         image: user.image,
-                        role: "pending",
+                        role: role,
                         authMethod: account.provider,
                     },
                 });
-                return false; // Prevent login if role is pending
+                return role !== "pending";
+
             }
 
             if (existingUser.role === "pending") {

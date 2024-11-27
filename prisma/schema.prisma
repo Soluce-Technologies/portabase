@@ -100,12 +100,14 @@ model Database {
   id           String   @id @default(cuid())
   name         String
   dbms         Dbms
+  generatedId  String   @unique
   description  String?
   backupPolicy String?  @map("backup_policy")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  agentId String @map("agent_id")
-  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId     String    @map("agent_id")
+  agent       Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  lastContact DateTime? @map("last_contact")
 
   backups       Backup[]
   restaurations Restauration[]
