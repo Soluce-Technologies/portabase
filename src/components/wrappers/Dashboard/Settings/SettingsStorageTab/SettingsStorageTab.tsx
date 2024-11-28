@@ -7,7 +7,7 @@ import {useState} from "react";
 import {Settings} from "@prisma/client";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
 import {useMutation} from "@tanstack/react-query";
-import {checkConnexionToS3} from "@/features/upload/upload.action";
+import {checkConnexionToS3} from "@/features/upload/public/upload.action";
 import {toast} from "sonner";
 import {updateUserAction} from "@/components/wrappers/Dashboard/Profile/UserForm/user-form.action";
 import {useRouter} from "next/navigation";

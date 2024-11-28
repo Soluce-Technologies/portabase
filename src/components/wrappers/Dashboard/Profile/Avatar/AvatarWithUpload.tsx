@@ -3,7 +3,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {User} from "@prisma/client";
 import {UploadIcon} from "lucide-react";
 import {toast} from "sonner";
-import {uploadImageAction} from "@/features/upload/upload.action";
+import {uploadImageAction} from "@/features/upload/public/upload.action";
 import {useMutation} from "@tanstack/react-query";
 import {prisma} from "@/prisma";
 import {updateImageUserAction} from "@/components/wrappers/Dashboard/Profile/Avatar/avatar.action";

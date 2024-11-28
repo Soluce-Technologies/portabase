@@ -4,7 +4,14 @@ import {errorHandler} from "@/middleware/errorHandler";
 
 export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
+
+    // Exclude `/api/auth` and its subpaths
+    if (url.pathname.startsWith('/api/auth')) {
+        return NextResponse.next();
+    }
+
     if (url.pathname.startsWith('/api')) {
+
         const routeExists = checkRouteExists(url.pathname);
         // If the route does not exist, return a 404 JSON response
         if (!routeExists) {
@@ -31,10 +38,15 @@ function checkRouteExists(pathname) {
         // /^\/api\/auth\/\w+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
         // /^\/api\/agent\/healthcheck\/\w+$/,           // Dynamic route with an alphanumeric parameter (e.g., /api/user/username)
         /^\/api\/agent\/[^/]+\/status\/?$/,   // Dynamic route for /api/agent/[id]/status
-        /^\/api\/logs\$/,
+        /^\/api\/files\/[^/]+\/?$/,
     ];
     return routePatterns.some(pattern => pattern.test(pathname));
 }
+
+
 export const config = {
-    matcher: ['/api/agent/:path*'],
+    matcher: [
+        // '/api/agent/:path*',
+        '/api/:path*',
+    ],
 };

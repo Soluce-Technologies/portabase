@@ -1,6 +1,7 @@
 import {prisma} from "@/prisma";
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import {Dbms} from "@prisma/client";
+import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 
 // Regular expression for UUIDv4
 const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -19,7 +20,12 @@ export type Body = {
     dbms: Dbms,
     generatedId: string
 }
-
+export async function GET(request: Request) {
+    const url = await getFileUrlPresignedLocal("d4a7fa35-2506-4d01-a612-a8ef2e2cc1c5.dump")
+    return Response.json({
+        message: url
+    })
+}
 
 export async function POST(
     request: Request,
@@ -52,7 +58,7 @@ export async function POST(
 
         const database = await prisma.database.findFirst({
             where: {
-                generatedId: body.name,
+                generatedId: body.generatedId,
             }
         })
 
