@@ -1,50 +1,42 @@
 import {PageParams} from "@/types/next";
+import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
+import {buttonVariants} from "@/components/ui/button";
+
 import {prisma} from "@/prisma";
-import {AgentCard} from "@/components/wrappers/Agent/AgentCard/AgentCard";
-import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
-import {Button} from "@/components/ui/button";
-import Link from 'next/link'
-import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {GearIcon} from "@radix-ui/react-icons";
+import Link from "next/link";
+import {projects} from "@/utils/mock-data";
 
-export default async function RoutePage(props: PageParams<{}>) {
 
-    const projects = await prisma.project.findMany({})
+export default async function RoutePage(props: PageParams<{ projectId: string }>) {
+
+    const {projectId} = await props.params
+
+    // const project = await prisma.project.findUnique({
+    //     where: {
+    //         id: projectId,
+    //     },
+    // })
+
+    const project = projects.find(p => p.id === projectId)
+
 
     return (
         <Page>
-            <PageHeader>
-                <PageTitle>
-                    Projects
-                </PageTitle>
-                {projects.length > 0 && (
-                    <PageActions>
-                        <Link href={"/dashboard/projects/new"}>
-                            <Button>+ Create Project</Button>
-                        </Link>
-                    </PageActions>
-                )}
-
-            </PageHeader>
-
-            <PageContent className="mt-10">
-
-                {projects.length > 0 ?
-                    <CardsWithPagination
-                        data={projects}
-                        cardItem={AgentCard}
-                        cardsPerPage={4}
-                        numberOfColumns={1}
-                    />
-                    :
-                    <Link
-                        href="/dashboard/projects/new"
-                        className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md">
-                        Create new Project
+            <div className="justify-between gap-2 sm:flex">
+                <PageTitle className="flex items-center">
+                    {project.name}
+                    <Link className={buttonVariants({variant: "outline"})}
+                          href={`/dashboard/projects/${project.id}/edit`}>
+                        <GearIcon className="w-7 h-7"/>
                     </Link>
+                </PageTitle>
+                <PageActions className="justify-between">
 
-                }
-
-
+                </PageActions>
+            </div>
+            {/*<PageDescription className="mt-5 sm:mt-0">{project.description}</PageDescription>*/}
+            <PageContent className="flex flex-col w-full h-full">
             </PageContent>
         </Page>
     )

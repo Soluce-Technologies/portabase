@@ -20,6 +20,17 @@ services:
       - /app/node_modules
     container_name: portabase-app
 
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+
+
   db:
     image: postgres:16-alpine
     ports:

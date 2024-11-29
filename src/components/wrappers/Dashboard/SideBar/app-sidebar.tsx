@@ -4,18 +4,21 @@ import {
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {
-    ChevronDown
-} from "lucide-react";
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
 import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBarMenu/SideBarMenu";
-import Image from 'next/image';
+import {OrganizationComboBox} from "@/components/wrappers/organization/OrganizationCombobox";
+import {prisma} from "@/prisma";
 
-export function AppSidebar() {
+export async function AppSidebar() {
+
+    const organizations = await prisma.organization.findMany({})
+    const defaultOrganization = await prisma.organization.findUnique({
+        where: {
+            slug: "default"
+        }
+    })
 
     return (
         <Sidebar collapsible="icon">
@@ -25,22 +28,10 @@ export function AppSidebar() {
                 </div>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    Select Project
-                                    <ChevronDown className="ml-auto"/>
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                <DropdownMenuItem>
-                                    <span>Project 1</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Project 2</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <OrganizationComboBox
+                            organizations={organizations}
+                            defaultOrganization={defaultOrganization}
+                        />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>

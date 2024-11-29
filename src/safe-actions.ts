@@ -1,5 +1,8 @@
 import {createSafeActionClient} from "next-safe-action";
 import {currentUser} from "@/auth/current-user";
+import {baseAuth} from "@/auth/auth";
+import {Organization} from "@prisma/client";
+import {currentOrganization} from "@/auth/current-organization";
 
 export class ActionError extends Error {
     constructor(message: string) {
@@ -17,15 +20,17 @@ const handleReturnedServerError = (error: Error) => {
 
 }
 
+
 export const action = createSafeActionClient(
     {
         handleReturnedServerError: handleReturnedServerError
     });
 
-export const userAction = action.use(async ({ next, ctx }) => {
+export const userAction = action.use(async ({next, ctx}) => {
     const user = await currentUser();
+
     if (!user) {
         throw new ActionError("You must be logged in");
     }
-    return next({ ctx: { user } });
+    return next({ctx: {user}});
 });
