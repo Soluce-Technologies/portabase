@@ -7,18 +7,15 @@ export async function GET(
     {params}: { params: Promise<{ fileName: string }> }
 ) {
 
-    // Retrieve params
     const {searchParams} = new URL(request.url);
     const token = searchParams.get('token');
     const expires = searchParams.get('expires');
     const fileName = (await params).fileName
 
-
     const privateLocalDir = "private/uploads/";
     const filePath = path.join(privateLocalDir, fileName);
 
     const crypto = require('crypto');
-
 
     if (!fs.existsSync(filePath)) {
         return NextResponse.json(
