@@ -38,6 +38,7 @@ function checkRouteExists(pathname) {
         // /^\/api\/auth\/\w+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
         // /^\/api\/agent\/healthcheck\/\w+$/,           // Dynamic route with an alphanumeric parameter (e.g., /api/user/username)
         /^\/api\/agent\/[^/]+\/status\/?$/,   // Dynamic route for /api/agent/[id]/status
+        /^\/api\/agent\/[^/]+\/backup\/?$/,   // Dynamic route for /api/agent/[id]/status
         /^\/api\/files\/[^/]+\/?$/,
     ];
     return routePatterns.some(pattern => pattern.test(pathname));

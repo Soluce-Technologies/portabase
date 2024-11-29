@@ -49,6 +49,7 @@ export async function POST(
             },
             databases: databasesResponse
         }
+        console.log(response)
 
         return Response.json(response)
     } catch (error) {

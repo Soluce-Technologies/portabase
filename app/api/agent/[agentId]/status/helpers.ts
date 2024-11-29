@@ -2,18 +2,10 @@ import {Agent, Database} from "@prisma/client";
 import {prisma} from "@/prisma";
 import {NextResponse} from "next/server";
 import {Body} from "./route";
+import {isUuidv4} from "@/utils/verify-uuid";
 
 
 
-// Regular expression for UUIDv4
-const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-// Type guard to check if a string is a valid UUIDv4
-function isUuidv4(value: string): value is string {
-    console.log(value)
-    console.log(uuidv4Regex.test(value))
-    return uuidv4Regex.test(value);
-}
 
 
 
@@ -22,12 +14,12 @@ function isUuidv4(value: string): value is string {
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
 
-    const formatDatabase = (database: Database) => ({
+    const formatDatabase = (database: Database, backupAction: boolean) => ({
         generatedId: database.generatedId,
         dbms: database.dbms,
         data: {
             backup: {
-                action: true,
+                action: backupAction,
                 cron: "",
             },
             restore: {
@@ -43,6 +35,8 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 generatedId: db.generatedId,
             },
         });
+
+        let backupAction: boolean = false
 
         if (!existingDatabase) {
             if (!isUuidv4(db.generatedId)) {
@@ -62,7 +56,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
             });
 
             if (databaseCreated) {
-                databasesResponse.push(formatDatabase(databaseCreated));
+                databasesResponse.push(formatDatabase(databaseCreated, backupAction));
             }
         } else {
             const databaseUpdated = await prisma.database.update({
@@ -73,7 +67,27 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                     lastContact: lastContact,
                 },
             });
-            databasesResponse.push(formatDatabase(databaseUpdated));
+
+            const backup = await prisma.backup.findFirst({
+                where: {
+                    databaseId: databaseUpdated.id,
+                    status: "waiting"
+                }
+            })
+
+            if(backup){
+                backupAction = true
+                await prisma.backup.update({
+                    where:{
+                        id: backup.id
+                    },
+                    data: {
+                        status: "ongoing"
+                    }
+                })
+            }
+
+            databasesResponse.push(formatDatabase(databaseUpdated, backupAction));
         }
     }
     return databasesResponse;

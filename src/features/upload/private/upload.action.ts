@@ -6,21 +6,27 @@ import {getServerUrl} from "@/utils/get-server-url";
 
 const privateLocalDir = "private/uploads/";
 
-async function uploadLocalPrivate(fileName: string, buffer: any) {
 
+export async function uploadLocalPrivate(fileName: string, buffer: any) {
     try {
         await mkdir(path.join(process.cwd(), privateLocalDir), { recursive: true });
-        return await writeFile(
-            path.join(process.cwd(), privateLocalDir + fileName),
+
+        await writeFile(
+            path.join(process.cwd(), privateLocalDir, fileName),
             buffer
-        )
+        );
+
+        return {
+            success: true,
+            message: "File uploaded successfully",
+            filePath: path.join(privateLocalDir, fileName),
+        };
 
     } catch (error) {
-        console.log("Error occured ", error);
-        throw new Error('An error occured while importing private file');
+        console.error("Error occurred:", error);
+        throw new Error("An error occurred while importing the private file");
     }
 }
-
 
 export async function getFileUrlPresignedLocal(fileName: string) {
     try {

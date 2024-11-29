@@ -97,13 +97,15 @@ enum Dbms {
 }
 
 model Database {
-  id           String   @id @default(cuid())
-  name         String
-  dbms         Dbms
-  generatedId  String   @unique
-  description  String?
-  backupPolicy String?  @map("backup_policy")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id                 String   @id @default(cuid())
+  name               String
+  dbms               Dbms
+  generatedId        String   @unique
+  description        String?
+  backupPolicy       String?  @map("backup_policy")
+  createdAt          DateTime @default(now()) @map("created_at")
+  isWaitingForBackup Boolean? @default(false)
+  backupToRestore    String?
 
   agentId     String    @map("agent_id")
   agent       Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)

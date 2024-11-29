@@ -11,6 +11,7 @@ import {GearIcon} from "@radix-ui/react-icons";
 import Link from "next/link";
 import {AgentModalKey} from "@/components/wrappers/Agent/AgentModalKey/AgentModalKey";
 import {KeyRound} from "lucide-react";
+import {BackupButton} from "@/components/wrappers/BackupButton/BackupButton";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
@@ -76,7 +77,6 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
 
     const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null
 
-
     return (
         <Page>
                 <div className="justify-between gap-2 sm:flex">
@@ -93,7 +93,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         </AgentModalKey>
                     </PageTitle>
                     <PageActions className="justify-between">
-                        <Button>Backup</Button>
+                        <BackupButton/>
                         <Button>Restore</Button>
                     </PageActions>
                 </div>
