@@ -1,27 +1,26 @@
 "use server"
-import {mkdir} from "fs/promises";
+import {mkdir, writeFile} from "fs/promises";
 import path from "path";
 import * as fs from "node:fs";
 import {getServerUrl} from "@/utils/get-server-url";
 
-
-// async function uploadLocalPrivate(fileName: string, buffer: any) {
-    // const localDir = "public/uploads/"
-    // try {
-    //     await mkdir(path.join(process.cwd(), localDir), { recursive: true });
-    //     return await writeFile(
-    //         path.join(process.cwd(), localDir + fileName),
-    //         buffer
-    //     )
-    //
-    // } catch (error) {
-    //     console.log("Error occured ", error);
-    //     throw new Error('An error occured while importing image');
-    //
-    // }
-// }
-
 const privateLocalDir = "private/uploads/";
+
+async function uploadLocalPrivate(fileName: string, buffer: any) {
+
+    try {
+        await mkdir(path.join(process.cwd(), privateLocalDir), { recursive: true });
+        return await writeFile(
+            path.join(process.cwd(), privateLocalDir + fileName),
+            buffer
+        )
+
+    } catch (error) {
+        console.log("Error occured ", error);
+        throw new Error('An error occured while importing private file');
+    }
+}
+
 
 export async function getFileUrlPresignedLocal(fileName: string) {
     try {
