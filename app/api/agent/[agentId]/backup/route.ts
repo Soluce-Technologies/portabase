@@ -26,7 +26,7 @@ export async function POST(
         const agentId = (await params).agentId
         const formData = await request.formData();
         const generatedId = formData.get("generatedId") as string;
-
+        console.log(formData)
 
 
         if (!isUuidv4(generatedId)) {
@@ -75,8 +75,10 @@ export async function POST(
             const fileName = `${uuid}.dump`
             const buffer = Buffer.from(await file.arrayBuffer());
 
-            const {success, message, filePath} = await uploadLocalPrivate(fileName, buffer)
+            console.log(buffer)
 
+            const {success, message, filePath} = await uploadLocalPrivate(fileName, buffer)
+            console.log(success, message, filePath)
             if (!success){
                 return NextResponse.json(
                     {error: message},
@@ -98,7 +100,7 @@ export async function POST(
                 message: true,
                 details: "Backup successfully uploaded"
             }
-            return Response.json(response)
+            return Response.json(response, {status: 200})
 
         }else{
             await prisma.backup.update({
@@ -114,7 +116,7 @@ export async function POST(
                 message: true,
                 details: "Backup successfully updated with status failed"
             }
-            return Response.json(response)
+            return Response.json(response , {status: 200})
         }
 
     } catch (error) {
