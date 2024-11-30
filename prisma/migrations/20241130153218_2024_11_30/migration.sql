@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - A unique constraint covering the columns `[generatedId]` on the table `databases` will be added. If there are existing duplicate values, this will fail.
-
-*/
 -- AlterTable
 ALTER TABLE "databases" ADD COLUMN     "project_id" TEXT;
 
@@ -33,9 +27,6 @@ CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "projects_slug_key" ON "projects"("slug");
-
--- CreateIndex
-CREATE UNIQUE INDEX "databases_generatedId_key" ON "databases"("generatedId");
 
 -- AddForeignKey
 ALTER TABLE "projects" ADD CONSTRAINT "projects_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

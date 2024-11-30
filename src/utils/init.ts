@@ -74,7 +74,7 @@ async function createDefaultOrganization() {
         }
     })
     if (!defaultOrganization) {
-        console.log("==== Creating default organization... ====\n")
+        console.log("==== Creating default Organization... ====\n")
         await prisma.organization.create({
             data: {
                 ...defaultOrganizationConf

@@ -11,7 +11,6 @@ import {prisma} from "@/prisma";
 export default async function Layout({children}: { children: React.ReactNode }) {
 
     const user = await currentUser()
-    console.log(user)
     if (user) {
         const userInfo = await prisma.user.findUnique({
             where: {

@@ -1,7 +1,7 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {prisma} from "@/prisma";
-import {ProjectForm} from "@/components/wrappers/project/ProjectForm";
+import {ProjectForm} from "@/components/wrappers/Project/ProjectForm";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
@@ -15,6 +15,12 @@ export default async function RoutePage(props: PageParams<{}>) {
         },
     })
 
+    const organization = await prisma.organization.findFirst({
+        where: {
+            slug: 'default',
+        }
+    })
+
     return (
         <Page>
             <PageHeader>
@@ -23,12 +29,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 </PageTitle>
             </PageHeader>
             <PageContent>
-                Add databases
-                {availableDatabases.map(database =>
-                    <div key={database.id}>
-                        {database.name}
-                    </div>)}
-                <ProjectForm/>
+                <ProjectForm databases={availableDatabases} organization={organization}/>
             </PageContent>
         </Page>
     )

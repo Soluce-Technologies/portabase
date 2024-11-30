@@ -20,12 +20,14 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import {FormControl} from "@/components/ui/form";
+import {SidebarMenuButton} from "@/components/ui/sidebar";
 
 export type comboBoxProps = {
     values: Array<{ value: string, label: string }>
     defaultValue?: string
     onValueChange?: any
     searchField?: boolean
+    sideBar?: boolean
 }
 
 
@@ -41,19 +43,33 @@ export function ComboBox(props: comboBoxProps) {
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-full justify-between"
-                >
-                    {value
-                        ? choices.find((choice) => choice.value === value)?.label
-                        : "Select choice..."}
-                    <ChevronDown className="opacity-50"/>
-                </Button>
+                {props.sideBar ?
+                    <SidebarMenuButton>
+                        {value
+                            ? choices.find((choice) => choice.value === value)?.label
+                            : "Select choice..."}
+                        <ChevronDown className="ml-auto"/>
+                    </SidebarMenuButton>
+                    :
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-full justify-between"
+                    >
+                        {value
+                            ? choices.find((choice) => choice.value === value)?.label
+                            : "Select choice..."}
+                        <ChevronDown className="opacity-50"/>
+                    </Button>
+                }
+
+
             </PopoverTrigger>
-            <PopoverContent className="p-0 popover-content-width-full">
+            <PopoverContent
+
+                className="p-0 popover-content-width-full"
+            >
                 <Command>
                     {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
                     <CommandList>

@@ -5,11 +5,21 @@ import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {projects} from "@/utils/mock-data";
-import {ProjectCard} from "@/components/wrappers/project/ProjectCard";
+import {ProjectCard} from "@/components/wrappers/Project/ProjectCard";
 
 export default async function RoutePage(props: PageParams<{}>) {
 
-    // const projects = await prisma.project.findMany({})
+
+    const projects = await prisma.project.findMany({
+        where: {
+            organization: {
+                slug: "default",
+            }
+        },
+        include:{
+            databases: {}
+        }
+    })
 
     return (
         <Page>
@@ -44,8 +54,6 @@ export default async function RoutePage(props: PageParams<{}>) {
                     </Link>
 
                 }
-
-
             </PageContent>
         </Page>
     )

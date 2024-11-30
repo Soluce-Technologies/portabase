@@ -8,6 +8,7 @@ import {Organization} from "@prisma/client";
 export type organizationComboBoxProps = {
     organizations: Organization[]
     defaultOrganization: Organization
+
 }
 
 
@@ -31,6 +32,10 @@ export function OrganizationComboBox(props: organizationComboBoxProps) {
     }
 
     return (
-        <ComboBox values={values} defaultValue={defaultOrganization.id} onValueChange={updateSession}/>
+        <ComboBox
+            sideBar={true}
+            values={values}
+            defaultValue={defaultOrganization.id}
+            onValueChange={updateSession}/>
     )
 }

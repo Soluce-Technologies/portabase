@@ -12,13 +12,15 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
 
     const {projectId} = await props.params
 
-    // const project = await prisma.project.findUnique({
-    //     where: {
-    //         id: projectId,
-    //     },
-    // })
+    const project = await prisma.project.findUnique({
+        where: {
+            id: projectId,
+        },
+        include:{
+            databases: {}
+        }
+    })
 
-    const project = projects.find(p => p.id === projectId)
 
 
     return (
@@ -35,7 +37,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
 
                 </PageActions>
             </div>
-            {/*<PageDescription className="mt-5 sm:mt-0">{project.description}</PageDescription>*/}
+            {/*<PageDescription className="mt-5 sm:mt-0">{Project.description}</PageDescription>*/}
             <PageContent className="flex flex-col w-full h-full">
             </PageContent>
         </Page>

@@ -11,12 +11,14 @@ export const ProjectCard = (props: projectCardProps) => {
 
     const {data: project} = props;
 
+
     return (
         <Link href={`/dashboard/projects/${project.id}`}>
             <Card className="flex flex-row justify-between">
                 <div className="">
                     <CardHeader>{project.name}</CardHeader>
                     <CardContent>
+                        {project.databases.length} databases
                     </CardContent>
                 </div>
             </Card>

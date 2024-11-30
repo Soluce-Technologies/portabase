@@ -3,7 +3,6 @@ import {User} from "@prisma/client";
 
 export const currentUser = async () => {
     const session = await baseAuth();
-    console.log("mysession", session)
     if (!session?.user) {
         return null;
     }

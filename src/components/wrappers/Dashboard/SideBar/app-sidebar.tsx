@@ -3,12 +3,12 @@ import {
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu,
+    SidebarMenu, SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
 import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBarMenu/SideBarMenu";
-import {OrganizationComboBox} from "@/components/wrappers/organization/OrganizationCombobox";
+import {OrganizationComboBox} from "@/components/wrappers/Organization/OrganizationCombobox";
 import {prisma} from "@/prisma";
 
 export async function AppSidebar() {

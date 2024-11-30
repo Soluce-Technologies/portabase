@@ -3,7 +3,7 @@ import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {prisma} from "@/prisma";
 import {notFound} from "next/navigation";
-import {ProjectForm} from "@/components/wrappers/project/ProjectForm";
+import {ProjectForm} from "@/components/wrappers/Project/ProjectForm";
 
 
 export default async function RoutePage(props: PageParams<{
@@ -16,12 +16,31 @@ export default async function RoutePage(props: PageParams<{
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
+        },
+        include: {
+            databases: {}
         }
     });
 
     if (!project) {
         notFound();
     }
+    const organization = await prisma.organization.findFirst({
+        where: {
+            slug: 'default',
+        }
+    })
+    const availableDatabases = await prisma.database.findMany({
+        where: {
+            OR: [
+                { projectId: null },
+                { projectId: project.id },
+            ],
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+    })
 
 
     return (
@@ -32,7 +51,7 @@ export default async function RoutePage(props: PageParams<{
                 </PageTitle>
             </PageHeader>
             <PageContent>
-                <ProjectForm defaultValues={project} projectId={project.id}/>
+                <ProjectForm organization={organization} databases={availableDatabases} defaultValues={project} projectId={project.id}/>
             </PageContent>
         </Page>
     )
