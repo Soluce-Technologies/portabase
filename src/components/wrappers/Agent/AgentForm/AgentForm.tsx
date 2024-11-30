@@ -71,9 +71,9 @@ export const AgentForm = (props: agentFormProps) => {
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={"Project 1"} {...field} />
+                                            placeholder="Agent 1" {...field} />
                                     </FormControl>
-                                    <FormDescription>{"Your agent project name"}</FormDescription>
+                                    <FormDescription>Your agent project name</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -89,14 +89,14 @@ export const AgentForm = (props: agentFormProps) => {
                                     <FormControl>
                                         <Input
                                             value={field.value ?? ""}
-                                            placeholder={"agent-5-project-1"} {...field}
+                                            placeholder="agent-1" {...field}
                                             onChange={(e) => {
                                                 const value = e.target.value.replaceAll(" ", "-").toLowerCase()
                                                 field.onChange(value)
                                             }}
                                         />
                                     </FormControl>
-                                    <FormDescription>{'The slug is used in the url of the agent'}</FormDescription>
+                                    <FormDescription>The slug is used in the url of the agent</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -111,10 +111,10 @@ export const AgentForm = (props: agentFormProps) => {
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={'This agent is for the client exemple.com'} {...field}
+                                            placeholder='This agent is for the client exemple.com' {...field}
                                             value={field.value ?? ""}/>
                                     </FormControl>
-                                    <FormDescription>{"Enter your project agent description"}</FormDescription>
+                                    <FormDescription>Enter your project agent description</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}

@@ -6,7 +6,6 @@ import {env} from "@/env.mjs";
 import GoogleProvider from "next-auth/providers/google";
 
 
-
 export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
     adapter: PrismaAdapter(prisma),
     theme: {
@@ -79,20 +78,22 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
         //     // session.user.authMethod = user.authMethod;
         //     return session
         // },
-        async jwt({ token, trigger, session, user }) {
+        async jwt({token, trigger, session, user}) {
             if (trigger === "update" && session) {
-                return { ...token, ...session?.user };
+                return {...session, user: {...token, ...session?.user}};
+                // return {...token, ...session?.user};
             }
 
-            return { ...token, ...user };
+            return {...token, ...user};
         },
-        async session({ session, token, user }) {
-            session.user = token;
+        async session({session, token, user}) {
+            session.user = token.user;
+            // session.user = token;
             return session;
         },
-        async signIn({ account, user, profile }) {
+        async signIn({account, user, profile}) {
             const existingUser = await prisma.user.findFirst({
-                where: { email: user.email },
+                where: {email: user.email},
             });
 
             if (!existingUser) {
@@ -125,7 +126,7 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
 
             // Update auth method if user exists
             await prisma.user.update({
-                where: { id: existingUser.id },
+                where: {id: existingUser.id},
                 data: {
                     authMethod: account.provider,
                 },

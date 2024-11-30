@@ -1,10 +1,11 @@
 "use client"
-import {SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
+
+import {useEffect, useState} from "react";
 import Link from "next/link";
+import {SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
-import {PropsWithChildren, useEffect, useState} from "react";
-import {ChartArea, Home, Settings, ShieldHalf} from "lucide-react";
+import {ChartArea, FolderKanban, Home, Settings, ShieldHalf} from "lucide-react";
 import {usePathname} from "next/navigation";
 
 export type SidebarMenuCustomProps = {}
@@ -20,6 +21,11 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
         //     url: "/",
         //     icon: Home,
         // },
+        {
+            title: "Projects",
+            url: "projects",
+            icon: FolderKanban,
+        },
         {
             title: "Agents",
             url: "agents",

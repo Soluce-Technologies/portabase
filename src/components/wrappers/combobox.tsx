@@ -1,8 +1,8 @@
 "use client"
 
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
-import {Check, ChevronsUpDown} from "lucide-react"
+import {Check, ChevronDown} from "lucide-react"
 
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
@@ -45,15 +45,15 @@ export function ComboBox(props: comboBoxProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className="w-full justify-between"
                 >
                     {value
                         ? choices.find((choice) => choice.value === value)?.label
                         : "Select choice..."}
-                    <ChevronsUpDown className="opacity-50"/>
+                    <ChevronDown className="opacity-50"/>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="p-0 popover-content-width-full">
                 <Command>
                     {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
                     <CommandList>
@@ -64,8 +64,8 @@ export function ComboBox(props: comboBoxProps) {
                                     key={choice.value}
                                     value={choice.value}
                                     onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        onValueChange(currentValue === value ? "" : currentValue)
+                                        setValue(currentValue)
+                                        onValueChange(currentValue)
                                         setOpen(false)
                                     }}
                                 >
@@ -93,6 +93,7 @@ export type comboBoxFormItemProps = comboBoxProps & {
     onChange: any
 };
 
+/** Combobox to use when working with zodForm. */
 export function ComboBoxFormItem(props: comboBoxFormItemProps) {
 
     const {values: choices, searchField = false, value, name, onChange} = props;
@@ -108,7 +109,7 @@ export function ComboBoxFormItem(props: comboBoxFormItemProps) {
                         role="combobox"
                         aria-expanded={open}
                         className={cn(
-                            "w-[200px] justify-between",
+                            "w-full justify-between",
                             !value && "text-muted-foreground"
                         )}
                     >
@@ -117,11 +118,11 @@ export function ComboBoxFormItem(props: comboBoxFormItemProps) {
                                 (choice) => choice.value === value
                             )?.label
                             : `Select ${name}`}
-                        <ChevronsUpDown className="opacity-50"/>
+                        <ChevronDown className="opacity-50"/>
                     </Button>
                 </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="p-0 popover-content-width-full">
                 <Command>
                     {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
                     <CommandList>

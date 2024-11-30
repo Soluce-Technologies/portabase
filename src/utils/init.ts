@@ -6,6 +6,10 @@ import {env} from "@/env.mjs";
 export function init() {
     consoleAscii()
     console.log("====Init Functions====")
+
+    createDefaultOrganization().then(() => {
+    })
+
     createSettingsIfNotExist()
         .then(() => {
             console.log('====Initialization completed====');
@@ -31,20 +35,19 @@ async function createSettingsIfNotExist() {
     }
 
 
-
     const settings = await prisma.settings.findUnique({
         where: {
             name: "system",
         }
     })
-    if(!settings){
+    if (!settings) {
         console.log("====Init Setting : Create ====")
         await prisma.settings.create({
             data: {
                 ...configSettings
             }
         })
-    }else{
+    } else {
         console.log("====Init Setting : Update ====")
         await prisma.settings.update({
             where: {
@@ -58,7 +61,29 @@ async function createSettingsIfNotExist() {
 
 }
 
-function consoleAscii(){
+async function createDefaultOrganization() {
+
+    const defaultOrganizationConf = {
+        slug: "default",
+        name: "Default Organization",
+    }
+
+    const defaultOrganization = await prisma.organization.findUnique({
+        where: {
+            slug: "default",
+        }
+    })
+    if (!defaultOrganization) {
+        console.log("==== Creating default organization... ====\n")
+        await prisma.organization.create({
+            data: {
+                ...defaultOrganizationConf
+            }
+        })
+    }
+}
+
+function consoleAscii() {
     console.log("\n" +
         "    ____                __          __                          _____                               \n" +
         "   / __ \\ ____   _____ / /_ ____ _ / /_   ____ _ _____ ___     / ___/ ___   _____ _   __ ___   _____\n" +
