@@ -2,7 +2,7 @@
 
 import {userAction} from "@/safe-actions";
 import {prisma} from "@/prisma";
-import {ProjectSchema} from "@/components/wrappers/Project/ProjectForm.schema";
+import {ProjectSchema} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/ProjectForm.schema";
 import {z} from "zod";
 import {ServerActionResult} from "@/types/action-type";
 import {Projects} from "@prisma/client";
@@ -42,7 +42,7 @@ export const createProjectAction = userAction
                 success: true,
                 value: project,
                 actionSuccess: {
-                    message: "Project has been successfully created.",
+                    message: "ProjectsForm has been successfully created.",
                     messageParams: {projectName: parsedInput.data.name},
                 },
             };
@@ -50,7 +50,7 @@ export const createProjectAction = userAction
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to create Project.",
+                    message: "Failed to create ProjectsForm.",
                     status: 500, // Optional: Use a meaningful status code
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: {projectName: parsedInput.data.name},
@@ -130,7 +130,7 @@ export const updateProjectAction = userAction
                 success: true,
                 value: updatedProject,
                 actionSuccess: {
-                    message: "Project has been successfully updated.",
+                    message: "ProjectsForm has been successfully updated.",
                     messageParams: {projectName: parsedInput.data.name},
                 },
             };
@@ -138,7 +138,7 @@ export const updateProjectAction = userAction
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to update Project.",
+                    message: "Failed to update ProjectsForm.",
                     status: 500, // Optional: Use a meaningful status code
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: {projectName: parsedInput.data.name},

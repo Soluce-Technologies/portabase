@@ -12,6 +12,7 @@ export type cardsWithPaginationProps = {
     cardsPerPage?: number
     numberOfColumns?: number
     maxVisiblePages?: number
+    extendedProps?: any
 }
 
 
@@ -40,12 +41,11 @@ export const CardsWithPagination = (props: cardsWithPaginationProps) => {
         goToPage(Math.min(totalPages, currentPage + 1))
     }
 
-
     return (
         <div className={cn("flex flex-col h-full justify-between", className)}>
             <div className={cn(`grid h-max auto-rows-min gap-4 md:grid-cols-${numberOfColumns}`)}>
                 {currentCards.map((card, key) => (
-                    <CardItem key={key} data={card}/>
+                    <CardItem key={key} data={card} extendedProps={props.extendedProps} />
                 ))}
             </div>
             <PaginationNavigation

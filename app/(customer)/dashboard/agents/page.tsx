@@ -9,7 +9,6 @@ import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/
 export default async function RoutePage(props: PageParams<{}>) {
 
     const agents = await prisma.agent.findMany({})
-
     return (
         <Page>
             <PageHeader>
@@ -23,11 +22,8 @@ export default async function RoutePage(props: PageParams<{}>) {
                         </Link>
                     </PageActions>
                 )}
-
             </PageHeader>
-
             <PageContent className="mt-10">
-
                 {agents.length > 0 ?
                     <CardsWithPagination
                         data={agents}
@@ -41,10 +37,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                         className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md">
                         Create new Agent
                     </Link>
-
                 }
-
-
             </PageContent>
         </Page>
     )

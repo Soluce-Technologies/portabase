@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {projects} from "@/utils/mock-data";
-import {ProjectCard} from "@/components/wrappers/Project/ProjectCard";
+import {ProjectCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectCard";
 
 export default async function RoutePage(props: PageParams<{}>) {
 

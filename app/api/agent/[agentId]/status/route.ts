@@ -1,6 +1,6 @@
 import {prisma} from "@/prisma";
-import {NextRequest, NextResponse} from "next/server";
-import {Agent, Database, Dbms} from "@prisma/client";
+import {NextResponse} from "next/server";
+import {Dbms} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {handleDatabases} from "./helpers";
 
@@ -30,7 +30,7 @@ export async function POST(
     try {
         const agentId = (await params).agentId
         const body: Body = await request.json();
-        const lastContact = new Date()
+        const lastContact = new Date();
 
         const agent = await prisma.agent.findFirst({
             where: {
@@ -41,6 +41,15 @@ export async function POST(
             return NextResponse.json({error: "Agent not found"}, {status: 404})
         }
         const databasesResponse = await handleDatabases(body, agent, lastContact)
+
+        await prisma.agent.update({
+            where:{
+                id: agentId,
+            },
+            data:{
+                lastContact: lastContact,
+            }
+        })
 
         const response = {
             agent: {

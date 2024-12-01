@@ -14,8 +14,8 @@ import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {useMutation} from "@tanstack/react-query";
-import {ProjectSchema, ProjectType} from "@/components/wrappers/Project/ProjectForm.schema";
-import {createProjectAction, updateProjectAction} from "@/components/wrappers/Project/project-form.action";
+import {ProjectSchema, ProjectType} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/ProjectForm.schema";
+import {createProjectAction, updateProjectAction} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/project-form.action";
 import {useRouter} from "next/navigation";
 import {Database, Organization, Project, Projects} from "@prisma/client"
 import {MultiSelect} from "@/components/wrappers/MultiSelect/MultiSelect";

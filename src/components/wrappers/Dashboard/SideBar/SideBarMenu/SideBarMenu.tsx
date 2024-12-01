@@ -5,7 +5,7 @@ import Link from "next/link";
 import {SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
-import {ChartArea, FolderKanban, Home, Settings, ShieldHalf} from "lucide-react";
+import {ChartArea, FolderKanban, Home, Layers, Settings, ShieldHalf} from "lucide-react";
 import {usePathname} from "next/navigation";
 
 export type SidebarMenuCustomProps = {}
@@ -24,7 +24,7 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
         {
             title: "Projects",
             url: "projects",
-            icon: FolderKanban,
+            icon: Layers,
         },
         {
             title: "Agents",

@@ -8,3 +8,9 @@ export function timeAgo(rawDate: string | number | Date) {
     const date = new Date(rawDate)
     return "Not implemented"
 }
+
+export function formatDateLastContact(lastContact: string | number | Date | null) {
+    return lastContact
+        ? format(new Date(lastContact), 'dd/MM/yyyy HH:mm')
+        : "Never connected."
+}

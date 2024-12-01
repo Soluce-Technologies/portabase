@@ -1,11 +1,13 @@
 import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {buttonVariants} from "@/components/ui/button";
-
 import {prisma} from "@/prisma";
 import {GearIcon} from "@radix-ui/react-icons";
 import Link from "next/link";
-import {projects} from "@/utils/mock-data";
+import {ButtonDeleteProject} from "@/components/wrappers/Dashboard/Projects/ButtonDeleteProject/ButtonDeleteProject";
+import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
+import {ProjectDatabaseCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectDatabaseCard";
+import {notFound} from "next/navigation";
 
 
 export default async function RoutePage(props: PageParams<{ projectId: string }>) {
@@ -21,7 +23,9 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
         }
     })
 
-
+    if(!project){
+        notFound()
+    }
 
     return (
         <Page>
@@ -34,11 +38,26 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
                     </Link>
                 </PageTitle>
                 <PageActions className="justify-between">
-
+                    <ButtonDeleteProject
+                        text={"Delete Project"}
+                    />
                 </PageActions>
             </div>
-            {/*<PageDescription className="mt-5 sm:mt-0">{Project.description}</PageDescription>*/}
+            <PageDescription>
+                The list of associated databases
+            </PageDescription>
             <PageContent className="flex flex-col w-full h-full">
+                {project.databases.length > 0 ?
+                    <CardsWithPagination
+                        data={project.databases}
+                        cardItem={ProjectDatabaseCard}
+                        cardsPerPage={4}
+                        numberOfColumns={1}
+                        extendedProps={project}
+                    />
+                    :
+                    null
+                }
             </PageContent>
         </Page>
     )
