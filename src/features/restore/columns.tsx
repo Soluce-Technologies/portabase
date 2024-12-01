@@ -6,20 +6,17 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel, DropdownMenuSeparator,
+    DropdownMenuLabel,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {Download, MoreHorizontal, Trash2} from "lucide-react";
 import {ReloadIcon} from "@radix-ui/react-icons";
+import {Restauration} from "@prisma/client";
 
-export type Restore = {
-    id: string
-    createdAt: string
-    status: "pending" | "processing" | "success" | "failed"
-}
 
-export const restoreColumns: ColumnDef<Restore>[] = [
+
+export const restoreColumns: ColumnDef<Restauration>[] = [
     {
         accessorKey: "id",
         header: "Reference",

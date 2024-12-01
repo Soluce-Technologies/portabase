@@ -12,12 +12,9 @@ import {
 import {Button} from "@/components/ui/button";
 import {Download, MoreHorizontal, Trash2} from "lucide-react";
 import {ReloadIcon} from "@radix-ui/react-icons";
+import {Backup} from "@prisma/client";
 
-export type Backup = {
-    id: string
-    createdAt: string
-    status: "pending" | "processing" | "success" | "failed"
-}
+
 
 export const backupColumns: ColumnDef<Backup>[] = [
     {
@@ -41,7 +38,6 @@ export const backupColumns: ColumnDef<Backup>[] = [
     {
         id: "actions",
         cell: ({row}) => {
-            const payment = row.original
 
             return (
                 <DropdownMenu>

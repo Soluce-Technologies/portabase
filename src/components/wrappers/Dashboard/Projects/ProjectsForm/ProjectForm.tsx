@@ -17,7 +17,7 @@ import {useMutation} from "@tanstack/react-query";
 import {ProjectSchema, ProjectType} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/ProjectForm.schema";
 import {createProjectAction, updateProjectAction} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/project-form.action";
 import {useRouter} from "next/navigation";
-import {Database, Organization, Project, Projects} from "@prisma/client"
+import {Database, Organization, Projects} from "@prisma/client"
 import {MultiSelect} from "@/components/wrappers/MultiSelect/MultiSelect";
 import {ZodString} from "zod";
 import {toast} from "sonner";

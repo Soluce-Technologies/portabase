@@ -12,7 +12,6 @@ export default async function RoutePage(props: PageParams<{
 
     const {projectId} = await props.params
 
-    const user = await requiredCurrentUser()
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,

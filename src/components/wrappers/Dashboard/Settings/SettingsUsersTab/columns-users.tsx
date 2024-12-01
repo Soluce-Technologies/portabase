@@ -9,11 +9,7 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {Trash2} from "lucide-react";
-import {Button} from "@/components/ui/button";
-import {ButtonDeleteAccount} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
 import {deleteUserAction} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/delete-account.action";
-import {signOutAction} from "@/features/auth/auth.action";
-import {ButtonWithConfirm} from "@/components/wrappers/Button/ButtonWithConfirm/ButtonWithConfirm";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
 
 export const usersColumns: ColumnDef<User>[] = [

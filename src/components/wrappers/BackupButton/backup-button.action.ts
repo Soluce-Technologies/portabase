@@ -6,7 +6,6 @@ import {ServerActionResult} from "@/types/action-type";
 import {Backup} from "@prisma/client";
 
 
-
 export const backupButtonAction = userAction
     .schema(z.string())
     .action(async ({ parsedInput, ctx }): Promise<ServerActionResult<Backup>> => {
@@ -33,7 +32,7 @@ export const backupButtonAction = userAction
                 success: false,
                 actionError: {
                     message: "Failed to create backup.",
-                    status: 500, // Optional: Use a meaningful status code
+                    status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: { databaseId: parsedInput },
                 },

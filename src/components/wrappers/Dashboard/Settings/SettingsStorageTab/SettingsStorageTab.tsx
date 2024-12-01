@@ -77,6 +77,7 @@ export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
                     </div>
                     <div>
                         <ButtonWithLoading
+                            size={"default"}
                             disabled={!isSwitched}
                             isPending={mutation.isPending}
                             onClick={async () => {
