@@ -7,4 +7,4 @@ export const ProjectSchema = z.object({
     databases: z.array(z.string()),
 });
 
-export type ProjectSchema = z.infer<typeof ProjectSchema>;
+export type ProjectType = z.infer<typeof ProjectSchema>;

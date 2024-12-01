@@ -14,16 +14,18 @@ import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {useMutation} from "@tanstack/react-query";
-import {ProjectSchema} from "@/components/wrappers/Project/ProjectForm.schema";
-import {createProjectAction} from "@/components/wrappers/Project/ProjectForm.action";
+import {ProjectSchema, ProjectType} from "@/components/wrappers/Project/ProjectForm.schema";
+import {createProjectAction, updateProjectAction} from "@/components/wrappers/Project/project-form.action";
 import {useRouter} from "next/navigation";
-import {Database, Organization} from "@prisma/client"
+import {Database, Organization, Project, Projects} from "@prisma/client"
 import {MultiSelect} from "@/components/wrappers/MultiSelect/MultiSelect";
 import {ZodString} from "zod";
+import {toast} from "sonner";
+import {ServerActionResult} from "@/types/action-type";
 
 
 export type projectFormProps = {
-    defaultValues?: ProjectSchema;
+    defaultValues?: ProjectType;
     databases: Database[],
     organization: Organization,
     projectId?: string;
@@ -43,7 +45,7 @@ export const ProjectForm = (props: projectFormProps) => {
         }));
     };
 
-    const formatDefaultDatabases = (databases: ProjectSchema["databases"]): string[] => {
+    const formatDefaultDatabases = (databases: ProjectType['databases']): string[] => {
         return databases.map(database => database.id);
     };
 
@@ -60,21 +62,18 @@ export const ProjectForm = (props: projectFormProps) => {
     });
 
     const mutation = useMutation({
-        mutationFn: async (values: ProjectSchema) => {
+        mutationFn: async (values: ProjectType) => {
             console.log(values)
-            const projectCreated = await createProjectAction({data: values, organizationId: props.organization.id});
-            console.log(projectCreated)
-            //
-            // if (data) {
-            //     toast.success(`Success`);
-            //     router.push(`/dashboard/projects/${data.id}`);
-            //     router.refresh()
-            // }
-            //
-            // if (validationErrors) {
-            //     toast.success(`Error`);
-            //
-            // }
+            const project: Projects = isCreate ?  await createProjectAction({data: values, organizationId: props.organization.id}) : await updateProjectAction({data: values, organizationId: props.organization.id, projectId: props.projectId});
+            console.log(project)
+
+            if (project.data.success) {
+                toast.success(project.data.actionSuccess.message);
+                router.push(`/dashboard/projects/${project.data.value.id}`);
+                router.refresh()
+            }else{
+                toast.success(project.data.actionError.message);
+            }
 
 
         }
@@ -147,7 +146,7 @@ export const ProjectForm = (props: projectFormProps) => {
                         }
                     />
                     <Button>
-                        Create Project
+                        {isCreate ? `Create Project` : `Update Project`}
                     </Button>
                 </Form>
             </CardContent>
