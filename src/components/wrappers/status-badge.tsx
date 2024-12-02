@@ -2,7 +2,7 @@ import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
 
 export type statusBadgeProps = {
-    status: "pending" | "processing" | "success" | "failed"
+    status: "pending" | "ongoing" | "success" | "failed"
 }
 
 
@@ -14,7 +14,7 @@ export const StatusBadge = ({status}: statusBadgeProps) => {
         case 'pending':
             style = "text-yellow-500 border-yellow-500"
             break
-        case 'processing':
+        case 'ongoing':
             style = "text-orange-500 border-orange-500"
             break
         case 'failed':
@@ -24,7 +24,7 @@ export const StatusBadge = ({status}: statusBadgeProps) => {
             style = "text-green-500 border-green-500"
             break
         default:
-            throw Error
+            style = "text-yellow-500 border-yellow-500"
     }
 
     return (

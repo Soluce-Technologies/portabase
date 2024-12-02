@@ -1,4 +1,3 @@
-"use client"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
 import {backupColumns} from "@/features/backup/columns";
@@ -20,7 +19,6 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
             </TabsList>
 
             <TabsContent className="h-full justify-between" value="backup">
-
                     <DataTableWithPagination columns={backupColumns} data={props.backups}/>
             </TabsContent>
 
