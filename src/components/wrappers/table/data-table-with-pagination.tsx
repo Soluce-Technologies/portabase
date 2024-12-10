@@ -11,9 +11,10 @@ import {TablePagination} from "@/components/wrappers/table/table-pagination";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    extendedProps?: any
 }
 
-export function DataTableWithPagination<TData, TValue>({columns, data}: DataTableProps<TData, TValue>) {
+export function DataTableWithPagination<TData, TValue>({columns, data, extendedProps}: DataTableProps<TData, TValue>) {
 
     const [sorting, setSorting] = useState<SortingState>([])
 
@@ -27,11 +28,14 @@ export function DataTableWithPagination<TData, TValue>({columns, data}: DataTabl
         state: {
             sorting,
         },
+        meta: {
+            extendedProps: extendedProps,
+        }
     })
 
     return (
         <div className="flex flex-col justify-between h-full">
-            <DataTable table={table}/>
+            <DataTable table={table} />
             <TablePagination table={table} pageSizeOptions={[5, 10, 20, 50, 100]}/>
         </div>
     )

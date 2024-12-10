@@ -2,15 +2,13 @@
 import {useMutation} from "@tanstack/react-query";
 import {backupButtonAction} from "@/components/wrappers/BackupButton/backup-button.action";
 import {toast} from "sonner";
-import {Backup} from "@prisma/client";
 import {useRouter} from "next/navigation";
-import {ActionResult} from "@/types/action-type";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
 
 export type BackupButtonProps = {
     databaseId: string;
+    disable: boolean
 }
-
 
 export const BackupButton = (props: BackupButtonProps) => {
     const router = useRouter();
@@ -30,9 +28,9 @@ export const BackupButton = (props: BackupButtonProps) => {
         await mutation.mutateAsync(props.databaseId)
     }
 
-
     return (
         <ButtonWithLoading
+            disabled={props.disable}
             text="Backup"
             isPending={mutation.isPending}
             size={"default"}

@@ -10,6 +10,7 @@ export function timeAgo(rawDate: string | number | Date) {
 }
 
 export function formatDateLastContact(lastContact: string | number | Date | null) {
+    console.log(lastContact)
     return lastContact
         ? format(new Date(lastContact), 'dd/MM/yyyy HH:mm')
         : "Never connected."

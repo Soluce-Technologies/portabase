@@ -6,7 +6,8 @@ import {Backup, Restauration} from "@prisma/client";
 
 export type DatabaseTabsProps = {
     backups: Backup[]
-    // restaurations: Restauration[]
+    restaurations: Restauration[]
+    isAlreadyRestore: boolean
 }
 
 export const DatabaseTabs = (props: DatabaseTabsProps) => {
@@ -19,12 +20,12 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
             </TabsList>
 
             <TabsContent className="h-full justify-between" value="backup">
-                    <DataTableWithPagination columns={backupColumns} data={props.backups}/>
+                    <DataTableWithPagination columns={backupColumns} data={props.backups} extendedProps={props.isAlreadyRestore}/>
             </TabsContent>
 
-            {/*<TabsContent className="h-full justify-between" value="restore">*/}
-            {/*    <DataTableWithPagination columns={restoreColumns} data={props.restaurations}/>*/}
-            {/*</TabsContent>*/}
+            <TabsContent className="h-full justify-between" value="restore">
+                <DataTableWithPagination columns={restoreColumns} data={props.restaurations}/>
+            </TabsContent>
         </Tabs>
     )
 }
