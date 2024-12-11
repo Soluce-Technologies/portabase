@@ -3,6 +3,7 @@ import {prisma} from "@/prisma";
 import {NextResponse} from "next/server";
 import {Body} from "./route";
 import {isUuidv4} from "@/utils/verify-uuid";
+import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 
 
 
@@ -14,7 +15,7 @@ import {isUuidv4} from "@/utils/verify-uuid";
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
 
-    const formatDatabase = (database: Database, backupAction: boolean) => ({
+    const formatDatabase = (database: Database, backupAction: boolean, restoreAction: boolean, UrlBackup: string) => ({
         generatedId: database.generatedId,
         dbms: database.dbms,
         data: {
@@ -23,8 +24,8 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 cron: "",
             },
             restore: {
-                action: false,
-                file: "",
+                action: restoreAction,
+                file: UrlBackup,
             },
         },
     });
@@ -37,6 +38,8 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
         });
 
         let backupAction: boolean = false
+        let restoreAction: boolean = false
+        let UrlBackup: string = null
 
         if (!existingDatabase) {
             if (!isUuidv4(db.generatedId)) {
@@ -56,7 +59,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
             });
 
             if (databaseCreated) {
-                databasesResponse.push(formatDatabase(databaseCreated, backupAction));
+                databasesResponse.push(formatDatabase(databaseCreated, backupAction,restoreAction , UrlBackup));
             }
         } else {
             const databaseUpdated = await prisma.database.update({
@@ -75,6 +78,14 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 }
             })
 
+            const restoration = await prisma.restauration.findFirst({
+                where:{
+                    databaseId: databaseUpdated.id,
+                    status: "waiting"
+                }
+            })
+
+
             if(backup){
                 backupAction = true
                 await prisma.backup.update({
@@ -87,7 +98,28 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 })
             }
 
-            databasesResponse.push(formatDatabase(databaseUpdated, backupAction));
+            if(restoration){
+                restoreAction = true
+
+                const backupToRestore = await prisma.backup.findFirst({
+                    where:{
+                        id: restoration.backupId
+                    }
+                })
+                const fileName = backupToRestore.file
+                UrlBackup = await getFileUrlPresignedLocal(fileName)
+                await prisma.restauration.update({
+                    where: {
+                        id: restoration.id
+                    },
+                    data:{
+                        status: "ongoing"
+                    }
+                })
+            }
+
+
+            databasesResponse.push(formatDatabase(databaseUpdated, backupAction, restoreAction, UrlBackup));
         }
     }
     return databasesResponse;

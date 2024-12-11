@@ -6,7 +6,8 @@ import {Database} from "@prisma/client";
 
 export type DatabaseKpiPro = {
     successRate: any,
-    database: Database
+    database: Database,
+    totalBackups: number
 }
 
 
@@ -17,7 +18,7 @@ export const DatabaseKpi = (props: DatabaseKpiPro) => {
                 <CardHeader className="font-bold text-xl">
                     Backups
                 </CardHeader>
-                <CardContent></CardContent>
+                <CardContent>{props.totalBackups}</CardContent>
             </Card>
             <Card className="w-full sm:w-auto flex-1">
                 <CardHeader className="font-bold text-xl">

@@ -38,6 +38,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
 
     const isAlreadyBackup = !!backups.find(backup => backup.status === "waiting");
     const isAlreadyRestore = !!restaurations.find(restoration => restoration.status === "waiting");
+
     const totalBackups = await prisma.backup.count({
         where: {
             databaseId: databaseId,
@@ -66,6 +67,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
                 <DatabaseKpi
                     successRate={successRate}
                     database={database}
+                    totalBackups={totalBackups}
                 />
                 <DatabaseTabs
                     isAlreadyRestore={isAlreadyRestore}
