@@ -59,7 +59,6 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     </AgentModalKey>
                 </PageTitle>
                 <PageActions className="justify-between">
-                    <BackupButton/>
                     <Button>Restore</Button>
                 </PageActions>
             </div>

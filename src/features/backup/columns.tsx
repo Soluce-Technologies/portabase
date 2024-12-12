@@ -50,7 +50,7 @@ export const backupColumns: ColumnDef<Backup>[] = [
             const {extendedProps} = table.options.meta;
 
 
-            const isRestauring = !!rowData.restaurations.find(restauration => restauration.status === "waiting");
+            // const isRestauring = !!rowData.restaurations.find(restauration => restauration.status === "waiting");
 
             const router = useRouter()
 

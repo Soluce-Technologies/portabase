@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
 
 export type BackupButtonProps = {
-    databaseId: string;
+    databaseId: string
     disable: boolean
 }
 

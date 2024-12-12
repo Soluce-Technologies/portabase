@@ -1,10 +1,15 @@
 import {PageParams} from "@/types/next";
 import {prisma} from "@/prisma";
-import {notFound} from "next/navigation";
+import {notFound, usePathname, useRouter} from "next/navigation";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {BackupButton} from "@/components/wrappers/BackupButton/BackupButton";
 import {DatabaseTabs} from "@/components/wrappers/Dashboard/Projects/Database/DatabaseTabs";
 import {DatabaseKpi} from "@/components/wrappers/Dashboard/Projects/Database/DatabaseKpi";
+import Link from "next/link";
+import {buttonVariants} from "@/components/ui/button";
+import {GearIcon} from "@radix-ui/react-icons";
+import {EditButton} from "@/components/wrappers/Database/EditButton/EditButton";
+import {CronButton} from "@/components/wrappers/Database/CronButton/CronButton";
 
 
 export default async function RoutePage(props: PageParams<{ databaseId: string }>) {
@@ -57,6 +62,8 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {database.name}
+                    <EditButton/>
+                    <CronButton database={database}/>
                 </PageTitle>
                 <PageActions className="justify-between">
                     <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
