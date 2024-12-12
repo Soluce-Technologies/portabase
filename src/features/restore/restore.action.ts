@@ -26,7 +26,7 @@ export const createRestaurationAction = userAction
                 success: true,
                 value: restauration,
                 actionSuccess: {
-                    message: "Restauration has been successfully created.",
+                    message: "Restoration has been successfully created.",
                     messageParams: { restaurationId: restauration.id },
                 },
             };
@@ -38,7 +38,7 @@ export const createRestaurationAction = userAction
                     message: "Failed to create backup.",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: { message: "Error creating the restauration" },
+                    messageParams: { message: "Error creating the restoration" },
                 },
             };
         }

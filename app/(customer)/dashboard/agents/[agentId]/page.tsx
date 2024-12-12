@@ -13,6 +13,7 @@ import {AgentModalKey} from "@/components/wrappers/Agent/AgentModalKey/AgentModa
 import {KeyRound} from "lucide-react";
 import {BackupButton} from "@/components/wrappers/BackupButton/BackupButton";
 import {backups, restaurations} from "@/utils/mock-data";
+import {formatDateLastContact} from "@/utils/date-formatting";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
@@ -84,7 +85,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                             Last contact
                         </CardHeader>
                         <CardContent>
-                            {agent.lastContact?.toDateString() ?? "Never connected."}
+                            {formatDateLastContact(agent.lastContact)}
                         </CardContent>
                     </Card>
                 </div>

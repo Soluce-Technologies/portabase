@@ -15,13 +15,14 @@ import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {useMutation} from "@tanstack/react-query";
 import {ProjectSchema, ProjectType} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/ProjectForm.schema";
-import {createProjectAction, updateProjectAction} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/project-form.action";
+import {
+    createProjectAction,
+    updateProjectAction
+} from "@/components/wrappers/Dashboard/Projects/ProjectsForm/project-form.action";
 import {useRouter} from "next/navigation";
 import {Database, Organization, Projects} from "@prisma/client"
 import {MultiSelect} from "@/components/wrappers/MultiSelect/MultiSelect";
-import {ZodString} from "zod";
 import {toast} from "sonner";
-import {ServerActionResult} from "@/types/action-type";
 
 
 export type projectFormProps = {
@@ -41,7 +42,7 @@ export const ProjectForm = (props: projectFormProps) => {
     const formatDatabasesList = (databases: Database[]) => {
         return databases.map(database => ({
             value: database.id,
-            label: `${database.name} | ${database.generatedId}`,
+            label: `${database.name} (${database.generatedId}) | ${database.agent.name}`,
         }));
     };
 
@@ -64,14 +65,21 @@ export const ProjectForm = (props: projectFormProps) => {
     const mutation = useMutation({
         mutationFn: async (values: ProjectType) => {
             console.log(values)
-            const project: Projects = isCreate ?  await createProjectAction({data: values, organizationId: props.organization.id}) : await updateProjectAction({data: values, organizationId: props.organization.id, projectId: props.projectId});
+            const project: Projects = isCreate ? await createProjectAction({
+                data: values,
+                organizationId: props.organization.id
+            }) : await updateProjectAction({
+                data: values,
+                organizationId: props.organization.id,
+                projectId: props.projectId
+            });
             console.log(project)
 
             if (project.data.success) {
                 toast.success(project.data.actionSuccess.message);
                 router.push(`/dashboard/projects/${project.data.value.id}`);
                 router.refresh()
-            }else{
+            } else {
                 toast.success(project.data.actionError.message);
             }
 
@@ -115,7 +123,11 @@ export const ProjectForm = (props: projectFormProps) => {
                                 <FormLabel>Slug</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="project-1" {...field} />
+                                        placeholder="project-1" {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replaceAll(" ", "-").toLowerCase()
+                                            field.onChange(value)
+                                        }}/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -125,24 +137,24 @@ export const ProjectForm = (props: projectFormProps) => {
                         control={form.control}
                         name="databases"
                         render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Databases</FormLabel>
-                                    <FormControl>
+                            <FormItem>
+                                <FormLabel>Databases</FormLabel>
+                                <FormControl>
 
-                                        <MultiSelect
-                                            options={formatDatabasesList(props.databases)}
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value ?? []}
-                                            placeholder="Select databases"
-                                            variant="inverted"
-                                            animation={2}
-                                            // maxCount={100}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>Select databases you want to add to this project</FormDescription>
-                                    <FormMessage/>
-                                </FormItem>
-                            )
+                                    <MultiSelect
+                                        options={formatDatabasesList(props.databases)}
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value ?? []}
+                                        placeholder="Select databases"
+                                        variant="inverted"
+                                        animation={2}
+                                        // maxCount={100}
+                                    />
+                                </FormControl>
+                                <FormDescription>Select databases you want to add to this project</FormDescription>
+                                <FormMessage/>
+                            </FormItem>
+                        )
                         }
                     />
                     <Button>

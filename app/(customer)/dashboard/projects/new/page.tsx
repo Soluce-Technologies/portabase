@@ -10,6 +10,9 @@ export default async function RoutePage(props: PageParams<{}>) {
         where: {
             projectId: null
         },
+        include: {
+            agent: {}
+        },
         orderBy: {
             createdAt: 'desc',
         },

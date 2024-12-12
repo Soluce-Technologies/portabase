@@ -6,9 +6,11 @@ import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 
+
 export default async function RoutePage(props: PageParams<{}>) {
 
     const agents = await prisma.agent.findMany({})
+
     return (
         <Page>
             <PageHeader>

@@ -130,7 +130,7 @@ export const updateProjectAction = userAction
                 success: true,
                 value: updatedProject,
                 actionSuccess: {
-                    message: "ProjectsForm has been successfully updated.",
+                    message: "Project has been successfully updated.",
                     messageParams: {projectName: parsedInput.data.name},
                 },
             };
@@ -138,7 +138,7 @@ export const updateProjectAction = userAction
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to update ProjectsForm.",
+                    message: "Failed to update project.",
                     status: 500, // Optional: Use a meaningful status code
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: {projectName: parsedInput.data.name},

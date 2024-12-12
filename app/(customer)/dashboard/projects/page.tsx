@@ -5,17 +5,28 @@ import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {ProjectCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectCard";
+import {requiredCurrentUser} from "@/auth/current-user";
 
 export default async function RoutePage(props: PageParams<{}>) {
 
+    // const {searchParams} = props
+    // const organizationId = searchParams?.organizationId || "default";
+
+    const user = await requiredCurrentUser()
 
     const projects = await prisma.project.findMany({
         where: {
             organization: {
                 slug: "default",
+                // id: organizationId,
+                users: {
+                    some: {
+                        userId: user.id
+                    },
+                },
             }
         },
-        include:{
+        include: {
             databases: {}
         }
     })

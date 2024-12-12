@@ -54,19 +54,20 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String             @id @default(cuid())
   name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String?            @unique
+  emailVerified DateTime?          @map("email_verified")
   image         String?
   role          Role
   password      String?
-  authMethod    String?   @map("auth_method")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
-  deleted       Boolean?  @default(false)
+  authMethod    String?            @map("auth_method")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime?          @updatedAt @map("updated_at")
+  deleted       Boolean?           @default(false)
   accounts      Account[]
   sessions      Session[]
+  organizations UserOrganization[]
 
   @@map("users")
 }
@@ -84,8 +85,20 @@ model Organization {
   createdAt DateTime @default(now()) @map("created_at")
 
   projects Project[]
+  users    UserOrganization[]
 
   @@map("organizations")
+}
+
+model UserOrganization {
+  id             String       @id @default(cuid())
+  userId         String
+  organizationId String
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+  @@map("users_organisations")
 }
 
 model Project {
