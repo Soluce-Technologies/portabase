@@ -10,10 +10,21 @@ import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/Log
 import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBarMenu/SideBarMenu";
 import {OrganizationComboBox} from "@/components/wrappers/Organization/OrganizationCombobox";
 import {prisma} from "@/prisma";
+import {requiredCurrentUser} from "@/auth/current-user";
 
 export async function AppSidebar() {
 
-    const organizations = await prisma.organization.findMany({})
+    const user = await requiredCurrentUser()
+
+    const organizations = await prisma.organization.findMany({
+        where: {
+            users: {
+                some: {
+                    userId: user.id
+                },
+            },
+        },
+    })
     const defaultOrganization = await prisma.organization.findUnique({
         where: {
             slug: "default"

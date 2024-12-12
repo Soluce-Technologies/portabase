@@ -32,9 +32,12 @@ export default async function RoutePage(props: PageParams<{
     const availableDatabases = await prisma.database.findMany({
         where: {
             OR: [
-                { projectId: null },
-                { projectId: project.id },
+                {projectId: null},
+                {projectId: project.id},
             ],
+        },
+        include: {
+            agent: {}
         },
         orderBy: {
             createdAt: 'desc',
@@ -50,7 +53,8 @@ export default async function RoutePage(props: PageParams<{
                 </PageTitle>
             </PageHeader>
             <PageContent>
-                <ProjectForm organization={organization} databases={availableDatabases} defaultValues={project} projectId={project.id}/>
+                <ProjectForm organization={organization} databases={availableDatabases} defaultValues={project}
+                             projectId={project.id}/>
             </PageContent>
         </Page>
     )

@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "email": "email dev"
-
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",
@@ -76,7 +75,8 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3",
     "vaul": "^1.1.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",

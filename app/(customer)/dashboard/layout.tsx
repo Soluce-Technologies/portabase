@@ -6,6 +6,7 @@ import {AppSidebar} from "@/components/wrappers/Dashboard/SideBar/app-sidebar";
 import {currentUser} from "@/auth/current-user";
 import {Header} from "@/features/layout/Header";
 import {prisma} from "@/prisma";
+import {GlobalStoreProvider} from "@/state-management/provider";
 
 
 export default async function Layout({children}: { children: React.ReactNode }) {
@@ -22,16 +23,20 @@ export default async function Layout({children}: { children: React.ReactNode }) 
     if (!user) redirect('/login')
 
     return (
-        <SidebarProvider>
-            <div className="flex flex-col lg:flex-row w-full">
-                <AppSidebar/>
-                <SidebarInset>
-                    <Header/>
-                    <main className="h-full">
-                        {children}
-                    </main>
-                </SidebarInset>
-            </div>
-        </SidebarProvider>
+        // <HydrationZustand>
+        <GlobalStoreProvider>
+            <SidebarProvider>
+                <div className="flex flex-col lg:flex-row w-full">
+                    <AppSidebar/>
+                    <SidebarInset>
+                        <Header/>
+                        <main className="h-full">
+                            {children}
+                        </main>
+                    </SidebarInset>
+                </div>
+            </SidebarProvider>
+        </GlobalStoreProvider>
+        // </HydrationZustand>
     )
 }

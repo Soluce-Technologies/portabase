@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:20.1.0-alpine AS base
 
 ENV YARN_VERSION=4.2.2
 

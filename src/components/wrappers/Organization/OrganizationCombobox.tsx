@@ -1,20 +1,31 @@
 "use client"
 
-import {useSession} from "next-auth/react";
+import {useEffect} from "react";
 
 import {ComboBox} from "@/components/wrappers/combobox";
 import {Organization} from "@prisma/client";
+import {useStore} from "@/state-management/store";
 
 export type organizationComboBoxProps = {
     organizations: Organization[]
     defaultOrganization: Organization
-
 }
 
 
 export function OrganizationComboBox(props: organizationComboBoxProps) {
 
+    const {organizationId, moveToAnotherOrganization} = useStore((state) => state);
+
     const {organizations, defaultOrganization} = props
+
+    useEffect(() => {
+        if (organizationId == "") {
+            moveToAnotherOrganization(defaultOrganization.id)
+        } else {
+            const organization = organizations.find(organization => organization.id === organizationId)
+            if (!organization) moveToAnotherOrganization(defaultOrganization.id)
+        }
+    }, [organizationId])
 
     const values = organizations.map(organization => {
         return ({
@@ -23,19 +34,13 @@ export function OrganizationComboBox(props: organizationComboBoxProps) {
         })
     })
 
-    const {data: session, update} = useSession();
-
-    const updateSession = async (organizationId: string) => {
-        const organization = organizations.find(organization => organization.id === organizationId)
-        await update({...session, organization: organization})
-        console.log("session updtated", organization)
-    }
+    const onValueChange = async (id: string) => moveToAnotherOrganization(id)
 
     return (
         <ComboBox
             sideBar={true}
             values={values}
-            defaultValue={defaultOrganization.id}
-            onValueChange={updateSession}/>
+            defaultValue={organizationId}
+            onValueChange={onValueChange}/>
     )
 }

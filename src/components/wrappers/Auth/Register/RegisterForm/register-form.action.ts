@@ -8,18 +8,18 @@ import {hashPassword} from "@/utils/password";
 export const registerUserAction = action
     .schema(RegisterSchema)
     .action(async ({parsedInput, ctx}) => {
-        const user = await prisma.user.findUnique({ where: { email: parsedInput.email } });
+        const user = await prisma.user.findUnique({where: {email: parsedInput.email}});
         console.log(user);
         if (!user && parsedInput.password === parsedInput.confirmPassword) {
 
             const users = await prisma.user.findMany({
-                where:{
-                    deleted: { not: true },
+                where: {
+                    deleted: {not: true},
                 }
             })
             const role = users.length > 0 ? "pending" : "admin"
 
-            const new_user = await prisma.user.create({
+            const newUser = await prisma.user.create({
                 data: {
                     name: parsedInput.name,
                     email: parsedInput.email,
@@ -27,8 +27,20 @@ export const registerUserAction = action
                     role: role
                 },
             });
+
+            const defaultOrganization = await prisma.organization.findUnique({
+                where: {slug: "default"},
+            });
+
+            await prisma.userOrganization.create({
+                data: {
+                    userId: newUser.id,
+                    organizationId: defaultOrganization.id
+                },
+            });
+
             return {
-                data: new_user,
+                data: newUser,
             }
         }
         throw new Error('An error occured while creating user');

@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import {Check, ChevronDown} from "lucide-react"
 
@@ -33,10 +33,13 @@ export type comboBoxProps = {
 
 export function ComboBox(props: comboBoxProps) {
 
-
     const {values: choices, defaultValue: defaultChoice = "", onValueChange, searchField = false} = props;
 
-    const [value, setValue] = useState(defaultChoice)
+    const [value, setValue] = useState<string>()
+
+    useEffect(() => {
+        setValue(defaultChoice)
+    }, [defaultChoice])
 
     const [open, setOpen] = useState(false)
 

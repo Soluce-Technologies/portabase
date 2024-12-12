@@ -1,19 +1,18 @@
 "use client";
 
+import {useRouter} from "next/navigation";
+import {Info} from "lucide-react";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
+
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {
-    FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm
-} from "@/components/ui/form";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
-import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider, TooltipTrigger, Tooltip, TooltipContent} from "@/components/ui/tooltip";
 import {RegisterSchema, RegisterType} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.schema";
 import {registerUserAction} from "@/components/wrappers/Auth/Register/RegisterForm/register-form.action";
-import {Info} from "lucide-react";
 import {PasswordInput} from "@/components/wrappers/Auth/PaswordInput/password-input";
 
 export type registerFormProps = {
@@ -104,7 +103,8 @@ export const RegisterForm = (props: registerFormProps) => {
                                                     <Info className="ml-3" size="15"/>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    <p> Min. 8 characters, 1 uppercase (A-Z), 1 lowercase (a-z), 1 number (0-9), 1 special character (!, @, etc.)</p>
+                                                    <p> Min. 8 characters, 1 uppercase (A-Z), 1 lowercase (a-z), 1
+                                                        number (0-9), 1 special character (!, @, etc.)</p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>

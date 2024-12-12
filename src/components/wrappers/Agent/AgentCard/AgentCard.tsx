@@ -5,6 +5,7 @@ import Link from "next/link";
 import {ValueIcon} from "@radix-ui/react-icons";
 import {Circle} from "lucide-react";
 import {ConnectionCircle} from "@/components/wrappers/connection-circle";
+import {formatDateLastContact} from "@/utils/date-formatting";
 
 export type agentCardProps = {
     data: any
@@ -20,7 +21,7 @@ export const AgentCard = (props: agentCardProps) => {
                 <div className="">
                     <CardHeader>{agent.name}</CardHeader>
                     <CardContent>
-                        Last contact : {agent.lastContact?.toDateString() ?? "Never connected."}
+                        Last contact : {formatDateLastContact(agent.lastContact)}
                     </CardContent>
                 </div>
                 <div className="mt-3 mr-3">
