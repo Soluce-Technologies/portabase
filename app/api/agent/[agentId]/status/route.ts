@@ -41,7 +41,6 @@ export async function POST(
             return NextResponse.json({error: "Agent not found"}, {status: 404})
         }
         const databasesResponse = await handleDatabases(body, agent, lastContact)
-
         await prisma.agent.update({
             where:{
                 id: agentId,
