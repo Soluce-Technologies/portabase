@@ -1,5 +1,8 @@
 import { AdvancedCronSelect } from "./AdvancedCronSelect";
-import {updateBackupPolicyAction} from "@/components/wrappers/Database/CronButton/cron.action";
+import {
+    updateBackupPolicyAction,
+    updateDatabaseBackupPolicyAction
+} from "@/components/wrappers/Database/CronButton/cron.action";
 import {useMutation} from "@tanstack/react-query";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
@@ -18,7 +21,7 @@ export const CronInput = ({ database }: CronInputProps) => {
     const router = useRouter();
 
     const updateBackupPolicy = useMutation({
-        mutationFn: (value: string) => updateBackupPolicyAction({ databaseId: database.id, backupPolicy: value }),
+        mutationFn: (value: string) => updateDatabaseBackupPolicyAction({ databaseId: database.id, backupPolicy: value }),
         onSuccess: () => {
             toast.success(`Cron updated successfully.`);
             router.refresh();

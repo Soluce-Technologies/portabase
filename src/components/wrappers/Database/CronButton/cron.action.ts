@@ -4,7 +4,7 @@ import {z} from "zod";
 import {prisma} from "@/prisma";
 
 
-export const updateBackupPolicyAction = userAction
+export const updateDatabaseBackupPolicyAction = userAction
     .schema(
         z.object({
                 databaseId: z.string(),
@@ -13,12 +13,14 @@ export const updateBackupPolicyAction = userAction
         )
     )
     .action(async ({parsedInput, ctx}) => {
+        const cronPolicy = parsedInput.backupPolicy == "" ? null : parsedInput.backupPolicy
+
         const updatedDatabase = await prisma.database.update({
             where: {
                 id: parsedInput.databaseId,
             },
             data: {
-                backupPolicy: parsedInput.backupPolicy,
+                backupPolicy: cronPolicy,
             }
         })
         return {

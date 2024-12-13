@@ -21,7 +21,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
         data: {
             backup: {
                 action: backupAction,
-                cron: "",
+                cron: database.backupPolicy,
             },
             restore: {
                 action: restoreAction,
@@ -59,7 +59,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
             });
 
             if (databaseCreated) {
-                databasesResponse.push(formatDatabase(databaseCreated, backupAction,restoreAction , UrlBackup));
+                databasesResponse.push(formatDatabase(databaseCreated, backupAction,restoreAction, UrlBackup));
             }
         } else {
             const databaseUpdated = await prisma.database.update({
@@ -122,5 +122,6 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
             databasesResponse.push(formatDatabase(databaseUpdated, backupAction, restoreAction, UrlBackup));
         }
     }
+
     return databasesResponse;
 }
