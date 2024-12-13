@@ -21,7 +21,10 @@ import {
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {Database} from "@prisma/client";
-import {updateBackupPolicyAction} from "@/components/wrappers/Database/CronButton/cron.action";
+import {
+    updateBackupPolicyAction,
+    updateDatabaseBackupPolicyAction
+} from "@/components/wrappers/Database/CronButton/cron.action";
 
 
 export type CronButtonProps = {
@@ -32,8 +35,8 @@ export const CronButton = (props: CronButtonProps) => {
     const router = useRouter();
     const [isSwitched, setIsSwitched] = useState(props.database.backupPolicy !== null);
 
-    const updateBackupPolicy = useMutation({
-        mutationFn: (value: string) => updateBackupPolicyAction({databaseId: props.database.id, backupPolicy:value}),
+    const updateDatabaseBackupPolicy = useMutation({
+        mutationFn: (value: string) => updateDatabaseBackupPolicyAction({databaseId: props.database.id, backupPolicy:value}),
         onSuccess: () => {
             toast.success(`Method updated successfully.`);
             router.refresh()
@@ -47,7 +50,7 @@ export const CronButton = (props: CronButtonProps) => {
     const handleTypeChange = async (state: boolean) => {
         setIsSwitched(state);
         if(state == false) {
-            await updateBackupPolicy.mutateAsync(null)
+            await updateDatabaseBackupPolicy.mutateAsync("")
         }
     }
 
