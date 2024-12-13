@@ -1,6 +1,6 @@
+import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
-import {prisma} from "@/prisma";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {SettingsTabs} from "@/components/wrappers/Dashboard/Settings/SettingsTabs/SettingsTabs";
 

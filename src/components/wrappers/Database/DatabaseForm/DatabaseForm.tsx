@@ -2,7 +2,13 @@
 
 import {Card, CardContent} from "@/components/ui/card";
 import {
-    FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    useZodForm
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
@@ -11,6 +17,8 @@ import {useRouter} from "next/navigation";
 import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {DatabaseSchema, DatabaseType} from "@/components/wrappers/Database/DatabaseForm/form-database.schema";
+import {updateDatabaseAction} from "@/components/wrappers/Database/DatabaseForm/form-database.action";
+import {toast} from "sonner";
 
 export type DatabaseFormProps = {
     defaultValues?: DatabaseType;
@@ -19,19 +27,33 @@ export type DatabaseFormProps = {
 
 export const DatabaseForm = (props: DatabaseFormProps) => {
 
-    const isCreate = !Boolean(props.defaultValues)
+    const {defaultValues, databaseId} = props;
+
+    const isCreate = !Boolean(defaultValues)
 
     const form = useZodForm({
         schema: DatabaseSchema,
-        defaultValues: props.defaultValues,
+        defaultValues: {...defaultValues},
     });
+
+    console.log("aaaaaaaaaa", form.getValues())
 
     const router = useRouter();
 
     const mutation = useMutation({
         mutationFn: async (values: DatabaseType) => {
-            console.log("values", values)
 
+            const database = await updateDatabaseAction({id: databaseId, data: values});
+
+            if (database.serverError) {
+                console.error(database?.serverError);
+                toast.error(database?.serverError);
+                return;
+            }
+            console.log(database)
+            toast.success(`Database settings successfully updated!`);
+
+            router.back()
         }
     })
 
@@ -42,20 +64,18 @@ export const DatabaseForm = (props: DatabaseFormProps) => {
                     <Form form={form}
                           className="flex flex-col gap-4 mt-3"
                           onSubmit={async (values) => {
+                              console.log("sssssss")
                               await mutation.mutateAsync(values);
                           }}
                     >
                         <FormField
                             control={form.control}
                             name="name"
-                            disabled
-                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="Database 1" {...field} />
+                                        <Input disabled placeholder="Database 1" {...field}/>
                                     </FormControl>
                                     <FormDescription>Your database project name setup in agent</FormDescription>
                                     <FormMessage/>
@@ -65,14 +85,11 @@ export const DatabaseForm = (props: DatabaseFormProps) => {
                         <FormField
                             control={form.control}
                             name="dbms"
-                            defaultValue=""
-                            disabled
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Database type</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="PostgreSQL" {...field} value={field.value ?? ""} />
+                                        <Input disabled placeholder="PostgreSQL" {...field}/>
                                     </FormControl>
                                     <FormDescription>Your database project name setup in agent</FormDescription>
                                     <FormMessage/>
@@ -82,13 +99,11 @@ export const DatabaseForm = (props: DatabaseFormProps) => {
                         <FormField
                             control={form.control}
                             name="description"
-                            defaultValue=""
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="Prod database for project 1" {...field} value={field.value ?? ""} />
+                                        <Input placeholder="Prod database for project 1" {...field}/>
                                     </FormControl>
                                     <FormDescription>Add a short description about this database</FormDescription>
                                     <FormMessage/>

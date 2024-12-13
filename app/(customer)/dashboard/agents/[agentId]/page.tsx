@@ -1,19 +1,16 @@
+import Link from "next/link";
+import {GearIcon} from "@radix-ui/react-icons";
+import {KeyRound} from "lucide-react";
+
+import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
-import {Button, buttonVariants} from "@/components/ui/button";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {backupColumns} from "@/features/backup/columns";
-import {restoreColumns} from "@/features/restore/columns";
-import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
-import {prisma} from "@/prisma";
-import {GearIcon} from "@radix-ui/react-icons";
-import Link from "next/link";
-import {AgentModalKey} from "@/components/wrappers/Agent/AgentModalKey/AgentModalKey";
-import {KeyRound} from "lucide-react";
-import {BackupButton} from "@/components/wrappers/BackupButton/BackupButton";
-import {backups, restaurations} from "@/utils/mock-data";
 import {formatDateLastContact} from "@/utils/date-formatting";
+import {Button, buttonVariants} from "@/components/ui/button";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {AgentModalKey} from "@/components/wrappers/Agent/AgentModalKey/AgentModalKey";
+import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
+import {DatabaseCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectDatabaseCard";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
@@ -24,6 +21,9 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
         where: {
             id: agentId,
         },
+        include: {
+            databases: {}
+        }
     })
 
     const databaseId = 'db-123';
@@ -89,21 +89,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         </CardContent>
                     </Card>
                 </div>
-                <Tabs className="flex flex-col flex-1" defaultValue="backup">
-
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="backup">Backup</TabsTrigger>
-                        <TabsTrigger value="restore">Restoration</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent className="h-full justify-between" value="backup">
-                        <DataTableWithPagination columns={backupColumns} data={backups}/>
-                    </TabsContent>
-
-                    <TabsContent className="h-full justify-between" value="restore">
-                        <DataTableWithPagination columns={restoreColumns} data={restaurations}/>
-                    </TabsContent>
-                </Tabs>
+                <CardsWithPagination data={agent.databases} cardItem={DatabaseCard}/>
             </PageContent>
         </Page>
     )

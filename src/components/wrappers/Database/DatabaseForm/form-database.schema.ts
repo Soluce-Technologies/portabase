@@ -4,10 +4,9 @@ const cronRegex = /^(\d{1,2}|\*|(\d{1,2}-\d{1,2})|(\d{1,2}\/\d{1,2}))\s+(\d{1,2}
 
 
 export const DatabaseSchema = z.object({
-    name: z.string(),
-    description: z.string().optional().nullable(),
-    dbms: z.string(),
-    backupPolicy: z.string().regex(cronRegex, 'Invalid cron format')
+    name: z.string().readonly(),
+    description: z.string().optional(),
+    dbms: z.string().readonly(),
 });
 
 export type DatabaseType = z.infer<typeof DatabaseSchema>;
