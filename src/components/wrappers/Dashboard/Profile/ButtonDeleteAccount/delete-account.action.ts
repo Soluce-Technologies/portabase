@@ -3,7 +3,7 @@ import {userAction} from "@/safe-actions";
 import {prisma} from "@/prisma";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
-import {EmailFormSchema} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/EmailForm/email-form.schema";
+import {EmailFormSchema} from "@/components/wrappers/Dashboard/admin/AdminEmailTab/EmailForm/email-form.schema";
 
 
 export const deleteUserAction = userAction

@@ -5,16 +5,21 @@ import {useState} from "react";
 import {
     ColumnDef, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable
 } from "@tanstack/react-table"
-import {DataTable} from "@/components/wrappers/table/data-table";
+import {DataTable as BaseDataTable} from "@/components/wrappers/table/data-table";
 import {TablePagination} from "@/components/wrappers/table/table-pagination";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     extendedProps?: any
+    DataTable?: any
+    dataTableProps?: any
 }
 
-export function DataTableWithPagination<TData, TValue>({columns, data, extendedProps}: DataTableProps<TData, TValue>) {
+export function DataTableWithPagination<TData, TValue>(props: DataTableProps<TData, TValue>) {
+
+    const {columns, data, extendedProps, DataTable = BaseDataTable, dataTableProps} = props;
+
 
     const [sorting, setSorting] = useState<SortingState>([])
 
@@ -35,7 +40,7 @@ export function DataTableWithPagination<TData, TValue>({columns, data, extendedP
 
     return (
         <div className="flex flex-col justify-between h-full">
-            <DataTable table={table} />
+            <DataTable table={table} {...dataTableProps}/>
             <TablePagination table={table} pageSizeOptions={[5, 10, 20, 50, 100]}/>
         </div>
     )

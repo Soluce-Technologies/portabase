@@ -8,12 +8,18 @@ import {SettingsTabs} from "@/components/wrappers/Dashboard/Settings/SettingsTab
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await requiredCurrentUser()
 
+    const defaultOrganization = await prisma.organization.findUnique({
+        where: {slug: "default"},
+    });
+
     const users = await prisma.user.findMany({
-        where:{
-            id: {
-                not: user.id
+        where: {
+            organizations: {
+                some: {
+                    organizationId: defaultOrganization.id
+                },
             },
-            deleted: { not: true },
+            deleted: {not: true},
 
         }
     })
@@ -21,7 +27,7 @@ export default async function RoutePage(props: PageParams<{}>) {
     console.log(users)
 
     const settings = await prisma.settings.findUnique({
-        where:{
+        where: {
             name: "system"
         }
     })
@@ -34,10 +40,10 @@ export default async function RoutePage(props: PageParams<{}>) {
                 </PageTitle>
             </PageHeader>
             <PageDescription>
-                Manage your Portabase settings
+                Manage your organization settings.
             </PageDescription>
             <PageContent>
-                <SettingsTabs settings={settings} users={users}/>
+                <SettingsTabs settings={settings} currentUser={user} users={users}/>
             </PageContent>
         </Page>
     )

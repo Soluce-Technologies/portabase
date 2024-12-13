@@ -11,53 +11,47 @@ import {useMutation} from "@tanstack/react-query";
 import {TooltipProvider} from "@/components/ui/tooltip";
 
 import {
-    EmailFormSchema,
-    EmailFormType
-} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/EmailForm/email-form.schema";
-import Link from "next/link";
-import {PasswordInput} from "@/components/wrappers/Auth/PaswordInput/password-input";
-import {
-    updateEmailSettingsAction
-} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/EmailForm/email-form.action";
-import {toast} from "sonner";
+    S3FormSchema,
+    S3FormType
+} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.schema";
 import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {
+    updateS3SettingsAction
+} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.action";
 
-export type EmailFormProps = {
-    defaultValues?: EmailFormType;
+export type S3FormProps = {
+    defaultValues?: S3FormType;
 }
 
-export const EmailForm = (props: EmailFormProps) => {
-
-    const isCreate = !Boolean(props.defaultValues)
-
+export const StorageS3Form = (props: S3FormProps) => {
     const form = useZodForm({
-        schema: EmailFormSchema,
+        schema: S3FormSchema,
         defaultValues: props.defaultValues,
     });
+
     const router = useRouter();
 
     const mutation = useMutation({
-        mutationFn: async (values: EmailFormType) => {
-            const updateEmailSettings = await updateEmailSettingsAction({name: "system", data: values})
-            const data = updateEmailSettings?.data?.data
-            if (updateEmailSettings?.serverError || !data) {
-                console.log(updateEmailSettings?.serverError);
-                toast.error(updateEmailSettings?.serverError);
+        mutationFn: async (values: S3FormType) => {
+            console.log(values)
+            const updateS3Settings = await updateS3SettingsAction({name: "system", data: values})
+            const data = updateS3Settings?.data?.data
+            if (updateS3Settings?.serverError || !data) {
+                console.log(updateS3Settings?.serverError);
+                toast.error(updateS3Settings?.serverError);
                 return;
             }
-            toast.success(`Success updating email informations`);
+            toast.success(`Success updating storage informations`);
             router.refresh()
         }
     })
-
 
     return (
         <TooltipProvider>
             <Card>
                 <CardContent>
-
                     <Form form={form}
-
                           className="flex flex-col gap-4 mt-3"
                           onSubmit={async (values) => {
                               await mutation.mutateAsync(values);
@@ -65,85 +59,60 @@ export const EmailForm = (props: EmailFormProps) => {
                     >
                         <FormField
                             control={form.control}
-                            name="smtpFrom"
-                            defaultValue=""
-
+                            name="s3EndPointUrl"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>From Email *</FormLabel>
+                                    <FormLabel>Endpoint Url *</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={"exemple@portabase.com"} {...field} />
+                                            placeholder={"s3.eu-west-3.amazonaws.com"} {...field} />
                                     </FormControl>
-                                    <FormDescription>{"The email from where the email will be send"}</FormDescription>
+                                    <FormDescription>{"Your s3 compatible url"}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
-                            name="smtpHost"
-                            defaultValue=""
-
+                            name="s3AccessKeyId"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Server Host *</FormLabel>
+                                    <FormLabel>Access Key *</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={"ssl0.ovh.net"} {...field} />
+                                            placeholder={"The access key token"} {...field} />
                                     </FormControl>
-                                    <FormDescription>{"Your email server host"}</FormDescription>
+                                    <FormDescription>{"Add your access key"}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
-                            name="smtpPort"
-                            defaultValue=""
-
+                            name="s3SecretAccessKey"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Server Port *</FormLabel>
+                                    <FormLabel>Secret Key *</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={"465"} {...field} />
+                                            placeholder={"The secret key token"} {...field} />
                                     </FormControl>
-                                    <FormDescription>{"Your email server port (send)"}</FormDescription>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="smtpPassword"
-                            defaultValue=""
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <PasswordInput placeholder="Password" {...field}/>
-                                    </FormControl>
-                                    <FormDescription>{"Your email server password"}</FormDescription>
-
+                                    <FormDescription>{"Add your secret key"}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
-                            name="smtpUser"
-                            defaultValue=""
-
+                            name="S3BucketName"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>User Email *</FormLabel>
+                                    <FormLabel>Bucket name *</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder={"exemple@portabase.com"} {...field} />
+                                            placeholder={"my-bucket"} {...field} />
                                     </FormControl>
-                                    <FormDescription>{"The email server user"}</FormDescription>
+                                    <FormDescription>{"The bucket name where you want to store your data"}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -154,7 +123,6 @@ export const EmailForm = (props: EmailFormProps) => {
                                 Save
                             </Button>
                         </div>
-
                     </Form>
                 </CardContent>
             </Card>

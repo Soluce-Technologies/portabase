@@ -2,7 +2,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info, Send, ShieldCheck} from "lucide-react";
 import {Switch} from "@/components/ui/switch";
 import {Label} from "@/components/ui/label";
-import {StorageS3Form} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/StorageS3Form";
+import {StorageS3Form} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/StorageS3Form";
 import {useState} from "react";
 import {Settings} from "@prisma/client";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";
@@ -13,7 +13,7 @@ import {updateUserAction} from "@/components/wrappers/Dashboard/Profile/UserForm
 import {useRouter} from "next/navigation";
 import {
     updateStorageSettingsAction
-} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.action";
+} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.action";
 
 
 export type SettingsStorageTabProps = {
