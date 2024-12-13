@@ -1,4 +1,4 @@
-import {EmailForm} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/EmailForm/EmailForm";
+import {EmailForm} from "@/components/wrappers/Dashboard/admin/AdminEmailTab/EmailForm/EmailForm";
 import {Settings} from "@prisma/client";
 import {Send} from "lucide-react";
 import {ButtonWithLoading} from "@/components/wrappers/Button/ButtonWithLoading/ButtonWithLoading";

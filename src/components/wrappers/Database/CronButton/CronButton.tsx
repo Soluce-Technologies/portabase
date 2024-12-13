@@ -17,7 +17,7 @@ import {useState} from "react";
 import {useMutation} from "@tanstack/react-query";
 import {
     updateStorageSettingsAction
-} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.action";
+} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {Database} from "@prisma/client";

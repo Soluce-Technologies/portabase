@@ -2,7 +2,7 @@
 import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {prisma} from "@/prisma";
-import {EmailFormSchema} from "@/components/wrappers/Dashboard/Settings/SettingsEmailTab/EmailForm/email-form.schema";
+import {EmailFormSchema} from "@/components/wrappers/Dashboard/admin/AdminEmailTab/EmailForm/email-form.schema";
 
 
 export const updateEmailSettingsAction = userAction

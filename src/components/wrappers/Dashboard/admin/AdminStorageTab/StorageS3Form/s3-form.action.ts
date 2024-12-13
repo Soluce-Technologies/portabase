@@ -5,7 +5,7 @@ import {prisma} from "@/prisma";
 import {
     S3FormSchema,
     StorageSwitchSchema
-} from "@/components/wrappers/Dashboard/Settings/SettingsStorageTab/StorageS3Form/s3-form.schema";
+} from "@/components/wrappers/Dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.schema";
 
 
 export const updateS3SettingsAction = userAction

@@ -4,6 +4,7 @@ import {PropsWithChildren} from "react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {signOutAction} from "@/features/auth/auth.action";
 import {redirect} from "next/navigation";
+import {CircleUser, LogOut, ShieldHalf} from "lucide-react";
 
 export type LoggedInDropdownProps = PropsWithChildren<{}>
 
@@ -21,15 +22,29 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
                 <DropdownMenuItem onClick={() => {
                     redirect("/dashboard/profile")
                 }}>
-                    <span>Account</span>
+                    <div className="flex justify-start items-center gap-2">
+                        <CircleUser size={16}/>
+                        <span>Account</span>
+                    </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                    redirect("/dashboard/admin")
+                }}>
+                    <div className="flex justify-start items-center gap-2">
+                        <ShieldHalf size={16}/>
+                        <span>Administration Panel</span>
+                    </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                     signOutAction()
                 }}>
-                    <span>Sign out</span>
+                    <div className="flex justify-start items-center gap-2">
+                        <LogOut size={16}/>
+                        <span>Log out</span>
+                    </div>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
 
-)
+    )
 }
