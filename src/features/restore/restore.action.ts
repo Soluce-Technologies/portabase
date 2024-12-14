@@ -1,20 +1,21 @@
 "use server"
+
 import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {prisma} from "@/prisma";
 import {ServerActionResult} from "@/types/action-type";
-import {Restauration} from "@prisma/client";
+import {Restoration} from "@prisma/client";
 
 
-export const createRestaurationAction = userAction
+export const createRestorationAction = userAction
     .schema(z.object({
         backupId: z.string(),
         databaseId: z.string(),
     }))
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Restauration>> => {
+    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Restoration>> => {
 
         try {
-            const restauration = await prisma.restauration.create({
+            const restoration = await prisma.restoration.create({
                 data: {
                     databaseId: parsedInput.databaseId,
                     backupId: parsedInput.backupId,
@@ -24,14 +25,14 @@ export const createRestaurationAction = userAction
 
             return {
                 success: true,
-                value: restauration,
+                value: restoration,
                 actionSuccess: {
                     message: "Restoration has been successfully created.",
-                    messageParams: { restaurationId: restauration.id },
+                    messageParams: { restorationId: restoration.id },
                 },
             };
         } catch (error) {
-            console.error("Error creating restauration:", error);
+            console.error("Error creating restoration:", error);
             return {
                 success: false,
                 actionError: {

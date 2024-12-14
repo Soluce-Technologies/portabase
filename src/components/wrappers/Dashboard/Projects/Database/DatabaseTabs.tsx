@@ -2,11 +2,11 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
 import {backupColumns} from "@/features/backup/columns";
 import {restoreColumns} from "@/features/restore/columns";
-import {Backup, Restauration} from "@prisma/client";
+import {Backup, Restoration} from "@prisma/client";
 
 export type DatabaseTabsProps = {
     backups: Backup[]
-    restaurations: Restauration[]
+    restorations: Restoration[]
     isAlreadyRestore: boolean
 }
 
@@ -24,7 +24,7 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
             </TabsContent>
 
             <TabsContent className="h-full justify-between" value="restore">
-                <DataTableWithPagination columns={restoreColumns} data={props.restaurations}/>
+                <DataTableWithPagination columns={restoreColumns} data={props.restorations}/>
             </TabsContent>
         </Tabs>
     )

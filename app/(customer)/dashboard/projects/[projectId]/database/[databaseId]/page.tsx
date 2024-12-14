@@ -30,11 +30,11 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
             databaseId: database.id
         },
         include:{
-            restaurations: {}
+            restorations: {}
         }
     })
 
-    const restaurations = await prisma.restauration.findMany({
+    const restorations = await prisma.restoration.findMany({
         where: {
             databaseId: databaseId,
         }
@@ -42,7 +42,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
 
 
     const isAlreadyBackup = !!backups.find(backup => backup.status === "waiting");
-    const isAlreadyRestore = !!restaurations.find(restoration => restoration.status === "waiting");
+    const isAlreadyRestore = !!restorations.find(restoration => restoration.status === "waiting");
 
     const totalBackups = await prisma.backup.count({
         where: {
@@ -79,7 +79,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
                 <DatabaseTabs
                     isAlreadyRestore={isAlreadyRestore}
                     backups={backups}
-                    restaurations={restaurations}
+                    restorations={restorations}
                 />
             </PageContent>
         </Page>

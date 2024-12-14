@@ -78,7 +78,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 }
             })
 
-            const restoration = await prisma.restauration.findFirst({
+            const restoration = await prisma.restoration.findFirst({
                 where:{
                     databaseId: databaseUpdated.id,
                     status: "waiting"
@@ -108,7 +108,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 })
                 const fileName = backupToRestore.file
                 UrlBackup = await getFileUrlPresignedLocal(fileName)
-                await prisma.restauration.update({
+                await prisma.restoration.update({
                     where: {
                         id: restoration.id
                     },

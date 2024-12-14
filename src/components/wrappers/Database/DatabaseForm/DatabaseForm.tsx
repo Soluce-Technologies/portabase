@@ -36,8 +36,6 @@ export const DatabaseForm = (props: DatabaseFormProps) => {
         defaultValues: {...defaultValues},
     });
 
-    console.log("aaaaaaaaaa", form.getValues())
-
     const router = useRouter();
 
     const mutation = useMutation({

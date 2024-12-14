@@ -53,7 +53,7 @@ export const databases = [
         "lastContact": "2024-11-28T08:30:00.000Z",
         "projectId": "proj-789",
         "backups": [],
-        "restaurations": []
+        "restorations": []
     },
     {
         "id": "1e4f9265-5f10-4bd4-8e5c-3283746cfd7a",
@@ -67,7 +67,7 @@ export const databases = [
         "lastContact": "2024-11-25T10:15:00.000Z",
         "projectId": null,
         "backups": [],
-        "restaurations": []
+        "restorations": []
     },
     {
         "id": "b6f92bd7-834b-41c1-b6b3-dc4214b1de08",
@@ -81,7 +81,7 @@ export const databases = [
         "lastContact": null,
         "projectId": "proj-456",
         "backups": [],
-        "restaurations": []
+        "restorations": []
     }
 ]
 
@@ -108,7 +108,7 @@ export const backups = [
     {'id': 'backup-11', 'createdAt': '2023-11-25T11:26:54.871000Z', 'status': 'failed'}
 ]
 
-export const restaurations = [
+export const restorations = [
     {'id': 'restore-1', 'backupId': 'backup-1', 'createdAt': '2023-11-27T11:26:54.870914Z', 'status': 'pending'},
     {'id': 'restore-2', 'backupId': 'backup-2', 'createdAt': '2023-12-03T11:26:54.870927Z', 'status': 'failed'},
     {'id': 'restore-3', 'backupId': 'backup-3', 'createdAt': '2023-12-12T11:26:54.870937Z', 'status': 'success'},

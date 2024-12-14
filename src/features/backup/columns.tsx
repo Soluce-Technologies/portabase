@@ -15,7 +15,7 @@ import {ReloadIcon} from "@radix-ui/react-icons";
 import {Backup} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {useMutation} from "@tanstack/react-query";
-import {createRestaurationAction} from "@/features/restore/restore.action";
+import {createRestorationAction} from "@/features/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {TooltipCustom} from "@/components/wrappers/TooltipCustom/TooltipCustom";
@@ -50,7 +50,7 @@ export const backupColumns: ColumnDef<Backup>[] = [
             const {extendedProps} = table.options.meta;
 
 
-            // const isRestauring = !!rowData.restaurations.find(restauration => restauration.status === "waiting");
+            // const isRestoring = !!rowData.restorations.find(restoration => restoration.status === "waiting");
 
             const router = useRouter()
 
@@ -62,15 +62,15 @@ export const backupColumns: ColumnDef<Backup>[] = [
 
             const mutationRestore = useMutation({
                 mutationFn: async () => {
-                    const restauration = await createRestaurationAction({
+                    const restoration = await createRestorationAction({
                         backupId: rowData.id,
                         databaseId: rowData.databaseId
                     })
-                    if (restauration.data.success) {
-                        toast.success(restauration.data.actionSuccess?.message || "Restauration created successfully!");
+                    if (restoration.data.success) {
+                        toast.success(restoration.data.actionSuccess?.message || "Restoration created successfully!");
                         router.refresh()
                     } else {
-                        toast.error(restauration.serverError || "Failed to create restauration.");
+                        toast.error(restoration.serverError || "Failed to create restoration.");
                     }
                 }})
 
@@ -90,7 +90,7 @@ export const backupColumns: ColumnDef<Backup>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         {status == "success" ?
                             <>
-                                <TooltipCustom disabled={extendedProps} text="Already a restauration waiting">
+                                <TooltipCustom disabled={extendedProps} text="Already a restoration waiting">
                                     <DropdownMenuItem disabled={mutationRestore.isPending || extendedProps}
                                                       onClick={async () => {
                                                           await handleRestore()

@@ -49,7 +49,7 @@ export async function POST(
             return NextResponse.json({error: "Database associated with generatedId provided not found"}, {status: 404})
         }
 
-        const restoration = await prisma.restauration.findFirst({
+        const restoration = await prisma.restoration.findFirst({
             where: {
                 status : "ongoing",
                 databaseId: database.id
@@ -59,7 +59,7 @@ export async function POST(
             return NextResponse.json({error: "Unable to fin the corresponding restoration"}, {status: 404})
         }
 
-        await prisma.restauration.update({
+        await prisma.restoration.update({
             where:{
                 id : restoration.id
             },
