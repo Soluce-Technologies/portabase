@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import {isUuidv4} from "@/utils/verify-uuid";
 import {prisma} from "@/prisma";
+import {eventEmitter} from "../../../events/route";
 
 
 
@@ -72,6 +73,10 @@ export async function POST(
             message: true,
             details: "Restoration successfully updated"
         }
+
+        eventEmitter.emit('modification', { update: true });
+
+
         return Response.json(response , {status: 200})
 
 

@@ -5,6 +5,7 @@ import {isUuidv4} from "@/utils/verify-uuid";
 import {uploadLocalPrivate} from "@/features/upload/private/upload.action";
 import {v4 as uuidv4} from "uuid";
 import {Backup, Database} from "@prisma/client";
+import {eventEmitter} from "../../../events/route";
 
 export async function POST(
     request: Request,
@@ -118,6 +119,7 @@ export async function POST(
                     status: "success",
                 },
             });
+            eventEmitter.emit('modification', { update: true });
 
             return NextResponse.json(
                 {
@@ -130,6 +132,7 @@ export async function POST(
                 where: { id: backup.id },
                 data: { status: "failed" },
             });
+            eventEmitter.emit('modification', { update: true });
 
             return NextResponse.json(
                 {
