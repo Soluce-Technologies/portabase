@@ -1,16 +1,39 @@
+"use client"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
 import {backupColumns} from "@/features/backup/columns";
 import {restoreColumns} from "@/features/restore/columns";
-import {Backup, Restauration} from "@prisma/client";
+import {Backup, Database, Restauration} from "@prisma/client";
+import {useEffect} from "react";
+import {useRouter} from "next/navigation";
+import {eventUpdate} from "@/types/events";
 
 export type DatabaseTabsProps = {
     backups: Backup[]
     restaurations: Restauration[]
     isAlreadyRestore: boolean
+    database: Database
 }
 
 export const DatabaseTabs = (props: DatabaseTabsProps) => {
+
+    const router = useRouter();
+    useEffect(() => {
+        const eventSource = new EventSource('/api/events');
+
+        eventSource.addEventListener('modification', (event) => {
+            const data:eventUpdate = JSON.parse(event.data)
+            if(data.update){
+                console.log("update", data.update)
+                router.refresh()
+            }
+        });
+
+        return () => {
+            eventSource.close();
+        };
+    }, []);
+
     return (
         <Tabs className="flex flex-col flex-1" defaultValue="backup">
 

@@ -77,6 +77,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
                     totalBackups={totalBackups}
                 />
                 <DatabaseTabs
+                    database={database}
                     isAlreadyRestore={isAlreadyRestore}
                     backups={backups}
                     restaurations={restaurations}

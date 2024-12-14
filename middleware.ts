@@ -41,6 +41,7 @@ function checkRouteExists(pathname) {
         /^\/api\/agent\/[^/]+\/backup\/?$/,
         /^\/api\/agent\/[^/]+\/restore\/?$/,
         /^\/api\/files\/[^/]+\/?$/,
+        /^\/api\/events\/?$/,
     ];
     return routePatterns.some(pattern => pattern.test(pathname));
 }

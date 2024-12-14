@@ -3,6 +3,7 @@ import {NextResponse} from "next/server";
 import {Dbms} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {handleDatabases} from "./helpers";
+import {eventEmitter} from "../../../events/route";
 
 
 export type databaseAgent = {
@@ -50,6 +51,8 @@ export async function POST(
             }
         })
 
+        eventEmitter.emit('modification', { update: true });
+
         const response = {
             agent: {
                 id: agentId,
@@ -58,7 +61,6 @@ export async function POST(
             databases: databasesResponse
         }
         console.log(response)
-
         return Response.json(response)
     } catch (error) {
         console.error('Error in POST handler:', error);
