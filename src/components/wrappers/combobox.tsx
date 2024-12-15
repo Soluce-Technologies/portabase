@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover"
 import {FormControl} from "@/components/ui/form";
 import {SidebarMenuButton} from "@/components/ui/sidebar";
+import {Separator} from "@/components/ui/separator";
 
 export type comboBoxProps = {
     values: Array<{ value: string, label: string }>
@@ -33,7 +34,7 @@ export type comboBoxProps = {
 
 export function ComboBox(props: comboBoxProps) {
 
-    const {values: choices, defaultValue: defaultChoice = "", onValueChange, searchField = false} = props;
+    const {values: choices, defaultValue: defaultChoice = "", onValueChange, searchField = false, sideBar = false} = props;
 
     const [value, setValue] = useState<string>()
 
@@ -46,7 +47,7 @@ export function ComboBox(props: comboBoxProps) {
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                {props.sideBar ?
+                {sideBar ?
                     <SidebarMenuButton>
                         {value
                             ? choices.find((choice) => choice.value === value)?.label
@@ -69,10 +70,7 @@ export function ComboBox(props: comboBoxProps) {
 
 
             </PopoverTrigger>
-            <PopoverContent
-
-                className="p-0 popover-content-width-full"
-            >
+            <PopoverContent className="p-0 popover-content-width-full">
                 <Command>
                     {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
                     <CommandList>
@@ -100,6 +98,12 @@ export function ComboBox(props: comboBoxProps) {
                         </CommandGroup>
                     </CommandList>
                 </Command>
+                <Separator/>
+                {sideBar ?
+                    <SidebarMenuButton>
+                        + Create new organization
+                    </SidebarMenuButton>
+                    : null}
             </PopoverContent>
         </Popover>
     )
