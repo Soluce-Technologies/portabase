@@ -10,10 +10,9 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import {Download, MoreHorizontal, Trash2} from "lucide-react";
+import {MoreHorizontal} from "lucide-react";
 import {ReloadIcon} from "@radix-ui/react-icons";
 import {Restoration} from "@prisma/client";
-
 
 
 export const restoreColumns: ColumnDef<Restoration>[] = [

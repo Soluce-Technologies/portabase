@@ -32,8 +32,8 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
             icon: ShieldHalf,
         },
         {
-            title: "Statistic",
-            url: "kpi",
+            title: "Statistics",
+            url: "statistics",
             icon: ChartArea,
         },
         {

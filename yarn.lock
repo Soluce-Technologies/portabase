@@ -4046,10 +4046,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@^0.454.0:
-  version "0.454.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.454.0.tgz#a81b9c482018720f07ead0503ae502d94d528444"
-  integrity sha512-hw7zMDwykCLnEzgncEEjHeA6+45aeEzRYuKHuyRSOPkhko+J3ySGjGIzu+mmMfDFG1vazHepMaYFYHbTFAZAAQ==
+lucide-react@^0.468.0:
+  version "0.468.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.468.0.tgz#830c1bfd905575ddd23b832baa420c87db166910"
+  integrity sha512-6koYRhnM2N0GGZIdXzSeiNwguv1gt/FAjZOiPl76roBi3xKEXa4WmfpxgQwTTL4KipXjefrnf3oV4IsYhi4JFA==
 
 make-dir@^3.1.0:
   version "3.1.0"
@@ -4862,10 +4862,10 @@ recharts-scale@^0.4.4:
   dependencies:
     decimal.js-light "^2.4.1"
 
-recharts@^2.13.3:
-  version "2.13.3"
-  resolved "https://registry.yarnpkg.com/recharts/-/recharts-2.13.3.tgz#a5ce61e493dff921a14a14a8f42a9f2d2bbefd5a"
-  integrity sha512-YDZ9dOfK9t3ycwxgKbrnDlRC4BHdjlY73fet3a0C1+qGMjXVZe6+VXmpOIIhzkje5MMEL8AN4hLIe4AMskBzlA==
+recharts@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/recharts/-/recharts-2.15.0.tgz#0b77bff57a43885df9769ae649a14cb1a7fe19aa"
+  integrity sha512-cIvMxDfpAmqAmVgc4yb7pgm/O1tmmkl/CjrvXuW+62/+7jj/iF9Ykm+hb/UJt42TREHMyd3gb+pkgoa2MxgDIw==
   dependencies:
     clsx "^2.0.0"
     eventemitter3 "^4.0.1"
