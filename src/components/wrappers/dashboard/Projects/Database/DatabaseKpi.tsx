@@ -25,7 +25,7 @@ export const DatabaseKpi = (props: DatabaseKpiPro) => {
                     Success rate
                 </CardHeader>
                 <CardContent>
-                    {props.successRate ?? "Unavailable for now."}
+                    {props.successRate ? `${props.successRate} %` : "Unavailable for now."}
                 </CardContent>
             </Card>
             <Card className="w-full sm:w-auto flex-1">
