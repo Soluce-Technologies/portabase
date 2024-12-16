@@ -6,6 +6,5 @@ export const isValidCronPart = (type: string, value: string): boolean => {
         month: /^(\*|([1-9]|1[0-2])|(\d+(,\d+)*|(\d+-\d+)|(\*\/\d+)))$/,
         "day-of-week": /^(\*|[0-6]|(\d+(,\d+)*|(\d+-\d+)|(\*\/\d+)))$/,
     };
-
     return regexMap[type]?.test(value) ?? false;
 };

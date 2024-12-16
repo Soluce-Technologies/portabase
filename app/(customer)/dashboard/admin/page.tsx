@@ -3,7 +3,7 @@ import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {prisma} from "@/prisma";
-import {AdminTabs} from "@/components/wrappers/Dashboard/admin/admin-tabs";
+import {AdminTabs} from "@/components/wrappers/dashboard/admin/admin-tabs";
 
 
 export default async function RoutePage(props: PageParams<{}>) {

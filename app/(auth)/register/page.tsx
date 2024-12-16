@@ -1,7 +1,7 @@
 "use client"
 
 import {PageParams} from "@/types/next";
-import {RegisterForm} from "@/components/wrappers/Auth/Register/RegisterForm/RegisterForm";
+import {RegisterForm} from "@/components/wrappers/auth/Register/RegisterForm/RegisterForm";
 
 export default function RoutePage(props: PageParams<{}>) {
     return (

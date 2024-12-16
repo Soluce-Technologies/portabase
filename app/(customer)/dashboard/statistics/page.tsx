@@ -2,8 +2,8 @@ import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {prisma} from "@/prisma";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {EvolutionLineChart} from "@/components/wrappers/charts/evolution-line-chart";
-import {PercentageLineChart} from "@/components/wrappers/charts/percentage-line-chart";
+import {EvolutionLineChart} from "@/components/wrappers/dashboard/statistics/charts/evolution-line-chart";
+import {PercentageLineChart} from "@/components/wrappers/dashboard/statistics/charts/percentage-line-chart";
 
 export default async function RoutePage(props: PageParams<{}>) {
 
