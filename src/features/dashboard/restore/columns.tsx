@@ -1,7 +1,6 @@
 "use client"
 
 import {ColumnDef} from "@tanstack/react-table"
-import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,6 +12,7 @@ import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import {ReloadIcon} from "@radix-ui/react-icons";
 import {Restoration} from "@prisma/client";
+import {StatusBadge} from "@/components/wrappers/common/status-badge";
 
 
 export const restoreColumns: ColumnDef<Restoration>[] = [

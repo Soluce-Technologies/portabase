@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 
 import {ComboBox} from "@/components/wrappers/common/combobox";
 import {Organization} from "@prisma/client";
-import {getCurrentOrganizationSlug, setCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
+import {getCurrentOrganizationId, setCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
 import {useSidebar} from "@/components/ui/sidebar";
 
 export type organizationComboBoxProps = {
@@ -17,42 +17,42 @@ export function OrganizationCombobox(props: organizationComboBoxProps) {
 
     // const {organizationId, moveToAnotherOrganization} = useStore((state) => state);
 
-    const [organizationSlug, setOrganizationSlug] = useState<string>()
+    const [organizationId, setOrganizationId] = useState<string>()
 
     const {organizations, defaultOrganization} = props
 
     useEffect(() => {
-        getCurrentOrganizationSlug().then(slug => {
+        getCurrentOrganizationId().then(id => {
 
-            if (slug == "") {
-                setOrganizationSlug(defaultOrganization.slug)
-                setCurrentOrganizationSlug(defaultOrganization.slug)
+            if (id == "") {
+                setOrganizationId(defaultOrganization.id)
+                setCurrentOrganizationId(defaultOrganization.id)
             } else {
-                setOrganizationSlug(slug)
-                const organization = organizations.find(organization => organization.slug === slug)
+                setOrganizationId(id)
+                const organization = organizations.find(organization => organization.id === id)
                 if (!organization) {
-                    setOrganizationSlug(defaultOrganization.slug)
-                    setCurrentOrganizationSlug(defaultOrganization.slug)
+                    setOrganizationId(defaultOrganization.id)
+                    setCurrentOrganizationId(defaultOrganization.id)
                 }
             }
         })
 
-    }, [organizationSlug])
+    }, [organizationId])
 
     const values = organizations.map(organization => {
         return ({
-            value: organization.slug,
+            value: organization.id,
             label: organization.name,
         })
     })
 
-    const onValueChange = (slug: string) => {
-        if (organizationSlug !== slug) {
-            setOrganizationSlug(slug)
-            setCurrentOrganizationSlug(slug)
+    const onValueChange = (id: string) => {
+        if (organizationId !== id) {
+            setOrganizationId(id)
+            setCurrentOrganizationId(id)
         }
     }
-    const { state, isMobile } = useSidebar();
+    const {state, isMobile} = useSidebar();
 
 
     return (
@@ -61,7 +61,7 @@ export function OrganizationCombobox(props: organizationComboBoxProps) {
                 <ComboBox
                     sideBar
                     values={values}
-                    defaultValue={organizationSlug}
+                    defaultValue={organizationId}
                     onValueChange={onValueChange}/>
             )}
 

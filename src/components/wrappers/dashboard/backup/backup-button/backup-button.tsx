@@ -6,7 +6,7 @@ import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 
 import {backupButtonAction} from "@/components/wrappers/dashboard/backup/backup-button/backup-button.action";
-import {ButtonWithLoading} from "@/components/wrappers/common/button/ButtonWithLoading/ButtonWithLoading";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 
 export type BackupButtonProps = {
     databaseId: string

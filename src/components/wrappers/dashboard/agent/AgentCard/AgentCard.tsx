@@ -4,8 +4,8 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import Link from "next/link";
 import {ValueIcon} from "@radix-ui/react-icons";
 import {Circle} from "lucide-react";
-import {ConnectionCircle} from "@/components/wrappers/common/connection-circle";
 import {formatDateLastContact} from "@/utils/date-formatting";
+import {ConnectionCircle} from "@/components/wrappers/common/connection-circle";
 
 export type agentCardProps = {
     data: any

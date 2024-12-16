@@ -11,8 +11,8 @@ import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {TooltipProvider, TooltipTrigger, Tooltip, TooltipContent} from "@/components/ui/tooltip";
-import {RegisterSchema, RegisterType} from "@/components/wrappers/auth/Register/RegisterForm/register-form.schema";
-import {registerUserAction} from "@/components/wrappers/auth/Register/RegisterForm/register-form.action";
+import {RegisterSchema, RegisterType} from "@/components/wrappers/auth/Register/register-form/register-form.schema";
+import {registerUserAction} from "@/components/wrappers/auth/Register/register-form/register-form.action";
 import {PasswordInput} from "@/components/wrappers/auth/PaswordInput/password-input";
 
 export type registerFormProps = {

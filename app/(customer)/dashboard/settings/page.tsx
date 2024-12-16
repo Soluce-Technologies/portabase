@@ -1,22 +1,23 @@
 import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
-import {Page, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
+import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {SettingsTabs} from "@/components/wrappers/dashboard/settings/SettingsTabs/SettingsTabs";
+import {getCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
+import {Button} from "@/components/ui/button";
+import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await requiredCurrentUser()
 
-    const defaultOrganization = await prisma.organization.findUnique({
-        where: {slug: "default"},
-    });
+    const currentOrganizationId = await getCurrentOrganizationId()
 
     const users = await prisma.user.findMany({
         where: {
             organizations: {
                 some: {
-                    organizationId: defaultOrganization.id
+                    organizationId: currentOrganizationId
                 },
             },
             deleted: {not: true},
@@ -38,6 +39,10 @@ export default async function RoutePage(props: PageParams<{}>) {
                 <PageTitle>
                     Settings
                 </PageTitle>
+                <PageActions>
+                    {/*<Button variant="destructive">Delete Organization</Button>*/}
+                    <ButtonWithConfirm text="Delete Organization" variant="destructive"/>
+                </PageActions>
             </PageHeader>
             <PageDescription>
                 Manage your organization settings.

@@ -1,5 +1,5 @@
 "use server"
-import {RegisterSchema} from "@/components/wrappers/auth/Register/RegisterForm/register-form.schema";
+import {RegisterSchema} from "@/components/wrappers/auth/Register/register-form/register-form.schema";
 import {action} from "@/safe-actions";
 import {prisma} from "@/prisma";
 import {hashPassword} from "@/utils/password";

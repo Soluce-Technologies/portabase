@@ -1,29 +1,30 @@
+import Link from 'next/link'
+
 import {PageParams} from "@/types/next";
 import {prisma} from "@/prisma";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {Button} from "@/components/ui/button";
-import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {ProjectCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectCard";
 import {requiredCurrentUser} from "@/auth/current-user";
+import {getCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
+
 
 export default async function RoutePage(props: PageParams<{}>) {
 
-    // const {searchParams} = props
-    // const organizationId = searchParams?.organizationId || "default";
-
     const user = await requiredCurrentUser()
+
+    const currentOrganizationId = await getCurrentOrganizationId()
 
     const projects = await prisma.project.findMany({
         where: {
             organization: {
-                slug: "default",
-                // id: organizationId,
-                users: {
-                    some: {
-                        userId: user.id
-                    },
-                },
+                id: currentOrganizationId,
+                // users: {
+                //     some: {
+                //         userId: user.id
+                //     },
+                // },
             }
         },
         include: {

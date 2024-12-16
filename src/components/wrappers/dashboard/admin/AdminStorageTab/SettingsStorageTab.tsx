@@ -5,7 +5,7 @@ import {Label} from "@/components/ui/label";
 import {StorageS3Form} from "@/components/wrappers/dashboard/admin/AdminStorageTab/StorageS3Form/StorageS3Form";
 import {useState} from "react";
 import {Settings} from "@prisma/client";
-import {ButtonWithLoading} from "@/components/wrappers/common/button/ButtonWithLoading/ButtonWithLoading";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {useMutation} from "@tanstack/react-query";
 import {checkConnexionToS3} from "@/features/upload/public/upload.action";
 import {toast} from "sonner";

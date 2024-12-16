@@ -1,7 +1,6 @@
 "use client"
 
 import {ColumnDef} from "@tanstack/react-table"
-import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,9 +14,10 @@ import {ReloadIcon} from "@radix-ui/react-icons";
 import {Backup} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {useMutation} from "@tanstack/react-query";
-import {createRestorationAction} from "@/features/restore/restore.action";
+import {createRestorationAction} from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {TooltipCustom} from "@/components/wrappers/common/tooltipCustom/TooltipCustom";
 
 

@@ -7,6 +7,8 @@ import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
+import {createOrganizationAction} from "@/components/wrappers/dashboard/organization/organization.action";
+import {useRouter} from "next/navigation";
 
 export type createOrganizationModalProps = {
     children: any
@@ -17,12 +19,16 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
 
     const {children} = props;
 
+    const router = useRouter()
+
     const form = useZodForm({
         schema: OrganizationSchema,
     });
 
     const mutation = useMutation({
         mutationFn: async (values: OrganizationSchema) => {
+            const result = await createOrganizationAction(values)
+            router.refresh()
         }
     })
 
@@ -54,6 +60,20 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="slug"
+                            defaultValue=""
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Slug</FormLabel>
                                     <FormControl>
                                         <Input {...field} />
                                     </FormControl>

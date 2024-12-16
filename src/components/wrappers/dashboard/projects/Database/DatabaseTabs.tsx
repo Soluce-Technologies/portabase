@@ -2,12 +2,12 @@
 
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTableWithPagination} from "@/components/wrappers/common/table/data-table-with-pagination";
-import {backupColumns} from "@/features/backup/columns";
-import {restoreColumns} from "@/features/restore/columns";
 import {Backup, Database, Restoration} from "@prisma/client";
 import {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {eventUpdate} from "@/types/events";
+import {backupColumns} from "@/features/dashboard/backup/columns";
+import {restoreColumns} from "@/features/dashboard/restore/columns";
 
 export type DatabaseTabsProps = {
     backups: Backup[]

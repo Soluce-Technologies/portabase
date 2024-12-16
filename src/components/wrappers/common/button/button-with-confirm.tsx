@@ -1,4 +1,5 @@
 "use client"
+
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {Loader2} from "lucide-react";
@@ -15,15 +16,17 @@ export type VariantButton = {
 export type ButtonWithConfirmProps = {
     icon?: any,
     text: string,
-    variant?:  keyof VariantButton ,
+    variant?: keyof VariantButton,
     className?: string,
     onClick?: () => void,
-    isPending? : boolean
+    isPending?: boolean
 };
 
 export const ButtonWithConfirm = (props: ButtonWithConfirmProps) => {
+
     const [isConfirming, setIsConfirming] = useState(false)
-    return(
+
+    return (
         <Button
             onClick={() => {
                 if (isConfirming) {
@@ -42,4 +45,5 @@ export const ButtonWithConfirm = (props: ButtonWithConfirmProps) => {
             </>
         </Button>
     )
+
 }

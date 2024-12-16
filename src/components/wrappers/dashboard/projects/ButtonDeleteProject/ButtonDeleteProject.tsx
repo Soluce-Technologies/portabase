@@ -1,6 +1,7 @@
 "use client"
-import {ButtonWithConfirm} from "@/components/wrappers/common/button/ButtonWithConfirm/ButtonWithConfirm";
+
 import {Trash2} from "lucide-react";
+import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
 
 export type ButtonDeleteProjectProps = {
     text? : string

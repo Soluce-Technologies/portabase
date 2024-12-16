@@ -10,7 +10,7 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
-import {ButtonWithLoading} from "@/components/wrappers/common/button/ButtonWithLoading/ButtonWithLoading";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 
 export const usersColumns: ColumnDef<User>[] = [
     {

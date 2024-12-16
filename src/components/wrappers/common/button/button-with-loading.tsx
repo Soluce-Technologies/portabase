@@ -1,6 +1,7 @@
 "use client"
+
 import {Button} from "@/components/ui/button";
-import {ButtonHTMLAttributes, useState} from "react";
+import {ButtonHTMLAttributes} from "react";
 import {Loader2} from "lucide-react";
 
 export type VariantButton = {

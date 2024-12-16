@@ -1,9 +1,10 @@
 "use client"
+
 import {useMutation} from "@tanstack/react-query";
 import {signOutAction} from "@/features/auth/auth.action";
-import {ButtonWithConfirm} from "@/components/wrappers/common/button/ButtonWithConfirm/ButtonWithConfirm";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
 import {Trash2} from "lucide-react";
+import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
 
 export type ButtonDeleteAccountProps = {
     text? : string
