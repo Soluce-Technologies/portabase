@@ -3,7 +3,7 @@ import {
     SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu, SidebarMenuButton,
+    SidebarMenu,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {LoggedInButton} from "@/components/wrappers/Dashboard/LoggedInButton/LoggedInButton";
@@ -11,6 +11,8 @@ import {SidebarMenuCustom} from "@/components/wrappers/Dashboard/SideBar/SideBar
 import {OrganizationComboBox} from "@/components/wrappers/Organization/OrganizationCombobox";
 import {prisma} from "@/prisma";
 import {requiredCurrentUser} from "@/auth/current-user";
+import {SideBarLogo} from "@/components/wrappers/Dashboard/SideBar/SideBarLogo/SideBarLogo";
+import {SideBarFooterCredit} from "@/components/wrappers/Dashboard/SideBar/SideBarFooterCredit/SideBarFooterCredit";
 
 export async function AppSidebar() {
 
@@ -34,9 +36,7 @@ export async function AppSidebar() {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <div className="flex justify-center items-center ">
-                    <h1 className="font-bold text-xl">Portabase</h1>
-                </div>
+               <SideBarLogo/>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <OrganizationComboBox
@@ -45,6 +45,8 @@ export async function AppSidebar() {
                         />
                     </SidebarMenuItem>
                 </SidebarMenu>
+
+
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
@@ -60,9 +62,7 @@ export async function AppSidebar() {
                         <LoggedInButton/>
                     </SidebarMenuItem>
                 </SidebarMenu>
-                <div className="text-center">
-                    <h1 className="text-[10px]">Portabase Community Edition 1.0.0</h1>
-                </div>
+                <SideBarFooterCredit/>
             </SidebarFooter>
         </Sidebar>
     )

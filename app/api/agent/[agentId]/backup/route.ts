@@ -20,6 +20,7 @@ export async function POST(
                 { status: 400 }
             );
         }
+        eventEmitter.emit('modification', { update: true });
 
         const agentId = (await params).agentId;
         const formData = await request.formData();

@@ -17,6 +17,8 @@ export async function POST(
 ) {
 
     try {
+        eventEmitter.emit('modification', { update: true });
+
         const agentId = (await params).agentId
         const body: BodyResultRestore = await request.json();
 

@@ -65,7 +65,7 @@ export const UsersDataTable = ({currentUser, table}: usersDataTableProps) => {
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row: Row<User>) => (
                             <TableRow
-                                className={cn(row.original.id === currentUser.id ? "bg-gray-200 pointer-events-none" : "")}
+                                className={cn(row.original.id === currentUser.id ? "opacity-40 pointer-events-none" : "")}
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
                             >

@@ -6,6 +6,7 @@ import {ComboBox} from "@/components/wrappers/combobox";
 import {Organization} from "@prisma/client";
 import {useStore} from "@/state-management/store";
 import {getCurrentOrganizationSlug, setCurrentOrganizationSlug} from "@/features/dashboard/organization";
+import {useSidebar} from "@/components/ui/sidebar";
 
 export type organizationComboBoxProps = {
     organizations: Organization[]
@@ -24,7 +25,6 @@ export function OrganizationComboBox(props: organizationComboBoxProps) {
     useEffect(() => {
         getCurrentOrganizationSlug().then(slug => {
 
-            console.log("sssssss", slug)
             if (slug == "") {
                 setOrganizationSlug(defaultOrganization.slug)
                 setCurrentOrganizationSlug(defaultOrganization.slug)
@@ -53,12 +53,20 @@ export function OrganizationComboBox(props: organizationComboBoxProps) {
             setCurrentOrganizationSlug(slug)
         }
     }
+    const { state, isMobile } = useSidebar();
+
 
     return (
-        <ComboBox
-            sideBar
-            values={values}
-            defaultValue={organizationSlug}
-            onValueChange={onValueChange}/>
+        <>
+            {state === 'expanded' && (
+                <ComboBox
+                    sideBar
+                    values={values}
+                    defaultValue={organizationSlug}
+                    onValueChange={onValueChange}/>
+            )}
+
+        </>
+
     )
 }
