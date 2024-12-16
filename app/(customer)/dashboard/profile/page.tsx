@@ -1,13 +1,12 @@
 import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {notFound} from "next/navigation";
 import {requiredCurrentUser} from "@/auth/current-user";
-import {UserForm} from "@/components/wrappers/dashboard/Profile/UserForm/UserForm";
+import {UserForm} from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
 import {prisma} from "@/prisma";
 import {Badge} from "@/components/ui/badge";
-import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import {AvatarWithUpload} from "@/components/wrappers/dashboard/Profile/Avatar/AvatarWithUpload";
+import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
+import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
 
 export default async function RoutePage(props: PageParams<{}>) {
 

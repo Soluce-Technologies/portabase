@@ -9,8 +9,8 @@ import {formatDateLastContact} from "@/utils/date-formatting";
 import {Button, buttonVariants} from "@/components/ui/button";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {AgentModalKey} from "@/components/wrappers/dashboard/agent/AgentModalKey/AgentModalKey";
-import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
-import {DatabaseCard} from "@/components/wrappers/dashboard/Projects/ProjectCard/ProjectDatabaseCard";
+import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
+import {DatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {

@@ -7,7 +7,6 @@ import {sendEmail} from "@/utils/email-helper";
 import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
 import {render} from "@react-email/render";
 import {toast} from "sonner";
-import HelloEmail from "../../../../../../emails/HelloEmail";
 
 
 

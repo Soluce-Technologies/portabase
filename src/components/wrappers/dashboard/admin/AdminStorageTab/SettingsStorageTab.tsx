@@ -9,7 +9,6 @@ import {ButtonWithLoading} from "@/components/wrappers/common/button/ButtonWithL
 import {useMutation} from "@tanstack/react-query";
 import {checkConnexionToS3} from "@/features/upload/public/upload.action";
 import {toast} from "sonner";
-import {updateUserAction} from "@/components/wrappers/dashboard/Profile/UserForm/user-form.action";
 import {useRouter} from "next/navigation";
 import {
     updateStorageSettingsAction

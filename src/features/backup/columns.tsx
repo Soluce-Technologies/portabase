@@ -1,7 +1,7 @@
 "use client"
 
 import {ColumnDef} from "@tanstack/react-table"
-import {StatusBadge} from "@/components/wrappers/status-badge";
+import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,7 +18,7 @@ import {useMutation} from "@tanstack/react-query";
 import {createRestorationAction} from "@/features/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {TooltipCustom} from "@/components/wrappers/TooltipCustom/TooltipCustom";
+import {TooltipCustom} from "@/components/wrappers/common/tooltipCustom/TooltipCustom";
 
 
 export const backupColumns: ColumnDef<Backup>[] = [

@@ -6,12 +6,6 @@ import {isUuidv4} from "@/utils/verify-uuid";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 
 
-
-
-
-
-
-
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
 

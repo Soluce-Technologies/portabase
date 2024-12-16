@@ -1,7 +1,7 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {prisma} from "@/prisma";
-import {ProjectForm} from "@/components/wrappers/dashboard/Projects/ProjectsForm/ProjectForm";
+import {ProjectForm} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm";
 
 
 export default async function RoutePage(props: PageParams<{}>) {

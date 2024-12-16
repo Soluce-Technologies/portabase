@@ -2,7 +2,7 @@
 
 import {useState} from "react";
 
-import {DateTimePicker} from "@/components/wrappers/daytime-picker";
+import {DateTimePicker} from "@/components/wrappers/common/daytime-picker";
 import {Button} from "@/components/ui/button";
 import {
     Form,

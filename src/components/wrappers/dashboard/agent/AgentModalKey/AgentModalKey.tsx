@@ -10,13 +10,13 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-import {CodeSnippet} from "@/components/wrappers/CodeSnippet/CodeSnippet";
 import {generateEdgeKey} from "@/utils/edge_key";
 import {Copy} from "lucide-react";
 import {PropsWithChildren, useState} from "react";
 import {CopyButton} from "@/components/wrappers/common/button/copy-button";
 import {Agent} from "@prisma/client";
 import {getServerUrl} from "@/utils/get-server-url";
+import {CodeSnippet} from "@/components/wrappers/codeSnippet/CodeSnippet";
 
 export type agentRegistrationDialogProps = PropsWithChildren<{
     agent: Agent

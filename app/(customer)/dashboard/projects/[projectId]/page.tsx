@@ -4,9 +4,9 @@ import {buttonVariants} from "@/components/ui/button";
 import {prisma} from "@/prisma";
 import {GearIcon} from "@radix-ui/react-icons";
 import Link from "next/link";
-import {ButtonDeleteProject} from "@/components/wrappers/dashboard/Projects/ButtonDeleteProject/ButtonDeleteProject";
-import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
-import {ProjectDatabaseCard} from "@/components/wrappers/dashboard/Projects/ProjectCard/ProjectDatabaseCard";
+import {ButtonDeleteProject} from "@/components/wrappers/dashboard/projects/ButtonDeleteProject/ButtonDeleteProject";
+import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
+import {ProjectDatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 import {notFound} from "next/navigation";
 
 

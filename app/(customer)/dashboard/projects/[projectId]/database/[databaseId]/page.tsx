@@ -3,8 +3,8 @@ import {prisma} from "@/prisma";
 import {notFound} from "next/navigation";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {BackupButton} from "@/components/wrappers/dashboard/backup/backup-button/backup-button";
-import {DatabaseTabs} from "@/components/wrappers/dashboard/Projects/Database/DatabaseTabs";
-import {DatabaseKpi} from "@/components/wrappers/dashboard/Projects/Database/DatabaseKpi";
+import {DatabaseTabs} from "@/components/wrappers/dashboard/projects/Database/DatabaseTabs";
+import {DatabaseKpi} from "@/components/wrappers/dashboard/projects/Database/DatabaseKpi";
 import {EditButton} from "@/components/wrappers/dashboard/database/EditButton/EditButton";
 import {CronButton} from "@/components/wrappers/dashboard/database/CronButton/CronButton";
 

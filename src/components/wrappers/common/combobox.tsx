@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 
-import {Check, ChevronDown, KeyRound} from "lucide-react"
+import {Check, ChevronDown} from "lucide-react"
 
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
@@ -22,8 +22,7 @@ import {
 import {FormControl} from "@/components/ui/form";
 import {SidebarMenuButton} from "@/components/ui/sidebar";
 import {Separator} from "@/components/ui/separator";
-import {AgentModalKey} from "@/components/wrappers/dashboard/agent/AgentModalKey/AgentModalKey";
-import {CreateOrganizationModal} from "@/components/wrappers/dashboard/Organization/create-organisation-modal";
+import {CreateOrganizationModal} from "@/components/wrappers/dashboard/organization/create-organisation-modal";
 
 export type comboBoxProps = {
     values: Array<{ value: string, label: string }>

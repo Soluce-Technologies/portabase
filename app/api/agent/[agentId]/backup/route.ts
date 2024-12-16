@@ -1,5 +1,4 @@
 import {NextResponse} from "next/server";
-import {Body} from "../status/route";
 import {prisma} from "@/prisma";
 import {isUuidv4} from "@/utils/verify-uuid";
 import {uploadLocalPrivate} from "@/features/upload/private/upload.action";

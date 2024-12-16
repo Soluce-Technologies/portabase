@@ -1,7 +1,7 @@
 "use client"
 
 import {ColumnDef} from "@tanstack/react-table"
-import {StatusBadge} from "@/components/wrappers/status-badge";
+import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {
     DropdownMenu,
     DropdownMenuContent,

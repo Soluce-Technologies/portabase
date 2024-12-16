@@ -1,9 +1,9 @@
 import {notFound} from "next/navigation";
 
 import {currentUser} from "@/auth/current-user";
-import {LoggedInButton} from "@/components/wrappers/dashboard/LoggedInButton/LoggedInButton";
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {ModeToggle} from "@/features/theme/ModeToggle";
+import {LoggedInButton} from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
 
 export const Header = async () => {
     const user = await currentUser()

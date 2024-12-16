@@ -1,8 +1,8 @@
 import {flexRender, Row, RowData} from "@tanstack/react-table";
 
 import {User} from "@prisma/client";
-import {DataTableWithPagination} from "@/components/wrappers/table/data-table-with-pagination";
-import {usersColumns} from "@/components/wrappers/dashboard/Settings/SettingsUsersTab/columns-users";
+import {DataTableWithPagination} from "@/components/wrappers/common/table/data-table-with-pagination";
+import {usersColumns} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/columns-users";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {cn} from "@/lib/utils";
 
