@@ -4,7 +4,7 @@ import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
 import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {ProjectCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectCard";
+import {ProjectCard} from "@/components/wrappers/dashboard/Projects/ProjectCard/ProjectCard";
 import {requiredCurrentUser} from "@/auth/current-user";
 
 export default async function RoutePage(props: PageParams<{}>) {

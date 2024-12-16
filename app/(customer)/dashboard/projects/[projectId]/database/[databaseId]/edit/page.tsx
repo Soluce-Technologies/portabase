@@ -1,10 +1,10 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {AgentForm} from "@/components/wrappers/Agent/AgentForm/AgentForm";
+import {AgentForm} from "@/components/wrappers/dashboard/agent/AgentForm/AgentForm";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {prisma} from "@/prisma";
 import {notFound} from "next/navigation";
-import {DatabaseForm} from "@/components/wrappers/Database/DatabaseForm/DatabaseForm";
+import {DatabaseForm} from "@/components/wrappers/dashboard/database/DatabaseForm/DatabaseForm";
 
 
 export default async function RoutePage(props: PageParams<{

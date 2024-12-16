@@ -8,9 +8,9 @@ import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/feat
 import {formatDateLastContact} from "@/utils/date-formatting";
 import {Button, buttonVariants} from "@/components/ui/button";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {AgentModalKey} from "@/components/wrappers/Agent/AgentModalKey/AgentModalKey";
+import {AgentModalKey} from "@/components/wrappers/dashboard/agent/AgentModalKey/AgentModalKey";
 import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
-import {DatabaseCard} from "@/components/wrappers/Dashboard/Projects/ProjectCard/ProjectDatabaseCard";
+import {DatabaseCard} from "@/components/wrappers/dashboard/Projects/ProjectCard/ProjectDatabaseCard";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {

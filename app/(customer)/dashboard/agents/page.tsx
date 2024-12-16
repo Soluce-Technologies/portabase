@@ -1,6 +1,6 @@
 import {PageParams} from "@/types/next";
 import {prisma} from "@/prisma";
-import {AgentCard} from "@/components/wrappers/Agent/AgentCard/AgentCard";
+import {AgentCard} from "@/components/wrappers/dashboard/agent/AgentCard/AgentCard";
 import {CardsWithPagination} from "@/components/wrappers/cards-with-pagination";
 import {Button} from "@/components/ui/button";
 import Link from 'next/link'

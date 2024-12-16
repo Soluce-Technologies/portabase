@@ -2,7 +2,7 @@ import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
-import {SettingsTabs} from "@/components/wrappers/Dashboard/Settings/SettingsTabs/SettingsTabs";
+import {SettingsTabs} from "@/components/wrappers/dashboard/Settings/SettingsTabs/SettingsTabs";
 
 
 export default async function RoutePage(props: PageParams<{}>) {

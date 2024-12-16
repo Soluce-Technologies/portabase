@@ -3,11 +3,11 @@ import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {notFound} from "next/navigation";
 import {requiredCurrentUser} from "@/auth/current-user";
-import {UserForm} from "@/components/wrappers/Dashboard/Profile/UserForm/UserForm";
+import {UserForm} from "@/components/wrappers/dashboard/Profile/UserForm/UserForm";
 import {prisma} from "@/prisma";
 import {Badge} from "@/components/ui/badge";
-import {ButtonDeleteAccount} from "@/components/wrappers/Dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import {AvatarWithUpload} from "@/components/wrappers/Dashboard/Profile/Avatar/AvatarWithUpload";
+import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/Profile/ButtonDeleteAccount/ButtonDeleteAccount";
+import {AvatarWithUpload} from "@/components/wrappers/dashboard/Profile/Avatar/AvatarWithUpload";
 
 export default async function RoutePage(props: PageParams<{}>) {
 

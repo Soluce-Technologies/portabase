@@ -2,14 +2,14 @@ import {PageParams} from "@/types/next";
 import {prisma} from "@/prisma";
 import {notFound, usePathname, useRouter} from "next/navigation";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
-import {BackupButton} from "@/components/wrappers/BackupButton/BackupButton";
-import {DatabaseTabs} from "@/components/wrappers/Dashboard/Projects/Database/DatabaseTabs";
-import {DatabaseKpi} from "@/components/wrappers/Dashboard/Projects/Database/DatabaseKpi";
+import {BackupButton} from "@/components/wrappers/dashboard/backup/backup-button/backup-button";
+import {DatabaseTabs} from "@/components/wrappers/dashboard/Projects/Database/DatabaseTabs";
+import {DatabaseKpi} from "@/components/wrappers/dashboard/Projects/Database/DatabaseKpi";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {GearIcon} from "@radix-ui/react-icons";
-import {EditButton} from "@/components/wrappers/Database/EditButton/EditButton";
-import {CronButton} from "@/components/wrappers/Database/CronButton/CronButton";
+import {EditButton} from "@/components/wrappers/dashboard/database/EditButton/EditButton";
+import {CronButton} from "@/components/wrappers/dashboard/database/CronButton/CronButton";
 
 
 export default async function RoutePage(props: PageParams<{ databaseId: string }>) {

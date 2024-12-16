@@ -3,7 +3,7 @@ import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {prisma} from "@/prisma";
 import {notFound} from "next/navigation";
-import {RestoreForm} from "@/components/wrappers/Database/RestoreForm";
+import {RestoreForm} from "@/components/wrappers/dashboard/database/RestoreForm";
 
 
 export default async function RoutePage(props: PageParams<{
