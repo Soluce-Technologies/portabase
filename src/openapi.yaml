@@ -126,6 +126,7 @@ components:
         - updatedAt
         - slug
         - name
+        - isArchived
         - organizationId
     AgentScalarFieldEnum:
       type: string
@@ -452,6 +453,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organizationId:
           type: string
         organization:
@@ -465,6 +468,7 @@ components:
         - createdAt
         - slug
         - name
+        - isArchived
         - organizationId
         - organization
     Agent:
@@ -1957,6 +1961,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        isArchived:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
         organizationId:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
@@ -1981,6 +1989,8 @@ components:
         slug:
           $ref: "#/components/schemas/SortOrder"
         name:
+          $ref: "#/components/schemas/SortOrder"
+        isArchived:
           $ref: "#/components/schemas/SortOrder"
         organizationId:
           $ref: "#/components/schemas/SortOrder"
@@ -2026,6 +2036,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        isArchived:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
         organizationId:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
@@ -2078,6 +2092,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
             - type: string
+        isArchived:
+          oneOf:
+            - $ref: "#/components/schemas/BoolWithAggregatesFilter"
+            - type: boolean
         organizationId:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
@@ -4119,6 +4137,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organization:
           $ref: "#/components/schemas/OrganizationCreateNestedOneWithoutProjectsInput"
         databases:
@@ -4153,6 +4173,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
         organization:
           $ref: "#/components/schemas/OrganizationUpdateOneRequiredWithoutProjectsNestedI\
             nput"
@@ -4175,6 +4199,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organizationId:
           type: string
       required:
@@ -4207,6 +4233,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
     AgentCreateInput:
       type: object
       properties:
@@ -5587,6 +5617,15 @@ components:
       required:
         - userId
         - organizationId
+    BoolFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolFilter"
     DatabaseListRelationFilter:
       type: object
       properties:
@@ -5601,6 +5640,21 @@ components:
       properties:
         _count:
           $ref: "#/components/schemas/SortOrder"
+    BoolWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedBoolFilter"
+        _max:
+          $ref: "#/components/schemas/NestedBoolFilter"
     EnumDbmsFilter:
       type: object
       properties:
@@ -7030,6 +7084,11 @@ components:
             - type: array
               items:
                 $ref: "#/components/schemas/DatabaseWhereUniqueInput"
+    BoolFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          type: boolean
     OrganizationUpdateOneRequiredWithoutProjectsNestedInput:
       type: object
       properties:
@@ -8553,6 +8612,30 @@ components:
           $ref: "#/components/schemas/NestedBoolNullableFilter"
         _max:
           $ref: "#/components/schemas/NestedBoolNullableFilter"
+    NestedBoolFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolFilter"
+    NestedBoolWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedBoolFilter"
+        _max:
+          $ref: "#/components/schemas/NestedBoolFilter"
     NestedEnumDbmsFilter:
       type: object
       properties:
@@ -9770,6 +9853,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         databases:
           $ref: "#/components/schemas/DatabaseCreateNestedManyWithoutProjectInput"
       required:
@@ -9792,6 +9877,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         databases:
           $ref: "#/components/schemas/DatabaseUncheckedCreateNestedManyWithoutProjectInpu\
             t"
@@ -9966,6 +10053,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        isArchived:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
         organizationId:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
@@ -11199,6 +11290,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organization:
           $ref: "#/components/schemas/OrganizationCreateNestedOneWithoutProjectsInput"
       required:
@@ -11222,6 +11315,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organizationId:
           type: string
       required:
@@ -11570,6 +11665,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
         organization:
           $ref: "#/components/schemas/OrganizationUpdateOneRequiredWithoutProjectsNestedI\
             nput"
@@ -11599,6 +11698,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
         organizationId:
           oneOf:
             - type: string
@@ -12843,6 +12946,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
       required:
         - slug
         - name
@@ -12889,6 +12994,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
         databases:
           $ref: "#/components/schemas/DatabaseUpdateManyWithoutProjectNestedInput"
     ProjectUncheckedUpdateWithoutOrganizationInput:
@@ -12917,6 +13026,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
         databases:
           $ref: "#/components/schemas/DatabaseUncheckedUpdateManyWithoutProjectNestedInpu\
             t"
@@ -12946,6 +13059,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        isArchived:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
     UserOrganizationUpdateWithoutOrganizationInput:
       type: object
       properties:
@@ -14193,6 +14310,8 @@ components:
           type: boolean
         name:
           type: boolean
+        isArchived:
+          type: boolean
         organizationId:
           type: boolean
         organization:
@@ -14733,6 +14852,8 @@ components:
           type: boolean
         name:
           type: boolean
+        isArchived:
+          type: boolean
         organizationId:
           type: boolean
         _all:
@@ -14750,6 +14871,8 @@ components:
           type: boolean
         name:
           type: boolean
+        isArchived:
+          type: boolean
         organizationId:
           type: boolean
     ProjectMaxAggregateInput:
@@ -14764,6 +14887,8 @@ components:
         slug:
           type: boolean
         name:
+          type: boolean
+        isArchived:
           type: boolean
         organizationId:
           type: boolean
@@ -15508,6 +15633,8 @@ components:
           type: string
         name:
           type: string
+        isArchived:
+          type: boolean
         organizationId:
           type: string
         _count:
@@ -15527,6 +15654,7 @@ components:
         - createdAt
         - slug
         - name
+        - isArchived
         - organizationId
     AggregateAgent:
       type: object
@@ -16509,6 +16637,8 @@ components:
           type: integer
         name:
           type: integer
+        isArchived:
+          type: integer
         organizationId:
           type: integer
         _all:
@@ -16519,6 +16649,7 @@ components:
         - updatedAt
         - slug
         - name
+        - isArchived
         - organizationId
         - _all
     ProjectMinAggregateOutputType:
@@ -16546,6 +16677,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        isArchived:
+          oneOf:
+            - type: "null"
+            - type: boolean
         organizationId:
           oneOf:
             - type: "null"
@@ -16575,6 +16710,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        isArchived:
+          oneOf:
+            - type: "null"
+            - type: boolean
         organizationId:
           oneOf:
             - type: "null"

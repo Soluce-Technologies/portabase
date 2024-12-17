@@ -132,6 +132,7 @@ model Project {
   updatedAt      DateTime?    @updatedAt() @map("updated_at")
   slug           String       @unique()
   name           String
+  isArchived     Boolean      @default(false) @map("is_archived")
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
   databases      Database[]

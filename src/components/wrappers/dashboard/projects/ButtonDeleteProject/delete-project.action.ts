@@ -29,7 +29,7 @@ export const deleteProjectAction = userAction
                 value: project,
                 actionSuccess: {
                     message: "Projects has been successfully archived.",
-                    messageParams: {projectName: parsedInput.data.name},
+                    messageParams: {projectId: parsedInput},
                 },
             };
         } catch (error) {
@@ -39,7 +39,7 @@ export const deleteProjectAction = userAction
                     message: "Failed to archived Projects.",
                     status: 500, // Optional: Use a meaningful status code
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: {projectName: parsedInput.data.name},
+                    messageParams: {projectId: parsedInput},
                 },
             };
         }

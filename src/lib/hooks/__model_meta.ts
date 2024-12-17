@@ -377,6 +377,10 @@ const metadata = {
                 }, name: {
                     name: "name",
                     type: "String",
+                }, isArchived: {
+                    name: "isArchived",
+                    type: "Boolean",
+                    attributes: [{ "name": "@default", "args": [{ "value": false }] }],
                 }, organizationId: {
                     name: "organizationId",
                     type: "String",

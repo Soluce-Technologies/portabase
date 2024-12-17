@@ -328,7 +328,7 @@ export function useSuspenseCountProject<TArgs extends Prisma.ProjectCountArgs, T
     return useSuspenseModelQuery<TQueryFnData, TData, TError>('Project', `${endpoint}/project/count`, args, options, fetch);
 }
 
-export function useCheckProject<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: string; slug?: string; name?: string; organizationId?: string }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
+export function useCheckProject<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: string; slug?: string; name?: string; isArchived?: boolean; organizationId?: string }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
     const { endpoint, fetch } = getHooksContext();
     return useModelQuery<boolean, boolean, TError>('Project', `${endpoint}/project/check`, args, options, fetch);
 }
