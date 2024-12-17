@@ -18,8 +18,6 @@ export const signInAction = async (type: string, formData?: any) => {
                 email: formData.email
             });
         } catch (error) {
-            // const signInError = error as CredentialsSignin
-            console.error(error);
             return {error: "Error loging in, please try again or check your credentials !"};
         }
         redirect("/")
