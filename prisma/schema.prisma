@@ -102,11 +102,11 @@ model UserOrganization {
 }
 
 model Project {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
-
+  id             String       @id @default(cuid())
+  slug           String       @unique
+  name           String
+  createdAt      DateTime     @default(now()) @map("created_at")
+  isArchived     Boolean      @default(false)
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id])
 
