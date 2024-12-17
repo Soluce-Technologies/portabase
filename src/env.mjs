@@ -31,6 +31,7 @@ export const env = createEnv({
         S3_USE_SSL: z.string().optional(),
 
         STORAGE_TYPE: z.string().optional(),
+        NEXT_PUBLIC_GOOGLE_AUTH: z.string().optional(),
 
     },
     /*
@@ -40,6 +41,7 @@ export const env = createEnv({
      */
     client: {
         NEXT_PUBLIC_DOMAIN_NAME: z.string(),
+        NEXT_PUBLIC_GOOGLE_AUTH: z.string().optional(),
     },
     /*
      * Due to how Next.js bundles environment variables on Edge and Client,
@@ -62,6 +64,7 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
         AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+        NEXT_PUBLIC_GOOGLE_AUTH: process.env.NEXT_PUBLIC_GOOGLE_AUTH,
 
         S3_ENDPOINT: process.env.S3_ENDPOINT,
         S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,

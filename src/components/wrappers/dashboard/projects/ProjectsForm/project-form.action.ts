@@ -42,7 +42,7 @@ export const createProjectAction = userAction
                 success: true,
                 value: project,
                 actionSuccess: {
-                    message: "ProjectsForm has been successfully created.",
+                    message: "Projects has been successfully created.",
                     messageParams: {projectName: parsedInput.data.name},
                 },
             };
@@ -50,7 +50,7 @@ export const createProjectAction = userAction
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to create ProjectsForm.",
+                    message: "Failed to create Projects.",
                     status: 500, // Optional: Use a meaningful status code
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: {projectName: parsedInput.data.name},

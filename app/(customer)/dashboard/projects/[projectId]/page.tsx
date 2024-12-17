@@ -39,6 +39,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
                 </PageTitle>
                 <PageActions className="justify-between">
                     <ButtonDeleteProject
+                        projectId={projectId}
                         text={"Delete Project"}
                     />
                 </PageActions>

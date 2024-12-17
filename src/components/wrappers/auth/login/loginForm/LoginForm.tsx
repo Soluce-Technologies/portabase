@@ -38,10 +38,6 @@ export const LoginForm = (props: loginFormProps) => {
             <Card>
                 <CardHeader>
                     <div className="grid gap-2 text-center mb-2">
-                        {/*<div className="justify-center text-center flex">*/}
-                        {/*    <Image src="/logo.png" alt="Logo Portabase" width={100}*/}
-                        {/*           height={50}/>*/}
-                        {/*</div>*/}
                         <h1 className="text-3xl font-bold">Login</h1>
                         <p className="text-balance text-muted-foreground">
                             Enter your informations bellow to login

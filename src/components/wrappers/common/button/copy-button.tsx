@@ -13,7 +13,8 @@ export async function copyToClipboardWithMeta(value: string) {
 
 
 export type CopyButtonProps = {
-    value: string
+    value: string,
+    className: string
 }
 
 
