@@ -6,6 +6,9 @@ import {SettingsTabs} from "@/components/wrappers/dashboard/settings/SettingsTab
 import {getCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
 import {Button} from "@/components/ui/button";
 import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
+import {
+    DeleteOrganizationButton
+} from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
@@ -25,7 +28,7 @@ export default async function RoutePage(props: PageParams<{}>) {
         }
     })
 
-    console.log(users)
+    console.log(currentOrganizationId)
 
     const settings = await prisma.settings.findUnique({
         where: {
@@ -41,7 +44,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 </PageTitle>
                 <PageActions>
                     {/*<Button variant="destructive">Delete Organization</Button>*/}
-                    <ButtonWithConfirm text="Delete Organization" variant="destructive"/>
+                    <DeleteOrganizationButton organizationId={currentOrganizationId}/>
                 </PageActions>
             </PageHeader>
             <PageDescription>

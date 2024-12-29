@@ -9,6 +9,7 @@ import {Input} from "@/components/ui/input";
 import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
 import {createOrganizationAction} from "@/components/wrappers/dashboard/organization/organization.action";
 import {useRouter} from "next/navigation";
+import {useState} from "react";
 
 export type createOrganizationModalProps = {
     children: any
@@ -16,6 +17,7 @@ export type createOrganizationModalProps = {
 
 
 export function CreateOrganizationModal(props: createOrganizationModalProps) {
+    const [open, setOpen] = useState(false);
 
     const {children} = props;
 
@@ -27,14 +29,16 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
 
     const mutation = useMutation({
         mutationFn: async (values: OrganizationSchema) => {
+            console.log(values)
             const result = await createOrganizationAction(values)
+            setOpen(false);
             router.refresh()
         }
     })
 
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
 
             <DialogTrigger asChild>
                 {children}
@@ -50,6 +54,7 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                     <Form form={form}
                           className="flex flex-col gap-4"
                           onSubmit={async (values) => {
+                              console.log(values)
                               await mutation.mutateAsync(values);
                           }}
                     >
@@ -81,14 +86,14 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                                 </FormItem>
                             )}
                         />
+                        <DialogFooter>
+                            <div className="flex items-center justify-between w-full">
+                                <Button type="submit">Create</Button>
+                            </div>
+                        </DialogFooter>
                     </Form>
                 </div>
 
-                <DialogFooter>
-                    <div className="flex items-center justify-between w-full">
-                        <Button type="submit">Create</Button>
-                    </div>
-                </DialogFooter>
 
             </DialogContent>
 

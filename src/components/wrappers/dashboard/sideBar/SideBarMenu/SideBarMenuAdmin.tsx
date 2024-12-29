@@ -8,27 +8,22 @@ import {buttonVariants} from "@/components/ui/button";
 import {ChartArea, Layers, Settings, ShieldHalf} from "lucide-react";
 import {usePathname} from "next/navigation";
 
-export type SidebarMenuCustomProps = {}
+export type SidebarMenuAdminProps = {}
 
-export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
+export const SidebarMenuAdmin = (props: SidebarMenuAdminProps) => {
 
     const BASE_URL = "/dashboard";
     const pathname = usePathname();
     // Menu items.
     const items = [
         {
-            title: "Projects",
-            url: "projects",
-            icon: Layers,
+            title: "Agents",
+            url: "agents",
+            icon: ShieldHalf,
         },
         {
-            title: "Statistics",
-            url: "statistics",
-            icon: ChartArea,
-        },
-        {
-            title: "Settings",
-            url: "settings",
+            title: "Administration panel",
+            url: "admin",
             icon: Settings,
         },
     ]
@@ -38,8 +33,7 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
         const currentItem = items.find((item) => `${BASE_URL}/${item.url}` === currentUrl);
         if (currentItem) {
             setActiveItem(currentItem.title);
-        }
-        else{
+        }else{
             setActiveItem("");
         }
     }, [pathname]);
@@ -73,40 +67,3 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
         </SidebarMenu>
     )
 }
-
-// export type SidebarMenuItemCustomProps = {
-//     title: string
-//     url: string
-//     icon: Element
-// }
-//
-//
-// export const SidebarMenuItemCustom = (props: SidebarMenuItemCustomProps) => {
-//
-//     const {title, url, icon} = props;
-//
-//     const BASE_URL = "/dashboard";
-//     const pathname = usePathname();
-//
-//     const [activeItem, setActiveItem] = useState(title);
-//
-//     return (
-//         <SidebarMenuItem key={title}>
-//             <SidebarMenuButton asChild>
-//                 <Link
-//                     className={cn(buttonVariants({
-//                         size: "lg",
-//                         variant: activeItem === title ? "secondary" : 'ghost'
-//                     }), "justify-start p-0")}
-//                     href={`${BASE_URL}/${url}`}
-//                     onClick={() => handleItemClick(item.title)}
-//                 >
-//                     <icon/>
-//                     <span>{title}</span>
-//                 </Link>
-//             </SidebarMenuButton>
-//             <SidebarMenuAction
-//                 className={`peer-data-[active=true]/menu-button:opacity-100 ${activeItem === title ? 'active' : ''}`}/>
-//         </SidebarMenuItem>
-//     )
-// }

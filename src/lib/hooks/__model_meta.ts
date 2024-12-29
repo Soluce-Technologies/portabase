@@ -287,6 +287,11 @@ const metadata = {
                     isDataModel: true,
                     isArray: true,
                     backLink: 'organization',
+                }, deleted: {
+                    name: "deleted",
+                    type: "Boolean",
+                    isOptional: true,
+                    attributes: [{ "name": "@default", "args": [{ "value": false }] }],
                 },
             }
             , uniqueConstraints: {

@@ -27,6 +27,12 @@ plugin tanstack_query {
     target = "react"
 }
 
+
+plugin enhancer {
+    provider = '@core/enhancer'
+    generatePermissionChecker = true
+}
+
 abstract model Base {
     id        String    @id @default(cuid())
     createdAt DateTime  @default(now()) @map("created_at")
@@ -98,6 +104,10 @@ model Organization extends Base {
 
     projects Project[]
     users    UserOrganization[]
+    deleted  Boolean?           @default(false)
+
+    @@allow('create,read,update', true)
+
 
     @@map("organizations")
 }
@@ -115,7 +125,7 @@ model UserOrganization extends Base {
 model Project extends Base {
     slug           String       @unique
     name           String
-    isArchived  Boolean @map("is_archived") @default(false)
+    isArchived     Boolean      @map("is_archived") @default(false)
 
     organizationId String       @map("organization_id")
     organization   Organization @relation(fields: [organizationId], references: [id])
@@ -133,7 +143,8 @@ model Agent extends Base {
 
     databases   Database[]
 
-    @@allow('all', true)
+    // Restrict access to users with role "admin"
+    @@allow('all', auth().role == "admin")
 
     @@map("agents")
 }
@@ -214,6 +225,9 @@ model Settings extends Base {
     smtpHost          String?
     smtpPort          String?
     smtpUser          String?
+
+    // Restrict access to users with role "admin"
+    @@allow('all', auth().role == "admin")
 
     @@map("settings")
 }

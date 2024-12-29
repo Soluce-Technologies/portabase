@@ -13,11 +13,13 @@ import {requiredCurrentUser} from "@/auth/current-user";
 import {SideBarLogo} from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
 import {SideBarFooterCredit} from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
 import {LoggedInButton} from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
+import {db} from "@/db";
+import {checkAllPermissions} from "@/features/permissions/permissions";
+import {SidebarMenuAdmin} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenuAdmin";
 
 export async function AppSidebar() {
 
     const user = await requiredCurrentUser()
-
     const organizations = await prisma.organization.findMany({
         where: {
             users: {
@@ -25,6 +27,7 @@ export async function AppSidebar() {
                     userId: user.id
                 },
             },
+            deleted: {not: true},
         },
     })
     const defaultOrganization = await prisma.organization.findUnique({
@@ -32,6 +35,8 @@ export async function AppSidebar() {
             slug: "default"
         }
     })
+
+
 
     return (
         <Sidebar collapsible="icon">
@@ -55,6 +60,14 @@ export async function AppSidebar() {
                         <SidebarMenuCustom/>
                     </SidebarGroupContent>
                 </SidebarGroup>
+                {user.role == "admin" ?
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Administration</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenuAdmin/>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                :null}
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>

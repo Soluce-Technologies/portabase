@@ -110,6 +110,7 @@ components:
         - updatedAt
         - slug
         - name
+        - deleted
     UserOrganizationScalarFieldEnum:
       type: string
       enum:
@@ -403,6 +404,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UserOrganization"
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
       required:
         - id
         - createdAt
@@ -1650,6 +1655,11 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        deleted:
+          oneOf:
+            - $ref: "#/components/schemas/BoolNullableFilter"
+            - type: boolean
+            - type: "null"
         projects:
           $ref: "#/components/schemas/ProjectListRelationFilter"
         users:
@@ -1669,6 +1679,10 @@ components:
           $ref: "#/components/schemas/SortOrder"
         name:
           $ref: "#/components/schemas/SortOrder"
+        deleted:
+          oneOf:
+            - $ref: "#/components/schemas/SortOrder"
+            - $ref: "#/components/schemas/SortOrderInput"
         projects:
           $ref: "#/components/schemas/ProjectOrderByRelationAggregateInput"
         users:
@@ -1711,6 +1725,11 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        deleted:
+          oneOf:
+            - $ref: "#/components/schemas/BoolNullableFilter"
+            - type: boolean
+            - type: "null"
         projects:
           $ref: "#/components/schemas/ProjectListRelationFilter"
         users:
@@ -1757,6 +1776,11 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
             - type: string
+        deleted:
+          oneOf:
+            - $ref: "#/components/schemas/BoolNullableWithAggregatesFilter"
+            - type: boolean
+            - type: "null"
     UserOrganizationWhereInput:
       type: object
       properties:
@@ -3953,6 +3977,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         projects:
           $ref: "#/components/schemas/ProjectCreateNestedManyWithoutOrganizationInput"
         users:
@@ -3987,6 +4015,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
         projects:
           $ref: "#/components/schemas/ProjectUpdateManyWithoutOrganizationNestedInput"
         users:
@@ -4009,6 +4042,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
       required:
         - slug
         - name
@@ -4038,6 +4075,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
     UserOrganizationCreateInput:
       type: object
       properties:
@@ -10235,6 +10277,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         projects:
           $ref: "#/components/schemas/ProjectCreateNestedManyWithoutOrganizationInput"
       required:
@@ -10257,6 +10303,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         projects:
           $ref: "#/components/schemas/ProjectUncheckedCreateNestedManyWithoutOrganization\
             Input"
@@ -10479,6 +10529,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
         projects:
           $ref: "#/components/schemas/ProjectUpdateManyWithoutOrganizationNestedInput"
     OrganizationUncheckedUpdateWithoutUsersInput:
@@ -10507,6 +10562,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
         projects:
           $ref: "#/components/schemas/ProjectUncheckedUpdateManyWithoutOrganizationNested\
             Input"
@@ -10527,6 +10587,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         users:
           $ref: "#/components/schemas/UserOrganizationCreateNestedManyWithoutOrganization\
             Input"
@@ -10550,6 +10614,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         users:
           $ref: "#/components/schemas/UserOrganizationUncheckedCreateNestedManyWithoutOrg\
             anizationInput"
@@ -10749,6 +10817,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
         users:
           $ref: "#/components/schemas/UserOrganizationUpdateManyWithoutOrganizationNested\
             Input"
@@ -10778,6 +10851,11 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        deleted:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NullableBoolFieldUpdateOperationsInput"
+            - type: "null"
         users:
           $ref: "#/components/schemas/UserOrganizationUncheckedUpdateManyWithoutOrganizat\
             ionNestedInput"
@@ -14272,6 +14350,8 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/UserOrganizationFindManyArgs"
+        deleted:
+          type: boolean
         _count:
           oneOf:
             - type: boolean
@@ -14770,6 +14850,8 @@ components:
           type: boolean
         name:
           type: boolean
+        deleted:
+          type: boolean
         _all:
           type: boolean
     OrganizationMinAggregateInput:
@@ -14785,6 +14867,8 @@ components:
           type: boolean
         name:
           type: boolean
+        deleted:
+          type: boolean
     OrganizationMaxAggregateInput:
       type: object
       properties:
@@ -14797,6 +14881,8 @@ components:
         slug:
           type: boolean
         name:
+          type: boolean
+        deleted:
           type: boolean
     UserOrganizationCountAggregateInput:
       type: object
@@ -15535,6 +15621,10 @@ components:
           type: string
         name:
           type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
         _count:
           oneOf:
             - type: "null"
@@ -16493,6 +16583,8 @@ components:
           type: integer
         name:
           type: integer
+        deleted:
+          type: integer
         _all:
           type: integer
       required:
@@ -16501,6 +16593,7 @@ components:
         - updatedAt
         - slug
         - name
+        - deleted
         - _all
     OrganizationMinAggregateOutputType:
       type: object
@@ -16527,6 +16620,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
     OrganizationMaxAggregateOutputType:
       type: object
       properties:
@@ -16552,6 +16649,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        deleted:
+          oneOf:
+            - type: "null"
+            - type: boolean
     UserOrganizationCountAggregateOutputType:
       type: object
       properties:
@@ -22283,6 +22384,7 @@ paths:
       description: Create a new Organization
       tags:
         - organization
+      security: []
       responses:
         "201":
           description: Successful operation
@@ -22328,6 +22430,7 @@ paths:
       description: Create several Organization
       tags:
         - organization
+      security: []
       responses:
         "201":
           description: Successful operation
@@ -22373,6 +22476,7 @@ paths:
       description: Find one unique Organization
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22428,6 +22532,7 @@ paths:
       description: Find the first Organization matching the given condition
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22483,6 +22588,7 @@ paths:
       description: Find a list of Organization
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22540,6 +22646,7 @@ paths:
       description: Update a Organization
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22585,6 +22692,7 @@ paths:
       description: Update Organizations matching the given condition
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22630,6 +22738,7 @@ paths:
       description: Upsert a Organization
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22785,6 +22894,7 @@ paths:
       description: Find a list of Organization
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22842,6 +22952,7 @@ paths:
       description: Aggregate Organizations
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -22897,6 +23008,7 @@ paths:
       description: Group Organizations by fields
       tags:
         - organization
+      security: []
       responses:
         "200":
           description: Successful operation
@@ -24296,7 +24408,6 @@ paths:
       description: Create a new Agent
       tags:
         - agent
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -24342,7 +24453,6 @@ paths:
       description: Create several Agent
       tags:
         - agent
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -24388,7 +24498,6 @@ paths:
       description: Find one unique Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24444,7 +24553,6 @@ paths:
       description: Find the first Agent matching the given condition
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24500,7 +24608,6 @@ paths:
       description: Find a list of Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24558,7 +24665,6 @@ paths:
       description: Update a Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24604,7 +24710,6 @@ paths:
       description: Update Agents matching the given condition
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24650,7 +24755,6 @@ paths:
       description: Upsert a Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24696,7 +24800,6 @@ paths:
       description: Delete one unique Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24752,7 +24855,6 @@ paths:
       description: Delete Agents matching the given condition
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24808,7 +24910,6 @@ paths:
       description: Find a list of Agent
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24866,7 +24967,6 @@ paths:
       description: Aggregate Agents
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -24922,7 +25022,6 @@ paths:
       description: Group Agents by fields
       tags:
         - agent
-      security: []
       responses:
         "200":
           description: Successful operation
