@@ -55,48 +55,10 @@ export const usersColumns: ColumnDef<User>[] = [
         header: "Email"
     },
     {
-        accessorKey: "createdAt",
-        header: "Created At",
+        accessorKey: "updatedAt",
+        header: "Updated At",
         cell: ({row}) => {
-            return new Date(row.getValue("createdAt")).toLocaleString("fr-FR");
+            return new Date(row.getValue("updatedAt")).toLocaleString("fr-FR");
         },
-    },
-    {
-        accessorKey: "authMethod",
-        header: "Method",
-        cell: ({row}) => {
-            return <Badge variant="outline">{row.getValue("authMethod")}</Badge>
-        },
-    },
-    {
-        header: "Action",
-        id: "actions",
-        cell: ({ row, table }) => {
-
-            const router = useRouter();
-            const mutation = useMutation({
-                mutationFn: () => deleteUserAction(row.original.id),
-                onSuccess: async () => {
-                   toast.success('User deleted successfully.');
-                   router.refresh()
-                },
-            })
-
-
-            return (
-                <div className="flex items-center gap-2">
-                    <ButtonWithLoading
-                        variant="outline"
-                        text=""
-                        icon={<Trash2 color="red" size={15} />}
-                        onClick={async () => {
-                            await mutation.mutateAsync();
-                        }}
-                        size="icon"
-                    />
-
-                </div>
-            );
-        },
-    },
+    }
 ]

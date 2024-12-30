@@ -2,9 +2,9 @@ import {flexRender, Row, RowData} from "@tanstack/react-table";
 
 import {User} from "@prisma/client";
 import {DataTableWithPagination} from "@/components/wrappers/common/table/data-table-with-pagination";
-import {usersColumns} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/columns-users";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {cn} from "@/lib/utils";
+import {usersColumnsAdmin} from "@/components/wrappers/dashboard/admin/columns-users";
 
 export type AdminUsersTableProps = {
     currentUser: User;
@@ -14,7 +14,6 @@ export type AdminUsersTableProps = {
 export const AdminUsersTable = (props: AdminUsersTableProps) => {
 
     const {currentUser, users} = props;
-
     return (
         <div className="flex flex-col h-full  py-4">
             <div className="flex gap-4 h-fit justify-between">
@@ -22,7 +21,7 @@ export const AdminUsersTable = (props: AdminUsersTableProps) => {
             </div>
             <div className="mt-5">
                 <DataTableWithPagination
-                    columns={usersColumns}
+                    columns={usersColumnsAdmin}
                     data={users}
                     DataTable={UsersDataTable}
                     dataTableProps={{currentUser}}

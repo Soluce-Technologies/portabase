@@ -47,7 +47,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
                 </PageTitle>
                 {projects.length > 0 && (
                     <PageActions>
-                        <Link href={"/dashboard/projects/new"}>
+                        <Link href={`/dashboard/${currentOrganizationSlug}/projects/new`}>
                             <Button>+ Create Project</Button>
                         </Link>
                     </PageActions>
@@ -59,6 +59,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
 
                 {projects.length > 0 ?
                     <CardsWithPagination
+                        organizationSlug={currentOrganizationSlug}
                         data={projects}
                         cardItem={ProjectCard}
                         cardsPerPage={4}
@@ -66,7 +67,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
                     />
                     :
                     <Link
-                        href="/dashboard/projects/new"
+                        href={`/dashboard/${currentOrganizationSlug}/projects/new`}
                         className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md">
                         Create new Project
                     </Link>

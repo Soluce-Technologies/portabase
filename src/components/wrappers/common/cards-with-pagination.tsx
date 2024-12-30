@@ -7,6 +7,7 @@ import {PaginationNavigation} from "@/components/wrappers/common/pagination/pagi
 
 export type cardsWithPaginationProps = {
     className?: string
+    organizationSlug?:string
     data: Array<{}>;
     cardItem: React.ComponentType;
     cardsPerPage?: number
@@ -18,7 +19,7 @@ export type cardsWithPaginationProps = {
 
 export const CardsWithPagination = (props: cardsWithPaginationProps) => {
 
-    const {className, data, cardItem, cardsPerPage = 5, numberOfColumns = 1, maxVisiblePages = 3} = props
+    const {className,organizationSlug, data, cardItem, cardsPerPage = 5, numberOfColumns = 1, maxVisiblePages = 3} = props
 
     const CardItem = cardItem
 
@@ -45,7 +46,7 @@ export const CardsWithPagination = (props: cardsWithPaginationProps) => {
         <div className={cn("flex flex-col h-full justify-between", className)}>
             <div className={cn(`grid h-max auto-rows-min gap-4 md:grid-cols-${numberOfColumns}`)}>
                 {currentCards.map((card, key) => (
-                    <CardItem key={key} data={card} extendedProps={props.extendedProps} />
+                    <CardItem key={key} data={card} organizationSlug={organizationSlug} extendedProps={props.extendedProps} />
                 ))}
             </div>
             <PaginationNavigation

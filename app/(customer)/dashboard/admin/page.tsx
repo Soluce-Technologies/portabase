@@ -38,7 +38,6 @@ export default async function RoutePage(props: PageParams<{}>) {
             </PageHeader>
             <PageContent className="mt-10">
                 <AdminTabs settings={settings} currentUser={user} users={users}/>
-
             </PageContent>
         </Page>
     )

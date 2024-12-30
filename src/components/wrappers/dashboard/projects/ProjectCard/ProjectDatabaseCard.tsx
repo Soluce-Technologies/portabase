@@ -10,14 +10,15 @@ import {formatDateLastContact} from "@/utils/date-formatting";
 export type projectDatabaseCardProps = {
     data: Database,
     extendedProps: any
+    organizationSlug: string
 }
 
 export const ProjectDatabaseCard = (props: projectDatabaseCardProps) => {
 
-    const {data: database, extendedProps: extendedProps} = props;
+    const {organizationSlug,data: database, extendedProps: extendedProps} = props;
 
     return (
-        <Link href={`/dashboard/projects/${extendedProps.id}/database/${database.id}`}>
+        <Link href={`/dashboard/${organizationSlug}/projects/${extendedProps.id}/database/${database.id}`}>
             <DatabaseCard data={database}/>
         </Link>
     )

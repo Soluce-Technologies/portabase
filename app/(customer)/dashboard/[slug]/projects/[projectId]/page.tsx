@@ -8,11 +8,21 @@ import {ButtonDeleteProject} from "@/components/wrappers/dashboard/projects/Butt
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {ProjectDatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 import {notFound} from "next/navigation";
+import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 
 
-export default async function RoutePage(props: PageParams<{ projectId: string }>) {
+export default async function RoutePage(props: PageParams<{ slug:string, projectId: string }>) {
 
-    const {projectId} = await props.params
+    const {slug: organizationSlug, projectId} = await props.params
+
+
+    const currentOrganizationSlug = await getCurrentOrganizationSlug()
+
+    if(currentOrganizationSlug != organizationSlug) {
+        notFound()
+    }
+
+
 
     const project = await prisma.project.findUnique({
         where: {
@@ -33,7 +43,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
                 <PageTitle className="flex items-center">
                     {project.name}
                     <Link className={buttonVariants({variant: "outline"})}
-                          href={`/dashboard/projects/${project.id}/edit`}>
+                          href={`/dashboard/${currentOrganizationSlug}/projects/${project.id}/edit`}>
                         <GearIcon className="w-7 h-7"/>
                     </Link>
                 </PageTitle>
@@ -51,6 +61,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
                 {project.databases.length > 0 ?
                     <CardsWithPagination
                         data={project.databases}
+                        organizationSlug={organizationSlug}
                         cardItem={ProjectDatabaseCard}
                         cardsPerPage={4}
                         numberOfColumns={1}

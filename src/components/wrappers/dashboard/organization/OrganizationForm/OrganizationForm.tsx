@@ -14,74 +14,69 @@ import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button";
 import {useMutation} from "@tanstack/react-query";
-import {ProjectSchema, ProjectType} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm.schema";
-import {
-    createProjectAction,
-    updateProjectAction
-} from "@/components/wrappers/dashboard/projects/ProjectsForm/project-form.action";
 import {useRouter} from "next/navigation";
-import {Database, Organization, Projects} from "@prisma/client"
+import {Organization, User} from "@prisma/client"
 import {MultiSelect} from "@/components/wrappers/common/multiSelect/MultiSelect";
+import {
+    OrganizationFormSchema,
+    OrganizationFormType
+} from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
+import {
+    createOrganizationAction,
+    updateOrganizationAction
+} from "@/components/wrappers/dashboard/organization/organization.action";
 import {toast} from "sonner";
 
 
-export type projectFormProps = {
-    defaultValues?: ProjectType;
-    databases: Database[],
-    organization: Organization,
-    projectId?: string;
+export type organizationFormProps = {
+    defaultValues?: Organization;
+    users: User[]
 
 }
 
-export const ProjectForm = (props: projectFormProps) => {
+export const OrganizationForm = (props: organizationFormProps) => {
 
     const router = useRouter();
     const isCreate = !Boolean(props.defaultValues)
 
 
-    const formatDatabasesList = (databases: Database[]) => {
-        return databases.map(database => ({
-            value: database.id,
-            label: `${database.name} (${database.generatedId}) | ${database.agent.name}`,
+    const formatUsersList = (users: User[]) => {
+        return users.map(user => ({
+            value: user.id,
+            label: `${user.name} | ${user.email}`,
         }));
     };
 
-    const formatDefaultDatabases = (databases: ProjectType['databases']): string[] => {
-        return databases.map(database => database.id);
+    const formatDefaultUsers = (users: OrganizationFormType['users']): string[] => {
+        console.log(users)
+        return users.map(user => user.userId );
     };
 
     const formattedDefaultValues = {
         ...props.defaultValues,
-        databases: !isCreate ? formatDefaultDatabases(props.defaultValues?.databases) : []
+        users: !isCreate ? formatDefaultUsers(props.defaultValues?.users) : []
     }
 
 
     const form = useZodForm({
-        schema: ProjectSchema,
+        schema: OrganizationFormSchema,
         defaultValues: formattedDefaultValues,
 
     });
 
     const mutation = useMutation({
-        mutationFn: async (values: ProjectType) => {
+        mutationFn: async (values: OrganizationFormType) => {
             console.log(values)
-            const project: Projects = isCreate ? await createProjectAction({
-                data: values,
-                organizationId: props.organization.id
-            }) : await updateProjectAction({
-                data: values,
-                organizationId: props.organization.id,
-                projectId: props.projectId
-            });
-            console.log(project)
-
-            if (project.data.success) {
-                toast.success(project.data.actionSuccess.message);
-                router.push(`/dashboard/${props.organization.slug}/projects/${project.data.value.id}`);
+            const organization = await updateOrganizationAction({data: values, organizationId: props.defaultValues.id})
+            console.log(organization)
+            if (organization.data.success) {
+                toast.success(organization.data.actionSuccess.message);
+                router.push(`/dashboard/${organization.data.value.slug}/settings`);
                 router.refresh()
             } else {
-                toast.success(project.data.actionError.message);
+                toast.success(organization.data.actionError.message);
             }
+
 
 
         }
@@ -108,7 +103,7 @@ export const ProjectForm = (props: projectFormProps) => {
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Project 1" {...field} />
+                                        placeholder="Organization 1" {...field} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -135,14 +130,14 @@ export const ProjectForm = (props: projectFormProps) => {
                     />
                     <FormField
                         control={form.control}
-                        name="databases"
+                        name="users"
                         render={({field}) => (
                             <FormItem>
                                 <FormLabel>Databases</FormLabel>
                                 <FormControl>
 
                                     <MultiSelect
-                                        options={formatDatabasesList(props.databases)}
+                                        options={formatUsersList(props.users)}
                                         onValueChange={field.onChange}
                                         defaultValue={field.value ?? []}
                                         placeholder="Select databases"
@@ -151,14 +146,14 @@ export const ProjectForm = (props: projectFormProps) => {
                                         // maxCount={100}
                                     />
                                 </FormControl>
-                                <FormDescription>Select databases you want to add to this project</FormDescription>
+                                <FormDescription>Select users you want to add to this organization</FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )
                         }
                     />
                     <Button>
-                        {isCreate ? `Create Project` : `Update Project`}
+                        {isCreate ? `Create Organization` : `Update Organization`}
                     </Button>
                 </Form>
             </CardContent>
