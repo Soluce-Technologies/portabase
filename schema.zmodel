@@ -106,8 +106,8 @@ model Organization extends Base {
     users    UserOrganization[]
     deleted  Boolean?           @default(false)
 
-    @@allow('create,read,update', true)
-
+    // Allow only users who are part of the organization
+    @@allow('all', users?[user == auth()])
 
     @@map("organizations")
 }

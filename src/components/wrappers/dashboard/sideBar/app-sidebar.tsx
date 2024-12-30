@@ -9,17 +9,17 @@ import {
 import {SidebarMenuCustom} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenu";
 import {OrganizationCombobox} from "@/components/wrappers/dashboard/organization/organization-combobox";
 import {prisma} from "@/prisma";
-import {requiredCurrentUser} from "@/auth/current-user";
+import {currentUser, requiredCurrentUser} from "@/auth/current-user";
 import {SideBarLogo} from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
 import {SideBarFooterCredit} from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
 import {LoggedInButton} from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
-import {db} from "@/db";
-import {checkAllPermissions} from "@/features/permissions/permissions";
 import {SidebarMenuAdmin} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenuAdmin";
+import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 
 export async function AppSidebar() {
 
     const user = await requiredCurrentUser()
+    const currentOrganizationSlug = await getCurrentOrganizationSlug()
     const organizations = await prisma.organization.findMany({
         where: {
             users: {
@@ -57,7 +57,7 @@ export async function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenuCustom/>
+                        <SidebarMenuCustom currentOrganizationSlug={currentOrganizationSlug}/>
                     </SidebarGroupContent>
                 </SidebarGroup>
                 {user.role == "admin" ?

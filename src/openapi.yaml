@@ -22384,7 +22384,6 @@ paths:
       description: Create a new Organization
       tags:
         - organization
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -22430,7 +22429,6 @@ paths:
       description: Create several Organization
       tags:
         - organization
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -22476,7 +22474,6 @@ paths:
       description: Find one unique Organization
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22532,7 +22529,6 @@ paths:
       description: Find the first Organization matching the given condition
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22588,7 +22584,6 @@ paths:
       description: Find a list of Organization
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22646,7 +22641,6 @@ paths:
       description: Update a Organization
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22692,7 +22686,6 @@ paths:
       description: Update Organizations matching the given condition
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22738,7 +22731,6 @@ paths:
       description: Upsert a Organization
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22894,7 +22886,6 @@ paths:
       description: Find a list of Organization
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -22952,7 +22943,6 @@ paths:
       description: Aggregate Organizations
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -23008,7 +22998,6 @@ paths:
       description: Group Organizations by fields
       tags:
         - organization
-      security: []
       responses:
         "200":
           description: Successful operation

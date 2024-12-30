@@ -80,7 +80,7 @@ export const deleteOrganizationAction = userAction
             const uuid = uuidv4()
             const organization = await db.organization.findFirst({
                 where: {
-                    id: parsedInput,
+                    slug: parsedInput,
                 }
             })
             console.log(organization);

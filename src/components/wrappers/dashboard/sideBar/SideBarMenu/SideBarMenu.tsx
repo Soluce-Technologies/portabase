@@ -8,11 +8,13 @@ import {buttonVariants} from "@/components/ui/button";
 import {ChartArea, Layers, Settings, ShieldHalf} from "lucide-react";
 import {usePathname} from "next/navigation";
 
-export type SidebarMenuCustomProps = {}
+export type SidebarMenuCustomProps = {
+    currentOrganizationSlug: string
+}
 
 export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
 
-    const BASE_URL = "/dashboard";
+    const BASE_URL = `/dashboard/${props.currentOrganizationSlug}`;
     const pathname = usePathname();
     // Menu items.
     const items = [

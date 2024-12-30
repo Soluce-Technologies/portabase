@@ -80,7 +80,12 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                                 <FormItem>
                                     <FormLabel>Slug</FormLabel>
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input {...field}
+                                               onChange={(e) => {
+                                                   const value = e.target.value.replaceAll(" ", "-").toLowerCase()
+                                                   field.onChange(value)
+                                               }}
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>

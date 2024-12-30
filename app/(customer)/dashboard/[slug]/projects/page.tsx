@@ -7,19 +7,26 @@ import {Button} from "@/components/ui/button";
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {ProjectCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectCard";
 import {requiredCurrentUser} from "@/auth/current-user";
-import {getCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
+import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
+import {currentOrganization} from "@/auth/current-organization";
+import {notFound} from "next/navigation";
 
 
-export default async function RoutePage(props: PageParams<{}>) {
+export default async function RoutePage(props: PageParams<{slug: string}>) {
+    const {slug: organizationSlug} = await props.params
 
     const user = await requiredCurrentUser()
 
-    const currentOrganizationId = await getCurrentOrganizationId()
+    const currentOrganizationSlug = await getCurrentOrganizationSlug()
+
+    if(currentOrganizationSlug != organizationSlug) {
+        notFound()
+    }
 
     const projects = await prisma.project.findMany({
         where: {
             organization: {
-                id: currentOrganizationId,
+                slug: organizationSlug,
                 // users: {
                 //     some: {
                 //         userId: user.id

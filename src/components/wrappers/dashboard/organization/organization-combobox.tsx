@@ -4,8 +4,12 @@ import {useEffect, useState} from "react";
 
 import {ComboBox} from "@/components/wrappers/common/combobox";
 import {Organization} from "@prisma/client";
-import {getCurrentOrganizationId, setCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
+import {
+    getCurrentOrganizationSlug,
+    setCurrentOrganizationSlug
+} from "@/features/dashboard/organization-cookie";
 import {useSidebar} from "@/components/ui/sidebar";
+import {useRouter} from "next/navigation";
 
 export type organizationComboBoxProps = {
     organizations: Organization[]
@@ -14,42 +18,43 @@ export type organizationComboBoxProps = {
 
 
 export function OrganizationCombobox(props: organizationComboBoxProps) {
-
+    const router = useRouter()
     // const {organizationId, moveToAnotherOrganization} = useStore((state) => state);
 
-    const [organizationId, setOrganizationId] = useState<string>()
+    const [organizationSlug, setOrganizationSlug] = useState<string>()
 
     const {organizations, defaultOrganization} = props
 
     useEffect(() => {
-        getCurrentOrganizationId().then(id => {
+        getCurrentOrganizationSlug().then(slug => {
 
-            if (id == "") {
-                setOrganizationId(defaultOrganization.id)
-                setCurrentOrganizationId(defaultOrganization.id)
+            if (slug == "") {
+                setOrganizationSlug(defaultOrganization.id)
+                setCurrentOrganizationSlug(defaultOrganization.slug)
             } else {
-                setOrganizationId(id)
-                const organization = organizations.find(organization => organization.id === id)
+                setOrganizationSlug(slug)
+                const organization = organizations.find(organization => organization.slug === slug)
                 if (!organization) {
-                    setOrganizationId(defaultOrganization.id)
-                    setCurrentOrganizationId(defaultOrganization.id)
+                    setOrganizationSlug(defaultOrganization.id)
+                    setCurrentOrganizationSlug(defaultOrganization.slug)
                 }
             }
         })
 
-    }, [organizationId])
+    }, [organizationSlug])
 
     const values = organizations.map(organization => {
         return ({
-            value: organization.id,
+            value: organization.slug,
             label: organization.name,
         })
     })
 
-    const onValueChange = (id: string) => {
-        if (organizationId !== id) {
-            setOrganizationId(id)
-            setCurrentOrganizationId(id)
+    const onValueChange = (slug: string) => {
+        if (organizationSlug !== slug) {
+            setOrganizationSlug(slug)
+            setCurrentOrganizationSlug(slug)
+            router.replace("/dashboard")
         }
     }
     const {state, isMobile} = useSidebar();
@@ -61,7 +66,7 @@ export function OrganizationCombobox(props: organizationComboBoxProps) {
                 <ComboBox
                     sideBar
                     values={values}
-                    defaultValue={organizationId}
+                    defaultValue={organizationSlug}
                     onValueChange={onValueChange}/>
             )}
 

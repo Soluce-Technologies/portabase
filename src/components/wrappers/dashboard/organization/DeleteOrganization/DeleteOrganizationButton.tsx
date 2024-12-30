@@ -4,21 +4,21 @@ import {
     deleteOrganizationAction,
 } from "@/components/wrappers/dashboard/organization/organization.action";
 import {useMutation} from "@tanstack/react-query";
-import {setCurrentOrganizationId} from "@/features/dashboard/organization-cookie";
+import {setCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 import {useRouter} from "next/navigation";
 
 export type DeleteOrganizationButtonProps = {
-    organizationId: string;
+    organizationSlug: string;
 }
 
 export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) => {
     const router = useRouter();
     const mutation = useMutation({
-        mutationFn: () => deleteOrganizationAction(props.organizationId),
+        mutationFn: () => deleteOrganizationAction(props.organizationSlug),
         onSuccess: async (result) => {
             console.log(result);
             if(result.data.success) {
-                await setCurrentOrganizationId("default")
+                await setCurrentOrganizationSlug("default")
                 router.push("/dashboard")
             }
         },
