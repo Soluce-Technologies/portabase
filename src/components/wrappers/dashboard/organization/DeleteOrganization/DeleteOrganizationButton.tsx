@@ -6,6 +6,7 @@ import {
 import {useMutation} from "@tanstack/react-query";
 import {setCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 export type DeleteOrganizationButtonProps = {
     organizationSlug: string;
@@ -19,7 +20,10 @@ export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) =
             console.log(result);
             if(result.data.success) {
                 await setCurrentOrganizationSlug("default")
-                router.push("/dashboard")
+                router.push("/")
+                toast.success(result.data.actionSuccess.message);
+            }else{
+                toast.error(result.data.actionError.message);
             }
         },
     })

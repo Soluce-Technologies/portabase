@@ -181,7 +181,7 @@ export const deleteOrganizationAction = userAction
             console.log(organization);
             const organizationUpdated = await db.organization.update({
                 where: {
-                    id: parsedInput,
+                    slug: parsedInput,
                 },
                 data: {
                     name: `${organization.name}-${uuid}`,
