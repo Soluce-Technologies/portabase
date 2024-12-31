@@ -24,7 +24,7 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
                 mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
                 onSuccess: () => {
                     toast.success(`User updated successfully.`);
-                    router.refresh()
+                    // router.refresh()
 
                 },
                 onError: () => {

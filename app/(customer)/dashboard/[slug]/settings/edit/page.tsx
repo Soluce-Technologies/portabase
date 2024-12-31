@@ -12,7 +12,7 @@ export default async function RoutePage(props: PageParams<{
 }>) {
     const {slug: organizationSlug} = await props.params
     const currentOrganizationSlug = await getCurrentOrganizationSlug()
-
+    const user = await requiredCurrentUser()
     if(currentOrganizationSlug != organizationSlug) {
         notFound()
     }
@@ -24,8 +24,16 @@ export default async function RoutePage(props: PageParams<{
         include:{
             users:{
                 include:{
-                    user:{}
-                }
+                    user:{
+                    }
+                },
+                where: {
+                    user: {
+                        id: {
+                            not: user.id, // Exclude user with id: 1
+                        },
+                    },
+                },
             }
         }
     })
@@ -33,6 +41,7 @@ export default async function RoutePage(props: PageParams<{
     const users = await prisma.user.findMany({
         where: {
             deleted: {not: true},
+            id: {not: user.id}
         }
     })
 

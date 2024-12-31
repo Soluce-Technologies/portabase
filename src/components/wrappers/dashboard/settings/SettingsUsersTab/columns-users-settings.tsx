@@ -11,6 +11,9 @@ import {useState} from "react";
 import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import {
+    updateUserOrganizationAction
+} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/settings-user-tab.action";
 
 export const usersColumns: ColumnDef<UserOrganization>[] = [
     {
@@ -20,24 +23,24 @@ export const usersColumns: ColumnDef<UserOrganization>[] = [
             const router = useRouter();
             const [role, setRole] = useState<string>(row.getValue("role"))
 
-            // const updateMutation = useMutation({
-            //     mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
-            //     onSuccess: () => {
-            //         toast.success(`User updated successfully.`);
-            //         router.refresh()
-            //
-            //     },
-            //     onError: () => {
-            //         toast.error(`An error occurred while updating user information.`);
-            //     },
-            // });
+            const updateMutation = useMutation({
+                mutationFn: () => updateUserOrganizationAction({id: row.original.id, role: role}),
+                onSuccess: () => {
+                    toast.success(`User updated successfully.`);
+                    // router.refresh()
+
+                },
+                onError: () => {
+                    toast.error(`An error occurred while updating user information.`);
+                },
+            });
 
             const handleUpdateRole = async () => {
                 const nextRole = role === "admin" ? "member"
-                    : role === "member" ? "user"
+                    : role === "member" ? "admin"
                         : "admin";
                 setRole(nextRole);
-                // await updateMutation.mutateAsync()
+                await updateMutation.mutateAsync()
             };
 
             return <Badge
