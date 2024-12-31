@@ -14,7 +14,7 @@ import {ReloadIcon} from "@radix-ui/react-icons";
 import {Backup} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {useMutation} from "@tanstack/react-query";
-import {createRestorationAction} from "@/features/dashboard/restore/restore.action";
+import {createRestorationAction, deleteBackupAction} from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {StatusBadge} from "@/components/wrappers/common/status-badge";
@@ -49,15 +49,7 @@ export const backupColumns: ColumnDef<Backup>[] = [
             // @ts-ignore
             const {extendedProps} = table.options.meta;
 
-
-            // const isRestoring = !!rowData.restorations.find(restoration => restoration.status === "waiting");
-
             const router = useRouter()
-
-            const handleDownload = async (fileName: string) => {
-                const url = await getFileUrlPresignedLocal(fileName)
-                window.open(url, '_self');
-            }
 
 
             const mutationRestore = useMutation({
@@ -74,9 +66,33 @@ export const backupColumns: ColumnDef<Backup>[] = [
                     }
                 }})
 
+            const mutationDeleteBackup =  useMutation({
+                mutationFn: async () => {
+                    const restoration = await deleteBackupAction({
+                        backupId: rowData.id,
+                        databaseId: rowData.databaseId
+                    })
+                    if (restoration.data.success) {
+                        toast.success(restoration.data.actionSuccess.message);
+                        router.refresh()
+                    } else {
+                        toast.error(restoration.data.actionError.message);
+                    }
+                }})
+
             const handleRestore = async () => {
                 await mutationRestore.mutateAsync()
             }
+
+            const handleDelete = async () => {
+                await mutationDeleteBackup.mutateAsync()
+            }
+
+            const handleDownload = async (fileName: string) => {
+                const url = await getFileUrlPresignedLocal(fileName)
+                window.open(url, '_self');
+            }
+
 
             return (
                 <DropdownMenu>
@@ -106,7 +122,8 @@ export const backupColumns: ColumnDef<Backup>[] = [
                             </>
                             : null}
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem className="text-red-600" onClick={() => {
+                        <DropdownMenuItem className="text-red-600" onClick={async () => {
+                            await handleDelete()
                         }}>
                             <Trash2/> Delete
                         </DropdownMenuItem>
