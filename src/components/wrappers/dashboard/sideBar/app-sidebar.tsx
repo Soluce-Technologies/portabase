@@ -37,6 +37,15 @@ export async function AppSidebar() {
     })
 
 
+    const currentOrganizationUser = await prisma.userOrganization.findFirst({
+        where:{
+            userId: user.id,
+            organization:{
+                slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
+            }
+        }
+    })
+
 
     return (
         <Sidebar collapsible="icon">
@@ -57,7 +66,7 @@ export async function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenuCustom currentOrganizationSlug={currentOrganizationSlug}/>
+                        <SidebarMenuCustom currentOrganizationUser={currentOrganizationUser} currentOrganizationSlug={currentOrganizationSlug}/>
                     </SidebarGroupContent>
                 </SidebarGroup>
                 {user.role == "admin" ?

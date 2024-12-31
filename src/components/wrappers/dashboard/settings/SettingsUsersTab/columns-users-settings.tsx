@@ -2,7 +2,7 @@
 
 import {ColumnDef} from "@tanstack/react-table"
 import {Badge} from "@/components/ui/badge";
-import {User} from "@prisma/client";
+import {User, UserOrganization} from "@prisma/client";
 import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
@@ -12,7 +12,7 @@ import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 
-export const usersColumns: ColumnDef<User>[] = [
+export const usersColumns: ColumnDef<UserOrganization>[] = [
     {
         accessorKey: "role",
         header: "Role",
@@ -20,24 +20,24 @@ export const usersColumns: ColumnDef<User>[] = [
             const router = useRouter();
             const [role, setRole] = useState<string>(row.getValue("role"))
 
-            const updateMutation = useMutation({
-                mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
-                onSuccess: () => {
-                    toast.success(`User updated successfully.`);
-                    router.refresh()
-
-                },
-                onError: () => {
-                    toast.error(`An error occurred while updating user information.`);
-                },
-            });
+            // const updateMutation = useMutation({
+            //     mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
+            //     onSuccess: () => {
+            //         toast.success(`User updated successfully.`);
+            //         router.refresh()
+            //
+            //     },
+            //     onError: () => {
+            //         toast.error(`An error occurred while updating user information.`);
+            //     },
+            // });
 
             const handleUpdateRole = async () => {
-                const nextRole = role === "admin" ? "pending"
-                    : role === "pending" ? "user"
+                const nextRole = role === "admin" ? "member"
+                    : role === "member" ? "user"
                         : "admin";
                 setRole(nextRole);
-                await updateMutation.mutateAsync()
+                // await updateMutation.mutateAsync()
             };
 
             return <Badge
@@ -47,11 +47,11 @@ export const usersColumns: ColumnDef<User>[] = [
         },
     },
     {
-        accessorKey: "name",
+        accessorKey: "user.name",
         header: "Name"
     },
     {
-        accessorKey: "email",
+        accessorKey: "user.email",
         header: "Email"
     },
     {

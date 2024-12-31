@@ -44,7 +44,8 @@ export const createOrganizationAction = userAction
             await prisma.userOrganization.create({
                 data: {
                     userId: ctx.user.id,
-                    organizationId: organization.id
+                    organizationId: organization.id,
+                    role: "admin"
                 },
             });
 
@@ -113,6 +114,7 @@ export const updateOrganizationAction = userAction
                     data: usersToAdd.map((userId) => ({
                         userId: userId,
                         organizationId: organization.id,
+                        role: "member"
                     })),
                     skipDuplicates: true, // Optional: to avoid duplicate insertion errors
                 });

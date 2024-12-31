@@ -5,8 +5,11 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {signOutAction} from "@/features/auth/auth.action";
 import {redirect} from "next/navigation";
 import {CircleUser, LogOut, ShieldHalf} from "lucide-react";
+import {User} from "@prisma/client";
 
-export type LoggedInDropdownProps = PropsWithChildren<{}>
+export type LoggedInDropdownProps = PropsWithChildren<{
+    user: User
+}>
 
 export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
 
@@ -27,14 +30,16 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
                         <span>Account</span>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {
-                    redirect("/dashboard/admin")
-                }}>
-                    <div className="flex justify-start items-center gap-2">
-                        <ShieldHalf size={16}/>
-                        <span>Administration Panel</span>
-                    </div>
-                </DropdownMenuItem>
+                {props.user.role == "admin" ?
+                    <DropdownMenuItem onClick={() => {
+                        redirect("/dashboard/admin")
+                    }}>
+                        <div className="flex justify-start items-center gap-2">
+                            <ShieldHalf size={16}/>
+                            <span>Administration Panel</span>
+                        </div>
+                    </DropdownMenuItem>
+                    : null}
                 <DropdownMenuItem onClick={() => {
                     signOutAction()
                 }}>

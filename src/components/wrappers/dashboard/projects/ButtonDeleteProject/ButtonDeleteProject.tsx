@@ -17,7 +17,7 @@ export const ButtonDeleteProject = (props: ButtonDeleteProjectProps) => {
     const mutation = useMutation({
         mutationFn: () => deleteProjectAction(props.projectId),
         onSuccess: async (result) => {
-            router.push("/dashboard/projects")
+            router.push("/dashboard")
             if(result.data.success) {
                 toast.success(result.data.actionSuccess.message);
             }

@@ -14,7 +14,7 @@ export const LoggedInButton = async () => {
 
 
     return (
-        <LoggedInDropdown>
+        <LoggedInDropdown user={user}>
             <SidebarMenuButton>
                 <Avatar className="size-6">
                     <AvatarFallback>{user.name?.[0]}</AvatarFallback>

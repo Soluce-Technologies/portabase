@@ -3,15 +3,12 @@ import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {SettingsTabs} from "@/components/wrappers/dashboard/settings/SettingsTabs/SettingsTabs";
-import {getCurrentOrganizationId, getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
-import {Button, buttonVariants} from "@/components/ui/button";
-import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
+import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 import {
     DeleteOrganizationButton
 } from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
-import {GearIcon} from "@radix-ui/react-icons";
-import Link from "next/link";
 import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/EditButtonSettings/EditButtonSettings";
+import {notFound} from "next/navigation";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
@@ -22,21 +19,27 @@ export default async function RoutePage(props: PageParams<{}>) {
     const organization = await prisma.organization.findUnique({
         where: {
             slug: currentOrganizationSlug,
+        },
+        include: {
+            users:{
+                include:{
+                    user: {}
+                }
+            }
         }
     })
 
-    const users = await prisma.user.findMany({
-        where: {
-            organizations: {
-                some: {
-                    organizationId: organization.id
-                },
-            },
-            deleted: {not: true},
-
+    const currentOrganizationUser = await prisma.userOrganization.findFirst({
+        where:{
+            userId: user.id,
+            organization:{
+                slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
+            }
         }
     })
-
+    if (currentOrganizationUser.role != "admin") {
+        notFound()
+    }
 
 
     const settings = await prisma.settings.findUnique({
@@ -64,7 +67,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 Manage your organization settings.
             </PageDescription>
             <PageContent>
-                <SettingsTabs settings={settings} currentUser={user} users={users}/>
+                <SettingsTabs settings={settings} currentUser={user} users={organization.users}/>
             </PageContent>
         </Page>
     )

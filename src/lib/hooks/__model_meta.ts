@@ -346,6 +346,9 @@ const metadata = {
                     backLink: 'users',
                     isRelationOwner: true,
                     foreignKeyMapping: { "id": "organizationId" },
+                }, role: {
+                    name: "role",
+                    type: "OrganizationRole",
                 },
             }
             , uniqueConstraints: {

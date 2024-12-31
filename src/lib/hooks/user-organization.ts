@@ -327,8 +327,9 @@ export function useSuspenseCountUserOrganization<TArgs extends Prisma.UserOrgani
     const { endpoint, fetch } = getHooksContext();
     return useSuspenseModelQuery<TQueryFnData, TData, TError>('UserOrganization', `${endpoint}/userOrganization/count`, args, options, fetch);
 }
+import type { OrganizationRole } from '@prisma/client';
 
-export function useCheckUserOrganization<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: string; userId?: string; organizationId?: string }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
+export function useCheckUserOrganization<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: string; userId?: string; organizationId?: string; role?: OrganizationRole }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
     const { endpoint, fetch } = getHooksContext();
     return useModelQuery<boolean, boolean, TError>('UserOrganization', `${endpoint}/userOrganization/check`, args, options, fetch);
 }

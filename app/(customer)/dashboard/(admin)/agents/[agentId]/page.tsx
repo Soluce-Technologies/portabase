@@ -1,14 +1,11 @@
 import Link from "next/link";
 import {GearIcon} from "@radix-ui/react-icons";
-import {KeyRound} from "lucide-react";
-
 import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
-import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
+import {Page, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {formatDateLastContact} from "@/utils/date-formatting";
-import {Button, buttonVariants} from "@/components/ui/button";
+import {buttonVariants} from "@/components/ui/button";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {AgentModalKey} from "@/components/wrappers/dashboard/agent/AgentModalKey/AgentModalKey";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {DatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 import {AgentCardKey} from "@/components/wrappers/dashboard/agent/AgentCardKey/AgentCardKey";

@@ -1,12 +1,14 @@
-import {User} from "@prisma/client";
+import {User, UserOrganization} from "@prisma/client";
 import {DataTableWithPagination} from "@/components/wrappers/common/table/data-table-with-pagination";
 import {usersColumns} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/columns-users-settings";
-import {UsersDataTable} from "@/components/wrappers/dashboard/admin/admin-user-table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {flexRender, Row} from "@tanstack/react-table";
+import {cn} from "@/lib/utils";
 
 
 export type SettingsUsersTabProps = {
     currentUser: User;
-    users: User[]
+    users: UserOrganization[]
 }
 
 export const SettingsUsersTab = (props: SettingsUsersTabProps) => {
@@ -26,6 +28,70 @@ export const SettingsUsersTab = (props: SettingsUsersTabProps) => {
                     dataTableProps={{currentUser}}
                 />
             </div>
+        </div>
+    )
+}
+
+
+
+export type usersDataTableProps = {
+    currentUser: User;
+    table: any,
+}
+
+export const UsersDataTable = ({currentUser, table}: usersDataTableProps) => {
+
+    return (
+        <div className="rounded-md border w-full ">
+            <Table className="w-full">
+                <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => {
+                                return (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                )
+                            })}
+                        </TableRow>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row: Row<UserOrganization>) => {
+                                return(
+                                    <TableRow
+                                        className={cn((row.original.userId) === currentUser.id ? "opacity-40 pointer-events-none" : "")}
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext(),
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                )
+                            }
+
+                        )) : (
+                        <TableRow>
+                            <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                                No results.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         </div>
     )
 }

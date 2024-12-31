@@ -3,6 +3,7 @@
 import {redirect} from "next/navigation";
 import {signIn, signOut} from "@/auth/auth";
 import {getServerUrl} from "@/utils/get-server-url";
+import {deleteOrganizationCookie} from "@/features/dashboard/organization-cookie";
 //
 // const baseUrl = getServerUrl();
 // async function fetchCsrfToken() {
@@ -35,13 +36,23 @@ import {getServerUrl} from "@/utils/get-server-url";
 //     }
 // }
 //
-
-
 export const signOutAction = async () => {
-    // await manualSignOut()
-    await signOut({redirectTo: '/', redirect: true})
-    window.location.reload();
-}
+    const deleteCookieResponse = await deleteOrganizationCookie();
+    await signOut({ redirectTo: '/', redirect: true });
+
+    if (typeof window !== 'undefined') {
+        window.location.reload();
+    }
+
+    return deleteCookieResponse;
+};
+//
+// export const signOutAction = async () => {
+//     // await manualSignOut()
+//     await signOut({redirectTo: '/', redirect: true})
+//     await deleteOrganizationCookie()
+//     window.location.reload();
+// }
 export const signInAction = async (type: string, formData?: any) => {
     if (type === "google") {
         await signIn(type, {redirectTo: '/dashboard'})

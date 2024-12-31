@@ -7,9 +7,11 @@ import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
 import {ChartArea, Layers, Settings, ShieldHalf} from "lucide-react";
 import {usePathname} from "next/navigation";
+import {UserOrganization} from "@prisma/client";
 
 export type SidebarMenuCustomProps = {
-    currentOrganizationSlug: string
+    currentOrganizationSlug: string,
+    currentOrganizationUser: UserOrganization,
 }
 
 export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
@@ -27,13 +29,17 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
             title: "Statistics",
             url: "statistics",
             icon: ChartArea,
-        },
-        {
+        }
+    ]
+
+    if (props.currentOrganizationUser.role === "admin") {
+        items.push({
             title: "Settings",
             url: "settings",
             icon: Settings,
-        },
-    ]
+        },)
+    }
+
 
     useEffect(() => {
         const currentUrl = pathname;

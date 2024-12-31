@@ -112,11 +112,18 @@ model Organization extends Base {
     @@map("organizations")
 }
 
+enum OrganizationRole {
+    member
+    admin
+}
+
+
 model UserOrganization extends Base {
     userId         String
     organizationId String
     user           User         @relation(fields: [userId], references: [id])
     organization   Organization @relation(fields: [organizationId], references: [id])
+    role          OrganizationRole
 
     @@unique([userId, organizationId])
     @@map("users_organisations")

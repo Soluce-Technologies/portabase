@@ -117,14 +117,18 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
 
                 const defaultOrganization = await prisma.organization.findUnique({
                     where: {slug: "default"},
+                    include: {users: {}}
                 });
 
-                await prisma.userOrganization.create({
-                    data: {
-                        userId: newUser.id,
-                        organizationId: defaultOrganization.id
-                    },
-                });
+                const organizationRole = defaultOrganization.users.length > 0 ? "member" : "admin"
+
+                    await prisma.userOrganization.create({
+                        data: {
+                            userId: newUser.id,
+                            organizationId: defaultOrganization.id,
+                            role: organizationRole
+                        },
+                    });
 
                 return role !== "pending";
 

@@ -5,19 +5,13 @@ import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagin
 import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-// import {db} from "@/db";
-import {enhance} from "@zenstackhq/runtime";
 import {currentUser} from "@/auth/current-user";
+import {db} from "@/db";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
 
-    const user = await currentUser();
-    const db = enhance(prisma, {user: user});
-
     const agents = await db.agent.findMany()
-
-    console.log("aaaa", agents)
 
     return (
         <Page>

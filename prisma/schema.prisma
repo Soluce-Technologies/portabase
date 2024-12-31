@@ -19,6 +19,11 @@ enum Role {
   admin
 }
 
+enum OrganizationRole {
+  member
+  admin
+}
+
 enum Dbms {
   postgresql
   mysql
@@ -115,13 +120,14 @@ model Organization {
 }
 
 model UserOrganization {
-  id             String       @id() @default(cuid())
-  createdAt      DateTime     @default(now()) @map("created_at")
-  updatedAt      DateTime?    @updatedAt() @map("updated_at")
+  id             String           @id() @default(cuid())
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime?        @updatedAt() @map("updated_at")
   userId         String
   organizationId String
-  user           User         @relation(fields: [userId], references: [id])
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User             @relation(fields: [userId], references: [id])
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  role           OrganizationRole
 
   @@unique([userId, organizationId])
   @@map("users_organisations")

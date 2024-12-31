@@ -35,6 +35,11 @@ components:
         - pending
         - user
         - admin
+    OrganizationRole:
+      type: string
+      enum:
+        - member
+        - admin
     Dbms:
       type: string
       enum:
@@ -119,6 +124,7 @@ components:
         - updatedAt
         - userId
         - organizationId
+        - role
     ProjectScalarFieldEnum:
       type: string
       enum:
@@ -434,6 +440,8 @@ components:
           $ref: "#/components/schemas/User"
         organization:
           $ref: "#/components/schemas/Organization"
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - id
         - createdAt
@@ -441,6 +449,7 @@ components:
         - organizationId
         - user
         - organization
+        - role
     Project:
       type: object
       properties:
@@ -1823,6 +1832,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/EnumOrganizationRoleFilter"
+            - $ref: "#/components/schemas/OrganizationRole"
         user:
           oneOf:
             - $ref: "#/components/schemas/UserScalarRelationFilter"
@@ -1845,6 +1858,8 @@ components:
         userId:
           $ref: "#/components/schemas/SortOrder"
         organizationId:
+          $ref: "#/components/schemas/SortOrder"
+        role:
           $ref: "#/components/schemas/SortOrder"
         user:
           $ref: "#/components/schemas/UserOrderByWithRelationInput"
@@ -1893,6 +1908,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/EnumOrganizationRoleFilter"
+            - $ref: "#/components/schemas/OrganizationRole"
         user:
           oneOf:
             - $ref: "#/components/schemas/UserScalarRelationFilter"
@@ -1943,6 +1962,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
             - type: string
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/EnumOrganizationRoleWithAggregatesFilter"
+            - $ref: "#/components/schemas/OrganizationRole"
     ProjectWhereInput:
       type: object
       properties:
@@ -4093,11 +4116,14 @@ components:
             - type: "null"
             - type: string
               format: date-time
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
         user:
           $ref: "#/components/schemas/UserCreateNestedOneWithoutOrganizationsInput"
         organization:
           $ref: "#/components/schemas/OrganizationCreateNestedOneWithoutUsersInput"
       required:
+        - role
         - user
         - organization
     UserOrganizationUpdateInput:
@@ -4118,6 +4144,10 @@ components:
               format: date-time
             - $ref: "#/components/schemas/NullableDateTimeFieldUpdateOperationsInput"
             - type: "null"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
         user:
           $ref: "#/components/schemas/UserUpdateOneRequiredWithoutOrganizationsNestedInpu\
             t"
@@ -4141,9 +4171,12 @@ components:
           type: string
         organizationId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - userId
         - organizationId
+        - role
     UserOrganizationUpdateManyMutationInput:
       type: object
       properties:
@@ -4162,6 +4195,10 @@ components:
               format: date-time
             - $ref: "#/components/schemas/NullableDateTimeFieldUpdateOperationsInput"
             - type: "null"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
     ProjectCreateInput:
       type: object
       properties:
@@ -5642,6 +5679,23 @@ components:
       properties:
         _count:
           $ref: "#/components/schemas/SortOrder"
+    EnumOrganizationRoleFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/OrganizationRole"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
     OrganizationScalarRelationFilter:
       type: object
       properties:
@@ -5659,6 +5713,29 @@ components:
       required:
         - userId
         - organizationId
+    EnumOrganizationRoleWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/OrganizationRole"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/NestedEnumOrganizationRoleWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
+        _max:
+          $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
     BoolFilter:
       type: object
       properties:
@@ -7025,6 +7102,11 @@ components:
           $ref: "#/components/schemas/OrganizationCreateOrConnectWithoutUsersInput"
         connect:
           $ref: "#/components/schemas/OrganizationWhereUniqueInput"
+    EnumOrganizationRoleFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          $ref: "#/components/schemas/OrganizationRole"
     UserUpdateOneRequiredWithoutOrganizationsNestedInput:
       type: object
       properties:
@@ -8654,6 +8736,46 @@ components:
           $ref: "#/components/schemas/NestedBoolNullableFilter"
         _max:
           $ref: "#/components/schemas/NestedBoolNullableFilter"
+    NestedEnumOrganizationRoleFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/OrganizationRole"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
+    NestedEnumOrganizationRoleWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/OrganizationRole"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationRole"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/NestedEnumOrganizationRoleWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
+        _max:
+          $ref: "#/components/schemas/NestedEnumOrganizationRoleFilter"
     NestedBoolFilter:
       type: object
       properties:
@@ -9535,9 +9657,12 @@ components:
             - type: "null"
             - type: string
               format: date-time
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
         organization:
           $ref: "#/components/schemas/OrganizationCreateNestedOneWithoutUsersInput"
       required:
+        - role
         - organization
     UserOrganizationUncheckedCreateWithoutUserInput:
       type: object
@@ -9554,8 +9679,11 @@ components:
               format: date-time
         organizationId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - organizationId
+        - role
     UserOrganizationCreateOrConnectWithoutUserInput:
       type: object
       properties:
@@ -9878,6 +10006,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/EnumOrganizationRoleFilter"
+            - $ref: "#/components/schemas/OrganizationRole"
     ProjectCreateWithoutOrganizationInput:
       type: object
       properties:
@@ -9965,9 +10097,12 @@ components:
             - type: "null"
             - type: string
               format: date-time
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
         user:
           $ref: "#/components/schemas/UserCreateNestedOneWithoutOrganizationsInput"
       required:
+        - role
         - user
     UserOrganizationUncheckedCreateWithoutOrganizationInput:
       type: object
@@ -9984,8 +10119,11 @@ components:
               format: date-time
         userId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - userId
+        - role
     UserOrganizationCreateOrConnectWithoutOrganizationInput:
       type: object
       properties:
@@ -12664,8 +12802,11 @@ components:
               format: date-time
         organizationId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - organizationId
+        - role
     AccountUpdateWithoutUserInput:
       type: object
       properties:
@@ -12960,6 +13101,10 @@ components:
               format: date-time
             - $ref: "#/components/schemas/NullableDateTimeFieldUpdateOperationsInput"
             - type: "null"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
         organization:
           $ref: "#/components/schemas/OrganizationUpdateOneRequiredWithoutUsersNestedInpu\
             t"
@@ -12985,6 +13130,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
     UserOrganizationUncheckedUpdateManyWithoutUserInput:
       type: object
       properties:
@@ -13007,6 +13156,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
     ProjectCreateManyOrganizationInput:
       type: object
       properties:
@@ -13044,8 +13197,11 @@ components:
               format: date-time
         userId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
       required:
         - userId
+        - role
     ProjectUpdateWithoutOrganizationInput:
       type: object
       properties:
@@ -13159,6 +13315,10 @@ components:
               format: date-time
             - $ref: "#/components/schemas/NullableDateTimeFieldUpdateOperationsInput"
             - type: "null"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
         user:
           $ref: "#/components/schemas/UserUpdateOneRequiredWithoutOrganizationsNestedInpu\
             t"
@@ -13184,6 +13344,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
     UserOrganizationUncheckedUpdateManyWithoutOrganizationInput:
       type: object
       properties:
@@ -13206,6 +13370,10 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        role:
+          oneOf:
+            - $ref: "#/components/schemas/OrganizationRole"
+            - $ref: "#/components/schemas/EnumOrganizationRoleFieldUpdateOperationsInput"
     DatabaseCreateManyProjectInput:
       type: object
       properties:
@@ -14377,6 +14545,8 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/OrganizationArgs"
+        role:
+          type: boolean
     ProjectSelect:
       type: object
       properties:
@@ -14897,6 +15067,8 @@ components:
           type: boolean
         organizationId:
           type: boolean
+        role:
+          type: boolean
         _all:
           type: boolean
     UserOrganizationMinAggregateInput:
@@ -14912,6 +15084,8 @@ components:
           type: boolean
         organizationId:
           type: boolean
+        role:
+          type: boolean
     UserOrganizationMaxAggregateInput:
       type: object
       properties:
@@ -14924,6 +15098,8 @@ components:
         userId:
           type: boolean
         organizationId:
+          type: boolean
+        role:
           type: boolean
     ProjectCountAggregateInput:
       type: object
@@ -15674,6 +15850,8 @@ components:
           type: string
         organizationId:
           type: string
+        role:
+          $ref: "#/components/schemas/OrganizationRole"
         _count:
           oneOf:
             - type: "null"
@@ -15691,6 +15869,7 @@ components:
         - createdAt
         - userId
         - organizationId
+        - role
     AggregateProject:
       type: object
       properties:
@@ -16666,6 +16845,8 @@ components:
           type: integer
         organizationId:
           type: integer
+        role:
+          type: integer
         _all:
           type: integer
       required:
@@ -16674,6 +16855,7 @@ components:
         - updatedAt
         - userId
         - organizationId
+        - role
         - _all
     UserOrganizationMinAggregateOutputType:
       type: object
@@ -16700,6 +16882,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        role:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/OrganizationRole"
     UserOrganizationMaxAggregateOutputType:
       type: object
       properties:
@@ -16725,6 +16911,10 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        role:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/OrganizationRole"
     ProjectCountAggregateOutputType:
       type: object
       properties:

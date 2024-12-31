@@ -21,8 +21,6 @@ export default async function RoutePage(props: PageParams<{}>) {
         }
     })
 
-    console.log(users)
-
     const settings = await prisma.settings.findUnique({
         where: {
             name: "system"

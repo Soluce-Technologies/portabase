@@ -32,10 +32,13 @@ export const registerUserAction = action
                 where: {slug: "default"},
             });
 
+            const organizationRole = users.length > 0 ? "member" : "admin"
+
             await prisma.userOrganization.create({
                 data: {
                     userId: newUser.id,
-                    organizationId: defaultOrganization.id
+                    organizationId: defaultOrganization.id,
+                    role:organizationRole
                 },
             });
 

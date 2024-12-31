@@ -1,18 +1,12 @@
 "use client"
 
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {DataTableWithPagination} from "@/components/wrappers/common/table/data-table-with-pagination";
-import {usersColumns} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/columns-users-settings";
-import {User, Settings} from "@prisma/client";
-import {backupColumns} from "@/features/backup/columns";
-import {SettingsEmailTab} from "@/components/wrappers/dashboard/admin/AdminEmailTab/SettingsEmailTab";
-import {SettingsStorageTab} from "@/components/wrappers/dashboard/admin/AdminStorageTab/SettingsStorageTab";
+import {User, Settings, UserOrganization} from "@prisma/client";
 import {SettingsUsersTab} from "@/components/wrappers/dashboard/settings/SettingsUsersTab/SettingsUsersTab";
 
 
 export type SettingsTabsProps = {
     currentUser: User;
-    users: User[];
+    users: UserOrganization[];
     settings: Settings;
 }
 
