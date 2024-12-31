@@ -1,0 +1,55 @@
+name: portabase-prod
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/dockerfile/Dockerfile
+      target: prod
+
+    ports:
+      - '8887:80'
+    environment:
+      - TIME_ZONE="Europe/Paris"
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+
+    container_name: portabase-app-prod
+
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U devuser -d devdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  s3:
+    image: docker.io/bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=SoluceTechnologies
+      - MINIO_ROOT_PASSWORD=p18avkwHPDh9mk
+      - MINIO_DEFAULT_BUCKETS=statics
+
+
+volumes:
+  postgres-data:
+  minio_data:

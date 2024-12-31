@@ -64,6 +64,7 @@
     "next-safe-action": "^7.4.3",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.16",
+    "npm-check-updates": "^17.1.13",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-day-picker": "8.10.1",
     "react-dom": "19.0.0-rc-66855b96-20241106",
@@ -84,6 +85,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@types/eslint-plugin-tailwindcss": "^3",
     "@types/node": "^20",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
@@ -91,6 +93,7 @@
     "@zenstackhq/tanstack-query": "^2.10.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
+    "eslint-plugin-tailwindcss": "^3.17.5",
     "postcss": "^8",
     "prisma": "^5.22.0",
     "tailwindcss": "^3.4.1",

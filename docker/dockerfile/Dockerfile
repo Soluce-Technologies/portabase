@@ -1,6 +1,7 @@
 FROM node:20.1.0-alpine AS base
 
-ENV YARN_VERSION=4.2.2
+#ENV YARN_VERSION=4.2.2
+ENV YARN_VERSION=4.5.3
 
 RUN apk add --no-cache libc6-compat
 
@@ -13,6 +14,8 @@ FROM base AS deps
 
 WORKDIR /app
 
+COPY .yarn ./.yarn
+COPY .yarnrc.yml ./
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 RUN \
@@ -45,7 +48,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npx prisma generate
+#RUN npx prisma generate
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
