@@ -7,11 +7,11 @@ export const env = createEnv({
      * Will throw if you access these variables on the client.
      */
     server: {
-        NODE_ENV: z.enum(['development', 'production']),
-        DATABASE_URL: z.string().url(),
-        NEXT_PUBLIC_SECRET: z.string(),
-        NEXTAUTH_URL: z.string(),
-        NEXT_PUBLIC_DOMAIN_NAME: z.string(),
+        NODE_ENV: z.enum(['development', 'production']).optional(),
+        DATABASE_URL: z.string().url().optional(),
+        NEXT_PUBLIC_SECRET: z.string().optional(),
+        NEXTAUTH_URL: z.string().optional(),
+        NEXT_PUBLIC_DOMAIN_NAME: z.string().optional(),
 
 
         SMTP_PASSWORD: z.string().optional(),
@@ -40,7 +40,7 @@ export const env = createEnv({
      * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
      */
     client: {
-        NEXT_PUBLIC_DOMAIN_NAME: z.string(),
+        NEXT_PUBLIC_DOMAIN_NAME: z.string().optional(),
         NEXT_PUBLIC_GOOGLE_AUTH: z.string().optional(),
     },
     /*
