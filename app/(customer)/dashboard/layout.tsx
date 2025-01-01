@@ -25,6 +25,8 @@ export default async function Layout({children}: { children: React.ReactNode }) 
     return (
         // <HydrationZustand>
         // <GlobalStoreProvider>
+        <>
+
             <SidebarProvider>
                 <div className="flex flex-col lg:flex-row w-full">
                     <AppSidebar/>
@@ -36,6 +38,7 @@ export default async function Layout({children}: { children: React.ReactNode }) 
                     </SidebarInset>
                 </div>
             </SidebarProvider>
+        </>
         // </GlobalStoreProvider>
         // </HydrationZustand>
     )

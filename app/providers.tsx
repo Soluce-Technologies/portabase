@@ -10,10 +10,6 @@ import {SessionProvider} from "next-auth/react";
 export type ProviderProps = PropsWithChildren<{}>;
 const queryClient = new QueryClient()
 
-// import dynamic from 'next/dynamic';
-
-// const ThemeProvider = dynamic(() => import('@/features/theme/theme-provider'), {ssr: false});
-
 export const Providers = (props: ProviderProps) => {
     return (
         <SessionProvider>

@@ -3,7 +3,7 @@
 import {redirect} from "next/navigation";
 import {signIn, signOut} from "@/auth/auth";
 import {getServerUrl} from "@/utils/get-server-url";
-import {deleteOrganizationCookie} from "@/features/dashboard/organization-cookie";
+import {deleteOrganizationCookie, setCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 //
 // const baseUrl = getServerUrl();
 // async function fetchCsrfToken() {
@@ -37,7 +37,7 @@ import {deleteOrganizationCookie} from "@/features/dashboard/organization-cookie
 // }
 //
 export const signOutAction = async () => {
-    const deleteCookieResponse = await deleteOrganizationCookie();
+    const deleteCookieResponse = await setCurrentOrganizationSlug("");
     await signOut({ redirectTo: '/', redirect: true });
 
     if (typeof window !== 'undefined') {
@@ -55,9 +55,12 @@ export const signOutAction = async () => {
 // }
 export const signInAction = async (type: string, formData?: any) => {
     if (type === "google") {
+        await setCurrentOrganizationSlug("default");
         await signIn(type, {redirectTo: '/dashboard'})
     } else {
         try {
+            await setCurrentOrganizationSlug("default");
+
             await signIn(type, {
                 redirect: false,
                 password: formData.password,

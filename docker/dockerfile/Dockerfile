@@ -1,9 +1,10 @@
-FROM node:20.1.0-alpine AS base
+FROM node:23.5.0-alpine AS base
 
 #ENV YARN_VERSION=4.2.2
 ENV YARN_VERSION=4.5.3
 
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache openssl
 
 # install and use yarn 4.x
 RUN corepack enable && corepack prepare yarn@${YARN_VERSION}

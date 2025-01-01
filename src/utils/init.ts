@@ -1,5 +1,4 @@
 import {prisma} from "@/prisma";
-import {Settings} from "@prisma/client";
 import {env} from "@/env.mjs";
 
 
