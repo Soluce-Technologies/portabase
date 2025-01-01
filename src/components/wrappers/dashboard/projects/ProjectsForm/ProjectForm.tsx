@@ -73,14 +73,13 @@ export const ProjectForm = (props: projectFormProps) => {
                 organizationId: props.organization.id,
                 projectId: props.projectId
             });
-            console.log(project)
 
-            if (project.data.success) {
+            if (project.data?.success) {
                 toast.success(project.data.actionSuccess.message);
                 router.push(`/dashboard/${props.organization.slug}/projects/${project.data.value.id}`);
-                router.refresh()
+                router.refresh();
             } else {
-                toast.success(project.data.actionError.message);
+                toast.error(project.data.actionError.message || "Unknown error occurred.");
             }
 
 

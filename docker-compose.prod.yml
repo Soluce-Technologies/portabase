@@ -10,9 +10,9 @@ services:
 
     ports:
       - '8887:80'
-    environment:
-      - TIME_ZONE="Europe/Paris"
-      - NODE_ENV=development
+    env_file:
+      - .env
+
     depends_on:
       db:
         condition: service_healthy
