@@ -100,11 +100,11 @@ export const LoginForm = (props: loginFormProps) => {
                             </Link>
                         </div>
                     </Form>
-                    {env.NEXT_PUBLIC_GOOGLE_AUTH ?
+                    {/*{env.NEXT_PUBLIC_GOOGLE_AUTH ?*/}
 
                     <SocialAuthButton/>
 
-                    :null}
+                    {/*:null}*/}
                 </CardContent>
             </Card>
         </TooltipProvider>
