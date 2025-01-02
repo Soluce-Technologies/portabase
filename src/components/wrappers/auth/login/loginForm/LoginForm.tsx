@@ -76,7 +76,7 @@ export const LoginForm = (props: loginFormProps) => {
                                     <div className="flex items-center">
                                         <FormLabel>Password</FormLabel>
                                         <Link
-                                            href="/forgot-password"
+                                            href={"/forgot-password"}
                                             className="ml-auto inline-block text-sm underline"
                                         >
                                             Forgot your password?
@@ -94,7 +94,7 @@ export const LoginForm = (props: loginFormProps) => {
                         </Button>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{" "}
-                            <Link href="/register" className="underline">
+                            <Link href={"/register"} className="underline">
                                 Sign up
                             </Link>
                         </div>

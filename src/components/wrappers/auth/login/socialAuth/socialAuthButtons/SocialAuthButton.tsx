@@ -9,7 +9,7 @@ export type SocialAuthButtonProps = {}
 export const SocialAuthButton = (props: SocialAuthButtonProps) => {
     return (
         <div className="flex flex-col gap-4 mt-5">
-            {env.NEXT_PUBLIC_GOOGLE_AUTH === "true" ?
+            {process.env.NEXT_PUBLIC_GOOGLE_AUTH == 'true' ?
                 <Button
                     onClick={(e) => {
                         e.preventDefault();
