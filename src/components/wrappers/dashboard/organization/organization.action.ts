@@ -7,7 +7,7 @@ import {ServerActionResult} from "@/types/action-type";
 import {Organization} from "@prisma/client";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
-import {db} from "@/db";
+import {getDb} from "@/db";
 import {
     OrganizationFormSchema
 } from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
@@ -172,6 +172,7 @@ export const deleteOrganizationAction = userAction
         console.log(parsedInput);
         try {
 
+            const db = await getDb()
             const uuid = uuidv4()
             const organization = await db.organization.findFirst({
                 where: {

@@ -50,6 +50,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npx prisma generate
+RUN npx zenstack generate
+
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
@@ -76,6 +78,7 @@ RUN chown nextjs:nodejs .next
 
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/schema.zmodel ./
+#COPY --from=builder /app/src/lib/hooks ./src/lib/hooks
 COPY --from=builder /app/src/openapi.yaml ./src/
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static

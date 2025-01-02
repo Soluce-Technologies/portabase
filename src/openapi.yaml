@@ -14143,42 +14143,42 @@ components:
             - type: string
             - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
             - type: "null"
-    UserArgs:
+    UserDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/UserSelect"
         include:
           $ref: "#/components/schemas/UserInclude"
-    OrganizationArgs:
+    OrganizationDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/OrganizationSelect"
         include:
           $ref: "#/components/schemas/OrganizationInclude"
-    ProjectArgs:
+    ProjectDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/ProjectSelect"
         include:
           $ref: "#/components/schemas/ProjectInclude"
-    AgentArgs:
+    AgentDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/AgentSelect"
         include:
           $ref: "#/components/schemas/AgentInclude"
-    DatabaseArgs:
+    DatabaseDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/DatabaseSelect"
         include:
           $ref: "#/components/schemas/DatabaseInclude"
-    BackupArgs:
+    BackupDefaultArgs:
       type: object
       properties:
         select:
@@ -14191,14 +14191,14 @@ components:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
     SessionInclude:
       type: object
       properties:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
     UserInclude:
       type: object
       properties:
@@ -14217,7 +14217,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserCountOutputTypeArgs"
+            - $ref: "#/components/schemas/UserCountOutputTypeDefaultArgs"
     OrganizationInclude:
       type: object
       properties:
@@ -14232,25 +14232,25 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationCountOutputTypeArgs"
+            - $ref: "#/components/schemas/OrganizationCountOutputTypeDefaultArgs"
     UserOrganizationInclude:
       type: object
       properties:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
         organization:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationArgs"
+            - $ref: "#/components/schemas/OrganizationDefaultArgs"
     ProjectInclude:
       type: object
       properties:
         organization:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationArgs"
+            - $ref: "#/components/schemas/OrganizationDefaultArgs"
         databases:
           oneOf:
             - type: boolean
@@ -14258,7 +14258,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/ProjectCountOutputTypeArgs"
+            - $ref: "#/components/schemas/ProjectCountOutputTypeDefaultArgs"
     AgentInclude:
       type: object
       properties:
@@ -14269,14 +14269,14 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/AgentCountOutputTypeArgs"
+            - $ref: "#/components/schemas/AgentCountOutputTypeDefaultArgs"
     DatabaseInclude:
       type: object
       properties:
         agent:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/AgentArgs"
+            - $ref: "#/components/schemas/AgentDefaultArgs"
         backups:
           oneOf:
             - type: boolean
@@ -14288,18 +14288,18 @@ components:
         project:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/ProjectArgs"
+            - $ref: "#/components/schemas/ProjectDefaultArgs"
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseCountOutputTypeArgs"
+            - $ref: "#/components/schemas/DatabaseCountOutputTypeDefaultArgs"
     BackupInclude:
       type: object
       properties:
         database:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseArgs"
+            - $ref: "#/components/schemas/DatabaseDefaultArgs"
         restorations:
           oneOf:
             - type: boolean
@@ -14307,18 +14307,18 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/BackupCountOutputTypeArgs"
+            - $ref: "#/components/schemas/BackupCountOutputTypeDefaultArgs"
     RestorationInclude:
       type: object
       properties:
         backup:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/BackupArgs"
+            - $ref: "#/components/schemas/BackupDefaultArgs"
         database:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseArgs"
+            - $ref: "#/components/schemas/DatabaseDefaultArgs"
     UserCountOutputTypeSelect:
       type: object
       properties:
@@ -14357,32 +14357,32 @@ components:
       properties:
         restorations:
           type: boolean
-    UserCountOutputTypeArgs:
+    UserCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/UserCountOutputTypeSelect"
-    OrganizationCountOutputTypeArgs:
+    OrganizationCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/OrganizationCountOutputTypeSelect"
-    ProjectCountOutputTypeArgs:
+    ProjectCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/ProjectCountOutputTypeSelect"
-    AgentCountOutputTypeArgs:
+    AgentCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/AgentCountOutputTypeSelect"
-    DatabaseCountOutputTypeArgs:
+    DatabaseCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
           $ref: "#/components/schemas/DatabaseCountOutputTypeSelect"
-    BackupCountOutputTypeArgs:
+    BackupCountOutputTypeDefaultArgs:
       type: object
       properties:
         select:
@@ -14421,7 +14421,7 @@ components:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
     SessionSelect:
       type: object
       properties:
@@ -14440,7 +14440,7 @@ components:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
     VerificationTokenSelect:
       type: object
       properties:
@@ -14496,7 +14496,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserCountOutputTypeArgs"
+            - $ref: "#/components/schemas/UserCountOutputTypeDefaultArgs"
     OrganizationSelect:
       type: object
       properties:
@@ -14523,7 +14523,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationCountOutputTypeArgs"
+            - $ref: "#/components/schemas/OrganizationCountOutputTypeDefaultArgs"
     UserOrganizationSelect:
       type: object
       properties:
@@ -14540,11 +14540,11 @@ components:
         user:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/UserArgs"
+            - $ref: "#/components/schemas/UserDefaultArgs"
         organization:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationArgs"
+            - $ref: "#/components/schemas/OrganizationDefaultArgs"
         role:
           type: boolean
     ProjectSelect:
@@ -14567,7 +14567,7 @@ components:
         organization:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/OrganizationArgs"
+            - $ref: "#/components/schemas/OrganizationDefaultArgs"
         databases:
           oneOf:
             - type: boolean
@@ -14575,7 +14575,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/ProjectCountOutputTypeArgs"
+            - $ref: "#/components/schemas/ProjectCountOutputTypeDefaultArgs"
     AgentSelect:
       type: object
       properties:
@@ -14600,7 +14600,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/AgentCountOutputTypeArgs"
+            - $ref: "#/components/schemas/AgentCountOutputTypeDefaultArgs"
     DatabaseSelect:
       type: object
       properties:
@@ -14629,7 +14629,7 @@ components:
         agent:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/AgentArgs"
+            - $ref: "#/components/schemas/AgentDefaultArgs"
         lastContact:
           type: boolean
         backups:
@@ -14645,11 +14645,11 @@ components:
         project:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/ProjectArgs"
+            - $ref: "#/components/schemas/ProjectDefaultArgs"
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseCountOutputTypeArgs"
+            - $ref: "#/components/schemas/DatabaseCountOutputTypeDefaultArgs"
     BackupSelect:
       type: object
       properties:
@@ -14668,7 +14668,7 @@ components:
         database:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseArgs"
+            - $ref: "#/components/schemas/DatabaseDefaultArgs"
         restorations:
           oneOf:
             - type: boolean
@@ -14676,7 +14676,7 @@ components:
         _count:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/BackupCountOutputTypeArgs"
+            - $ref: "#/components/schemas/BackupCountOutputTypeDefaultArgs"
     RestorationSelect:
       type: object
       properties:
@@ -14693,13 +14693,13 @@ components:
         backup:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/BackupArgs"
+            - $ref: "#/components/schemas/BackupDefaultArgs"
         databaseId:
           type: boolean
         database:
           oneOf:
             - type: boolean
-            - $ref: "#/components/schemas/DatabaseArgs"
+            - $ref: "#/components/schemas/DatabaseDefaultArgs"
     SettingsSelect:
       type: object
       properties:

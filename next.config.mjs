@@ -13,6 +13,8 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    // bundlePagesRouterDependencies: true,
+
 };
 
 export default nextConfig;

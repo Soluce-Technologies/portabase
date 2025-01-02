@@ -1,3 +1,4 @@
+"use server"
 import {baseAuth} from "@/auth/auth";
 import {User} from "@prisma/client";
 

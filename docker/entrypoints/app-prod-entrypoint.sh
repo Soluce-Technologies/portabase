@@ -1,8 +1,6 @@
 #!/bin/bash
 
-npm install -g npm@11.0.0
-npm -v
-
+npx install --save-dev @zenstackhq/openapi
 
 
 npx zenstack generate
