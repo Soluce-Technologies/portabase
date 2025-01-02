@@ -14,6 +14,11 @@ const nextConfig = {
         ignoreDuringBuilds: true,
     },
     // bundlePagesRouterDependencies: true,
+    compiler: {
+        removeConsole: {
+            exclude: ['error'],
+        },
+    },
 
 };
 
