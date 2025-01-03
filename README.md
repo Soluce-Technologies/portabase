@@ -105,6 +105,8 @@ Installation steps in order to use it locally and work on some features improvem
 - [ ] Add tests procedure
 - [ ] Add Release File
 - [ ] Security improvements
+- [ ] Improve UX/UI
+- [ ] Improve Workspace system
 - [ ] Multi locale support
 - [ ] Multi db support
     - [x] PostgreSQL
