@@ -74,11 +74,13 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 
 RUN mkdir .next
+RUN mkdir -p /app/private/uploads
+RUN chown -R nextjs:nodejs /app/private
+
 RUN chown nextjs:nodejs .next
 
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/schema.zmodel ./
-#COPY --from=builder /app/src/lib/hooks ./src/lib/hooks
 COPY --from=builder /app/src/openapi.yaml ./src/
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static

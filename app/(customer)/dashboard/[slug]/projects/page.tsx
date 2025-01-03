@@ -25,6 +25,8 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
 
     const projects = await prisma.project.findMany({
         where: {
+            isArchived: {not: true},
+
             organization: {
                 slug: organizationSlug,
                 // users: {

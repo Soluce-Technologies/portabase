@@ -16,10 +16,14 @@ export const ButtonDeleteProject = (props: ButtonDeleteProjectProps) => {
     const router = useRouter()
     const mutation = useMutation({
         mutationFn: () => deleteProjectAction(props.projectId),
-        onSuccess: async (result) => {
-            router.push("/dashboard")
-            if(result.data.success) {
+        onSuccess: async (result: any) => {
+            console.log(result)
+            if(result.data?.success) {
                 toast.success(result.data.actionSuccess.message);
+                router.push("/")
+
+            }else{
+                toast.error(result.data.actionError.message || "Unknown error occurred.");
             }
         },
     })

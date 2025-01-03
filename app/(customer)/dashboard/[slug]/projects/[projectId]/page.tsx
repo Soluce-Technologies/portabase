@@ -27,6 +27,7 @@ export default async function RoutePage(props: PageParams<{ slug:string, project
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
+            isArchived: {not: true}
         },
         include:{
             databases: {}

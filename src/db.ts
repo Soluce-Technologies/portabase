@@ -6,11 +6,11 @@
 //
 // export const db = enhance(prisma, {user: user});
 
-import { enhance } from "@zenstackhq/runtime";
-import { prisma } from "@/prisma";
+import {enhance} from "@zenstackhq/runtime";
+import {prisma} from "@/prisma";
 
 export const getDb = async () => {
-    const { currentUser } = await import("@/auth/current-user");
+    const {currentUser} = await import("@/auth/current-user");
     const user = await currentUser();
-    return enhance(prisma, { user });
+    return enhance(prisma, {user});
 };
