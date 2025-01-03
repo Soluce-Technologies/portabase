@@ -107,6 +107,7 @@ Installation steps in order to use it locally and work on some features improvem
 - [ ] Security improvements
 - [ ] Improve UX/UI
 - [ ] Improve Workspace system
+- [ ] Migrate to Drizzle ORM
 - [ ] Multi locale support
 - [ ] Multi db support
     - [x] PostgreSQL
@@ -150,6 +151,9 @@ If you're using Semantic Versioning (SemVer) to version your Docker images, you 
 
 ```major.minor.patch-rc.release-tag (e.g. 1.0.0-rc.1-dev)```
 
+For zenstask 
+
+```zenstack generate```
 
 <!-- LICENSE -->
 ## License

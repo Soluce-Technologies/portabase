@@ -76,6 +76,7 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN mkdir -p /app/private/uploads
 RUN chown -R nextjs:nodejs /app/private
+RUN chown -R nextjs:nodejs /app/public
 
 RUN chown nextjs:nodejs .next
 
