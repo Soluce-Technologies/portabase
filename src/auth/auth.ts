@@ -117,7 +117,16 @@ export const {handlers, auth: baseAuth, signIn, signOut} = NextAuth({
 
                 const defaultOrganization = await prisma.organization.findUnique({
                     where: {slug: "default"},
-                    include: {users: {}}
+                    include: {users: {
+                           include:{
+                               user: true
+                           },
+                           where:{
+                               user: {
+                                   deleted: {not: true},
+                               }
+                           }
+                        }}
                 });
 
                 const organizationRole = defaultOrganization.users.length > 0 ? "member" : "admin"
