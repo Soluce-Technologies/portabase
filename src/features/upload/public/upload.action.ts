@@ -10,6 +10,7 @@ import {checkMinioAlive, createPublicBucket, saveFileInBucket} from "@/utils/s3-
 import {prisma} from "@/prisma";
 import {UploadedObjectInfo} from "minio/src/internal/type";
 import {Settings} from "@prisma/client";
+import {getServerUrl} from "@/utils/get-server-url";
 
 
 export const uploadImageAction = userAction
@@ -50,13 +51,19 @@ export const uploadImageAction = userAction
 
 function getUrl(fileName:string, settings: Settings, bucketName: string):string {
     if (env.NODE_ENV === "production") {
-        // url = `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`
-        return "url"
+        if(settings.storage === "s3"){
+            return `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`
+        }else if(settings.storage === "local"){
+            const url = getServerUrl()
+            return `${url}/uploads/${fileName}`
+        }
+
     } else {
         if(settings.storage === "s3"){
             return `http://localhost:${env.S3_PORT}/${bucketName}/${fileName}`
         }else if(settings.storage === "local"){
-            return `http://localhost:8887/uploads/${fileName}`
+            const url = getServerUrl()
+            return `${url}/uploads/${fileName}`
         }
     }
 }
