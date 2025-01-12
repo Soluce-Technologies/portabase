@@ -55,7 +55,7 @@ function getUrl(fileName:string, settings: Settings, bucketName: string):string 
             return `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`
         }else if(settings.storage === "local"){
             const url = getServerUrl()
-            return `${url}/uploads/${fileName}`
+            return `${url}/api/images/${fileName}`
         }
 
     } else {
@@ -63,13 +63,13 @@ function getUrl(fileName:string, settings: Settings, bucketName: string):string 
             return `http://localhost:${env.S3_PORT}/${bucketName}/${fileName}`
         }else if(settings.storage === "local"){
             const url = getServerUrl()
-            return `${url}/uploads/${fileName}`
+            return `${url}/api/images/${fileName}`
         }
     }
 }
 
 async function uploadLocal(fileName: string, buffer: any) {
-    const localDir = "public/uploads/"
+    const localDir = "private/uploads/images/"
     try {
         await mkdir(path.join(process.cwd(), localDir), { recursive: true });
         return await writeFile(

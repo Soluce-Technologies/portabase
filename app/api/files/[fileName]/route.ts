@@ -12,7 +12,7 @@ export async function GET(
     const expires = searchParams.get('expires');
     const fileName = (await params).fileName
 
-    const privateLocalDir = "private/uploads/";
+    const privateLocalDir = "private/uploads/files/";
     const filePath = path.join(privateLocalDir, fileName);
 
     const crypto = require('crypto');

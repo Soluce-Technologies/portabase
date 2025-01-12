@@ -5,7 +5,7 @@ import path from "path";
 import * as fs from "node:fs";
 import {getServerUrl} from "@/utils/get-server-url";
 
-const privateLocalDir = "private/uploads/";
+const privateLocalDir = "private/uploads/files/";
 
 
 export async function uploadLocalPrivate(fileName: string, buffer: any) {
