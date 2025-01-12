@@ -86,7 +86,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     </Card>
 
                 </div>
-                <Card className="w-full sm:w-auto flex-1">
+                <Card className="w-full sm:w-auto flex-1 mb-4">
                     <CardHeader className="font-bold text-xl">
                         Edge Key
                     </CardHeader>

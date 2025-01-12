@@ -4,13 +4,15 @@ import {prisma} from "@/prisma";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {EvolutionLineChart} from "@/components/wrappers/dashboard/statistics/charts/evolution-line-chart";
 import {PercentageLineChart} from "@/components/wrappers/dashboard/statistics/charts/percentage-line-chart";
+import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 
 export default async function RoutePage(props: PageParams<{}>) {
+    const currentOrganizationSlug = await getCurrentOrganizationSlug()
 
     const projectsCount = await prisma.project.count({
         where: {
             organization: {
-                slug: "default"
+                slug: currentOrganizationSlug
             }
         },
     });
@@ -22,6 +24,15 @@ export default async function RoutePage(props: PageParams<{}>) {
         orderBy: {
             createdAt: "asc",
         },
+        where: {
+            database: {
+                project: {
+                    organization: {
+                        slug: currentOrganizationSlug
+                    }
+                }
+            }
+        }
     });
 
     const backupsRate = await prisma.backup.groupBy({
@@ -30,11 +41,21 @@ export default async function RoutePage(props: PageParams<{}>) {
             status: {
                 in: ['success', 'failed'],
             },
+            database: {
+                project: {
+                    organization: {
+                        slug: currentOrganizationSlug
+                    }
+                }
+            }
         },
         _count: {
             id: true,
         },
     });
+
+    console.log("data",backupsEvolution)
+    console.log("data",backupsRate)
 
 
     return (
