@@ -22,5 +22,5 @@ export default async function NotFound() {
     //     redirect("/")
     // }
 
-    redirect("/")
+    redirect("/dashboard/default")
 }

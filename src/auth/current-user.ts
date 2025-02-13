@@ -1,6 +1,7 @@
 "use server"
 import {baseAuth} from "@/auth/auth";
 import {User} from "@prisma/client";
+import {prisma} from "@/prisma";
 
 export const currentUser = async () => {
     const session = await baseAuth();
@@ -14,7 +15,15 @@ export const currentUser = async () => {
 export const requiredCurrentUser = async () => {
     const user = await currentUser();
     if (!user) {
-        throw new Error("User not found");
+        return null
     }
+
+    const userDb = await prisma.user.findFirst({
+        where: {id: user.id},
+    })
+    if(!userDb){
+        return null
+    }
+
     return user;
 }

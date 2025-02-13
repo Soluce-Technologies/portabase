@@ -6,7 +6,6 @@ import {AppSidebar} from "@/components/wrappers/dashboard/sideBar/app-sidebar";
 import {currentUser} from "@/auth/current-user";
 import {Header} from "@/features/layout/Header";
 import {prisma} from "@/prisma";
-import {GlobalStoreProvider} from "@/state-management/provider";
 
 
 export default async function Layout({children}: { children: React.ReactNode }) {
