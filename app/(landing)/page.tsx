@@ -7,7 +7,6 @@ export default async function Index() {
     const user = await currentUser()
     if (user) {
         const currentOrganizationSlug = await getCurrentOrganizationSlug()
-        console.log(currentOrganizationSlug)
         redirect(`/dashboard/${currentOrganizationSlug}/projects`)
     }
     redirect("/login")

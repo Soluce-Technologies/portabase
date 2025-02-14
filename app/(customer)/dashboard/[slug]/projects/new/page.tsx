@@ -8,6 +8,7 @@ import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cook
 
 export default async function RoutePage(props: PageParams<{slug: string}>) {
     const {slug: organizationSlug} = await props.params
+
     const currentOrganizationSlug = await getCurrentOrganizationSlug()
     if(currentOrganizationSlug != organizationSlug) {
         notFound()

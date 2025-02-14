@@ -14,12 +14,6 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
     const {slug: organizationSlug} = await props.params
 
 
-    const currentOrganizationSlug = await getCurrentOrganizationSlug()
-
-    // if(currentOrganizationSlug != organizationSlug) {
-    //     notFound()
-    // }
-
     const projects = await prisma.project.findMany({
         where: {
             isArchived: {not: true},
@@ -46,7 +40,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
                 </PageTitle>
                 {projects.length > 0 && (
                     <PageActions>
-                        <Link href={`/dashboard/${currentOrganizationSlug}/projects/new`}>
+                        <Link href={`/dashboard/${organizationSlug}/projects/new`}>
                             <Button>+ Create Project</Button>
                         </Link>
                     </PageActions>
@@ -58,7 +52,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
 
                 {projects.length > 0 ?
                     <CardsWithPagination
-                        organizationSlug={currentOrganizationSlug}
+                        organizationSlug={organizationSlug}
                         data={projects}
                         cardItem={ProjectCard}
                         cardsPerPage={4}
@@ -66,7 +60,7 @@ export default async function RoutePage(props: PageParams<{slug: string}>) {
                     />
                     :
                     <Link
-                        href={`/dashboard/${currentOrganizationSlug}/projects/new`}
+                        href={`/dashboard/${organizationSlug}/projects/new`}
                         className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md">
                         Create new Project
                     </Link>
