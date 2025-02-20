@@ -1,3 +1,4 @@
+"use server"
 import {PageParams} from "@/types/next";
 import {AgentCard} from "@/components/wrappers/dashboard/agent/AgentCard/AgentCard";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
@@ -9,7 +10,7 @@ import {prisma} from "@/prisma";
 
 export default async function RoutePage(props: PageParams<{}>) {
 
-    const agents = await prisma.agent.findMany()
+    const agents = await prisma.agent.findMany({})
 
     return (
         <Page>
