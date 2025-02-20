@@ -15,7 +15,6 @@ import {PasswordInput} from "@/components/wrappers/auth/PaswordInput/password-in
 import {signInAction} from "@/features/auth/auth.action";
 import {LoginSchema, LoginType} from "@/components/wrappers/auth/login/loginForm/login-form.schema";
 import {SocialAuthButton} from "@/components/wrappers/auth/login/socialAuth/socialAuthButtons/SocialAuthButton";
-import {env} from "@/env.mjs";
 
 export type loginFormProps = {
     defaultValues?: LoginType;

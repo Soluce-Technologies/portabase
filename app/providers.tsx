@@ -1,6 +1,6 @@
 "use client"
 
-import {PropsWithChildren} from "react";
+import {PropsWithChildren, Suspense} from "react";
 import {ThemeProvider} from "@/features/theme/theme-provider";
 
 import {Toaster} from "@/components/ui/sonner";
@@ -12,18 +12,21 @@ const queryClient = new QueryClient()
 
 export const Providers = (props: ProviderProps) => {
     return (
-        <SessionProvider>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                // disableTransitionOnChange
-            >
-                <QueryClientProvider client={queryClient}>
-                    <Toaster/>
-                    {props.children}
-                </QueryClientProvider>
-            </ThemeProvider>
-        </SessionProvider>
+        <Suspense fallback={null}>
+            <SessionProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    // disableTransitionOnChange
+                >
+                    <QueryClientProvider client={queryClient}>
+                        <Toaster/>
+                        {props.children}
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </SessionProvider>
+        </Suspense>
+
     )
 }
