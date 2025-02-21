@@ -5,13 +5,17 @@ import {Button} from "@/components/ui/button";
 import Link from 'next/link'
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {prisma} from "@/prisma";
+import {notFound} from "next/navigation";
+export const dynamic = "force-dynamic";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
 
-    const agents = await prisma.agent.findMany({})
+    const agents = await prisma.agent.findMany()
 
-
+    if(!agents){
+        notFound()
+    }
 
 
     return (
