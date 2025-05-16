@@ -1,15 +1,14 @@
-import {redirect} from "next/navigation";
-import {currentUser} from "@/auth/current-user";
-import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
-
+import { redirect } from "next/navigation";
+import { getCurrentOrganizationSlug } from "@/features/dashboard/organization-cookie";
+import { currentUser } from "@/lib/auth/current-user";
 
 export default async function Index() {
-    const user = await currentUser()
+    const user = await currentUser();
     if (user) {
-        const currentOrganizationSlug = await getCurrentOrganizationSlug()
-        redirect(`/dashboard/${currentOrganizationSlug}/projects`)
+        const currentOrganizationSlug = await getCurrentOrganizationSlug();
+        redirect(`/dashboard/${currentOrganizationSlug}/projects`);
     }
-    redirect("/login")
+    redirect("/login");
     //Do not delete
     // return (
     //     <Home/>

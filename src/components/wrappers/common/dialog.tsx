@@ -1,28 +1,21 @@
-"use client"
+"use client";
 
-import {Button} from "@/components/ui/button"
-import {
-    Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle
-} from "@/components/ui/dialog"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
-
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export type agentRegistrationDialogProps = {
-    open: boolean,
-    setOpen: (open: boolean) => void,
-}
-
+    open: boolean;
+    setOpen: (open: boolean) => void;
+};
 
 export const AgentRegistrationDialog = (props: agentRegistrationDialogProps) => {
-
-    const {open, setOpen} = props;
+    const { open, setOpen } = props;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-
             <DialogContent className="sm:max-w-[425px]">
-
                 <DialogHeader>
                     <DialogTitle>New agent registered!</DialogTitle>
                 </DialogHeader>
@@ -32,7 +25,7 @@ export const AgentRegistrationDialog = (props: agentRegistrationDialogProps) => 
                         <Label htmlFor="name" className="text-right">
                             EDGE KEY
                         </Label>
-                        <Input id="name" value="Pedro Duarte" readOnly className="col-span-3"/>
+                        <Input id="name" value="Pedro Duarte" readOnly className="col-span-3" />
                     </div>
                 </div>
                 <DialogFooter>
@@ -40,5 +33,5 @@ export const AgentRegistrationDialog = (props: agentRegistrationDialogProps) => 
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};

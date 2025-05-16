@@ -1,5 +1,8 @@
-import {createEnv} from "@t3-oss/env-nextjs";
-import {z} from "zod";
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
+import packageJson from "../package.json" with { type: "json" };
+
+const { version } = packageJson;
 
 export const env = createEnv({
     /*
@@ -7,12 +10,13 @@ export const env = createEnv({
      * Will throw if you access these variables on the client.
      */
     server: {
-        NODE_ENV: z.enum(['development', 'production']).optional(),
+        NODE_ENV: z.enum(["development", "production"]).optional(),
         DATABASE_URL: z.string().url().optional(),
-        NEXT_PUBLIC_SECRET: z.string().optional(),
-        NEXTAUTH_URL: z.string().optional(),
-        NEXT_PUBLIC_DOMAIN_NAME: z.string().optional(),
-
+        NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_URL: z.string(),
+        NEXT_PUBLIC_PROJECT_VERSION: z.string(),
+        PROJECT_SECRET: z.string(),
 
         SMTP_PASSWORD: z.string().optional(),
         SMTP_FROM: z.string().optional(),
@@ -31,8 +35,6 @@ export const env = createEnv({
         S3_USE_SSL: z.string().optional(),
 
         STORAGE_TYPE: z.string().optional(),
-        NEXT_PUBLIC_GOOGLE_AUTH: z.string().optional(),
-
     },
     /*
      * Environment variables available on the client (and server).
@@ -40,8 +42,10 @@ export const env = createEnv({
      * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
      */
     client: {
-        NEXT_PUBLIC_DOMAIN_NAME: z.string().optional(),
-        NEXT_PUBLIC_GOOGLE_AUTH: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_URL: z.string(),
+        NEXT_PUBLIC_PROJECT_VERSION: z.string(),
     },
     /*
      * Due to how Next.js bundles environment variables on Edge and Client,
@@ -50,10 +54,12 @@ export const env = createEnv({
      * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
      */
     runtimeEnv: {
-        NEXT_PUBLIC_SECRET: process.env.NEXT_PUBLIC_SECRET,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-        NODE_ENV: process.env.NODE_ENV,
-        NEXT_PUBLIC_DOMAIN_NAME: process.env.NEXT_PUBLIC_DOMAIN_NAME,
+        NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
+        NEXT_PUBLIC_PROJECT_DESCRIPTION: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION,
+        NEXT_PUBLIC_PROJECT_URL: process.env.NEXT_PUBLIC_PROJECT_URL,
+        NEXT_PUBLIC_PROJECT_VERSION: version || "Unknown Version",
+        PROJECT_SECRET: process.env.PROJECT_SECRET,
+
         DATABASE_URL: process.env.DATABASE_URL,
 
         SMTP_PASSWORD: process.env.SMTP_PASSWORD,
@@ -64,7 +70,6 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
         AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
-        NEXT_PUBLIC_GOOGLE_AUTH: process.env.NEXT_PUBLIC_GOOGLE_AUTH,
 
         S3_ENDPOINT: process.env.S3_ENDPOINT,
         S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,

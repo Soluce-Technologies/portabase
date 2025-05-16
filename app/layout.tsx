@@ -1,13 +1,12 @@
 import React from "react";
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
 import "./globals.css";
-import {Providers} from "./providers";
-import {cn} from "@/lib/utils";
+import { Providers } from "./providers";
+import { cn } from "@/lib/utils";
 
-
-const inter = Inter({subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Portabase",
@@ -15,19 +14,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <body
-            className={cn(inter.className, "h-full")}
-        >
-        <Providers>
-            {children}
-        </Providers>
-        </body>
+            <body className={cn(inter.className, "h-full")}>
+                <Providers>{children}</Providers>
+            </body>
         </html>
     );
 }

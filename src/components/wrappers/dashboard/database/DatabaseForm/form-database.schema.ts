@@ -1,12 +1,9 @@
-import {z} from "zod";
-
-const cronRegex = /^(\d{1,2}|\*|(\d{1,2}-\d{1,2})|(\d{1,2}\/\d{1,2}))\s+(\d{1,2}|\*|(\d{1,2}-\d{1,2})|(\d{1,2}\/\d{1,2}))\s+(\d{1,2}|\*|(\d{1,2}-\d{1,2})|(\d{1,2}\/\d{1,2}))\s+(\d{1,7}|\*|(\d{1,7}-\d{1,7})|(\d{1,7}\/\d{1,7}))$/;
-
+import { z } from "zod";
 
 export const DatabaseSchema = z.object({
     name: z.string().readonly(),
     description: z.string().optional(),
-    dbms: z.string().readonly(),
+    dbms: z.enum(["active", "inactive"]).readonly(),
 });
 
 export type DatabaseType = z.infer<typeof DatabaseSchema>;

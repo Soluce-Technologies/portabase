@@ -1,16 +1,12 @@
 import React from "react";
-import {cn} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
     size?: number;
     className?: string;
 }
 
-export const LoadingSpinner = ({
-                                   size = 24,
-                                   className,
-                                   ...props
-                               }: ISVGProps) => {
+export const LoadingSpinner = ({ size = 24, className, ...props }: ISVGProps) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

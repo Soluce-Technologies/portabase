@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const S3FormSchema = z.object({
     s3EndPointUrl: z.string(),
@@ -9,9 +9,8 @@ export const S3FormSchema = z.object({
 
 export type S3FormType = z.infer<typeof S3FormSchema>;
 
-
 export const StorageSwitchSchema = z.object({
-    storage: z.string(),
-})
+    storage: z.enum(["local", "s3"]),
+});
 
-export type StorageType= z.infer<typeof StorageSwitchSchema>;
+export type StorageType = z.infer<typeof StorageSwitchSchema>;

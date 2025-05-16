@@ -1,28 +1,24 @@
 "use client";
 
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {
-    FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm
-} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Form} from "@/components/ui/form"
-import {Button} from "@/components/ui/button";
-import {useRouter} from "next/navigation";
-import {useMutation} from "@tanstack/react-query";
-import {TooltipProvider} from "@/components/ui/tooltip";
-import {UserSchema, UserType} from "@/components/wrappers/dashboard/profile/UserForm/user-form.schema";
-import {toast} from "sonner";
-import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
-import { useSession } from "next-auth/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { UserSchema, UserType } from "@/components/wrappers/dashboard/profile/UserForm/user-form.schema";
+import { toast } from "sonner";
+import { updateUserAction } from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
 
 export type userFormProps = {
     defaultValues?: UserType;
     userId?: string;
-}
+};
 
 export const UserForm = (props: userFormProps) => {
-
-    const isCreate = !Boolean(props.defaultValues)
+    const isCreate = !Boolean(props.defaultValues);
 
     const form = useZodForm({
         schema: UserSchema,
@@ -30,96 +26,73 @@ export const UserForm = (props: userFormProps) => {
     });
 
     const router = useRouter();
-    const { data: session, update } = useSession();
 
     const mutation = useMutation({
         mutationFn: async (values: UserType) => {
-            console.log("values", values)
-            console.log(props.userId)
+            console.log("values", values);
+            console.log(props.userId);
             const updateUser = await updateUserAction({
                 id: props.userId ?? "-",
-                data: values
-            })
+                data: values,
+            });
 
-            const data = updateUser?.data?.data
+            const data = updateUser?.data?.data;
             if (updateUser?.serverError || !data) {
-                console.log(updateUser?.serverError);
                 toast.error(updateUser?.serverError);
                 return;
             }
-            console.log("email:", values.email)
 
-            const newSession = {
-                ...session,
-                user: {
-                    ...session?.user,
-                    name: values.name,
-                    email: values.email
-                },
-            };
-
-            const updateSession = await update(newSession);
-            console.log(updateSession);
-            toast.success(`Success updating user informations`);
+            toast.success(`Profile updated successfully.`);
             router.push(`/dashboard/profile`);
-            router.refresh()
-        }
-    })
+            router.refresh();
+        },
+    });
 
     return (
         <TooltipProvider>
             <Card>
                 <CardHeader>
-                    <CardTitle>
-                        Account
-                    </CardTitle>
-                    <CardDescription>
-                        Your informations
-                    </CardDescription>
-
+                    <CardTitle>Account</CardTitle>
+                    <CardDescription>Your informations</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Form form={form}
-                          className="flex flex-col gap-4"
-                          onSubmit={async (values) => {
-                              await mutation.mutateAsync(values);
-                          }}
+                    <Form
+                        form={form}
+                        className="flex flex-col gap-4"
+                        onSubmit={async (values) => {
+                            await mutation.mutateAsync(values);
+                        }}
                     >
                         <FormField
                             control={form.control}
                             name="name"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={"Your Name"} {...field} />
+                                        <Input placeholder={"Your Name"} {...field} />
                                     </FormControl>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="email"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={'exemple@portabase.com'} disabled {...field}
-                                            value={field.value ?? ""}/>
+                                        <Input placeholder={"exemple@portabase.com"} disabled {...field} value={field.value ?? ""} />
                                     </FormControl>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button>
-                            {isCreate ? `` : `Save`}
-                        </Button>
+                        <Button>{isCreate ? `` : `Save`}</Button>
                     </Form>
                 </CardContent>
             </Card>
         </TooltipProvider>
-    )
-}
+    );
+};

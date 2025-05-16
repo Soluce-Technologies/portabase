@@ -1,88 +1,101 @@
-"use server"
-
-import {userAction} from "@/safe-actions";
-import {z} from "zod";
-import {prisma} from "@/prisma";
-import {ServerActionResult} from "@/types/action-type";
-import {Backup, Restoration} from "@prisma/client";
-
+import { userAction } from "@/safe-actions";
+import { z } from "zod";
+import { ServerActionResult } from "@/types/action-type";
+import { Backup, backup, Restoration, restoration } from "@/db/schema";
+import { db } from "@/db";
+import { and, eq } from "drizzle-orm";
 
 export const deleteBackupAction = userAction
-    .schema(z.object({
-        backupId: z.string(),
-        databaseId: z.string(),
-    }))
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Backup>> => {
-
+    .schema(
+        z.object({
+            backupId: z.string(),
+            databaseId: z.string(),
+        })
+    )
+    .action(async ({ parsedInput }): Promise<ServerActionResult<Backup>> => {
         try {
-            const backupDeleted = await prisma.backup.delete({
-                where:{
-                    databaseId: parsedInput.databaseId,
-                    id: parsedInput.backupId
-                }
-            });
+            await db
+                .delete(backup)
+                .where(and(eq(backup.id, parsedInput.backupId), eq(backup.databaseId, parsedInput.databaseId)))
+                .execute();
 
-            return {
-                success: true,
-                value: backupDeleted,
-                actionSuccess: {
-                    message: "Backup has been successfully deleted.",
-                    messageParams: {message: "success"},
-                },
-            };
+            const backupExists = await db
+                .select()
+                .from(backup)
+                .where(and(eq(backup.id, parsedInput.backupId), eq(backup.databaseId, parsedInput.databaseId)))
+                .execute();
+
+            if (backupExists.length === 0) {
+                return {
+                    success: true,
+                    actionSuccess: {
+                        message: "Backup deleted successfully.",
+                    },
+                };
+            } else {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "Backup not found or already deleted.",
+                        status: 404,
+                        cause: "Backup could not be deleted.",
+                        messageParams: { message: "Error deleting the backup" },
+                    },
+                };
+            }
         } catch (error) {
-            console.error("Error deleting backup:", error);
             return {
                 success: false,
                 actionError: {
                     message: "Failed to delete backup.",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: {message: "Error deleting the backup"},
+                    messageParams: { message: "Error deleting the backup" },
                 },
             };
         }
-
-
     });
 
-
+// Create Restoration Action (Drizzle version)
 export const createRestorationAction = userAction
-    .schema(z.object({
-        backupId: z.string(),
-        databaseId: z.string(),
-    }))
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Restoration>> => {
-
+    .schema(
+        z.object({
+            backupId: z.string(),
+            databaseId: z.string(),
+        })
+    )
+    .action(async ({ parsedInput }): Promise<ServerActionResult<Restoration>> => {
         try {
-            const restoration = await prisma.restoration.create({
-                data: {
+            // Insert new restoration into the database
+            const restorationData = await db
+                .insert(restoration)
+                .values({
                     databaseId: parsedInput.databaseId,
                     backupId: parsedInput.backupId,
                     status: "waiting",
-                },
-            });
+                })
+                .returning()
+                .execute();
+
+            const createdRestoration = restorationData[0];
 
             return {
                 success: true,
-                value: restoration,
+                value: createdRestoration,
                 actionSuccess: {
                     message: "Restoration has been successfully created.",
-                    messageParams: {restorationId: restoration.id},
+                    messageParams: { restorationId: createdRestoration.id },
                 },
             };
         } catch (error) {
-            console.error("Error creating restoration:", error);
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to create backup.",
+                    message: "Failed to create restoration.",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: {message: "Error creating the restoration"},
+                    messageParams: { message: "Error creating the restoration" },
                 },
             };
         }
-
-
     });

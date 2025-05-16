@@ -1,55 +1,41 @@
-import {PageParams} from "@/types/next";
-import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {requiredCurrentUser} from "@/auth/current-user";
-import {prisma} from "@/prisma";
-import {notFound} from "next/navigation";
-import {RestoreForm} from "@/components/wrappers/dashboard/database/RestoreForm";
+import { PageParams } from "@/types/next";
+import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
+import { notFound } from "next/navigation";
+import { RestoreForm } from "@/components/wrappers/dashboard/database/RestoreForm";
+import { currentUser } from "@/lib/auth/current-user";
 
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { database, backup } from "@/db/schema";
 
-export default async function RoutePage(props: PageParams<{
-    databaseId: string;
-}>) {
+export default async function RoutePage(
+    props: PageParams<{
+        databaseId: string;
+    }>
+) {
+    const { databaseId } = await props.params;
 
-    const {databaseId} = await props.params
+    const user = await currentUser();
+    if (!user) notFound();
 
+    const [dbToRestore] = await db.select().from(database).where(eq(database.id, databaseId));
 
-    const user = await requiredCurrentUser()
-
-    const database = await prisma.database.findUnique({
-        where: {
-            id: databaseId,
-        }
-    });
-
-
-    const databases = await prisma.database.findMany({
-        where: {
-            dbms: database.dbms,
-        }
-    })
-
-    const backups = await prisma.backup.findMany({
-        where: {
-            status: "success",
-        }
-    });
-
-
-    if (!database) {
+    if (!dbToRestore) {
         notFound();
     }
 
+    const dbsOfSameType = await db.select().from(database).where(eq(database.dbms!, dbToRestore.dbms!));
+
+    const successfulBackups = await db.select().from(backup).where(eq(backup.status, "success"));
 
     return (
         <Page>
             <PageHeader>
-                <PageTitle>
-                    Restore {database.name}
-                </PageTitle>
+                <PageTitle>Restore {dbToRestore.name}</PageTitle>
             </PageHeader>
             <PageContent>
-                <RestoreForm databaseToRestore={database} databases={databases} backups={backups}/>
+                <RestoreForm databaseToRestore={dbToRestore} databases={dbsOfSameType} backups={successfulBackups} />
             </PageContent>
         </Page>
-    )
+    );
 }

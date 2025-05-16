@@ -1,35 +1,24 @@
 "use client";
 
-import {Card, CardContent} from "@/components/ui/card";
-import {
-    FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm
-} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Form} from "@/components/ui/form"
-import {Button} from "@/components/ui/button";
-import {useMutation} from "@tanstack/react-query";
-import {TooltipProvider} from "@/components/ui/tooltip";
+import { Card, CardContent } from "@/components/ui/card";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-import {
-    EmailFormSchema,
-    EmailFormType
-} from "@/components/wrappers/dashboard/admin/AdminEmailTab/EmailForm/email-form.schema";
-import Link from "next/link";
-import {PasswordInput} from "@/components/wrappers/auth/PaswordInput/password-input";
-import {
-    updateEmailSettingsAction
-} from "@/components/wrappers/dashboard/admin/AdminEmailTab/EmailForm/email-form.action";
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
+import { EmailFormSchema, EmailFormType } from "@/components/wrappers/dashboard/admin/AdminEmailTab/EmailForm/email-form.schema";
+import { PasswordInput } from "@/components/wrappers/auth/PaswordInput/password-input";
+import { updateEmailSettingsAction } from "@/components/wrappers/dashboard/admin/AdminEmailTab/EmailForm/email-form.action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export type EmailFormProps = {
     defaultValues?: EmailFormType;
-}
+};
 
 export const EmailForm = (props: EmailFormProps) => {
-
-    const isCreate = !Boolean(props.defaultValues)
-
     const form = useZodForm({
         schema: EmailFormSchema,
         defaultValues: props.defaultValues,
@@ -38,45 +27,40 @@ export const EmailForm = (props: EmailFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: EmailFormType) => {
-            const updateEmailSettings = await updateEmailSettingsAction({name: "system", data: values})
-            const data = updateEmailSettings?.data?.data
+            const updateEmailSettings = await updateEmailSettingsAction({ name: "system", data: values });
+            const data = updateEmailSettings?.data?.data;
             if (updateEmailSettings?.serverError || !data) {
-                console.log(updateEmailSettings?.serverError);
                 toast.error(updateEmailSettings?.serverError);
                 return;
             }
             toast.success(`Success updating email informations`);
-            router.refresh()
-        }
-    })
-
+            router.refresh();
+        },
+    });
 
     return (
         <TooltipProvider>
             <Card>
                 <CardContent>
-
-                    <Form form={form}
-
-                          className="flex flex-col gap-4 mt-3"
-                          onSubmit={async (values) => {
-                              await mutation.mutateAsync(values);
-                          }}
+                    <Form
+                        form={form}
+                        className="flex flex-col gap-4 mt-3"
+                        onSubmit={async (values) => {
+                            await mutation.mutateAsync(values);
+                        }}
                     >
                         <FormField
                             control={form.control}
                             name="smtpFrom"
                             defaultValue=""
-
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>From Email *</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={"exemple@portabase.com"} {...field} />
+                                        <Input placeholder={"exemple@portabase.com"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"The email from where the email will be send"}</FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -84,16 +68,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpHost"
                             defaultValue=""
-
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Server Host *</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={"ssl0.ovh.net"} {...field} />
+                                        <Input placeholder={"ssl0.ovh.net"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"Your email server host"}</FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -101,16 +83,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpPort"
                             defaultValue=""
-
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Server Port *</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={"465"} {...field} />
+                                        <Input placeholder={"465"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"Your email server port (send)"}</FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -119,15 +99,15 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpPassword"
                             defaultValue=""
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <PasswordInput placeholder="Password" {...field}/>
+                                        <PasswordInput placeholder="Password" {...field} />
                                     </FormControl>
                                     <FormDescription>{"Your email server password"}</FormDescription>
 
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -135,29 +115,23 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpUser"
                             defaultValue=""
-
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>User Email *</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder={"exemple@portabase.com"} {...field} />
+                                        <Input placeholder={"exemple@portabase.com"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"The email server user"}</FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <div className="flex justify-end gap-4">
-
-                            <Button>
-                                Save
-                            </Button>
+                            <Button>Save</Button>
                         </div>
-
                     </Form>
                 </CardContent>
             </Card>
         </TooltipProvider>
-    )
-}
+    );
+};

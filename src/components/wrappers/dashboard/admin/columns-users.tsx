@@ -1,31 +1,28 @@
-"use client"
+"use client";
 
-import {ColumnDef} from "@tanstack/react-table"
-import {Badge} from "@/components/ui/badge";
-import {User} from "@prisma/client";
-import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
-import {useMutation} from "@tanstack/react-query";
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
-import {Trash2} from "lucide-react";
-import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
-import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { User } from "@prisma/client";
+import { updateUserAction } from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Trash2 } from "lucide-react";
+import { deleteUserAction } from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
+import { ButtonWithLoading } from "@/components/wrappers/common/button/button-with-loading";
 
 export const usersColumnsAdmin: ColumnDef<User>[] = [
     {
         accessorKey: "role",
         header: "Role",
-        cell: ({row}) => {
-            const router = useRouter();
-            const [role, setRole] = useState<string>(row.getValue("role"))
+        cell: ({ row }) => {
+            const [role, setRole] = useState<string>(row.getValue("role"));
 
             const updateMutation = useMutation({
-                mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
+                mutationFn: () => updateUserAction({ id: row.original.id, data: { role: role } }),
                 onSuccess: () => {
                     toast.success(`User updated successfully.`);
-                    // router.refresh()
-
                 },
                 onError: () => {
                     toast.error(`An error occurred while updating user information.`);
@@ -33,55 +30,52 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
             });
 
             const handleUpdateRole = async () => {
-                const nextRole = role === "admin" ? "pending"
-                    : role === "pending" ? "user"
-                        : "admin";
+                const nextRole = role === "admin" ? "pending" : role === "pending" ? "user" : "admin";
                 setRole(nextRole);
-                await updateMutation.mutateAsync()
+                await updateMutation.mutateAsync();
             };
 
-            return <Badge
-                className="cursor-pointer"
-                onClick={() => handleUpdateRole()}
-                variant="outline">{role}</Badge>
+            return (
+                <Badge className="cursor-pointer" onClick={() => handleUpdateRole()} variant="outline">
+                    {role}
+                </Badge>
+            );
         },
     },
     {
         accessorKey: "name",
-        header: "Name"
+        header: "Name",
     },
     {
         accessorKey: "email",
-        header: "Email"
+        header: "Email",
     },
     {
         accessorKey: "updatedAt",
         header: "Updated At",
-        cell: ({row}) => {
+        cell: ({ row }) => {
             return new Date(row.getValue("updatedAt")).toLocaleString("fr-FR");
         },
     },
     {
         accessorKey: "authMethod",
         header: "Method",
-        cell: ({row}) => {
-            return <Badge variant="outline">{row.getValue("authMethod")}</Badge>
+        cell: ({ row }) => {
+            return <Badge variant="outline">{row.getValue("authMethod")}</Badge>;
         },
     },
     {
         header: "Action",
         id: "actions",
-        cell: ({ row, table }) => {
-
+        cell: ({ row }) => {
             const router = useRouter();
             const mutation = useMutation({
                 mutationFn: () => deleteUserAction(row.original.id),
                 onSuccess: async () => {
-                   toast.success('User deleted successfully.');
-                   router.refresh()
+                    toast.success("User deleted successfully.");
+                    router.refresh();
                 },
-            })
-
+            });
 
             return (
                 <div className="flex items-center gap-2">
@@ -94,9 +88,8 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
                         }}
                         size="icon"
                     />
-
                 </div>
             );
         },
     },
-]
+];

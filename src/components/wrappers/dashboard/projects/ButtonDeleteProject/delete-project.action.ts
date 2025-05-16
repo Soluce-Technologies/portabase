@@ -1,47 +1,49 @@
-"use server"
-import {userAction} from "@/safe-actions";
-import {z} from "zod";
-import {v4 as uuidv4} from "uuid";
-import {prisma} from "@/prisma";
-import {ServerActionResult} from "@/types/action-type";
-import {Projects} from "@prisma/client";
+"use server";
 
+import { userAction } from "@/safe-actions";
+import { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
+import { ServerActionResult } from "@/types/action-type";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { project } from "@/db/schema";
 
-export const deleteProjectAction = userAction
-    .schema(z.string())
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Projects>>  => {
+export const deleteProjectAction = userAction.schema(z.string()).action(async ({ parsedInput }): Promise<ServerActionResult<typeof project.$inferSelect>> => {
+    try {
+        const uuid = uuidv4();
 
-        try {
-            const uuid = uuidv4()
-
-            const project = await prisma.project.update({
-                where: {
-                    id: parsedInput
-                },
-                data:{
-                    isArchived: true,
-                    slug: uuid
-                }
+        const updatedProjects = await db
+            .update(project)
+            .set({
+                isArchived: true,
+                slug: uuid,
             })
+            .where(eq(project.id, parsedInput))
+            .returning();
 
-            return {
-                success: true,
-                value: project,
-                actionSuccess: {
-                    message: "Projects has been successfully archived.",
-                    messageParams: {projectId: parsedInput},
-                },
-            };
-        } catch (error) {
-            return {
-                success: false,
-                actionError: {
-                    message: "Failed to archived Projects.",
-                    status: 500, // Optional: Use a meaningful status code
-                    cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: {projectId: parsedInput},
-                },
-            };
+        const updatedProject = updatedProjects[0];
+
+        if (!updatedProject) {
+            throw new Error("Project not found or update failed");
         }
 
-    });
+        return {
+            success: true,
+            value: updatedProject,
+            actionSuccess: {
+                message: "Projects has been successfully archived.",
+                messageParams: { projectId: parsedInput },
+            },
+        };
+    } catch (error) {
+        return {
+            success: false,
+            actionError: {
+                message: "Failed to archive Projects.",
+                status: 500,
+                cause: error instanceof Error ? error.message : "Unknown error",
+                messageParams: { projectId: parsedInput },
+            },
+        };
+    }
+});

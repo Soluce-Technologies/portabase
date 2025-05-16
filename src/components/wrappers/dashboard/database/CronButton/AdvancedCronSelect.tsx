@@ -2,17 +2,17 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {isValidCronPart} from "@/utils/cron";
+import { isValidCronPart } from "@/utils/cron";
 
 export const AdvancedCronSelect = ({
-                                       id,
-                                       label,
-                                       options,
-                                       type,
-                                       value,
-                                       defaultValue,
-                                       onValueChange,
-                                   }: {
+    id,
+    label,
+    options,
+    type,
+    value,
+    defaultValue,
+    onValueChange,
+}: {
     id: string;
     label: string;
     options: string[];
@@ -38,7 +38,9 @@ export const AdvancedCronSelect = ({
 
     return (
         <div className="grid grid-cols-2 items-center gap-2">
-            <Label htmlFor={id} className="text-left">{label}</Label>
+            <Label htmlFor={id} className="text-left">
+                {label}
+            </Label>
             {!isAdvanced ? (
                 <Select
                     id={id}

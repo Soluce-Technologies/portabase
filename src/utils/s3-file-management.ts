@@ -1,14 +1,15 @@
-import * as Minio from 'minio'
-import {env} from "@/env.mjs";
+import * as Minio from "minio";
+import { env } from "@/env.mjs";
 import internal from "node:stream";
-import {prisma} from "@/prisma";
+import { db } from "@/db";
+import { setting as drizzleSetting } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 // const settings = await prisma.settings.findUnique({
 //     where:{
 //         name: "system"
 //     }
 // })
-
 
 // Create a new Minio client with the S3 endpoint, access key, and secret key
 // export const s3Client = env.NODE_ENV === "production" ?
@@ -36,52 +37,58 @@ import {prisma} from "@/prisma";
 //         useSSL: env.S3_USE_SSL === 'true'
 //     })
 
+async function getS3Client() {
+    const settings = await db
+        .select()
+        .from(drizzleSetting)
+        .where(eq(drizzleSetting.name, "system"))
+        .then((res) => res[0]);
 
-async function gets3Client() {
+    if (!settings) {
+        throw new Error("S3 settings not found in database.");
+    }
 
-    const settings = await prisma.settings.findUnique({
-        where: {
-            name: "system"
-        }
-    })
+    const baseConfig = {
+        endPoint: settings.s3EndPointUrl ?? "",
+        accessKey: settings.s3AccessKeyId ?? "",
+        secretKey: settings.s3SecretAccessKey ?? "",
+    };
 
-    const s3Client = env.NODE_ENV === "production" ?
-        new Minio.Client({
-            endPoint: settings.s3EndPointUrl ?? "",
-            accessKey: settings.s3AccessKeyId ?? "",
-            secretKey: settings.s3SecretAccessKey ?? "",
-        }) : new Minio.Client({
-            endPoint: settings.s3EndPointUrl ?? "",
-            port: Number(env.S3_PORT ?? 0),
-            accessKey: settings.s3AccessKeyId ?? "",
-            secretKey: settings.s3SecretAccessKey ?? "",
-            useSSL: env.S3_USE_SSL === 'true'
-        })
-    return s3Client
+    const s3Client =
+        env.NODE_ENV === "production"
+            ? new Minio.Client({
+                  ...baseConfig,
+              })
+            : new Minio.Client({
+                  ...baseConfig,
+                  port: Number(env.S3_PORT ?? 0),
+                  useSSL: env.S3_USE_SSL === "true",
+              });
+
+    return s3Client;
 }
 
 export async function checkMinioAlive() {
     try {
         console.log("Check MinioAlive");
-        const s3Client = await gets3Client()
+        const s3Client = await getS3Client();
         // Try to list buckets to check connectivity
         const buckets = await s3Client.listBuckets();
-        console.log('MinIO is up and running. Buckets:', buckets);
-        return {message: true}
+        console.log("MinIO is up and running. Buckets:", buckets);
+        return { message: true };
     } catch (error) {
-        console.error('Error connecting to MinIO:', error);
-        return {error: error}
-
+        console.error("Error connecting to MinIO:", error);
+        return { error: error };
     }
 }
 
 export async function createBucketIfNotExists(bucketName: string) {
-    const s3Client = await gets3Client()
+    const s3Client = await getS3Client();
 
-    const bucketExists = await s3Client.bucketExists(bucketName)
+    const bucketExists = await s3Client.bucketExists(bucketName);
     if (!bucketExists) {
         console.log(`Creating bucket ${bucketName}`);
-        await s3Client.makeBucket(bucketName)
+        await s3Client.makeBucket(bucketName);
     }
 }
 
@@ -91,36 +98,28 @@ export async function createBucketIfNotExists(bucketName: string) {
  * @param fileName name of the file
  * @param file file to save
  */
-export async function saveFileInBucket({
-                                           bucketName,
-                                           fileName,
-                                           file,
-                                       }: {
-    bucketName: string
-    fileName: string
-    file: Buffer | internal.Readable
-}) {
+export async function saveFileInBucket({ bucketName, fileName, file }: { bucketName: string; fileName: string; file: Buffer | internal.Readable }) {
     // Check if Minio is Alive
-    await checkMinioAlive()
+    await checkMinioAlive();
     // Create bucket if it doesn't exist
-    await createBucketIfNotExists(bucketName)
+    await createBucketIfNotExists(bucketName);
     // check if file exists - optional.
     // Without this check, the file will be overwritten if it exists
     const fileExists = await checkFileExistsInBucket({
         bucketName,
         fileName,
-    })
+    });
 
-    console.log('File exists:', fileExists);
+    console.log("File exists:", fileExists);
 
     if (fileExists) {
-        throw new Error('File already exists')
+        throw new Error("File already exists");
     }
-    const s3Client = await gets3Client()
+    const s3Client = await getS3Client();
 
     // Upload image to S3 bucket
-    const result = await s3Client.putObject(bucketName, fileName, file)
-    return result
+    const result = await s3Client.putObject(bucketName, fileName, file);
+    return result;
 }
 
 /**
@@ -129,15 +128,15 @@ export async function saveFileInBucket({
  * @param fileName name of the file
  * @returns true if file exists, false if not
  */
-export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
-    const s3Client = await gets3Client()
+export async function checkFileExistsInBucket({ bucketName, fileName }: { bucketName: string; fileName: string }) {
+    const s3Client = await getS3Client();
 
     try {
-        await s3Client.statObject(bucketName, fileName)
+        await s3Client.statObject(bucketName, fileName);
     } catch (error) {
-        return false
+        return false;
     }
-    return true
+    return true;
 }
 
 /**
@@ -146,25 +145,24 @@ export async function checkFileExistsInBucket({bucketName, fileName}: { bucketNa
  * @returns promise with array of presigned urls
  */
 export async function createPresignedUrlToUpload({
-                                                     bucketName,
-                                                     fileName,
-                                                     expiry = 60 * 60, // 1 hour
-                                                 }: {
-    bucketName: string
-    fileName: string
-    expiry?: number
+    bucketName,
+    fileName,
+    expiry = 60 * 60, // 1 hour
+}: {
+    bucketName: string;
+    fileName: string;
+    expiry?: number;
 }) {
     // Create bucket if it doesn't exist
-    await createBucketIfNotExists(bucketName)
-    const s3Client = await gets3Client()
+    await createBucketIfNotExists(bucketName);
+    const s3Client = await getS3Client();
 
-    return await s3Client.presignedPutObject(bucketName, fileName, expiry)
+    return await s3Client.presignedPutObject(bucketName, fileName, expiry);
 }
 
-
 // Function to create a bucket and make it public
-export async function createPublicBucket({bucketName}: { bucketName: string }) {
-    const s3Client = await gets3Client()
+export async function createPublicBucket({ bucketName }: { bucketName: string }) {
+    const s3Client = await getS3Client();
 
     try {
         // Check if the bucket already exists
@@ -179,21 +177,21 @@ export async function createPublicBucket({bucketName}: { bucketName: string }) {
 
         // Define a bucket policy for public access
         const policy = {
-            Version: '2012-10-17',
+            Version: "2012-10-17",
             Statement: [
                 {
-                    Effect: 'Allow',
+                    Effect: "Allow",
                     Principal: "*",
-                    Action: 's3:GetObject',
-                    Resource: `arn:aws:s3:::${bucketName}/*`
-                }
-            ]
+                    Action: "s3:GetObject",
+                    Resource: `arn:aws:s3:::${bucketName}/*`,
+                },
+            ],
         };
 
         // Set the policy to the bucket
         await s3Client.setBucketPolicy(bucketName, JSON.stringify(policy));
         console.log(`Bucket ${bucketName} is now public.`);
     } catch (error) {
-        console.error('Error creating bucket:', error);
+        console.error("Error creating bucket:", error);
     }
 }

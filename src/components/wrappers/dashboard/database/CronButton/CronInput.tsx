@@ -1,20 +1,16 @@
 import { AdvancedCronSelect } from "./AdvancedCronSelect";
-import {
-    updateBackupPolicyAction,
-    updateDatabaseBackupPolicyAction
-} from "@/components/wrappers/dashboard/database/CronButton/cron.action";
-import {useMutation} from "@tanstack/react-query";
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {toast} from "sonner";
-import {Database} from "@prisma/client";
-import {Button} from "@/components/ui/button";
-import {Separator} from "@/components/ui/separator";
+import { updateDatabaseBackupPolicyAction } from "@/components/wrappers/dashboard/database/CronButton/cron.action";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Database } from "@/db/schema";
 
 export type CronInputProps = {
-    database : Database
-}
-
+    database: Database;
+};
 
 export const CronInput = ({ database }: CronInputProps) => {
     const [cron, setCron] = useState<string>(database.backupPolicy ?? "* * * * *");
@@ -31,7 +27,7 @@ export const CronInput = ({ database }: CronInputProps) => {
         },
     });
 
-    const handleChangeCron = (type: string, value: string) => {
+    const handleChangeCron = (type: "minute" | "hour" | "day-of-month" | "month" | "day-of-week", value: string) => {
         const cronParts = cron.split(" ");
         const indexMap = { minute: 0, hour: 1, "day-of-month": 2, month: 3, "day-of-week": 4 };
         cronParts[indexMap[type]] = value;
@@ -96,9 +92,7 @@ export const CronInput = ({ database }: CronInputProps) => {
                     <div className="font-semibold">Cron Expression</div>
                     <div className="font-mono text-muted-foreground">{cron}</div>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                    This cron expression determines when the job will run.
-                </div>
+                <div className="text-sm text-muted-foreground">This cron expression determines when the job will run.</div>
             </div>
             <div className="flex justify-between gap-2">
                 <Button

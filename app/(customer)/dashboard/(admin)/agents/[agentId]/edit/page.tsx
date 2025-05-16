@@ -1,19 +1,18 @@
-import {PageParams} from "@/types/next";
-import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {AgentForm} from "@/components/wrappers/dashboard/agent/AgentForm/AgentForm";
-import {prisma} from "@/prisma";
-import {notFound} from "next/navigation";
+import { PageParams } from "@/types/next";
+import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
+import { AgentForm } from "@/components/wrappers/dashboard/agent/AgentForm/AgentForm";
+import { notFound } from "next/navigation";
+import { db } from "@/db";
 
+export default async function RoutePage(
+    props: PageParams<{
+        agentId: string;
+    }>
+) {
+    const { agentId } = await props.params;
 
-export default async function RoutePage(props: PageParams<{
-    agentId: string;
-}>) {
-
-    const {agentId} = await props.params
-    const agent = await prisma.agent.findUnique({
-        where: {
-            id: agentId,
-        }
+    const agent = await db.query.agent.findFirst({
+        where: (fields, { eq }) => eq(fields.id, agentId),
     });
 
     if (!agent) {
@@ -23,13 +22,11 @@ export default async function RoutePage(props: PageParams<{
     return (
         <Page>
             <PageHeader>
-                <PageTitle>
-                    Edit {agent.name}
-                </PageTitle>
+                <PageTitle>Edit {agent.name}</PageTitle>
             </PageHeader>
             <PageContent>
-                <AgentForm defaultValues={agent} agentId={agent.id}/>
+                <AgentForm defaultValues={agent} agentId={agent.id} />
             </PageContent>
         </Page>
-    )
+    );
 }

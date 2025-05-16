@@ -1,12 +1,12 @@
-import {useEffect} from "react";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {cn} from "@/lib/utils";
+import { useEffect } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 export type tablePaginationSizeProps = {
-    className?: string
-    table: any
-    pageSizeOptions?: number[]
-}
+    className?: string;
+    table: any;
+    pageSizeOptions?: number[];
+};
 
 export const TablePaginationSize = (props: tablePaginationSizeProps) => {
     const { className, table, pageSizeOptions = [10, 20, 30, 40, 50] } = props;

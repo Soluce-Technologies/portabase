@@ -1,115 +1,105 @@
 "use client";
 
-import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    useZodForm
-} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Form} from "@/components/ui/form"
-import {Button} from "@/components/ui/button";
-import {useMutation} from "@tanstack/react-query";
-import {ProjectSchema, ProjectType} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm.schema";
-import {
-    createProjectAction,
-    updateProjectAction
-} from "@/components/wrappers/dashboard/projects/ProjectsForm/project-form.action";
-import {useRouter} from "next/navigation";
-import {Database, Organization, Projects} from "@prisma/client"
-import {MultiSelect} from "@/components/wrappers/common/multiSelect/MultiSelect";
-import {toast} from "sonner";
-
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { ProjectSchema, ProjectType } from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm.schema";
+import { createProjectAction, updateProjectAction } from "@/components/wrappers/dashboard/projects/ProjectsForm/project-form.action";
+import { useRouter } from "next/navigation";
+import { MultiSelect } from "@/components/wrappers/common/multiselect/multi-select";
+import { toast } from "sonner";
+import { DatabaseWith, Organization } from "@/db/schema";
 
 export type projectFormProps = {
     defaultValues?: ProjectType;
-    databases: Database[],
-    organization: Organization,
+    databases: DatabaseWith[];
+    organization: Organization;
     projectId?: string;
-
-}
+};
 
 export const ProjectForm = (props: projectFormProps) => {
-
     const router = useRouter();
-    const isCreate = !Boolean(props.defaultValues)
+    const isCreate = !Boolean(props.defaultValues);
 
-
-    const formatDatabasesList = (databases: Database[]) => {
-        return databases.map(database => ({
+    const formatDatabasesList = (databases: DatabaseWith[]) => {
+        return databases.map((database) => ({
             value: database.id,
-            label: `${database.name} (${database.generatedId}) | ${database.agent.name}`,
+            label: `${database.name} (${database.id}) | ${database.agent.name}`,
         }));
     };
 
-    const formatDefaultDatabases = (databases: ProjectType['databases']): string[] => {
-        return databases.map(database => database.id);
+    const formatDefaultDatabases = (databases: string[]): string[] => {
+        return databases;
     };
 
     const formattedDefaultValues = {
         ...props.defaultValues,
-        databases: !isCreate ? formatDefaultDatabases(props.defaultValues?.databases) : []
-    }
-
+        databases: !isCreate ? formatDefaultDatabases(props.defaultValues?.databases ?? []) : [],
+    };
 
     const form = useZodForm({
         schema: ProjectSchema,
         defaultValues: formattedDefaultValues,
-
     });
 
     const mutation = useMutation({
         mutationFn: async (values: ProjectType) => {
-            console.log(values)
-            const project: Projects = isCreate ? await createProjectAction({
-                data: values,
-                organizationId: props.organization.id
-            }) : await updateProjectAction({
-                data: values,
-                organizationId: props.organization.id,
-                projectId: props.projectId
-            });
-
-            if (project.data?.success) {
-                toast.success(project.data.actionSuccess.message);
-                router.push(`/dashboard/${props.organization.slug}/projects/${project.data.value.id}`);
-                router.refresh();
-            } else {
-                toast.error(project.data.actionError.message || "Unknown error occurred.");
+            console.log(values);
+            if (!isCreate && !props.projectId) {
+                throw new Error("Project ID is required for updates");
             }
+            const project = isCreate
+                ? await createProjectAction({
+                      data: values,
+                      organizationId: props.organization.id,
+                  })
+                : await updateProjectAction({
+                      data: values,
+                      organizationId: props.organization.id,
+                      projectId: props.projectId!,
+                  });
 
-
-        }
-    })
+            if (project && project.data) {
+                if (project.data.success) {
+                    project.data.actionSuccess && toast.success(project.data.actionSuccess.message);
+                    router.push(`/dashboard/${props.organization.slug}/projects/${project.data.value!.id}`);
+                    router.refresh();
+                } else {
+                    project.data.actionError && toast.error(project.data.actionError.message || "Unknown error occurred.");
+                    router.refresh();
+                }
+            } else {
+                toast.error("Failed to process request. No response received.");
+                router.refresh();
+            }
+        },
+    });
 
     return (
         <Card>
-            <CardHeader>
-
-            </CardHeader>
+            <CardHeader></CardHeader>
             <CardContent>
-                <Form form={form}
-                      className="flex flex-col gap-4"
-                      onSubmit={async (values) => {
-                          await mutation.mutateAsync(values);
-                      }}
+                <Form
+                    form={form}
+                    className="flex flex-col gap-4"
+                    onSubmit={async (values) => {
+                        await mutation.mutateAsync(values);
+                    }}
                 >
                     <FormField
                         control={form.control}
                         name="name"
                         defaultValue=""
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        placeholder="Project 1" {...field} />
+                                    <Input placeholder="Project 1" {...field} />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -117,29 +107,30 @@ export const ProjectForm = (props: projectFormProps) => {
                         control={form.control}
                         name="slug"
                         defaultValue=""
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Slug</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="project-1" {...field}
+                                        placeholder="project-1"
+                                        {...field}
                                         onChange={(e) => {
-                                            const value = e.target.value.replaceAll(" ", "-").toLowerCase()
-                                            field.onChange(value)
-                                        }}/>
+                                            const value = e.target.value.replaceAll(" ", "-").toLowerCase();
+                                            field.onChange(value);
+                                        }}
+                                    />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="databases"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Databases</FormLabel>
                                 <FormControl>
-
                                     <MultiSelect
                                         options={formatDatabasesList(props.databases)}
                                         onValueChange={field.onChange}
@@ -151,16 +142,13 @@ export const ProjectForm = (props: projectFormProps) => {
                                     />
                                 </FormControl>
                                 <FormDescription>Select databases you want to add to this project</FormDescription>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
-                        )
-                        }
+                        )}
                     />
-                    <Button>
-                        {isCreate ? `Create Project` : `Update Project`}
-                    </Button>
+                    <Button>{isCreate ? `Create Project` : `Update Project`}</Button>
                 </Form>
             </CardContent>
         </Card>
-    )
-}
+    );
+};

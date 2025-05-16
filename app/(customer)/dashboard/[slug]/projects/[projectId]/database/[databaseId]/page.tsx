@@ -1,91 +1,75 @@
-import {PageParams} from "@/types/next";
-import {prisma} from "@/prisma";
-import {notFound} from "next/navigation";
-import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
-import {BackupButton} from "@/components/wrappers/dashboard/backup/backup-button/backup-button";
-import {DatabaseTabs} from "@/components/wrappers/dashboard/projects/Database/DatabaseTabs";
-import {DatabaseKpi} from "@/components/wrappers/dashboard/projects/Database/DatabaseKpi";
-import {EditButton} from "@/components/wrappers/dashboard/database/EditButton/EditButton";
-import {CronButton} from "@/components/wrappers/dashboard/database/CronButton/CronButton";
+import { PageParams } from "@/types/next";
+import { notFound } from "next/navigation";
+import { Page, PageActions, PageContent, PageDescription, PageTitle } from "@/features/layout/page";
+import { BackupButton } from "@/components/wrappers/dashboard/backup/backup-button/backup-button";
+import { DatabaseTabs } from "@/components/wrappers/dashboard/projects/Database/DatabaseTabs";
+import { DatabaseKpi } from "@/components/wrappers/dashboard/projects/Database/DatabaseKpi";
+import { EditButton } from "@/components/wrappers/dashboard/database/EditButton/EditButton";
+import { CronButton } from "@/components/wrappers/dashboard/database/CronButton/CronButton";
 
+import { db } from "@/db";
+import { eq, and } from "drizzle-orm";
+import { backup as drizzleBackup, database as drizzleDatabase, restoration as drizzleRestoration } from "@/db/schema";
 
 export default async function RoutePage(props: PageParams<{ databaseId: string }>) {
+    const { databaseId } = await props.params;
 
-    const {databaseId} = await props.params
-    const database = await prisma.database.findUnique({
-        where: {
-            id: databaseId,
-        },
-    })
-    if (!database) {
-        notFound()
+    const dbItem = await db.query.database.findFirst({
+        where: eq(drizzleDatabase.id, databaseId),
+    });
+
+    if (!dbItem) {
+        notFound();
     }
 
-
-    const backups = await prisma.backup.findMany({
-        where: {
-            databaseId: database.id
+    const backups = await db.query.backup.findMany({
+        where: eq(drizzleBackup.databaseId, dbItem.id),
+        with: {
+            restorations: true,
         },
-        include:{
-            restorations: {}
-        },
-        orderBy: {
-            createdAt: "desc"
-        }
-    })
-
-    const restorations = await prisma.restoration.findMany({
-        where: {
-            databaseId: databaseId,
-        },
-        orderBy: {
-            createdAt: "desc"
-        }
-    })
-
-
-    const isAlreadyBackup = !!backups.find(backup => backup.status === "waiting");
-    const isAlreadyRestore = !!restorations.find(restoration => restoration.status === "waiting");
-
-    const totalBackups = await prisma.backup.count({
-        where: {
-            databaseId: databaseId,
-        },
+        orderBy: (b, { desc }) => [desc(b.createdAt)],
     });
-    const successfulBackups = await prisma.backup.count({
-        where: {
-            databaseId: databaseId,
-            status: 'success',
-        },
+
+    const restorations = await db.query.restoration.findMany({
+        where: eq(drizzleRestoration.databaseId, dbItem.id),
+        orderBy: (r, { desc }) => [desc(r.createdAt)],
     });
-    const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null
+
+    const isAlreadyBackup = backups.some((b) => b.status === "waiting");
+    const isAlreadyRestore = restorations.some((r) => r.status === "waiting");
+
+    const [totalBackups, successfulBackups] = await Promise.all([
+        db
+            .select({ count: drizzleBackup.id })
+            .from(drizzleBackup)
+            .where(eq(drizzleBackup.databaseId, dbItem.id))
+            .then((rows) => rows.length),
+        db
+            .select({ count: drizzleBackup.id })
+            .from(drizzleBackup)
+            .where(and(eq(drizzleBackup.databaseId, dbItem.id), eq(drizzleBackup.status, "success")))
+            .then((rows) => rows.length),
+    ]);
+
+    const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
     return (
         <Page>
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
-                    {database.name}
-                    <EditButton/>
-                    <CronButton database={database}/>
+                    {dbItem.name}
+                    <EditButton />
+                    <CronButton database={dbItem} />
                 </PageTitle>
                 <PageActions className="justify-between">
-                    <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
+                    <BackupButton disable={isAlreadyBackup} databaseId={databaseId} />
                 </PageActions>
             </div>
-            <PageDescription className="mt-5 sm:mt-0">{database.description}</PageDescription>
+            <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             <PageContent className="flex flex-col w-full h-full">
-                <DatabaseKpi
-                    successRate={successRate}
-                    database={database}
-                    totalBackups={totalBackups}
-                />
-                <DatabaseTabs
-                    database={database}
-                    isAlreadyRestore={isAlreadyRestore}
-                    backups={backups}
-                    restorations={restorations}
-                />
+                <DatabaseKpi successRate={successRate} database={dbItem} totalBackups={totalBackups} />
+                <DatabaseTabs database={dbItem} isAlreadyRestore={isAlreadyRestore} backups={backups} restorations={restorations} />
             </PageContent>
         </Page>
-    )
+    );
 }

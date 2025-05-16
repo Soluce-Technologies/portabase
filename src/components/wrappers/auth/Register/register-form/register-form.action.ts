@@ -1,51 +1,28 @@
-"use server"
-import {RegisterSchema} from "@/components/wrappers/auth/Register/register-form/register-form.schema";
-import {action} from "@/safe-actions";
-import {prisma} from "@/prisma";
-import {hashPassword} from "@/utils/password";
+"use server";
+import { RegisterSchema } from "@/components/wrappers/auth/Register/register-form/register-form.schema";
+import { action } from "@/safe-actions";
+import { signUp } from "@/lib/auth/auth-client";
+import { db } from "@/db";
+import { user as drizzleUser } from "@/db/schema/01_user";
+import { eq } from "drizzle-orm";
 
+export const registerUserAction = action.schema(RegisterSchema).action(async ({ parsedInput }: { parsedInput: typeof RegisterSchema._type }) => {
+    const [user] = await db.select().from(drizzleUser).where(eq(drizzleUser.email, parsedInput.email)).limit(1);
 
-export const registerUserAction = action
-    .schema(RegisterSchema)
-    .action(async ({parsedInput, ctx}) => {
-        const user = await prisma.user.findUnique({where: {email: parsedInput.email}});
-        console.log(user);
-        if (!user && parsedInput.password === parsedInput.confirmPassword) {
+    if (!user && parsedInput.password === parsedInput.confirmPassword) {
+        const { data, error } = await signUp.email({
+            email: parsedInput.email,
+            password: parsedInput.password,
+            name: parsedInput.name,
+        });
 
-            const users = await prisma.user.findMany({
-                where: {
-                    deleted: {not: true},
-                }
-            })
-            const role = users.length > 0 ? "pending" : "admin"
-
-            const newUser = await prisma.user.create({
-                data: {
-                    name: parsedInput.name,
-                    email: parsedInput.email,
-                    password: await hashPassword(parsedInput.password),
-                    role: role
-                },
-            });
-
-            const defaultOrganization = await prisma.organization.findUnique({
-                where: {slug: "default"},
-            });
-
-            const organizationRole = users.length > 0 ? "member" : "admin"
-
-            await prisma.userOrganization.create({
-                data: {
-                    userId: newUser.id,
-                    organizationId: defaultOrganization.id,
-                    role:organizationRole
-                },
-            });
-
-            return {
-                data: newUser,
-            }
+        if (error) {
+            throw new Error(error.message);
         }
-        throw new Error('An error occured while creating user');
 
-    });
+        return {
+            data: data?.user,
+        };
+    }
+    throw new Error("An error occured while creating user");
+});

@@ -1,53 +1,73 @@
-"use client"
+"use client";
 
-import {useEffect, useState} from "react";
+import { JSX, useEffect, useState } from "react";
 import Link from "next/link";
-import {SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
-import {cn} from "@/lib/utils";
-import {buttonVariants} from "@/components/ui/button";
-import {ChartArea, Layers, Settings, ShieldHalf} from "lucide-react";
-import {usePathname} from "next/navigation";
-import {UserOrganization} from "@prisma/client";
+import {
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarMenu as SM,
+    SidebarMenuAction,
+    SidebarMenuButton,
+    SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { ChevronDown, MoreHorizontal } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-export type SidebarMenuCustomProps = {
-    currentOrganizationSlug: string,
-    currentOrganizationUser: UserOrganization,
-}
+export type SidebarMenuProps = {
+    baseUrl: string;
+    items: SidebarItem[];
+};
 
-export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
+type SidebarItemContent = {
+    title: string;
+    url: string;
+    icon: JSX.Element;
+    dropdown?: {
+        title: string;
+        url: string;
+    }[];
+};
 
-    const BASE_URL = `/dashboard/${props.currentOrganizationSlug}`;
+type SidebarListItem = {
+    type: "list";
+    content: SidebarItemContent;
+};
+
+type SidebarCollapseItem = {
+    type: "collapse";
+    title: string;
+    content: SidebarItemContent[];
+};
+
+export type SidebarItem = SidebarListItem | SidebarCollapseItem;
+
+export const SidebarMenu = (props: SidebarMenuProps) => {
     const pathname = usePathname();
-    // Menu items.
-    const items = [
-        {
-            title: "Projects",
-            url: "projects",
-            icon: Layers,
-        },
-        {
-            title: "Statistics",
-            url: "statistics",
-            icon: ChartArea,
-        }
-    ]
-
-    if (props.currentOrganizationUser.role === "admin") {
-        items.push({
-            title: "Settings",
-            url: "settings",
-            icon: Settings,
-        },)
-    }
-
 
     useEffect(() => {
         const currentUrl = pathname;
-        const currentItem = items.find((item) => `${BASE_URL}/${item.url}` === currentUrl);
+
+        const currentItem = props.items.find((item) => {
+            if (item.type === "list") {
+                return `${props.baseUrl}/${item.content.url}` === currentUrl;
+            } else if (item.type === "collapse") {
+                return item.content.some((content) => `${props.baseUrl}/${content.url}` === currentUrl);
+            }
+            return false;
+        });
+
         if (currentItem) {
-            setActiveItem(currentItem.title);
-        }
-        else{
+            if (currentItem.type === "list") {
+                setActiveItem(currentItem.content.title);
+            } else if (currentItem.type === "collapse") {
+                setActiveItem(currentItem.title!);
+            }
+        } else {
             setActiveItem("");
         }
     }, [pathname]);
@@ -55,66 +75,88 @@ export const SidebarMenuCustom = (props: SidebarMenuCustomProps) => {
     const [activeItem, setActiveItem] = useState("");
     const handleItemClick = (title: string) => {
         setActiveItem(title);
-        console.log(title)
-    }
-    return (
-        <SidebarMenu>
-            {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                        <Link
-                            className={cn(buttonVariants({
-                                size: "lg",
-                                variant: activeItem === item.title ? "secondary" : 'ghost'
-                            }), "justify-start p-0")}
-                            href={`${BASE_URL}/${item.url}`}
-                            onClick={() => handleItemClick(item.title)}
-                        >
-                            <item.icon/>
-                            <span>{item.title}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuAction
-                        className={`peer-data-[active=true]/menu-button:opacity-100 ${activeItem === item.title ? 'active' : ''}`}/>
-                </SidebarMenuItem>
-            ))}
-        </SidebarMenu>
-    )
-}
+    };
 
-// export type SidebarMenuItemCustomProps = {
-//     title: string
-//     url: string
-//     icon: Element
-// }
-//
-//
-// export const SidebarMenuItemCustom = (props: SidebarMenuItemCustomProps) => {
-//
-//     const {title, url, icon} = props;
-//
-//     const BASE_URL = "/dashboard";
-//     const pathname = usePathname();
-//
-//     const [activeItem, setActiveItem] = useState(title);
-//
-//     return (
-//         <SidebarMenuItem key={title}>
-//             <SidebarMenuButton asChild>
-//                 <Link
-//                     className={cn(buttonVariants({
-//                         size: "lg",
-//                         variant: activeItem === title ? "secondary" : 'ghost'
-//                     }), "justify-start p-0")}
-//                     href={`${BASE_URL}/${url}`}
-//                     onClick={() => handleItemClick(item.title)}
-//                 >
-//                     <icon/>
-//                     <span>{title}</span>
-//                 </Link>
-//             </SidebarMenuButton>
-//             <SidebarMenuAction
-//                 className={`peer-data-[active=true]/menu-button:opacity-100 ${activeItem === title ? 'active' : ''}`}/>
-//         </SidebarMenuItem>
-//     )
-// }
+    return (
+        <SM>
+            {props.items.map((item, index) =>
+                item.type === "collapse" ? (
+                    <Collapsible defaultOpen key={index} className={`group/collapsible`}>
+                        <SidebarGroup>
+                            <SidebarGroupLabel asChild>
+                                <CollapsibleTrigger>
+                                    {item.title ?? "Please define a title"}
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                </CollapsibleTrigger>
+                            </SidebarGroupLabel>
+                            <CollapsibleContent>
+                                <SidebarGroupContent>
+                                    {item.content.map((content) => (
+                                        <SidebarMenuItem key={content.title}>
+                                            <SidebarMenuButton asChild>
+                                                <Link
+                                                    className={cn(
+                                                        buttonVariants({
+                                                            size: "lg",
+                                                            variant: activeItem === content.title ? "secondary" : "ghost",
+                                                        }),
+                                                        "justify-start p-0"
+                                                    )}
+                                                    href={`${props.baseUrl}/${content.url}`}
+                                                    onClick={() => handleItemClick(content.title)}
+                                                >
+                                                    {content.icon}
+                                                    <span>{content.title}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+
+                                            {content.dropdown && (
+                                                <SidebarMenuAction>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <SidebarMenuAction>
+                                                                <MoreHorizontal />
+                                                            </SidebarMenuAction>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent side="right" align="start">
+                                                            {content.dropdown.map((dropdown) => (
+                                                                <Link href={`${props.baseUrl}/${dropdown.url}`} className="justify-start p-0">
+                                                                    <DropdownMenuItem>
+                                                                        <span>{dropdown.title ?? "Please define a title"}</span>
+                                                                    </DropdownMenuItem>
+                                                                </Link>
+                                                            ))}
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </SidebarMenuAction>
+                                            )}
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarGroupContent>
+                            </CollapsibleContent>
+                        </SidebarGroup>
+                    </Collapsible>
+                ) : (
+                    <SidebarMenuItem key={index}>
+                        <SidebarMenuButton asChild>
+                            <Link
+                                className={cn(
+                                    buttonVariants({
+                                        size: "lg",
+                                        variant: activeItem === item.content.title ? "secondary" : "ghost",
+                                    }),
+                                    "justify-start p-0"
+                                )}
+                                href={`${props.baseUrl}/${item.content.url}`}
+                                onClick={() => handleItemClick(item.content.title)}
+                            >
+                                {item.content.icon}
+                                <span>{item.content.title}</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                )
+            )}
+        </SM>
+    );
+};

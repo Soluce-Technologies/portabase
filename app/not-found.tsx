@@ -1,6 +1,5 @@
-import {redirect, useRouter} from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function NotFound() {
-    console.log("not found");
-    redirect("/")
+    redirect("/dashboard/profile");
 }

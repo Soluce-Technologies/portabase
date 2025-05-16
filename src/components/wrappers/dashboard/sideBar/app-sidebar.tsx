@@ -1,91 +1,58 @@
 import {
     Sidebar,
-    SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu,
+    SidebarMenu as SM,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import {SidebarMenuCustom} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenu";
-import {OrganizationCombobox} from "@/components/wrappers/dashboard/organization/organization-combobox";
-import {prisma} from "@/prisma";
-import {currentUser, requiredCurrentUser} from "@/auth/current-user";
-import {SideBarLogo} from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
-import {SideBarFooterCredit} from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
-import {LoggedInButton} from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
-import {SidebarMenuAdmin} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenuAdmin";
-import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
+} from "@/components/ui/sidebar";
+import { SidebarItem, SidebarMenu } from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenu";
+import { OrganizationCombobox } from "@/components/wrappers/dashboard/organization/organization-combobox";
+import { SideBarLogo } from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
+import { SideBarFooterCredit } from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
+import { LoggedInButton } from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
+import { Layers, ChartArea, Settings, ShieldHalf } from "lucide-react";
+import { authClient } from "@/lib/auth/auth-client";
+import { SidebarContentA } from "./sidebar-content";
 
 export async function AppSidebar() {
+    /*const member = await getActiveMember();
 
-    const user = await requiredCurrentUser()
-    const currentOrganizationSlug = await getCurrentOrganizationSlug()
-    const organizations = await prisma.organization.findMany({
-        where: {
-            users: {
-                some: {
-                    userId: user.id
-                },
-            },
-            deleted: {not: true},
-        },
-    })
-    const defaultOrganization = await prisma.organization.findUnique({
-        where: {
-            slug: "default"
-        }
-    })
+    console.log("member", member);
 
+    if (!member) {
+        return notFound();
+    }
 
-    const currentOrganizationUser = await prisma.userOrganization.findFirst({
-        where:{
-            userId: user.id,
-            organization:{
-                slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
-            }
-        }
-    })
+    const organization = await getOrganization(member.organizationId);
 
+    //todo: à revoir
+
+    console.log("memebrer", member);
+    console.log("aoaoaoaoaoa", organization);*/
 
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-               <SideBarLogo/>
-                <SidebarMenu>
+                <SideBarLogo />
+                <SM>
                     <SidebarMenuItem>
-                        <OrganizationCombobox
-                            organizations={organizations}
-                            defaultOrganization={defaultOrganization}
-                        />
+                        <OrganizationCombobox />
                     </SidebarMenuItem>
-                </SidebarMenu>
-
-
+                </SM>
             </SidebarHeader>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenuCustom currentOrganizationUser={currentOrganizationUser} currentOrganizationSlug={currentOrganizationSlug}/>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                {user.role == "admin" ?
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Administration</SidebarGroupLabel>
-                        <SidebarGroupContent>
-                            <SidebarMenuAdmin/>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                :null}
-            </SidebarContent>
+            <SidebarContentA />
             <SidebarFooter>
-                <SidebarMenu>
+                <SM>
                     <SidebarMenuItem>
-                        <LoggedInButton/>
+                        <LoggedInButton />
                     </SidebarMenuItem>
-                </SidebarMenu>
-                <SideBarFooterCredit/>
+                </SM>
+                <SideBarFooterCredit />
             </SidebarFooter>
         </Sidebar>
-    )
+    );
 }

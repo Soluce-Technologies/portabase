@@ -1,44 +1,62 @@
-import {PageParams} from "@/types/next";
-import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {notFound} from "next/navigation";
-import {requiredCurrentUser} from "@/auth/current-user";
-import {UserForm} from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
-import {prisma} from "@/prisma";
-import {Badge} from "@/components/ui/badge";
-import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
+import { PageParams } from "@/types/next";
+import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
+import { notFound } from "next/navigation";
+import { UserForm } from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
+import { Badge } from "@/components/ui/badge";
+import { ButtonDeleteAccount } from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
+import { AvatarWithUpload } from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
+import { currentUser } from "@/lib/auth/current-user";
+//import { getAccounts, getSessions } from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{}>) {
+    const user = await currentUser();
 
-    const user = await requiredCurrentUser()
     if (!user) {
-        notFound()
+        return notFound();
     }
-    const userInfo = await prisma.user.findUnique({
-        where: {
-            email: user.email
-        }
-    })
+
+    if (user.role !== "user" && user.role !== "admin" && user.role !== "superadmin") {
+        return notFound();
+    }
+
+    //    const sessions = await getSessions();
+    //    const accounts = await getAccounts();
+
     return (
         <Page>
-                <div className="justify-between gap-2 sm:flex">
-                    <PageTitle className="flex items-center">
-                        <AvatarWithUpload user={userInfo}/>
-                        {user.name}
-                        <Badge className="ml-3 hidden lg:block">{userInfo.authMethod}</Badge>
-                        <Badge className="ml-3 hidden lg:block">{userInfo.role}</Badge>
-                    </PageTitle>
-                    <PageActions className="mt-2 hidden sm:block">
-                        <ButtonDeleteAccount text="Delete my account"/>
-                    </PageActions>
-                </div>
+            <div className="justify-between gap-2 sm:flex">
+                <PageTitle className="flex items-center">
+                    <AvatarWithUpload
+                        user={{
+                            ...user,
+                            image: user.image ?? null,
+                            role: user.role ?? null,
+                            banned: user.banned ?? null,
+                            banReason: user.banReason ?? null,
+                            banExpires: user.banExpires ?? null,
+                            deletedAt: user.deletedAt ? new Date(user.deletedAt) : null,
+                        }}
+                    />
+                    {user.name}
+                    <Badge className="ml-3 hidden lg:block">{user.role}</Badge>
+                </PageTitle>
+                <PageActions className="mt-2 hidden sm:block">
+                    <ButtonDeleteAccount text="Delete my account" />
+                </PageActions>
+            </div>
             <PageContent>
-                <UserForm  userId={userInfo.id} defaultValues={userInfo}/>
+                <UserForm
+                    userId={user.id}
+                    defaultValues={{
+                        name: user.name,
+                        email: user.email,
+                        role: user.role ?? undefined,
+                    }}
+                />
                 <div className="mt-4 sm:hidden">
                     <ButtonDeleteAccount text="Delete my account" />
                 </div>
-
             </PageContent>
         </Page>
-    )
+    );
 }

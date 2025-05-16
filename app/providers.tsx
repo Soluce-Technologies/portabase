@@ -1,32 +1,23 @@
-"use client"
+"use client";
 
-import {PropsWithChildren, Suspense} from "react";
-import {ThemeProvider} from "@/features/theme/theme-provider";
+import { PropsWithChildren, Suspense } from "react";
+import { ThemeProvider } from "@/features/theme/theme-provider";
 
-import {Toaster} from "@/components/ui/sonner";
-import {QueryClient, QueryClientProvider,} from '@tanstack/react-query'
-import {SessionProvider} from "next-auth/react";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export type ProviderProps = PropsWithChildren<{}>;
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export const Providers = (props: ProviderProps) => {
     return (
         <Suspense fallback={null}>
-            <SessionProvider>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    // disableTransitionOnChange
-                >
-                    <QueryClientProvider client={queryClient}>
-                        <Toaster/>
-                        {props.children}
-                    </QueryClientProvider>
-                </ThemeProvider>
-            </SessionProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <QueryClientProvider client={queryClient}>
+                    <Toaster />
+                    {props.children}
+                </QueryClientProvider>
+            </ThemeProvider>
         </Suspense>
-
-    )
-}
+    );
+};

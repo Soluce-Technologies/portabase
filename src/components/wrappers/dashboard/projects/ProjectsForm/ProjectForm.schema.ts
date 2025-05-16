@@ -1,5 +1,4 @@
-import {z} from "zod";
-import Database from "@prisma/client"
+import { z } from "zod";
 
 export const ProjectSchema = z.object({
     name: z.string(),

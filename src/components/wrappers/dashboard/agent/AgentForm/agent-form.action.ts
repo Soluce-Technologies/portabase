@@ -1,68 +1,44 @@
-"use server"
-import {ActionError, userAction} from "@/safe-actions";
-import {prisma} from "@/prisma";
-import {AgentSchema} from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.schema";
-import {z} from "zod";
-
+"use server";
+import { ActionError, userAction } from "@/safe-actions";
+import { AgentSchema } from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.schema";
+import { z } from "zod";
+import { eq, and, ne, count } from "drizzle-orm";
+import { db } from "@/db";
+import { agent } from "@/db/schema";
 
 const verifySlugUniqueness = async (slug: string, agentId?: string) => {
-    const slugExists = await prisma.agent.count({
-        where: {
-            slug: slug,
-            id: agentId ? {
-                not: agentId
-            } : undefined,
-        },
-    })
+    const conditions = agentId ? and(eq(agent.slug, slug), ne(agent.id, agentId)) : eq(agent.slug, slug);
 
-    console.log(slugExists)
-    if (slugExists) {
+    const [countResult] = await db.select({ count: count() }).from(agent).where(conditions);
+
+    if (countResult.count > 0) {
         throw new ActionError("Slug already exists");
     }
-}
+};
 
+export const createAgentAction = userAction.schema(AgentSchema).action(async ({ parsedInput }) => {
+    await verifySlugUniqueness(parsedInput.slug);
 
-export const createAgentAction = userAction
-    .schema(AgentSchema)
-    .action(async ({parsedInput, ctx}) => {
-        // Verify if slug already exist
-        await verifySlugUniqueness(parsedInput.slug);
-        const agent = await prisma.agent.create({
-            data: {
-                ...parsedInput
-            }
-        })
+    const [createdAgent] = await db.insert(agent).values(parsedInput).returning();
 
-        // await sendEmailIfUserCreatedFirstForm(ctx.user)
-
-        return {
-            data: agent,
-        }
-    });
-
+    return {
+        data: createdAgent,
+    };
+});
 
 export const updateAgentAction = userAction
     .schema(
         z.object({
-                id: z.string(),
-                data: AgentSchema,
-            }
-        )
+            id: z.string(),
+            data: AgentSchema,
+        })
     )
-    .action(async ({parsedInput, ctx}) => {
+    .action(async ({ parsedInput }) => {
         await verifySlugUniqueness(parsedInput.data.slug, parsedInput.id);
 
-        console.log("parsedInput", parsedInput.data)
-
-        const updatedAgent = await prisma.agent.update({
-            where: {
-                id: parsedInput.id,
-            },
-            data: parsedInput.data,
-        })
+        const [updatedAgent] = await db.update(agent).set(parsedInput.data).where(eq(agent.id, parsedInput.id)).returning();
 
         return {
             data: updatedAgent,
-
-        }
-    })
+        };
+    });
