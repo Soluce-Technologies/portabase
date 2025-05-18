@@ -5,46 +5,20 @@ import {prisma} from "@/prisma";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {notFound} from "next/navigation";
 import {OrganizationForm} from "@/components/wrappers/dashboard/organization/OrganizationForm/OrganizationForm";
+import {getOrganization} from "@/lib/auth/auth";
 
 
 export default async function RoutePage(props: PageParams<{
     slug: string;
 }>) {
-    const {slug: organizationSlug} = await props.params
-    const currentOrganizationSlug = await getCurrentOrganizationSlug()
-    const user = await requiredCurrentUser()
-    if(currentOrganizationSlug != organizationSlug) {
+
+    const {slug: organizationSlug} = await props.params;
+
+    const organization = await getOrganization({organizationSlug});
+
+    if (!organization) {
         notFound()
     }
-
-    const organization = await prisma.organization.findUnique({
-        where:{
-            slug: currentOrganizationSlug,
-        },
-        include:{
-            users:{
-                include:{
-                    user:{
-                    }
-                },
-                where: {
-                    user: {
-                        id: {
-                            not: user.id, // Exclude user with id: 1
-                        },
-                    },
-                },
-            }
-        }
-    })
-
-    const users = await prisma.user.findMany({
-        where: {
-            deleted: {not: true},
-            id: {not: user.id}
-        }
-    })
-
 
 
     return(
@@ -55,7 +29,7 @@ export default async function RoutePage(props: PageParams<{
                 </PageTitle>
             </PageHeader>
             <PageContent>
-                <OrganizationForm users={users} defaultValues={organization}/>
+                <OrganizationForm members={organization.members} defaultValues={organization}/>
             </PageContent>
         </Page>
     )

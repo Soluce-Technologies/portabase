@@ -1,13 +1,13 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db";
-import { env } from "@/env.mjs";
-import { nextCookies } from "better-auth/next-js";
-import { admin as adminPlugin, openAPI, organization } from "better-auth/plugins";
-import { ac, admin, user, pending, superadmin, orgOwner, orgAdmin, orgMember } from "@/lib/auth/permissions";
+import {betterAuth} from "better-auth";
+import {drizzleAdapter} from "better-auth/adapters/drizzle";
+import {db} from "@/db";
+import {env} from "@/env.mjs";
+import {nextCookies} from "better-auth/next-js";
+import {admin as adminPlugin, openAPI, organization} from "better-auth/plugins";
+import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
 
-import { headers } from "next/headers";
-import { count, eq } from "drizzle-orm";
+import {headers} from "next/headers";
+import {count, eq} from "drizzle-orm";
 import * as drizzleUser from "@/db/schema/01_user";
 import * as drizzleOrganization from "@/db/schema/02_organization";
 
@@ -140,7 +140,7 @@ export const signInUser = async (email: string, password: string) => {
 };*/
 
 export const createUser = async (name: string, email: string, password: string, role: "user" | "pending" | "admin" | "superadmin" = "pending") => {
-    const user = await auth.api.createUser({
+    return await auth.api.createUser({
         headers: await headers(),
         body: {
             name,
@@ -149,24 +149,18 @@ export const createUser = async (name: string, email: string, password: string, 
             role,
         },
     });
-
-    return user;
 };
 
 export const getSessions = async () => {
-    const sessions = await auth.api.listSessions({
+    return await auth.api.listSessions({
         headers: await headers(),
     });
-
-    return sessions;
 };
 
 export const getSession = async () => {
-    const session = await auth.api.getSession({
+    return await auth.api.getSession({
         headers: await headers(),
     });
-
-    return session;
 };
 
 export const revokeSession = async (e: string) => {
@@ -182,11 +176,9 @@ export const revokeSession = async (e: string) => {
 };
 
 export const getAccounts = async () => {
-    const sessions = await auth.api.listUserAccounts({
+    return await auth.api.listUserAccounts({
         headers: await headers(),
     });
-
-    return sessions;
 };
 
 export const unlinkAccount = async (provider: string, account: string) => {
@@ -203,26 +195,35 @@ export const unlinkAccount = async (provider: string, account: string) => {
     } catch (e) {}
 };
 
-export const getOrganization = async (organizationSlug?: string) => {
-    try {
-        const organization = await auth.api.getFullOrganization({
-            headers: await headers(),
-            query: {
-                organizationSlug,
-            },
-        });
+export const getOrganization = async ({
+                                          organizationId,
+                                          organizationSlug,
+                                      }: {
+    organizationId?: string;
+    organizationSlug?: string;
+}) => {
+    const query = organizationId
+        ? { organizationId }
+        : { organizationSlug };
 
-        return organization;
-    } catch (e) {}
+    console.log(query);
+
+    try {
+        return await auth.api.getFullOrganization({
+            headers: await headers(),
+            query,
+        });
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 };
 
 export const listOrganizations = async () => {
     try {
-        const organizations = await auth.api.listOrganizations({
+        return await auth.api.listOrganizations({
             headers: await headers(),
         });
-
-        return organizations;
     } catch (e) {}
 };
 

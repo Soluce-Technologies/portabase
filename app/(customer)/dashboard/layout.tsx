@@ -12,8 +12,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
     if (!user) redirect("/login");
 
     return (
-        // <HydrationZustand>
-        // <GlobalStoreProvider>
         <>
             <SidebarProvider>
                 <div className="flex flex-col lg:flex-row w-full">
@@ -25,7 +23,5 @@ export default async function Layout({ children }: { children: React.ReactNode }
                 </div>
             </SidebarProvider>
         </>
-        // </GlobalStoreProvider>
-        // </HydrationZustand>
     );
 }

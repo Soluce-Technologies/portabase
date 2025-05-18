@@ -7,23 +7,22 @@ import { ButtonDeleteProject } from "@/components/wrappers/dashboard/projects/Bu
 import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
 import { ProjectDatabaseCard } from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 import { notFound } from "next/navigation";
-import { getCurrentOrganizationSlug } from "@/features/dashboard/organization-cookie";
 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { organization as drizzleOrganization } from "@/db/schema";
+import {getOrganization} from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{ slug: string; projectId: string }>) {
     const { slug: organizationSlug, projectId } = await props.params;
 
-    const currentOrganizationSlug = await getCurrentOrganizationSlug();
+    const organization = await getOrganization({organizationSlug});
 
-    if (currentOrganizationSlug !== organizationSlug) {
+    if (!organization || organization?.slug !== organizationSlug) {
         notFound();
     }
-
     const org = await db.query.organization.findFirst({
-        where: eq(drizzleOrganization.slug, currentOrganizationSlug),
+        where: eq(drizzleOrganization.slug, organization.slug),
     });
 
     if (!org) notFound();
@@ -42,7 +41,7 @@ export default async function RoutePage(props: PageParams<{ slug: string; projec
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {proj.name}
-                    <Link className={buttonVariants({ variant: "outline" })} href={`/dashboard/${currentOrganizationSlug}/projects/${proj.id}/edit`}>
+                    <Link className={buttonVariants({ variant: "outline" })} href={`/dashboard/${organization.slug}/projects/${proj.id}/edit`}>
                         <GearIcon className="w-7 h-7" />
                     </Link>
                 </PageTitle>

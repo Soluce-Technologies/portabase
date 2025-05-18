@@ -1,6 +1,8 @@
-import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
+import {currentUser} from "@/lib/auth/current-user";
+import {getOrganization} from "@/lib/auth/auth";
+import {notFound} from "next/navigation";
 import {requiredCurrentUser} from "@/auth/current-user";
 import {SettingsTabs} from "@/components/wrappers/dashboard/settings/SettingsTabs/SettingsTabs";
 import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
@@ -8,45 +10,52 @@ import {
     DeleteOrganizationButton
 } from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
 import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/EditButtonSettings/EditButtonSettings";
-import {notFound} from "next/navigation";
 
 
-export default async function RoutePage(props: PageParams<{}>) {
-    const user = await requiredCurrentUser()
+export default async function RoutePage(props: PageParams<{ slug: string }>) {
+    const {slug: organizationSlug} = await props.params;
 
-    const currentOrganizationSlug = await getCurrentOrganizationSlug()
+    const user = await currentUser();
 
-    const organization = await prisma.organization.findUnique({
-        where: {
-            slug: currentOrganizationSlug,
-        },
-        include: {
-            users:{
-                include:{
-                    user: {}
-                }
-            }
-        }
-    })
+    const organization = await getOrganization({organizationSlug});
 
-    const currentOrganizationUser = await prisma.userOrganization.findFirst({
-        where:{
-            userId: user.id,
-            organization:{
-                slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
-            }
-        }
-    })
-    if (currentOrganizationUser.role != "admin") {
-        notFound()
+    if (!organization || organization?.slug !== organizationSlug) {
+        notFound();
     }
 
 
-    const settings = await prisma.settings.findUnique({
-        where: {
-            name: "system"
-        }
-    })
+
+    // const organization = await prisma.organization.findUnique({
+    //     where: {
+    //         slug: currentOrganizationSlug,
+    //     },
+    //     include: {
+    //         users:{
+    //             include:{
+    //                 user: {}
+    //             }
+    //         }
+    //     }
+    // })
+    //
+    // const currentOrganizationUser = await prisma.userOrganization.findFirst({
+    //     where:{
+    //         userId: user.id,
+    //         organization:{
+    //             slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
+    //         }
+    //     }
+    // })
+    // if (currentOrganizationUser.role != "admin") {
+    //     notFound()
+    // }
+    //
+    //
+    // const settings = await prisma.settings.findUnique({
+    //     where: {
+    //         name: "system"
+    //     }
+    // })
 
     return (
         <Page>
@@ -59,7 +68,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 </PageTitle>
                 <PageActions>
                     {organization.slug != "default" ?
-                        <DeleteOrganizationButton organizationSlug={currentOrganizationSlug}/>
+                        <DeleteOrganizationButton organizationSlug={organization.slug}/>
                         : null}
                 </PageActions>
             </PageHeader>
@@ -67,7 +76,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 Manage your organization settings.
             </PageDescription>
             <PageContent>
-                <SettingsTabs settings={settings} currentUser={user} users={organization.users}/>
+                {/*<SettingsTabs settings={settings} currentUser={user} users={organization.users}/>*/}
             </PageContent>
         </Page>
     )

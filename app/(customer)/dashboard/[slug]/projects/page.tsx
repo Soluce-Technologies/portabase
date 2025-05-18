@@ -1,25 +1,29 @@
 import Link from "next/link";
 
-import { PageParams } from "@/types/next";
-import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
-import { Button } from "@/components/ui/button";
-import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
-import { ProjectCard } from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectCard";
-import { db } from "@/db";
-import { notFound } from "next/navigation";
-import { getOrganization } from "@/lib/auth/auth";
+import {PageParams} from "@/types/next";
+import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
+import {Button} from "@/components/ui/button";
+import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {ProjectCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectCard";
+import {db} from "@/db";
+import {notFound} from "next/navigation";
+import {getOrganization} from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
-    const { slug: organizationSlug } = await props.params;
+    const {slug: organizationSlug} = await props.params;
 
-    const organization = await getOrganization(organizationSlug);
+    const organization = await getOrganization({organizationSlug});
 
     if (!organization || organization?.slug !== organizationSlug) {
         notFound();
     }
 
     const projects = await db.query.project.findMany({
-        where: (project, { eq, and, not }) => and(eq(project.organizationId, organization.id), not(eq(project.isArchived, true))),
+        where: (project, {
+            eq,
+            and,
+            not
+        }) => and(eq(project.organizationId, organization.id), not(eq(project.isArchived, true))),
         with: {
             databases: true,
         },
@@ -40,7 +44,8 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
 
             <PageContent className="mt-10">
                 {projects.length > 0 ? (
-                    <CardsWithPagination organizationSlug={organizationSlug} data={projects} cardItem={ProjectCard} cardsPerPage={4} numberOfColumns={1} />
+                    <CardsWithPagination organizationSlug={organizationSlug} data={projects} cardItem={ProjectCard}
+                                         cardsPerPage={4} numberOfColumns={1}/>
                 ) : (
                     <Link
                         href={`/dashboard/${organizationSlug}/projects/new`}

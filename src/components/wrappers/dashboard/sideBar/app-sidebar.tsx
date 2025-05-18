@@ -9,17 +9,19 @@ import {
     SidebarMenu as SM,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SidebarItem, SidebarMenu } from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenu";
-import { OrganizationCombobox } from "@/components/wrappers/dashboard/organization/organization-combobox";
-import { SideBarLogo } from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
-import { SideBarFooterCredit } from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
-import { LoggedInButton } from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
-import { Layers, ChartArea, Settings, ShieldHalf } from "lucide-react";
-import { authClient } from "@/lib/auth/auth-client";
-import { SidebarContentA } from "./sidebar-content";
+import {SidebarItem, SidebarMenu} from "@/components/wrappers/dashboard/sideBar/SideBarMenu/SideBarMenu";
+import {OrganizationCombobox} from "@/components/wrappers/dashboard/organization/organization-combobox";
+import {SideBarLogo} from "@/components/wrappers/dashboard/sideBar/SideBarLogo/SideBarLogo";
+import {SideBarFooterCredit} from "@/components/wrappers/dashboard/sideBar/SideBarFooterCredit/SideBarFooterCredit";
+import {LoggedInButton} from "@/components/wrappers/dashboard/loggedInButton/LoggedInButton";
+import {Layers, ChartArea, Settings, ShieldHalf} from "lucide-react";
+import {authClient} from "@/lib/auth/auth-client";
+import {SidebarContentA} from "./sidebar-content";
+import {getActiveMember, getOrganization} from "@/lib/auth/auth";
+import {notFound} from "next/navigation";
 
 export async function AppSidebar() {
-    /*const member = await getActiveMember();
+    const member = await getActiveMember();
 
     console.log("member", member);
 
@@ -27,31 +29,33 @@ export async function AppSidebar() {
         return notFound();
     }
 
-    const organization = await getOrganization(member.organizationId);
+    const organization = await getOrganization({organizationId: member.organizationId});
 
     //todo: à revoir
 
-    console.log("memebrer", member);
-    console.log("aoaoaoaoaoa", organization);*/
+    console.log("membrer", member);
+    console.log("aoaoaoaoaoa", organization);
 
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <SideBarLogo />
+                <SideBarLogo/>
                 <SM>
                     <SidebarMenuItem>
-                        <OrganizationCombobox />
+                        <OrganizationCombobox/>
                     </SidebarMenuItem>
                 </SM>
             </SidebarHeader>
-            <SidebarContentA />
+            <SidebarContent>
+                <SidebarContentA/>
+            </SidebarContent>
             <SidebarFooter>
                 <SM>
                     <SidebarMenuItem>
-                        <LoggedInButton />
+                        <LoggedInButton/>
                     </SidebarMenuItem>
                 </SM>
-                <SideBarFooterCredit />
+                <SideBarFooterCredit/>
             </SidebarFooter>
         </Sidebar>
     );
