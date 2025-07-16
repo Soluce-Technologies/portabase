@@ -97,7 +97,7 @@ export const auth = betterAuth({
                             await db.insert(drizzleDb.schemas.member).values({
                                 userId: user.id,
                                 organizationId: defaultOrg.id,
-                                role: "orgOwner",
+                                role: "owner",
                             });
                         } else {
                             console.warn("Default organization not found. Cannot assign member.");

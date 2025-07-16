@@ -41,6 +41,8 @@ export const SidebarContentA = () => {
         });
     }
 
+
+
     const adminItems: SidebarItem[] = [
         {
             type: "list",
@@ -62,13 +64,24 @@ export const SidebarContentA = () => {
 
     return (
         activeOrganization && (
+                <>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Application</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu items={appItems} baseUrl={`/dashboard`} />
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                    {(session && (session.user.role === "admin" || session.user.role === "superadmin")) && (
+                        <SidebarGroup>
+                            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+                            <SidebarGroupContent>
+                                <SidebarMenu items={adminItems} baseUrl={`/dashboard`} />
+                            </SidebarGroupContent>
+                        </SidebarGroup>
+                    )}
 
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu items={appItems} baseUrl={`/dashboard/${activeOrganization.slug}`} />
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                </>
+
         )
     );
 };

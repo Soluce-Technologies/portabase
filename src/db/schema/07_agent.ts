@@ -1,6 +1,8 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import {database} from "@/db/schema/06_database";
+import {relations} from "drizzle-orm";
 
 export const agent = pgTable("agents", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -14,3 +16,8 @@ export const agent = pgTable("agents", {
 
 export const agentSchema = createSelectSchema(agent);
 export type Agent = z.infer<typeof agentSchema>;
+
+
+export const agentRelations = relations(agent, ({ many }) => ({
+    databases: many(database),
+}));

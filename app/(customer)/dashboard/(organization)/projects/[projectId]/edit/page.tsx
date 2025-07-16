@@ -22,7 +22,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
         notFound();
     }
 
-    //
+
     const org = await db.query.organization.findFirst({
         where: eq(drizzleDb.schemas.organization.slug, "default"),
     });

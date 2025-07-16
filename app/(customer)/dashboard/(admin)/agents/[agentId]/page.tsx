@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {GearIcon} from "@radix-ui/react-icons";
-import {prisma} from "@/prisma";
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {formatDateLastContact} from "@/utils/date-formatting";
@@ -9,38 +8,55 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {DatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
 import {AgentCardKey} from "@/components/wrappers/dashboard/agent/AgentCardKey/AgentCardKey";
+import { db } from "@/db";
+import * as drizzleDb from "@/db";
+import {and, eq} from "drizzle-orm";
+import {notFound} from "next/navigation";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
 
     const {agentId} = await props.params
 
-    const agent = await prisma.agent.findUnique({
-        where: {
-            id: agentId,
-        },
-        include: {
-            databases: {}
+    const agent = await db.query.agent.findFirst({
+        where: eq(drizzleDb.schemas.agent.id, agentId),
+        with: {
+            databases: true
         }
     })
+    //
+    console.log(agent)
 
-    const databaseId = 'db-123';
-
-    const totalBackups = await prisma.backup.count({
-        where: {
-            databaseId: databaseId,
-        },
-    });
-
-    const successfulBackups = await prisma.backup.count({
-        where: {
-            databaseId: databaseId,
-            status: 'success',
-        },
-    });
-
-    const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null
-
+    if (!agent) {
+        notFound()
+    }
+    //
+    // const databaseId = 'db-123';
+    //
+    // const totalBackupsResult = await db
+    //     .select({ count: drizzleDb.schemas.backup.id })
+    //     .from(drizzleDb.schemas.backup)
+    //     .where(eq(drizzleDb.schemas.backup.databaseId, databaseId))
+    //     .execute();
+    //
+    // const totalBackups = totalBackupsResult.length;
+    //
+    // const successfulBackupsResult = await db
+    //     .select({ count: drizzleDb.schemas.backup.id })
+    //     .from(drizzleDb.schemas.backup)
+    //     .where(
+    //         and(
+    //             eq(drizzleDb.schemas.backup.databaseId, databaseId),
+    //             eq(drizzleDb.schemas.backup.status, "success")
+    //         )
+    //     )
+    //     .execute();
+    //
+    //
+    // const successfulBackups = successfulBackupsResult.length;
+    //
+    // const successRate =
+    //     totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
     return (
         <Page>
@@ -73,7 +89,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                             Success rate
                         </CardHeader>
                         <CardContent>
-                            {successRate ?? "Unavailable for now."}
+                            {/*{successRate ?? "Unavailable for now."}*/}
                         </CardContent>
                     </Card>
                     <Card className="w-full sm:w-auto flex-1">

@@ -1,26 +1,26 @@
-"use client";
-
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { User } from "@prisma/client";
-import { updateUserAction } from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Trash2 } from "lucide-react";
-import { deleteUserAction } from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
-import { ButtonWithLoading } from "@/components/wrappers/common/button/button-with-loading";
+"use client"
+import {ColumnDef} from "@tanstack/react-table";
+import {Badge} from "@/components/ui/badge";
+import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {Trash2} from "lucide-react";
+import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import {User} from "@/db/schema/01_user";
+import {useSession} from "@/lib/auth/auth-client";
 
 export const usersColumnsAdmin: ColumnDef<User>[] = [
     {
         accessorKey: "role",
         header: "Role",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const [role, setRole] = useState<string>(row.getValue("role"));
 
             const updateMutation = useMutation({
-                mutationFn: () => updateUserAction({ id: row.original.id, data: { role: role } }),
+                mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
                 onSuccess: () => {
                     toast.success(`User updated successfully.`);
                 },
@@ -53,22 +53,19 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
     {
         accessorKey: "updatedAt",
         header: "Updated At",
-        cell: ({ row }) => {
-            return new Date(row.getValue("updatedAt")).toLocaleString("fr-FR");
-        },
-    },
-    {
-        accessorKey: "authMethod",
-        header: "Method",
-        cell: ({ row }) => {
-            return <Badge variant="outline">{row.getValue("authMethod")}</Badge>;
+        cell: ({row}) => {
+            return new Date(row.getValue("updatedAt")).toLocaleString("fr-FR", {
+                timeZone: "Europe/Paris",
+            });
         },
     },
     {
         header: "Action",
         id: "actions",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const router = useRouter();
+            const {data: session, isPending} = useSession();
+
             const mutation = useMutation({
                 mutationFn: () => deleteUserAction(row.original.id),
                 onSuccess: async () => {
@@ -77,17 +74,23 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
                 },
             });
 
+
+
             return (
                 <div className="flex items-center gap-2">
-                    <ButtonWithLoading
-                        variant="outline"
-                        text=""
-                        icon={<Trash2 color="red" size={15} />}
-                        onClick={async () => {
-                            await mutation.mutateAsync();
-                        }}
-                        size="icon"
-                    />
+                    {!session || session?.user.email === row.original.email ? null :
+                        <ButtonWithLoading
+                            variant="outline"
+                            text=""
+                            icon={<Trash2 color="red" size={15}/>}
+                            onClick={async () => {
+                                await mutation.mutateAsync();
+                            }}
+                            size="icon"
+                        />
+
+                    }
+
                 </div>
             );
         },

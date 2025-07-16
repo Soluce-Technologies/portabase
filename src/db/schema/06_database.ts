@@ -11,7 +11,7 @@ export const database = pgTable("databases", {
     agentDatabaseId: uuid("agent_database_id").notNull().defaultRandom(),
     name: text("name").notNull(),
     dbms: dbmsEnum("dbms").notNull(),
-    description: text("description").notNull(),
+    description: text("description"),
     backupPolicy: text("backup_policy"),
     isWaitingForBackup: boolean("is_waiting_for_backup").default(false).notNull(),
     backupToRestore: text("backup_to_restore"),
@@ -23,8 +23,7 @@ export const database = pgTable("databases", {
     lastContact: timestamp("last_contact"),
 
     projectId: uuid("project_id")
-        .references(() => project.id)
-        .notNull(),
+        .references(() => project.id),
 });
 
 export const backup = pgTable(

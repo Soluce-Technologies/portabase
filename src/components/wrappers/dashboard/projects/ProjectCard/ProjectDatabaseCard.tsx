@@ -17,7 +17,7 @@ export const ProjectDatabaseCard = (props: projectDatabaseCardProps) => {
     const { organizationSlug, data: database, extendedProps: extendedProps } = props;
 
     return (
-        <Link href={`/dashboard/${organizationSlug}/projects/${extendedProps.id}/database/${database.id}`}>
+        <Link href={`/dashboard/projects/${extendedProps.id}/database/${database.id}`}>
             <DatabaseCard data={database} />
         </Link>
     );

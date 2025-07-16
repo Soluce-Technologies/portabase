@@ -1,25 +1,18 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
-import {prisma} from "@/prisma";
-import {requiredCurrentUser} from "@/auth/current-user";
 import {notFound} from "next/navigation";
 import {OrganizationForm} from "@/components/wrappers/dashboard/organization/OrganizationForm/OrganizationForm";
 import {getOrganization} from "@/lib/auth/auth";
 
 
 export default async function RoutePage(props: PageParams<{
-    slug: string;
+
 }>) {
-
-    const {slug: organizationSlug} = await props.params;
-
-    const organization = await getOrganization({organizationSlug});
+    const organization = await getOrganization({});
 
     if (!organization) {
-        notFound()
+        notFound();
     }
-
 
     return(
         <Page>

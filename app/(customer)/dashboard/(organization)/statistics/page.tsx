@@ -8,17 +8,17 @@ import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { asc, count, eq, inArray } from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {getOrganization} from "@/lib/auth/auth";
 
-export default async function RoutePage(props: PageParams<{ slug: string }>) {
-    const { slug: organizationSlug } = await props.params;
+export default async function RoutePage(props: PageParams<{ }>) {
+    const organization = await getOrganization({});
 
-    const currentOrganizationSlug = await getCurrentOrganizationSlug();
-    if (currentOrganizationSlug !== organizationSlug) {
+    if (!organization) {
         notFound();
     }
 
     const org = await db.query.organization.findFirst({
-        where: eq(drizzleDb.schemas.organization.slug, currentOrganizationSlug),
+        where: eq(drizzleDb.schemas.organization.slug, organization.slug),
     });
 
     if (!org) notFound();

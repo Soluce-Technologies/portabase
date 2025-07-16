@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
-export const dynamic = "force-dynamic";
 
 export default async function RoutePage(props: PageParams<{}>) {
     const agents = await db.query.agent.findMany();

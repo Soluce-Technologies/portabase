@@ -3,9 +3,6 @@ import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} 
 import {currentUser} from "@/lib/auth/current-user";
 import {getOrganization} from "@/lib/auth/auth";
 import {notFound} from "next/navigation";
-import {requiredCurrentUser} from "@/auth/current-user";
-import {SettingsTabs} from "@/components/wrappers/dashboard/settings/SettingsTabs/SettingsTabs";
-import {getCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 import {
     DeleteOrganizationButton
 } from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
@@ -13,49 +10,12 @@ import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/EditB
 
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
-    const {slug: organizationSlug} = await props.params;
-
+    const organization = await getOrganization({});
     const user = await currentUser();
 
-    const organization = await getOrganization({organizationSlug});
-
-    if (!organization || organization?.slug !== organizationSlug) {
+    if (!organization) {
         notFound();
     }
-
-
-
-    // const organization = await prisma.organization.findUnique({
-    //     where: {
-    //         slug: currentOrganizationSlug,
-    //     },
-    //     include: {
-    //         users:{
-    //             include:{
-    //                 user: {}
-    //             }
-    //         }
-    //     }
-    // })
-    //
-    // const currentOrganizationUser = await prisma.userOrganization.findFirst({
-    //     where:{
-    //         userId: user.id,
-    //         organization:{
-    //             slug: currentOrganizationSlug != "" ? currentOrganizationSlug : "default",
-    //         }
-    //     }
-    // })
-    // if (currentOrganizationUser.role != "admin") {
-    //     notFound()
-    // }
-    //
-    //
-    // const settings = await prisma.settings.findUnique({
-    //     where: {
-    //         name: "system"
-    //     }
-    // })
 
     return (
         <Page>
@@ -76,7 +36,7 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                 Manage your organization settings.
             </PageDescription>
             <PageContent>
-                {/*<SettingsTabs settings={settings} currentUser={user} users={organization.users}/>*/}
+            {/*    TODO add the list of organisation members (add, remove, edit) */}
             </PageContent>
         </Page>
     )

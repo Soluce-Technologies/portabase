@@ -46,7 +46,7 @@ export default async function RoutePage(props: PageParams<{
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {proj.name}
-                    <Link className={buttonVariants({ variant: "outline" })} href={`/dashboard/${organization.slug}/projects/${proj.id}/edit`}>
+                    <Link className={buttonVariants({ variant: "outline" })} href={`/dashboard/projects/${proj.id}/edit`}>
                         <GearIcon className="w-7 h-7" />
                     </Link>
                 </PageTitle>

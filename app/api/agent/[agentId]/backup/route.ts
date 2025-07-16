@@ -1,25 +1,27 @@
 import {NextResponse} from "next/server";
-import {prisma} from "@/prisma";
 import {isUuidv4} from "@/utils/verify-uuid";
 import {uploadLocalPrivate} from "@/features/upload/private/upload.action";
 import {v4 as uuidv4} from "uuid";
-import {Backup, Database} from "@prisma/client";
 import {eventEmitter} from "../../../events/route";
+import {db} from "@/db";
+import {Backup} from "@/db/schema/06_database";
+import {and, eq} from "drizzle-orm";
+import * as drizzleDb from "@/db";
 
 export async function POST(
     request: Request,
-    { params }: { params: Promise<{ agentId: string }> }
+    {params}: { params: Promise<{ agentId: string }> }
 ) {
     try {
         const contentType = request.headers.get("Content-Type");
 
         if (!contentType || !contentType.includes("multipart/form-data")) {
             return NextResponse.json(
-                { error: "Unsupported or missing Content-Type" },
-                { status: 400 }
+                {error: "Unsupported or missing Content-Type"},
+                {status: 400}
             );
         }
-        eventEmitter.emit('modification', { update: true });
+        eventEmitter.emit('modification', {update: true});
 
         const agentId = (await params).agentId;
         const formData = await request.formData();
@@ -28,61 +30,64 @@ export async function POST(
 
         if (!generatedId || !isUuidv4(generatedId)) {
             return NextResponse.json(
-                { error: "generatedId is not a valid UUID" },
-                { status: 400 }
+                {error: "generatedId is not a valid UUID"},
+                {status: 400}
             );
         }
 
-        const agent = await prisma.agent.findFirst({
-            where: { id: agentId },
+        const agent = await db.query.agent.findFirst({
+            where: eq(drizzleDb.schemas.agent.id, agentId),
         });
 
         if (!agent) {
             return NextResponse.json(
-                { error: "Agent not found" },
-                { status: 404 }
+                {error: "Agent not found"},
+                {status: 404}
             );
         }
 
-        const database = await prisma.database.findFirst({
-            where: { generatedId },
+        const database = await db.query.database.findFirst({
+            where: eq(drizzleDb.schemas.database.agentDatabaseId, generatedId),
         });
 
         if (!database) {
             return NextResponse.json(
-                { error: "Database associated with generatedId not found" },
-                { status: 404 }
+                {error: "Database associated with generatedId not found"},
+                {status: 404}
             );
         }
 
-        let backup: Backup | null = null;
+        let backup: Backup | null | undefined = null;
 
         if (method === "automatic") {
-            backup = await prisma.backup.create({
-                data: {
-                    status: "ongoing",
+            [backup] = await db
+                .insert(drizzleDb.schemas.backup)
+                .values({
+                    status: 'ongoing',
                     databaseId: database.id,
-                },
-            });
+                })
+                .returning();
+
 
             if (!backup) {
                 return NextResponse.json(
-                    { error: "Unable to create an automatic backup" },
-                    { status: 500 }
+                    {error: "Unable to create an automatic backup"},
+                    {status: 500}
                 );
             }
         } else {
-            backup = await prisma.backup.findFirst({
-                where: {
-                    status: "ongoing",
-                    databaseId: database.id,
-                },
+            backup = await db.query.backup.findFirst({
+                where: and(
+                    eq(drizzleDb.schemas.backup.status, 'ongoing'),
+                    eq(drizzleDb.schemas.backup.databaseId, database.id),
+                ),
             });
+
 
             if (!backup) {
                 return NextResponse.json(
-                    { error: "Unable to find the corresponding backup" },
-                    { status: 404 }
+                    {error: "Unable to find the corresponding backup"},
+                    {status: 404}
                 );
             }
         }
@@ -94,8 +99,8 @@ export async function POST(
 
             if (!file) {
                 return NextResponse.json(
-                    { error: "File is required for successful backup" },
-                    { status: 400 }
+                    {error: "File is required for successful backup"},
+                    {status: 400}
                 );
             }
 
@@ -103,49 +108,52 @@ export async function POST(
             const fileName = `${uuid}.dump`;
             const buffer = Buffer.from(await file.arrayBuffer());
 
-            const { success, message, filePath } = await uploadLocalPrivate(fileName, buffer);
+            const {success, message, filePath} = await uploadLocalPrivate(fileName, buffer);
 
             if (!success) {
                 return NextResponse.json(
-                    { error: message },
-                    { status: 500 }
+                    {error: message},
+                    {status: 500}
                 );
             }
 
-            await prisma.backup.update({
-                where: { id: backup.id },
-                data: {
+            await db
+                .update(drizzleDb.schemas.backup)
+                .set({
                     file: fileName,
-                    status: "success",
-                },
-            });
-            eventEmitter.emit('modification', { update: true });
+                    status: 'success',
+                })
+                .where(eq(drizzleDb.schemas.backup.id, backup.id));
+
+            eventEmitter.emit('modification', {update: true});
 
             return NextResponse.json(
                 {
                     message: "Backup successfully uploaded",
                 },
-                { status: 200 }
+                {status: 200}
             );
         } else {
-            await prisma.backup.update({
-                where: { id: backup.id },
-                data: { status: "failed" },
-            });
-            eventEmitter.emit('modification', { update: true });
+
+            await db
+                .update(drizzleDb.schemas.backup)
+                .set({status: 'failed'})
+                .where(eq(drizzleDb.schemas.backup.id, backup.id));
+
+            eventEmitter.emit('modification', {update: true});
 
             return NextResponse.json(
                 {
                     message: "Backup successfully updated with status failed",
                 },
-                { status: 200 }
+                {status: 200}
             );
         }
     } catch (error) {
         console.error("Error in POST handler:", error);
         return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
+            {error: "Internal server error"},
+            {status: 500}
         );
     }
 }

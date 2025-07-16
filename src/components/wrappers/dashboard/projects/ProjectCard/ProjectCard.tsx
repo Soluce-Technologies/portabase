@@ -1,8 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ProjectWith } from "@/db/schema";
 import Link from "next/link";
+import {ProjectWith} from "@/db/schema/05_project";
 
 export type projectCardProps = {
     data: ProjectWith;
@@ -13,7 +13,7 @@ export const ProjectCard = (props: projectCardProps) => {
     const { data: project, organizationSlug } = props;
 
     return (
-        <Link href={`/dashboard/${organizationSlug}/projects/${project.id}`}>
+        <Link href={`/dashboard/projects/${project.id}`}>
             <Card className="flex flex-row justify-between">
                 <div className="">
                     <CardHeader>{project.name}</CardHeader>
