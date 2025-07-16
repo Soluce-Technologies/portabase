@@ -7,6 +7,7 @@ import {Database} from "@/db/schema/06_database";
 import * as drizzleDb from "@/db";
 import {db as dbClient} from "@/db";
 import {and, eq} from "drizzle-orm";
+import {dbmsEnumSchema, EDbmsSchema} from "@/db/schema/types";
 
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
@@ -43,13 +44,14 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                     { status: 500 }
                 );
             }
-
+            console.log(db)
+            console.log(dbmsEnumSchema.parse(db.dbms))
             const [databaseCreated] = await dbClient
                 .insert(drizzleDb.schemas.database)
                 .values({
                     agentId: agent.id,
                     name: db.name,
-                    dbms: db.dbms,
+                    dbms: db.dbms as EDbmsSchema,
                     agentDatabaseId: db.generatedId,
                     lastContact: lastContact,
                 })

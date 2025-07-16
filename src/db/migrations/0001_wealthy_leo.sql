@@ -1,0 +1,1 @@
+DROP INDEX "database_id_status_unique";

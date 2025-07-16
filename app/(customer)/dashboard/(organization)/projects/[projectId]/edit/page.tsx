@@ -42,7 +42,11 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
             },
             orderBy: (db, {desc}) => [desc(db.createdAt)],
         })
-    ).filter((db): db is DatabaseWith => db.project !== null);
+    );
+        // .filter((db): db is DatabaseWith => db.project !== null);
+
+    console.log("ici34",availableDatabases);
+
 
     return (
         <Page>
@@ -52,7 +56,7 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
             <PageContent>
                 <ProjectForm
                     organization={org}
-                    databases={availableDatabases}
+                    databases={availableDatabases as DatabaseWith[]}
                     defaultValues={{name: proj.name, slug: proj.slug, databases: proj.databases.map((db) => db.id)}}
                     projectId={proj.id}
                 />

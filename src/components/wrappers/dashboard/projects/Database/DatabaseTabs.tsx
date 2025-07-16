@@ -41,10 +41,9 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
             </TabsList>
 
             <TabsContent className="h-full justify-between" value="backup">
-                {/*
-                <DataTable columns={backupColumns} data={props.backups} extendedProps={props.isAlreadyRestore} />
-                 */}
-                <DataTable columns={backupColumns} data={props.backups} enablePagination />
+
+                {/*<DataTable columns={backupColumns} data={props.backups} extendedProps={props.isAlreadyRestore} />*/}
+                <DataTable columns={backupColumns(props.isAlreadyRestore)} data={props.backups} enablePagination />
             </TabsContent>
 
             <TabsContent className="h-full justify-between" value="restore">

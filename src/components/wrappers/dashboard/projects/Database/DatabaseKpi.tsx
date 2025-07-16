@@ -1,8 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Database } from "@/db/schema";
-import { formatDateLastContact } from "@/utils/date-formatting";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {formatDateLastContact} from "@/utils/date-formatting";
+import {Database} from "@/db/schema/06_database";
 
 export type DatabaseKpiPro = {
     successRate: any;

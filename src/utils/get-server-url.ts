@@ -5,7 +5,7 @@ export const getServerUrl = () => {
         return window.location.origin;
     }
     if (env.NODE_ENV === "development") {
-        return `http://${env.NEXT_PUBLIC_PROJECT_URL}`;
+        return `${env.NEXT_PUBLIC_PROJECT_URL}`;
     }
-    return `https://${env.NEXT_PUBLIC_PROJECT_URL}`;
+    return `${env.NEXT_PUBLIC_PROJECT_URL}`;
 };

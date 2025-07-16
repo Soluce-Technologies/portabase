@@ -24,7 +24,6 @@ export type projectFormProps = {
 export const ProjectForm = (props: projectFormProps) => {
     const router = useRouter();
     const isCreate = !Boolean(props.defaultValues);
-
     const formatDatabasesList = (databases: DatabaseWith[]) => {
         return databases.map((database) => ({
             value: database.id,

@@ -38,7 +38,7 @@ export const backup = pgTable(
             .notNull()
             .references(() => database.id, { onDelete: "cascade" }),
     },
-    (table) => [uniqueIndex("database_id_status_unique").on(table.databaseId, table.status)]
+    // (table) => [uniqueIndex("database_id_status_unique").on(table.databaseId, table.status)]
 );
 
 export const restoration = pgTable("restorations", {

@@ -1,3 +1,4 @@
+"use server"
 import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";
@@ -57,6 +58,7 @@ export const deleteBackupAction = userAction
             };
         }
     });
+
 
 // Create Restoration Action (Drizzle version)
 export const createRestorationAction = userAction

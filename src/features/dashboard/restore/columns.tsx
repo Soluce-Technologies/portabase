@@ -7,6 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { StatusBadge } from "@/components/wrappers/common/status-badge";
 import {Restoration} from "@/db/schema/06_database";
+import {formatFrenchDate} from "@/utils/date-formatting";
 
 export const restoreColumns: ColumnDef<Restoration>[] = [
     {
@@ -17,7 +18,7 @@ export const restoreColumns: ColumnDef<Restoration>[] = [
         accessorKey: "createdAt",
         header: "Created At",
         cell: ({ row }) => {
-            return new Date(row.getValue("createdAt")).toLocaleString("fr-FR");
+            return formatFrenchDate(row.getValue("createdAt"))
         },
     },
     {

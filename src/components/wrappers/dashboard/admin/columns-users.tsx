@@ -11,6 +11,7 @@ import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDe
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {User} from "@/db/schema/01_user";
 import {useSession} from "@/lib/auth/auth-client";
+import {formatFrenchDate} from "@/utils/date-formatting";
 
 export const usersColumnsAdmin: ColumnDef<User>[] = [
     {
@@ -54,9 +55,7 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
         accessorKey: "updatedAt",
         header: "Updated At",
         cell: ({row}) => {
-            return new Date(row.getValue("updatedAt")).toLocaleString("fr-FR", {
-                timeZone: "Europe/Paris",
-            });
+            return formatFrenchDate(row.getValue("updatedAt"))
         },
     },
     {
