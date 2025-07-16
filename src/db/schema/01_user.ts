@@ -2,8 +2,10 @@ import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { project } from "./03_project";
-import { member, invitation, organization } from "./02_organization";
+import { project } from "./05_project";
+import {member} from "@/db/schema/03_member";
+import {invitation} from "@/db/schema/04_invitation";
+import {organization} from "@/db/schema/02_organization";
 
 export const user = pgTable("user", {
     id: uuid("id").defaultRandom().primaryKey(),

@@ -3,8 +3,8 @@ import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { UserSchema } from "@/components/wrappers/dashboard/profile/UserForm/user-form.schema";
 import { db } from "@/db";
-import { user as drizzleUser } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import * as drizzleDb from "@/db";
 
 export const updateUserAction = userAction
     .schema(
@@ -14,8 +14,7 @@ export const updateUserAction = userAction
         })
     )
     .action(async ({ parsedInput }) => {
-        const [updatedUser] = await db.update(drizzleUser).set(parsedInput.data).where(eq(drizzleUser.id, parsedInput.id)).returning();
-
+        const [updatedUser] = await db.update(drizzleDb.schemas.user).set(parsedInput.data).where(eq(drizzleDb.schemas.user.id, parsedInput.id)).returning();
         return {
             data: updatedUser,
         };

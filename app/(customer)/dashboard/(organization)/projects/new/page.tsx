@@ -3,16 +3,16 @@ import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {ProjectForm} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm";
 import {notFound} from "next/navigation";
 import {db} from "@/db";
-import {DatabaseWith, organization as drizzleOrganization} from "@/db/schema";
 import {eq} from "drizzle-orm";
 import {getOrganization} from "@/lib/auth/auth";
+import * as drizzleDb from "@/db";
+import {DatabaseWith} from "@/db/schema/06_database";
 
-export default async function RoutePage(props: PageParams<{ slug: string }>) {
-    const {slug: organizationSlug} = await props.params;
+export default async function RoutePage(props: PageParams<{  }>) {
 
-    const organization = await getOrganization({organizationSlug});
+    const organization = await getOrganization({});
 
-    if (!organization || organization?.slug !== organizationSlug) {
+    if (!organization ) {
         notFound();
     }
 
@@ -30,7 +30,7 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     ).filter((db) => db.project !== null) as DatabaseWith[];
 
     const org = await db.query.organization.findFirst({
-        where: eq(drizzleOrganization.slug, organization.slug),
+        where: eq(drizzleDb.schemas.organization.slug, organization.slug),
     });
 
     if (!org) notFound();

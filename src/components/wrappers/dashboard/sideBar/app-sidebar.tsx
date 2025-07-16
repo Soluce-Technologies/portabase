@@ -32,9 +32,8 @@ export async function AppSidebar() {
     const organization = await getOrganization({organizationId: member.organizationId});
 
     //todo: à revoir
+    console.log("organization", organization);
 
-    console.log("membrer", member);
-    console.log("aoaoaoaoaoa", organization);
 
     return (
         <Sidebar collapsible="icon">

@@ -9,9 +9,10 @@ import { checkMinioAlive, createPublicBucket, saveFileInBucket } from "@/utils/s
 //@ts-ignore
 import { UploadedObjectInfo } from "minio/src/internal/type";
 import { getServerUrl } from "@/utils/get-server-url";
-import { setting as drizzleSetting, Setting } from "@/db/schema";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
+import {Setting} from "@/db/schema/00_setting";
+import * as drizzleDb from "@/db";
 
 export const uploadImageAction = userAction.schema(z.instanceof(FormData)).action(async ({ parsedInput: formData, ctx }) => {
     const file = formData.get("file") as File;
@@ -21,8 +22,7 @@ export const uploadImageAction = userAction.schema(z.instanceof(FormData)).actio
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const [settings] = await db.select().from(drizzleSetting).where(eq(drizzleSetting.name, "system")).limit(1);
-
+    const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
     if (!settings) {
         throw new Error("System settings not found.");
     }

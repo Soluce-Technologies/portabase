@@ -1,10 +1,10 @@
 "use client";
-import { generateEdgeKey } from "@/utils/edge_key";
-import { getServerUrl } from "@/utils/get-server-url";
-import { PasswordInput } from "@/components/wrappers/auth/PaswordInput/password-input";
-import { useState } from "react";
-import { CopyButton } from "@/components/wrappers/common/button/copy-button";
-import { Agent } from "@/db/schema";
+import {generateEdgeKey} from "@/utils/edge_key";
+import {getServerUrl} from "@/utils/get-server-url";
+import {PasswordInput} from "@/components/wrappers/auth/PaswordInput/password-input";
+import {useState} from "react";
+import {CopyButton} from "@/components/wrappers/common/button/copy-button";
+import {Agent} from "@/db/schema/07_agent";
 
 export type AgentCardKeyProps = {
     agent: Agent;
@@ -22,7 +22,7 @@ export const AgentCardKey = (props: AgentCardKeyProps) => {
                     setCode(edge_key);
                 }}
             />
-            <CopyButton className="mt-5" value={code} />
+            <CopyButton className="mt-5" value={code}/>
         </>
     );
 };

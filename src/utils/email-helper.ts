@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/db";
-import { setting as drizzleSetting } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
+import * as drizzleDb from "@/db";
 
 type Payload = {
     to: string;
@@ -33,8 +33,8 @@ type EmailMassProps = {
 export const sendEmail = async (data: Payload) => {
     const settings = await db
         .select()
-        .from(drizzleSetting)
-        .where(eq(drizzleSetting.name, "system"))
+        .from(drizzleDb.schemas.setting)
+        .where(eq(drizzleDb.schemas.setting.name, "system"))
         .then((res) => res[0]);
 
     if (!settings) {

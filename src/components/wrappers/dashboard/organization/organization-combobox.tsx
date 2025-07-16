@@ -7,6 +7,7 @@ import { authClient } from "@/lib/auth/auth-client";
 
 export function OrganizationCombobox() {
     const router = useRouter();
+    const { state } = useSidebar();
 
     const { data: organizations } = authClient.useListOrganizations();
     const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -27,10 +28,9 @@ export function OrganizationCombobox() {
         await authClient.organization.setActive({
             organizationSlug: slug,
         });
-        router.replace(`/dashboard/${slug}/home`);
+        // router.replace(`/dashboard/${slug}/home`);
         router.refresh();
     };
-    const { state } = useSidebar();
 
     return <>{state === "expanded" && <ComboBox sideBar values={values} defaultValue={activeOrganization?.slug} onValueChange={onValueChange} />}</>;
 }

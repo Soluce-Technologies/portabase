@@ -3,8 +3,8 @@
 import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { db } from "@/db";
-import { database } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import * as drizzleDb from "@/db";
 
 export const updateDatabaseBackupPolicyAction = userAction
     .schema(
@@ -17,11 +17,11 @@ export const updateDatabaseBackupPolicyAction = userAction
         const cronPolicy = parsedInput.backupPolicy === "" ? null : parsedInput.backupPolicy;
 
         const [updated] = await db
-            .update(database)
+            .update(drizzleDb.schemas.database)
             .set({
                 backupPolicy: cronPolicy,
             })
-            .where(eq(database.id, parsedInput.databaseId))
+            .where(eq(drizzleDb.schemas.database.id, parsedInput.databaseId))
             .returning()
             .execute();
 

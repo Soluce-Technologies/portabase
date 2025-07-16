@@ -1,26 +1,28 @@
-import { PageParams } from "@/types/next";
-import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
-import { notFound } from "next/navigation";
-import { UserForm } from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
-import { Badge } from "@/components/ui/badge";
-import { ButtonDeleteAccount } from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import { AvatarWithUpload } from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
-import { currentUser } from "@/lib/auth/current-user";
+import {PageParams} from "@/types/next";
+import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {notFound} from "next/navigation";
+import {UserForm} from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
+import {Badge} from "@/components/ui/badge";
+import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
+import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
+import {currentUser} from "@/lib/auth/current-user";
+import {getAccounts, getSessions} from "@/lib/auth/auth";
 //import { getAccounts, getSessions } from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await currentUser();
-
+    console.log("my user",user);
     if (!user) {
         return notFound();
     }
+
 
     if (user.role !== "user" && user.role !== "admin" && user.role !== "superadmin") {
         return notFound();
     }
 
-    //    const sessions = await getSessions();
-    //    const accounts = await getAccounts();
+    // const sessions = await getSessions();
+    // const accounts = await getAccounts();
 
     return (
         <Page>
@@ -41,7 +43,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                     <Badge className="ml-3 hidden lg:block">{user.role}</Badge>
                 </PageTitle>
                 <PageActions className="mt-2 hidden sm:block">
-                    <ButtonDeleteAccount text="Delete my account" />
+                    <ButtonDeleteAccount text="Delete my account"/>
                 </PageActions>
             </div>
             <PageContent>
@@ -54,7 +56,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                     }}
                 />
                 <div className="mt-4 sm:hidden">
-                    <ButtonDeleteAccount text="Delete my account" />
+                    <ButtonDeleteAccount text="Delete my account"/>
                 </div>
             </PageContent>
         </Page>

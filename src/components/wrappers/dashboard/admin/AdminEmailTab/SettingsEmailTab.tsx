@@ -6,7 +6,7 @@ import { sendEmail } from "@/utils/email-helper";
 import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
 import { render } from "@react-email/render";
 import { toast } from "sonner";
-import { Setting } from "@/db/schema";
+import {Setting} from "@/db/schema/00_setting";
 
 export type SettingsEmailTabProps = {
     settings: Setting;

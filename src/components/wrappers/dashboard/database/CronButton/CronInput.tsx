@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Database } from "@/db/schema";
+import {Database} from "@/db/schema/06_database";
 
 export type CronInputProps = {
     database: Database;

@@ -8,7 +8,7 @@ import { PropsWithChildren } from "react";
 import { CopyButton } from "@/components/wrappers/common/button/copy-button";
 import { getServerUrl } from "@/utils/get-server-url";
 import { CodeSnippet } from "@/components/wrappers/code-snippet/CodeSnippet";
-import { Agent } from "@/db/schema";
+import {Agent} from "@/db/schema/07_agent";
 
 export type agentRegistrationDialogProps = PropsWithChildren<{
     agent: Agent;

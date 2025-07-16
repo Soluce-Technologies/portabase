@@ -3,7 +3,7 @@ import { relations } from "drizzle-orm";
 import { Organization, organization } from "./02_organization";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { Database, database } from "./05_database";
+import { Database, database } from "./06_database";
 
 export const project = pgTable("projects", {
     id: uuid("id").primaryKey().defaultRandom(),

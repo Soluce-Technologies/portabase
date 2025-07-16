@@ -3,9 +3,9 @@
 import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { db } from "@/db";
-import { setting as drizzleSetting } from "@/db/schema";
 import { S3FormSchema, StorageSwitchSchema } from "@/components/wrappers/dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.schema";
 import { eq } from "drizzle-orm";
+import * as drizzleDb from "@/db";
 
 export const updateS3SettingsAction = userAction
     .schema(
@@ -18,9 +18,9 @@ export const updateS3SettingsAction = userAction
         const { name, data } = parsedInput;
 
         const [updatedSettings] = await db
-            .update(drizzleSetting)
+            .update(drizzleDb.schemas.setting)
             .set({ ...data })
-            .where(eq(drizzleSetting.name, name))
+            .where(eq(drizzleDb.schemas.setting.name, name))
             .returning();
 
         return {
@@ -39,9 +39,9 @@ export const updateStorageSettingsAction = userAction
         const { name, data } = parsedInput;
 
         const [updatedSettings] = await db
-            .update(drizzleSetting)
+            .update(drizzleDb.schemas.setting)
             .set({ ...data })
-            .where(eq(drizzleSetting.name, name))
+            .where(eq(drizzleDb.schemas.setting.name, name))
             .returning();
 
         return {

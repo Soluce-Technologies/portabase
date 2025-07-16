@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { StatusBadge } from "@/components/wrappers/common/status-badge";
-import { Restoration } from "@/db/schema";
+import {Restoration} from "@/db/schema/06_database";
 
 export const restoreColumns: ColumnDef<Restoration>[] = [
     {

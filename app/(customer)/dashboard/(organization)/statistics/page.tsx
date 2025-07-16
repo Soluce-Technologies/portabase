@@ -7,7 +7,7 @@ import { getCurrentOrganizationSlug } from "@/features/dashboard/organization-co
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { asc, count, eq, inArray } from "drizzle-orm";
-import { organization as drizzleOrganization, project as drizzleProject, backup as drizzleBackup } from "@/db/schema";
+import * as drizzleDb from "@/db";
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
     const { slug: organizationSlug } = await props.params;
@@ -18,13 +18,13 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     }
 
     const org = await db.query.organization.findFirst({
-        where: eq(drizzleOrganization.slug, currentOrganizationSlug),
+        where: eq(drizzleDb.schemas.organization.slug, currentOrganizationSlug),
     });
 
     if (!org) notFound();
 
     const projects = await db.query.project.findMany({
-        where: eq(drizzleProject.organizationId, org.id),
+        where: eq(drizzleDb.schemas.project.organizationId, org.id),
     });
 
     const projectsCount = projects.length;
@@ -34,19 +34,19 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
             id: true,
             createdAt: true,
         },
-        orderBy: [asc(drizzleBackup.id)],
+        orderBy: [asc(drizzleDb.schemas.backup.id)],
     });
 
     const backupsRate = await db
         .select({
-            createdAt: drizzleBackup.createdAt,
-            status: drizzleBackup.status,
+            createdAt: drizzleDb.schemas.backup.createdAt,
+            status: drizzleDb.schemas.backup.status,
             _count: count(),
         })
-        .from(drizzleBackup)
-        .where(inArray(drizzleBackup.status, ["success", "failed"]))
-        .groupBy(drizzleBackup.createdAt, drizzleBackup.status)
-        .orderBy(drizzleBackup.createdAt);
+        .from(drizzleDb.schemas.backup)
+        .where(inArray(drizzleDb.schemas.backup.status, ["success", "failed"]))
+        .groupBy(drizzleDb.schemas.backup.createdAt, drizzleDb.schemas.backup.status)
+        .orderBy(drizzleDb.schemas.backup.createdAt);
 
     return (
         <Page>

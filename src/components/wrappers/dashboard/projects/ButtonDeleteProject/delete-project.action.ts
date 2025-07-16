@@ -1,24 +1,24 @@
 "use server";
 
-import { userAction } from "@/safe-actions";
-import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { ServerActionResult } from "@/types/action-type";
-import { eq } from "drizzle-orm";
-import { db } from "@/db";
-import { project } from "@/db/schema";
+import {userAction} from "@/safe-actions";
+import {z} from "zod";
+import {v4 as uuidv4} from "uuid";
+import {ServerActionResult} from "@/types/action-type";
+import {eq} from "drizzle-orm";
+import {db} from "@/db";
+import * as drizzleDb from "@/db";
 
-export const deleteProjectAction = userAction.schema(z.string()).action(async ({ parsedInput }): Promise<ServerActionResult<typeof project.$inferSelect>> => {
+export const deleteProjectAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<typeof drizzleDb.schemas.project.$inferSelect>> => {
     try {
         const uuid = uuidv4();
 
         const updatedProjects = await db
-            .update(project)
+            .update(drizzleDb.schemas.project)
             .set({
                 isArchived: true,
                 slug: uuid,
             })
-            .where(eq(project.id, parsedInput))
+            .where(eq(drizzleDb.schemas.project.id, parsedInput))
             .returning();
 
         const updatedProject = updatedProjects[0];
@@ -32,7 +32,7 @@ export const deleteProjectAction = userAction.schema(z.string()).action(async ({
             value: updatedProject,
             actionSuccess: {
                 message: "Projects has been successfully archived.",
-                messageParams: { projectId: parsedInput },
+                messageParams: {projectId: parsedInput},
             },
         };
     } catch (error) {
@@ -42,7 +42,7 @@ export const deleteProjectAction = userAction.schema(z.string()).action(async ({
                 message: "Failed to archive Projects.",
                 status: 500,
                 cause: error instanceof Error ? error.message : "Unknown error",
-                messageParams: { projectId: parsedInput },
+                messageParams: {projectId: parsedInput},
             },
         };
     }

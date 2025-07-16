@@ -1,7 +1,8 @@
 import { env } from "@/env.mjs";
 import { db } from "@/db";
-import { setting, organization } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import * as drizzleDb from "@/db";
+
 
 export function init() {
     consoleAscii();
@@ -32,14 +33,14 @@ async function createSettingsIfNotExist() {
         S3BucketName: env.S3_BUCKET_NAME ?? null,
     };
 
-    const [existing] = await db.select().from(setting).where(eq(setting.name, "system")).limit(1);
+    const [existing] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
 
     if (!existing) {
         console.log("====Init Setting : Create ====");
-        await db.insert(setting).values(configSettings);
+        await db.insert(drizzleDb.schemas.setting).values(configSettings);
     } else {
         console.log("====Init Setting : Update ====");
-        await db.update(setting).set(configSettings).where(eq(setting.name, "system"));
+        await db.update(drizzleDb.schemas.setting).set(configSettings).where(eq(drizzleDb.schemas.setting.name, "system"));
     }
 }
 
@@ -50,11 +51,11 @@ async function createDefaultOrganization() {
         createdAt: new Date(),
     };
 
-    const [existing] = await db.select().from(organization).where(eq(organization.slug, "default")).limit(1);
+    const [existing] = await db.select().from(drizzleDb.schemas.organization).where(eq(drizzleDb.schemas.organization.slug, "default")).limit(1);
 
     if (!existing) {
         console.log("==== Creating default Organization... ====\n");
-        await db.insert(organization).values(defaultOrganizationConf);
+        await db.insert(drizzleDb.schemas.organization).values(defaultOrganizationConf);
     }
 }
 

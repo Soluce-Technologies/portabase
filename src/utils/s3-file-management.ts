@@ -1,9 +1,9 @@
 import * as Minio from "minio";
-import { env } from "@/env.mjs";
+import {env} from "@/env.mjs";
 import internal from "node:stream";
-import { db } from "@/db";
-import { setting as drizzleSetting } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import {db} from "@/db";
+import * as drizzleDb from "@/db";
+import {eq} from "drizzle-orm";
 
 // const settings = await prisma.settings.findUnique({
 //     where:{
@@ -40,8 +40,8 @@ import { eq } from "drizzle-orm";
 async function getS3Client() {
     const settings = await db
         .select()
-        .from(drizzleSetting)
-        .where(eq(drizzleSetting.name, "system"))
+        .from(drizzleDb.schemas.setting)
+        .where(eq(drizzleDb.schemas.setting.name, "system"))
         .then((res) => res[0]);
 
     if (!settings) {
@@ -57,13 +57,13 @@ async function getS3Client() {
     const s3Client =
         env.NODE_ENV === "production"
             ? new Minio.Client({
-                  ...baseConfig,
-              })
+                ...baseConfig,
+            })
             : new Minio.Client({
-                  ...baseConfig,
-                  port: Number(env.S3_PORT ?? 0),
-                  useSSL: env.S3_USE_SSL === "true",
-              });
+                ...baseConfig,
+                port: Number(env.S3_PORT ?? 0),
+                useSSL: env.S3_USE_SSL === "true",
+            });
 
     return s3Client;
 }
@@ -75,10 +75,10 @@ export async function checkMinioAlive() {
         // Try to list buckets to check connectivity
         const buckets = await s3Client.listBuckets();
         console.log("MinIO is up and running. Buckets:", buckets);
-        return { message: true };
+        return {message: true};
     } catch (error) {
         console.error("Error connecting to MinIO:", error);
-        return { error: error };
+        return {error: error};
     }
 }
 
@@ -98,7 +98,11 @@ export async function createBucketIfNotExists(bucketName: string) {
  * @param fileName name of the file
  * @param file file to save
  */
-export async function saveFileInBucket({ bucketName, fileName, file }: { bucketName: string; fileName: string; file: Buffer | internal.Readable }) {
+export async function saveFileInBucket({bucketName, fileName, file}: {
+    bucketName: string;
+    fileName: string;
+    file: Buffer | internal.Readable
+}) {
     // Check if Minio is Alive
     await checkMinioAlive();
     // Create bucket if it doesn't exist
@@ -128,7 +132,7 @@ export async function saveFileInBucket({ bucketName, fileName, file }: { bucketN
  * @param fileName name of the file
  * @returns true if file exists, false if not
  */
-export async function checkFileExistsInBucket({ bucketName, fileName }: { bucketName: string; fileName: string }) {
+export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
     const s3Client = await getS3Client();
 
     try {
@@ -145,10 +149,10 @@ export async function checkFileExistsInBucket({ bucketName, fileName }: { bucket
  * @returns promise with array of presigned urls
  */
 export async function createPresignedUrlToUpload({
-    bucketName,
-    fileName,
-    expiry = 60 * 60, // 1 hour
-}: {
+                                                     bucketName,
+                                                     fileName,
+                                                     expiry = 60 * 60, // 1 hour
+                                                 }: {
     bucketName: string;
     fileName: string;
     expiry?: number;
@@ -161,7 +165,7 @@ export async function createPresignedUrlToUpload({
 }
 
 // Function to create a bucket and make it public
-export async function createPublicBucket({ bucketName }: { bucketName: string }) {
+export async function createPublicBucket({bucketName}: { bucketName: string }) {
     const s3Client = await getS3Client();
 
     try {

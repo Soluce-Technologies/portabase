@@ -1,6 +1,6 @@
 import { pgTable, text, boolean, timestamp, uuid, integer, pgEnum, uniqueIndex } from "drizzle-orm/pg-core";
-import { Agent, agent } from "./04_agent";
-import { Project, project } from "./03_project";
+import { Agent, agent } from "./07_agent";
+import { Project, project } from "./05_project";
 import { relations } from "drizzle-orm";
 import { dbmsEnum, statusEnum } from "./types";
 import { createSelectSchema } from "drizzle-zod";

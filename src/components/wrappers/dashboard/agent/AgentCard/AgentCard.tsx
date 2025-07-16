@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 import { formatDateLastContact } from "@/utils/date-formatting";
 import { ConnectionCircle } from "@/components/wrappers/common/connection-circle";
-import { Agent } from "@/db/schema";
+import {Agent} from "@/db/schema/07_agent";
 
 export type agentCardProps = {
     data: Agent;

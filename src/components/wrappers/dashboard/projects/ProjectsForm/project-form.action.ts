@@ -4,9 +4,11 @@ import { userAction } from "@/safe-actions";
 import { ProjectSchema } from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm.schema";
 import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";
-import { Database, database as drizzleDatabase, project as drizzleProject, Project } from "@/db/schema";
 import { db } from "@/db";
 import { eq, inArray } from "drizzle-orm";
+import {Project} from "@/db/schema/05_project";
+import * as drizzleDb from "@/db";
+import {Database} from "@/db/schema/06_database";
 
 export const createProjectAction = userAction
     .schema(
@@ -18,7 +20,7 @@ export const createProjectAction = userAction
     .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
         try {
             const [createdProject] = await db
-                .insert(drizzleProject)
+                .insert(drizzleDb.schemas.project)
                 .values({
                     name: parsedInput.data.name,
                     slug: parsedInput.data.slug,
@@ -27,7 +29,7 @@ export const createProjectAction = userAction
                 .returning();
 
             if (parsedInput.data.databases.length > 0) {
-                await db.update(drizzleDatabase).set({ projectId: createdProject.id }).where(inArray(drizzleDatabase.id, parsedInput.data.databases));
+                await db.update(drizzleDb.schemas.database).set({ projectId: createdProject.id }).where(inArray(drizzleDb.schemas.database.id, parsedInput.data.databases));
             }
 
             return {
@@ -62,7 +64,7 @@ export const updateProjectAction = userAction
     .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
         try {
             const existing = await db.query.project.findFirst({
-                where: eq(drizzleProject.id, parsedInput.projectId),
+                where: eq(drizzleDb.schemas.project.id, parsedInput.projectId),
                 with: {
                     databases: true,
                 },
@@ -79,20 +81,20 @@ export const updateProjectAction = userAction
             const databasesToRemove = existingDbIds.filter((id: string) => !newDbIds.includes(id));
 
             if (databasesToAdd.length > 0) {
-                await db.update(drizzleDatabase).set({ projectId: parsedInput.projectId }).where(inArray(drizzleDatabase.id, databasesToAdd));
+                await db.update(drizzleDb.schemas.database).set({ projectId: parsedInput.projectId }).where(inArray(drizzleDb.schemas.database.id, databasesToAdd));
             }
 
             if (databasesToRemove.length > 0) {
-                await db.update(drizzleDatabase).set({ projectId: null }).where(inArray(drizzleDatabase.id, databasesToRemove));
+                await db.update(drizzleDb.schemas.database).set({ projectId: null }).where(inArray(drizzleDb.schemas.database.id, databasesToRemove));
             }
 
             const [updatedProject] = await db
-                .update(drizzleProject)
+                .update(drizzleDb.schemas.project)
                 .set({
                     name: parsedInput.data.name,
                     slug: parsedInput.data.slug,
                 })
-                .where(eq(drizzleProject.id, parsedInput.projectId))
+                .where(eq(drizzleDb.schemas.project.id, parsedInput.projectId))
                 .returning();
 
             return {

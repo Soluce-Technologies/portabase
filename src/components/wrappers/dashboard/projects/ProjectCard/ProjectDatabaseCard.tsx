@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ConnectionCircle } from "@/components/wrappers/common/connection-circle";
 import { formatDateLastContact } from "@/utils/date-formatting";
-import { Database } from "@/db/schema";
+import {Database} from "@/db/schema/06_database";
 
 export type projectDatabaseCardProps = {
     data: Database;

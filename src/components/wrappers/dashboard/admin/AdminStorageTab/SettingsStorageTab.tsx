@@ -10,7 +10,7 @@ import { checkConnexionToS3 } from "@/features/upload/public/upload.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { updateStorageSettingsAction } from "@/components/wrappers/dashboard/admin/AdminStorageTab/StorageS3Form/s3-form.action";
-import { Setting } from "@/db/schema";
+import {Setting} from "@/db/schema/00_setting";
 
 export type SettingsStorageTabProps = {
     settings: Setting;

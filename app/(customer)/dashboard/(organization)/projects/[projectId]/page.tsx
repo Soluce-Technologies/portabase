@@ -10,19 +10,24 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { organization as drizzleOrganization } from "@/db/schema";
 import {getOrganization} from "@/lib/auth/auth";
+import * as drizzleDb from "@/db";
 
-export default async function RoutePage(props: PageParams<{ slug: string; projectId: string }>) {
-    const { slug: organizationSlug, projectId } = await props.params;
+export default async function RoutePage(props: PageParams<{
+    // slug: string;
+    projectId: string
+}>) {
+    const {
+        // slug: organizationSlug,
+        projectId } = await props.params;
 
-    const organization = await getOrganization({organizationSlug});
+    const organization = await getOrganization({});
 
-    if (!organization || organization?.slug !== organizationSlug) {
+    if (!organization) {
         notFound();
     }
     const org = await db.query.organization.findFirst({
-        where: eq(drizzleOrganization.slug, organization.slug),
+        where: eq(drizzleDb.schemas.organization.slug, organization.slug),
     });
 
     if (!org) notFound();
@@ -56,7 +61,7 @@ export default async function RoutePage(props: PageParams<{ slug: string; projec
                 {proj.databases.length > 0 ? (
                     <CardsWithPagination
                         data={proj.databases}
-                        organizationSlug={organizationSlug}
+                        organizationSlug={organization.slug}
                         cardItem={ProjectDatabaseCard}
                         cardsPerPage={4}
                         numberOfColumns={1}

@@ -9,12 +9,11 @@ import {db} from "@/db";
 import {notFound} from "next/navigation";
 import {getOrganization} from "@/lib/auth/auth";
 
-export default async function RoutePage(props: PageParams<{ slug: string }>) {
-    const {slug: organizationSlug} = await props.params;
+export default async function RoutePage(props: PageParams<{ }>) {
 
-    const organization = await getOrganization({organizationSlug});
+    const organization = await getOrganization({});
 
-    if (!organization || organization?.slug !== organizationSlug) {
+    if (!organization) {
         notFound();
     }
 
@@ -35,7 +34,7 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                 <PageTitle>Projects</PageTitle>
                 {projects.length > 0 && (
                     <PageActions>
-                        <Link href={`/dashboard/${organizationSlug}/projects/new`}>
+                        <Link href={`/dashboard/projects/new`}>
                             <Button>+ Create Project</Button>
                         </Link>
                     </PageActions>
@@ -44,11 +43,11 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
 
             <PageContent className="mt-10">
                 {projects.length > 0 ? (
-                    <CardsWithPagination organizationSlug={organizationSlug} data={projects} cardItem={ProjectCard}
+                    <CardsWithPagination organizationSlug={organization.slug} data={projects} cardItem={ProjectCard}
                                          cardsPerPage={4} numberOfColumns={1}/>
                 ) : (
                     <Link
-                        href={`/dashboard/${organizationSlug}/projects/new`}
+                        href={`/dashboard/projects/new`}
                         className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md"
                     >
                         Create new Project

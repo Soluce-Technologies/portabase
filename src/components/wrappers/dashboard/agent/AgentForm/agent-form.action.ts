@@ -4,12 +4,12 @@ import { AgentSchema } from "@/components/wrappers/dashboard/agent/AgentForm/age
 import { z } from "zod";
 import { eq, and, ne, count } from "drizzle-orm";
 import { db } from "@/db";
-import { agent } from "@/db/schema";
+import * as drizzleDb from "@/db";
 
 const verifySlugUniqueness = async (slug: string, agentId?: string) => {
-    const conditions = agentId ? and(eq(agent.slug, slug), ne(agent.id, agentId)) : eq(agent.slug, slug);
+        const conditions = agentId ? and(eq(drizzleDb.schemas.agent.slug, slug), ne(drizzleDb.schemas.agent.id, agentId)) : eq(drizzleDb.schemas.agent.slug, slug);
 
-    const [countResult] = await db.select({ count: count() }).from(agent).where(conditions);
+    const [countResult] = await db.select({ count: count() }).from(drizzleDb.schemas.agent).where(conditions);
 
     if (countResult.count > 0) {
         throw new ActionError("Slug already exists");
@@ -19,7 +19,7 @@ const verifySlugUniqueness = async (slug: string, agentId?: string) => {
 export const createAgentAction = userAction.schema(AgentSchema).action(async ({ parsedInput }) => {
     await verifySlugUniqueness(parsedInput.slug);
 
-    const [createdAgent] = await db.insert(agent).values(parsedInput).returning();
+    const [createdAgent] = await db.insert(drizzleDb.schemas.agent).values(parsedInput).returning();
 
     return {
         data: createdAgent,
@@ -36,7 +36,7 @@ export const updateAgentAction = userAction
     .action(async ({ parsedInput }) => {
         await verifySlugUniqueness(parsedInput.data.slug, parsedInput.id);
 
-        const [updatedAgent] = await db.update(agent).set(parsedInput.data).where(eq(agent.id, parsedInput.id)).returning();
+        const [updatedAgent] = await db.update(drizzleDb.schemas.agent).set(parsedInput.data).where(eq(drizzleDb.schemas.agent.id, parsedInput.id)).returning();
 
         return {
             data: updatedAgent,

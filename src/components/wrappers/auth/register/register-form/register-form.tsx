@@ -11,35 +11,36 @@ import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { RegisterSchema, RegisterType } from "@/components/wrappers/auth/Register/register-form/register-form.schema";
-import { registerUserAction } from "@/components/wrappers/auth/Register/register-form/register-form.action";
+import { RegisterSchema, RegisterType } from "@/components/wrappers/auth/register/register-form/register-form.schema";
 import { PasswordInput } from "@/components/wrappers/auth/PaswordInput/password-input";
+import {signUp} from "@/lib/auth/auth-client";
 
 export type registerFormProps = {
     defaultValues?: RegisterType;
 };
 
 export const RegisterForm = (props: registerFormProps) => {
+
     const form = useZodForm({
         schema: RegisterSchema,
     });
     const router = useRouter();
     const mutation = useMutation({
         mutationFn: async (values: RegisterType) => {
-            console.log(values);
-            const createUser = await registerUserAction(values);
-            console.log(createUser);
-            const data = createUser?.data?.data;
-            if (createUser?.serverError || !data) {
-                console.log(createUser?.serverError);
-                toast.error(createUser?.serverError);
-                return;
-            }
-            toast.success(`Success`);
-            router.push(`/login`);
-            router.refresh();
+            await signUp.email(values, {
+                onSuccess: () => {
+                    toast.success(`Success`);
+                    router.push(`/login`);
+                    router.refresh();
+                },
+                onError: (error) => {
+                    console.log(error);
+                    toast.error(error.error.message);
+                },
+            });
         },
     });
+
 
     return (
         <TooltipProvider>

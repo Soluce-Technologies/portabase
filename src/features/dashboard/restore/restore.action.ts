@@ -1,9 +1,11 @@
 import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";
-import { Backup, backup, Restoration, restoration } from "@/db/schema";
+import * as drizzleDb from "@/db";
+
 import { db } from "@/db";
 import { and, eq } from "drizzle-orm";
+import {Backup, Restoration} from "@/db/schema/06_database";
 
 export const deleteBackupAction = userAction
     .schema(
@@ -15,14 +17,14 @@ export const deleteBackupAction = userAction
     .action(async ({ parsedInput }): Promise<ServerActionResult<Backup>> => {
         try {
             await db
-                .delete(backup)
-                .where(and(eq(backup.id, parsedInput.backupId), eq(backup.databaseId, parsedInput.databaseId)))
+                .delete(drizzleDb.schemas.backup)
+                .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
                 .execute();
 
             const backupExists = await db
                 .select()
-                .from(backup)
-                .where(and(eq(backup.id, parsedInput.backupId), eq(backup.databaseId, parsedInput.databaseId)))
+                .from(drizzleDb.schemas.backup)
+                .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
                 .execute();
 
             if (backupExists.length === 0) {
@@ -68,7 +70,7 @@ export const createRestorationAction = userAction
         try {
             // Insert new restoration into the database
             const restorationData = await db
-                .insert(restoration)
+                .insert(drizzleDb.schemas.restoration)
                 .values({
                     databaseId: parsedInput.databaseId,
                     backupId: parsedInput.backupId,

@@ -9,13 +9,13 @@ import { CronButton } from "@/components/wrappers/dashboard/database/CronButton/
 
 import { db } from "@/db";
 import { eq, and } from "drizzle-orm";
-import { backup as drizzleBackup, database as drizzleDatabase, restoration as drizzleRestoration } from "@/db/schema";
+import * as drizzleDb from "@/db";
 
 export default async function RoutePage(props: PageParams<{ databaseId: string }>) {
     const { databaseId } = await props.params;
 
     const dbItem = await db.query.database.findFirst({
-        where: eq(drizzleDatabase.id, databaseId),
+        where: eq(drizzleDb.schemas.database.id, databaseId),
     });
 
     if (!dbItem) {
@@ -23,7 +23,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
     }
 
     const backups = await db.query.backup.findMany({
-        where: eq(drizzleBackup.databaseId, dbItem.id),
+        where: eq(drizzleDb.schemas.backup.databaseId, dbItem.id),
         with: {
             restorations: true,
         },
@@ -31,7 +31,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
     });
 
     const restorations = await db.query.restoration.findMany({
-        where: eq(drizzleRestoration.databaseId, dbItem.id),
+        where: eq(drizzleDb.schemas.restoration.databaseId, dbItem.id),
         orderBy: (r, { desc }) => [desc(r.createdAt)],
     });
 
@@ -40,14 +40,14 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
 
     const [totalBackups, successfulBackups] = await Promise.all([
         db
-            .select({ count: drizzleBackup.id })
-            .from(drizzleBackup)
-            .where(eq(drizzleBackup.databaseId, dbItem.id))
+            .select({ count: drizzleDb.schemas.backup.id })
+            .from(drizzleDb.schemas.backup)
+            .where(eq(drizzleDb.schemas.backup.databaseId, dbItem.id))
             .then((rows) => rows.length),
         db
-            .select({ count: drizzleBackup.id })
-            .from(drizzleBackup)
-            .where(and(eq(drizzleBackup.databaseId, dbItem.id), eq(drizzleBackup.status, "success")))
+            .select({ count: drizzleDb.schemas.backup.id })
+            .from(drizzleDb.schemas.backup)
+            .where(and(eq(drizzleDb.schemas.backup.databaseId, dbItem.id), eq(drizzleDb.schemas.backup.status, "success")))
             .then((rows) => rows.length),
     ]);
 

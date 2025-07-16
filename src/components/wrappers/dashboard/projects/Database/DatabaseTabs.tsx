@@ -7,7 +7,7 @@ import { eventUpdate } from "@/types/events";
 import { backupColumns } from "@/features/dashboard/backup/columns";
 import { restoreColumns } from "@/features/dashboard/restore/columns";
 import { DataTable } from "@/components/wrappers/common/table/data-table";
-import { Backup, Database, Restoration } from "@/db/schema";
+import {Backup, Database, Restoration} from "@/db/schema/06_database";
 
 export type DatabaseTabsProps = {
     backups: Backup[];

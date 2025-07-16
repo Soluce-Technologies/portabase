@@ -11,7 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { updateDatabaseBackupPolicyAction } from "@/components/wrappers/dashboard/database/CronButton/cron.action";
-import { Database } from "@/db/schema";
+import {Database} from "@/db/schema/06_database";
 
 export type CronButtonProps = {
     database: Database;

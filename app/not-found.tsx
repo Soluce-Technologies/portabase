@@ -1,5 +1,10 @@
 import { redirect } from "next/navigation";
 
 export default async function NotFound() {
-    redirect("/dashboard/profile");
+    // redirect("/dashboard/profile");
+    return(
+        <>
+            Error
+        </>
+    )
 }

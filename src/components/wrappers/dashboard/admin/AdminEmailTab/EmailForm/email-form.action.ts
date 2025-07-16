@@ -2,9 +2,9 @@
 import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { EmailFormSchema } from "@/components/wrappers/dashboard/admin/AdminEmailTab/EmailForm/email-form.schema";
-import { setting as drizzleSetting } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
+import * as drizzleDb from "@/db";
 
 export const updateEmailSettingsAction = userAction
     .schema(
@@ -17,11 +17,11 @@ export const updateEmailSettingsAction = userAction
         const { name, data } = parsedInput;
 
         const [updatedSettings] = await db
-            .update(drizzleSetting)
+            .update(drizzleDb.schemas.setting)
             .set({
                 ...data,
             })
-            .where(eq(drizzleSetting.name, name))
+            .where(eq(drizzleDb.schemas.setting.name, name))
             .returning();
 
         return {

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { updateUserOrganizationAction } from "@/components/wrappers/dashboard/settings/SettingsUsersTab/settings-user-tab.action";
-import { OrganizationMember } from "@/db/schema/02_organization";
+import {OrganizationMember} from "@/db/schema/03_member";
 
 export const usersColumns: ColumnDef<OrganizationMember>[] = [
     {

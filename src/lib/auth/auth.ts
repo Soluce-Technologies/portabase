@@ -5,19 +5,14 @@ import {env} from "@/env.mjs";
 import {nextCookies} from "better-auth/next-js";
 import {admin as adminPlugin, openAPI, organization} from "better-auth/plugins";
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
-
+import * as drizzleDb from "@/db";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
-import * as drizzleUser from "@/db/schema/01_user";
-import * as drizzleOrganization from "@/db/schema/02_organization";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg",
-        schema: {
-            ...drizzleUser,
-            ...drizzleOrganization,
-        },
+        schema: drizzleDb.schemas,
     }),
     emailAndPassword: {
         enabled: true,
@@ -51,7 +46,7 @@ export const auth = betterAuth({
         }),
         adminPlugin({
             adminRoles: ["admin", "superadmin"],
-            defaultRole: (await db.select({ count: count() }).from(drizzleUser["user"]))[0].count === 0 ? "superadmin" : "pending",
+            defaultRole: "pending",
             ac,
             roles: {
                 admin,
@@ -72,6 +67,67 @@ export const auth = betterAuth({
                 type: "number", //pg timestamp
                 nullable: true,
                 required: false,
+            },
+        },
+    },
+    databaseHooks: {
+        user: {
+            create: {
+                async before(user, context) {
+                    const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
+                    const role = userCount === 0 ? "superadmin" : "pending";
+
+                    return {
+                        data: {
+                            ...user,
+                            role,
+                        },
+                    };
+                },
+                async after(user, context) {
+                    const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
+
+                    if (userCount === 1) {
+                        const defaultOrgSlug = "default"; // change this if your default org has a different slug
+                        const defaultOrg = await db.query.organization.findFirst({
+                            where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
+                        });
+
+                        if (defaultOrg) {
+                            await db.insert(drizzleDb.schemas.member).values({
+                                userId: user.id,
+                                organizationId: defaultOrg.id,
+                                role: "orgOwner",
+                            });
+                        } else {
+                            console.warn("Default organization not found. Cannot assign member.");
+                        }
+                    }
+                },
+            },
+        },
+        session: {
+            create: {
+                before: async (session, context) => {
+                    const userId = session.userId;
+
+                    const memberships = await db.query.member.findMany({
+                        where: eq(drizzleDb.schemas.member.userId, userId),
+                    });
+
+                    if (!memberships.length) {
+                        // Fail the login attempt explicitly
+                        throw new Error("User is not part of any organization.");
+                    }
+
+                    const firstOrgId = memberships[0].organizationId;
+
+                    return {
+                        data: {
+                            activeOrganizationId: firstOrgId,
+                        },
+                    };
+                },
             },
         },
     },
@@ -165,14 +221,15 @@ export const getSession = async () => {
 
 export const revokeSession = async (e: string) => {
     try {
-        const { status } = await auth.api.revokeSession({
+        const {status} = await auth.api.revokeSession({
             body: {
                 token: e,
             },
             headers: await headers(),
         });
         return status;
-    } catch (e) {}
+    } catch (e) {
+    }
 };
 
 export const getAccounts = async () => {
@@ -183,7 +240,7 @@ export const getAccounts = async () => {
 
 export const unlinkAccount = async (provider: string, account: string) => {
     try {
-        const { status } = await auth.api.unlinkAccount({
+        const {status} = await auth.api.unlinkAccount({
             body: {
                 providerId: provider,
                 accountId: account,
@@ -192,26 +249,53 @@ export const unlinkAccount = async (provider: string, account: string) => {
         });
 
         return status;
-    } catch (e) {}
+    } catch (e) {
+    }
 };
-
+//
+// export const getOrganization = async ({
+//                                           organizationId,
+//                                           organizationSlug,
+//                                       }: {
+//     organizationId?: string;
+//     organizationSlug?: string;
+// }) => {
+//     const query = organizationId
+//         ? {organizationId}
+//         : {organizationSlug};
+//
+//     console.log(query);
+//
+//     try {
+//         return await auth.api.getFullOrganization({
+//             headers: await headers(),
+//             // query,
+//         });
+//     } catch (e) {
+//         console.error(e);
+//         return null;
+//     }
+// };
 export const getOrganization = async ({
                                           organizationId,
                                           organizationSlug,
                                       }: {
     organizationId?: string;
     organizationSlug?: string;
-}) => {
-    const query = organizationId
-        ? { organizationId }
-        : { organizationSlug };
+} = {}) => {
+    const query =
+        organizationId != null
+            ? { organizationId }
+            : organizationSlug != null
+                ? { organizationSlug }
+                : undefined;
 
     console.log(query);
 
     try {
         return await auth.api.getFullOrganization({
             headers: await headers(),
-            query,
+            ...(query ? { query } : {}),
         });
     } catch (e) {
         console.error(e);
@@ -224,13 +308,14 @@ export const listOrganizations = async () => {
         return await auth.api.listOrganizations({
             headers: await headers(),
         });
-    } catch (e) {}
+    } catch (e) {
+    }
 };
 
 export const getLastOrganizationOrFirst = async (userId: string) => {
     try {
-        const organizations = await db.query.organizationMember.findMany({
-            where: eq(drizzleOrganization.member.userId, userId),
+        const organizations = await db.query.organization.findMany({
+            where: eq(drizzleDb.schemas.member.userId, userId),
         });
 
         if (organizations.length > 0) {
@@ -260,7 +345,7 @@ export const createOrganization = async (name: string, slug: string) => {
 
 export const checkSlugOrganization = async (slug: string) => {
     try {
-        const { status } = await auth.api.checkOrganizationSlug({
+        const {status} = await auth.api.checkOrganizationSlug({
             headers: await headers(),
             body: {
                 slug,
@@ -278,6 +363,7 @@ export const getActiveMember = async () => {
         const member = await auth.api.getActiveMember({
             headers: await headers(),
         });
+        console.log(member);
 
         return member;
     } catch (e) {
