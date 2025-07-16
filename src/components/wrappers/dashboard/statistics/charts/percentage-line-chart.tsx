@@ -37,8 +37,8 @@ export function PercentageLineChart(props: percentageLineChartProps) {
                 acc[date] = { success: 0, failed: 0, total: 0 };
             }
 
-            acc[date][status === "success" ? "success" : "failed"] += backup._count.id;
-            acc[date].total += backup._count.id;
+            acc[date][status === "success" ? "success" : "failed"] += backup._count;
+            acc[date].total += backup._count;
 
             return acc;
         },

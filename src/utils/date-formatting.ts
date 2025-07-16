@@ -1,7 +1,7 @@
 import {format} from "date-fns";
 
 export function humanReadableDate(rawDate: string | number | Date) {
-    return format(new Date(rawDate), 'dd/MM/yyyy HH:mm')
+    return formatFrenchDate(rawDate);
 }
 
 export function timeAgo(rawDate: string | number | Date) {

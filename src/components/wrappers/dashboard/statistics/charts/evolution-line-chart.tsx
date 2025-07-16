@@ -33,6 +33,8 @@ export function EvolutionLineChart(props: evolutionLineChartProps) {
         [] as { date: string; count: number }[]
     );
 
+    console.log(cumulativeData);
+
     const chartConfig = {
         date: {
             label: "Date",
@@ -48,7 +50,7 @@ export function EvolutionLineChart(props: evolutionLineChartProps) {
         <ChartContainer config={chartConfig}>
             <LineChart
                 accessibilityLayer
-                data={data}
+                data={cumulativeData}
                 margin={{
                     left: 12,
                     right: 12,
@@ -60,7 +62,9 @@ export function EvolutionLineChart(props: evolutionLineChartProps) {
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
-                    tickFormatter={(value) => humanReadableDate(new Date(value)).split(" ")[0]}
+                    tickFormatter={(value) => {
+                        return humanReadableDate(new Date(value)).split(" ")[0]
+                    }}
                 />
                 <YAxis />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />

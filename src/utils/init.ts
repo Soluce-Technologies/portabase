@@ -1,16 +1,15 @@
 import { env } from "@/env.mjs";
-import { db } from "@/db";
+import {db, makeMigration} from "@/db";
 import { eq } from "drizzle-orm";
 import * as drizzleDb from "@/db";
 
 
-export function init() {
+export async function init() {
     consoleAscii();
     console.log("====Init Functions====");
-
-    createDefaultOrganization().then(() => {});
-
-    createSettingsIfNotExist()
+    await makeMigration();
+    await createDefaultOrganization();
+    await createSettingsIfNotExist()
         .then(() => {
             console.log("====Initialization completed====");
         })

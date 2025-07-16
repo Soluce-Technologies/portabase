@@ -3,7 +3,6 @@ import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EvolutionLineChart } from "@/components/wrappers/dashboard/statistics/charts/evolution-line-chart";
 import { PercentageLineChart } from "@/components/wrappers/dashboard/statistics/charts/percentage-line-chart";
-import { getCurrentOrganizationSlug } from "@/features/dashboard/organization-cookie";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { asc, count, eq, inArray } from "drizzle-orm";
@@ -37,6 +36,7 @@ export default async function RoutePage(props: PageParams<{ }>) {
         orderBy: [asc(drizzleDb.schemas.backup.id)],
     });
 
+
     const backupsRate = await db
         .select({
             createdAt: drizzleDb.schemas.backup.createdAt,
@@ -47,6 +47,9 @@ export default async function RoutePage(props: PageParams<{ }>) {
         .where(inArray(drizzleDb.schemas.backup.status, ["success", "failed"]))
         .groupBy(drizzleDb.schemas.backup.createdAt, drizzleDb.schemas.backup.status)
         .orderBy(drizzleDb.schemas.backup.createdAt);
+
+    console.log(backupsRate);
+
 
     return (
         <Page>
