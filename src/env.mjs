@@ -10,8 +10,8 @@ export const env = createEnv({
         DATABASE_URL: z.string().url().optional(),
         NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
         NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_URL: z.string(),
-        NEXT_PUBLIC_PROJECT_VERSION: z.string(),
+        NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
         PROJECT_SECRET: z.string(),
 
         SMTP_PASSWORD: z.string().optional(),
@@ -35,8 +35,8 @@ export const env = createEnv({
     client: {
         NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
         NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_URL: z.string(),
-        NEXT_PUBLIC_PROJECT_VERSION: z.string(),
+        NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
+        NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
     },
     runtimeEnv: {
         NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
