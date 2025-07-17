@@ -1,11 +1,22 @@
-FROM node:23.5.0-alpine AS base
+FROM node:23-alpine AS base
 
 ENV YARN_VERSION=4.9.1
 
-RUN apk add --no-cache libc6-compat
-RUN apk add --no-cache openssl
+RUN apk add --update --no-cache \
+    build-base \
+    libc6-compat \
+    openssl \
+    make \
+    g++ \
+    jpeg-dev \
+    cairo-dev \
+    giflib-dev \
+    pango-dev \
+    libtool \
+    autoconf \
+    automake \
+    libpng
 
-# install and use yarn 4.x
 RUN corepack enable && corepack prepare yarn@${YARN_VERSION}
 RUN yarn set version ${YARN_VERSION}
 
@@ -17,6 +28,7 @@ WORKDIR /app
 COPY .yarn ./.yarn
 COPY .yarnrc.yml ./
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
 
 RUN \
   if [ -f yarn.lock ]; then yarn; \
@@ -48,10 +60,6 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npx prisma generate
-RUN npx zenstack generate
-
-
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
@@ -73,18 +81,16 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 
 RUN mkdir .next
-RUN mkdir -p /app/private/uploads
-RUN chown -R nextjs:nodejs /app/private
-RUN chown -R nextjs:nodejs /app/public
-
 RUN chown nextjs:nodejs .next
 
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/schema.zmodel ./
-COPY --from=builder /app/src/openapi.yaml ./src/
+COPY --from=builder /app/next.config.ts ./
+COPY --from=builder /app/drizzle.config.ts ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --chown=nextjs:nodejs prisma ./prisma/
+COPY --chown=nextjs:nodejs src/db ./src/db
+
+
+
 
 USER root
 
@@ -100,3 +106,4 @@ ENV HOSTNAME="0.0.0.0"
 USER nextjs
 
 ENTRYPOINT ["sh","/app/app-prod-entrypoint.sh"]
+
