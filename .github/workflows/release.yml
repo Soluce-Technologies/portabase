@@ -29,6 +29,17 @@ jobs:
         with:
           images: solucetechnologies/portabase
 
+      - name: Set tags
+        id: set-tags
+        run: |
+          echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          TAGS="solucetechnologies/portabase:${GITHUB_REF#refs/tags/}"
+          if [ "${{ github.event.release.target_commitish }}" = "main" ]; then
+            TAGS="$TAGS,solucetechnologies/portabase:latest"
+          fi
+          echo "tags=$TAGS" >> $GITHUB_OUTPUT
+
+
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v6
