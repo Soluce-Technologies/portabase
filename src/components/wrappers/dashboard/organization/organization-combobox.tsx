@@ -1,16 +1,16 @@
 "use client";
 
-import { ComboBox } from "@/components/wrappers/common/combobox";
-import { useSidebar } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth/auth-client";
+import {ComboBox} from "@/components/wrappers/common/combobox";
+import {useSidebar} from "@/components/ui/sidebar";
+import {useRouter} from "next/navigation";
+import {authClient} from "@/lib/auth/auth-client";
 
 export function OrganizationCombobox() {
     const router = useRouter();
-    const { state } = useSidebar();
+    const {state} = useSidebar();
 
-    const { data: organizations } = authClient.useListOrganizations();
-    const { data: activeOrganization } = authClient.useActiveOrganization();
+    const {data: organizations, refetch} = authClient.useListOrganizations();
+    const {data: activeOrganization, refetch: refetchActiveOrga} = authClient.useActiveOrganization();
 
     if (!organizations) return null;
 
@@ -28,9 +28,16 @@ export function OrganizationCombobox() {
         await authClient.organization.setActive({
             organizationSlug: slug,
         });
-        // router.replace(`/dashboard/${slug}/home`);
         router.refresh();
     };
 
-    return <>{state === "expanded" && <ComboBox sideBar values={values} defaultValue={activeOrganization?.slug} onValueChange={onValueChange} />}</>;
+    const handleReset = () => {
+        refetch();
+        refetchActiveOrga()
+        router.refresh();
+    }
+
+    return <>{state === "expanded" &&
+        <ComboBox sideBar values={values} defaultValue={activeOrganization?.slug} onValueChange={onValueChange}
+                  reload={handleReset}/>}</>;
 }

@@ -1,6 +1,6 @@
 FROM node:23.5.0-alpine AS base
 
-ENV YARN_VERSION=4.6.0
+ENV YARN_VERSION=4.9.1
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache openssl

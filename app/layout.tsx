@@ -1,28 +1,31 @@
 import React from "react";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type {Metadata} from "next";
+import {Inter} from "next/font/google";
 
 import "./globals.css";
-import { Providers } from "./providers";
-import { cn } from "@/lib/utils";
+import {Providers} from "./providers";
+import {cn} from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
-    title: "Portabase",
-    description: "Manage all your database instances from one place !",
+    title: process.env.NEXT_PUBLIC_PROJECT_NAME ?? "App Title",
+    description: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION ?? undefined,
 };
 
 export default function RootLayout({
-    children,
-}: Readonly<{
+                                       children,
+                                   }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={cn(inter.className, "h-full")}>
-                <Providers>{children}</Providers>
-            </body>
+        <head>
+            <meta name="apple-mobile-web-app-title" content="Portabase"/>
+        </head>
+        <body className={cn(inter.className, "h-full")}>
+        <Providers>{children}</Providers>
+        </body>
         </html>
     );
 }

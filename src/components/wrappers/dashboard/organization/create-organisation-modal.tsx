@@ -1,31 +1,33 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { OrganizationSchema } from "@/components/wrappers/dashboard/organization/organization.schema";
-import { createOrganizationAction } from "@/components/wrappers/dashboard/organization/organization.action";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { authClient } from "@/lib/auth/auth-client";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
+import {createOrganizationAction} from "@/components/wrappers/dashboard/organization/organization.action";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {authClient} from "@/lib/auth/auth-client";
 
 export type createOrganizationModalProps = {
-    children: any;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSuccess?: () => void;
+
 };
 
-export function CreateOrganizationModal(props: createOrganizationModalProps) {
-    const [open, setOpen] = useState(false);
+export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createOrganizationModalProps) {
 
-    const { children } = props;
 
     const router = useRouter();
 
     const form = useZodForm({
         schema: OrganizationSchema,
     });
+
 
     const mutation = useMutation({
         mutationFn: async (values: OrganizationSchema) => {
@@ -35,18 +37,18 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
 
             if (result && result.data) {
                 if (result.data.success && result.data.value) {
-                    setOpen(false);
-                    await authClient.organization.setActive({ organizationSlug: result.data.value.slug });
-                    router.replace(`/dashboard/${result.data.value.slug}/home`);
+                    onOpenChange(false);
+                    await authClient.organization.setActive({organizationSlug: result.data.value.slug});
+                    onSuccess?.();
+                    router.replace(`/dashboard/home`);
+                    // router.refresh();
                 }
             }
         },
     });
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px] w-full">
                 <DialogHeader>
                     <DialogTitle>Create a new organization</DialogTitle>
@@ -65,13 +67,13 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                             control={form.control}
                             name="name"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -79,7 +81,7 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                             control={form.control}
                             name="slug"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Slug</FormLabel>
                                     <FormControl>
@@ -91,7 +93,7 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                                             }}
                                         />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />

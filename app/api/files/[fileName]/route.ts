@@ -31,7 +31,7 @@ export async function GET(
             {status: 403}
         );
     }
-
+    //@ts-ignore
     const expiresAt = parseInt(expires, 10);
     if (Date.now() > expiresAt) {
         return NextResponse.json(

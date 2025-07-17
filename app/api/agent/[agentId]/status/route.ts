@@ -6,6 +6,7 @@ import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {EDbmsSchema} from "@/db/schema/types";
 import {eq} from "drizzle-orm";
+import {isUuidv4} from "@/utils/verify-uuid";
 
 export type databaseAgent = {
     name: string,
@@ -33,6 +34,14 @@ export async function POST(
         const agentId = (await params).agentId
         const body: Body = await request.json();
         const lastContact = new Date();
+
+        if (!isUuidv4(agentId)) {
+            return NextResponse.json(
+                {error: "agentId is not a valid uuid"},
+                {status: 500}
+            );
+        }
+
 
 
         const agent = await db.query.agent.findFirst({
