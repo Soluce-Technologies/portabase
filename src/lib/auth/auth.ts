@@ -14,6 +14,7 @@ export const auth = betterAuth({
         provider: "pg",
         schema: drizzleDb.schemas,
     }),
+    secret: env.PROJECT_SECRET,
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: false,
