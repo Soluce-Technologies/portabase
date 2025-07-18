@@ -82,6 +82,10 @@ COPY --from=builder /app/public ./public
 
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
+RUN mkdir -p /app/private/uploads
+RUN chown -R nextjs:nodejs /app/private
+RUN chown -R nextjs:nodejs /app/public
+
 
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/drizzle.config.ts ./
