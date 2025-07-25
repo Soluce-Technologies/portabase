@@ -30,10 +30,9 @@ function buildCSPHeader(): string {
 
 function buildPermissionsPolicy(): string {
     return Object.entries(PORTABASE_DEFAULT_SETTINGS.SECURITY.PERMISSIONS_POLICY)
-        .map(([feature, values]) => `${feature}=${values.join(", ")}`)
+        .map(([feature, values]) => `${feature.toLowerCase()}=${values.join(", ")}`)
         .join(", ");
 }
-
 
 
 
@@ -76,6 +75,10 @@ const nextConfig: NextConfig = {
                         key: 'Referrer-Policy',
                         value: 'strict-origin-when-cross-origin',
                     },
+                    {
+                        key: 'Strict-Transport-Security',
+                        value: 'max-age=63072000; includeSubDomains; preload',
+                    }
                     // ...other security headers
                 ],
             },
