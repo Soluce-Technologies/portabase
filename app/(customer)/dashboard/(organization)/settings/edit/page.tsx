@@ -4,13 +4,12 @@ import {notFound} from "next/navigation";
 import {OrganizationForm} from "@/components/wrappers/dashboard/organization/OrganizationForm/OrganizationForm";
 import {getOrganization} from "@/lib/auth/auth";
 
-
 export default async function RoutePage(props: PageParams<{
 
 }>) {
     const organization = await getOrganization({});
 
-    if (!organization) {
+    if (!organization || organization.slug == "default") {
         notFound();
     }
 

@@ -7,13 +7,16 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { OrganizationFormSchema } from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
 import { db } from "@/db";
-import { Organization, organization as drizzleOrganization, organizationMember as drizzleOrganizationMember } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { checkSlugOrganization, createOrganization } from "@/lib/auth/auth";
+import {checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
+import {slugify} from "@/utils/slugify";
+import {Organization} from "@/db/schema/02_organization";
+import * as drizzleDb from "@/db";
 
 export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({ parsedInput }): Promise<ServerActionResult<Organization>> => {
     try {
-        if (!checkSlugOrganization(parsedInput.slug)) {
+        const slug = slugify(parsedInput.name);
+        if (!await checkSlugOrganization(slug)) {
             return {
                 success: false,
                 actionError: {
@@ -24,14 +27,29 @@ export const createOrganizationAction = userAction.schema(OrganizationSchema).ac
             };
         }
 
-        const organization = await createOrganization(parsedInput.name, parsedInput.slug);
+        let createdOrganization: Organization;
+
+        try {
+            createdOrganization = await createOrganization(parsedInput.name, slug) as unknown as Organization;
+        } catch (authError: any) {
+            console.error("Auth deletion failed:", authError);
+            return {
+                success: false,
+                actionError: {
+                    message: authError.message || "Authentication service error.",
+                    status: authError.status || 500,
+                    cause: "auth_error",
+                    messageParams: { message: authError.message },
+                },
+            };
+        }
 
         return {
             success: true,
-            value: organization!,
+            value: createdOrganization,
             actionSuccess: {
                 message: "Organization has been successfully created.",
-                messageParams: { organizationId: organization!.id },
+                messageParams: { organizationId: createdOrganization!.id },
             },
         };
     } catch (error) {
@@ -58,7 +76,7 @@ export const updateOrganizationAction = userAction
         try {
             const newUserList = parsedInput.data.users;
 
-            const organization = await db.select().from(organization).where(eq(organization.id, parsedInput.organizationId)).execute();
+            const organization = await db.select().from(drizzleDb.schemas.organization).where(eq(drizzleDb.schemas.organization.id, parsedInput.organizationId)).execute();
 
             if (organization.length === 0) {
                 throw new Error("Organization not found.");
@@ -70,7 +88,7 @@ export const updateOrganizationAction = userAction
 
             if (usersToAdd.length > 0) {
                 await db
-                    .insert(userOrganization)
+                    .insert(drizzleDb.schemas.organization)
                     .values(
                         usersToAdd.map((userId) => ({
                             userId,
@@ -117,44 +135,60 @@ export const updateOrganizationAction = userAction
         }
     });
 
-export const deleteOrganizationAction = userAction.schema(z.string()).action(async ({ parsedInput, ctx }): Promise<ServerActionResult<Organization>> => {
-    try {
-        const uuid = uuidv4();
-        const organization = await db.select().from(organization).where(eq(organization.slug, parsedInput)).execute();
+export const deleteOrganizationAction = userAction.schema(z.string()).action(
+    async ({ parsedInput, ctx }): Promise<ServerActionResult<Organization>> => {
+        try {
+            const org = await db.query.organization.findFirst({
+                where: eq(drizzleDb.schemas.organization.slug, parsedInput),
+            });
 
-        if (organization.length === 0) {
-            throw new Error("Organization not found.");
+            if (!org) {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "Organization not found.",
+                        status: 404,
+                        cause: "not_found",
+                    },
+                };
+            }
+
+            let deletedOrganization: Organization;
+
+            try {
+                deletedOrganization = await deleteOrganization(org.id) as Organization;
+            } catch (authError: any) {
+                console.error("Auth deletion failed:", authError);
+                return {
+                    success: false,
+                    actionError: {
+                        message: authError.message || "Authentication service error.",
+                        status: authError.status || 500,
+                        cause: "auth_error",
+                        messageParams: { message: authError.message },
+                    },
+                };
+            }
+
+            return {
+                success: true,
+                value: deletedOrganization,
+                actionSuccess: {
+                    message: "Organization has been successfully deleted.",
+                    messageParams: { organizationId: deletedOrganization.id },
+                },
+            };
+        } catch (error) {
+            console.error("Unexpected error in deleteOrganizationAction:", error);
+            return {
+                success: false,
+                actionError: {
+                    message: "Failed to delete organization due to a server error.",
+                    status: 500,
+                    cause: "server_error",
+                    messageParams: { message: "Internal server error while deleting the organization" },
+                },
+            };
         }
-
-        const updatedOrganization = await db
-            .update(organization)
-            .set({
-                name: `${organization[0].name}-${uuid}`,
-                slug: `${organization[0].slug}-${uuid}`,
-                deleted: true,
-            })
-            .where(eq(organization.id, organization[0].id))
-            .returning()
-            .execute();
-
-        return {
-            success: true,
-            value: updatedOrganization[0],
-            actionSuccess: {
-                message: "Organization has been successfully deleted.",
-                messageParams: { organizationId: updatedOrganization[0].id },
-            },
-        };
-    } catch (error) {
-        console.error("Error deleting organization:", error);
-        return {
-            success: false,
-            actionError: {
-                message: "Failed to delete organization.",
-                status: 500,
-                cause: error.message ?? "Unknown error",
-                messageParams: { message: "Error deleting the organization" },
-            },
-        };
     }
-});
+);

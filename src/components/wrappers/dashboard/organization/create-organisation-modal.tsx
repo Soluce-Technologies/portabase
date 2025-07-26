@@ -11,6 +11,7 @@ import {createOrganizationAction} from "@/components/wrappers/dashboard/organiza
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {authClient} from "@/lib/auth/auth-client";
+import {toast} from "sonner";
 
 export type createOrganizationModalProps = {
     open: boolean;
@@ -35,15 +36,19 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
 
             const result = await createOrganizationAction(values);
 
-            if (result && result.data) {
-                if (result.data.success && result.data.value) {
-                    onOpenChange(false);
-                    await authClient.organization.setActive({organizationSlug: result.data.value.slug});
-                    onSuccess?.();
-                    router.replace(`/dashboard/home`);
-                    // router.refresh();
-                }
+            if (result?.data?.success && result.data.value) {
+                onOpenChange(false);
+                await authClient.organization.setActive({organizationSlug: result.data.value.slug});
+                onSuccess?.();
+                toast.success(result.data.actionSuccess?.message || "Organization Created.");
+                // router.push("/");
+                router.replace(`/dashboard/home`);
+            } else {
+                // @ts-ignore
+                const errorMsg = result?.data?.actionError?.message || result?.data?.actionError?.messageParams?.message || "Failed to create the organization.";
+                toast.error(errorMsg);
             }
+
         },
     });
 
@@ -77,26 +82,26 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="slug"
-                            defaultValue=""
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Slug</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                const value = e.target.value.replaceAll(" ", "-").toLowerCase();
-                                                field.onChange(value);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+                        {/*<FormField*/}
+                        {/*    control={form.control}*/}
+                        {/*    name="slug"*/}
+                        {/*    defaultValue=""*/}
+                        {/*    render={({field}) => (*/}
+                        {/*        <FormItem>*/}
+                        {/*            <FormLabel>Slug</FormLabel>*/}
+                        {/*            <FormControl>*/}
+                        {/*                <Input*/}
+                        {/*                    {...field}*/}
+                        {/*                    onChange={(e) => {*/}
+                        {/*                        const value = e.target.value.replaceAll(" ", "-").toLowerCase();*/}
+                        {/*                        field.onChange(value);*/}
+                        {/*                    }}*/}
+                        {/*                />*/}
+                        {/*            </FormControl>*/}
+                        {/*            <FormMessage/>*/}
+                        {/*        </FormItem>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
                         <DialogFooter>
                             <div className="flex items-center justify-between w-full">
                                 <Button type="submit">Create</Button>

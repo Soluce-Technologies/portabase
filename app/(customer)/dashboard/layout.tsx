@@ -2,7 +2,7 @@ import React from "react";
 import {redirect} from "next/navigation";
 
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
-import {AppSidebar} from "@/components/wrappers/dashboard/sideBar/app-sidebar";
+import {AppSidebar} from "@/components/wrappers/dashboard/common/sidebar/app-sidebar";
 import {Header} from "@/features/layout/Header";
 import {currentUser} from "@/lib/auth/current-user";
 

@@ -3,8 +3,9 @@ import { relations } from "drizzle-orm";
 import { project } from "./05_project";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import {invitation} from "@/db/schema/04_invitation";
-import {member} from "@/db/schema/03_member";
+import {invitation, OrganizationInvitation} from "@/db/schema/04_invitation";
+import {member, OrganizationMember} from "@/db/schema/03_member";
+import {User} from "@/db/schema/01_user";
 
 export const organization = pgTable("organization", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -28,3 +29,15 @@ export const organizationRelations = relations(organization, ({ many }) => ({
 export const organizationSchema = createSelectSchema(organization);
 export type Organization = z.infer<typeof organizationSchema>;
 
+export type OrganizationWithMembers = Organization & {
+    members: OrganizationMember[];
+};
+
+export type MemberWithUser = OrganizationMember & {
+    user: User;
+};
+
+export type OrganizationWithMembersAndUsers = Organization & {
+    members: MemberWithUser[];
+    invitations: OrganizationInvitation[];
+};

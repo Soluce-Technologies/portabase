@@ -6,7 +6,7 @@ export default async function Index() {
     const user = await currentUser();
     if (user) {
         const currentOrganizationSlug = await getCurrentOrganizationSlug();
-        redirect(`/dashboard/${currentOrganizationSlug}/projects`);
+        redirect(`/dashboard/home`);
     }
     redirect("/login");
     //Do not delete

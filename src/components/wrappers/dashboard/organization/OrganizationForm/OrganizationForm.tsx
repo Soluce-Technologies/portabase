@@ -9,34 +9,35 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { MultiSelect } from "@/components/wrappers/common/multiselect/multi-select";
 import { OrganizationFormSchema, OrganizationFormType } from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
-import { updateOrganizationAction } from "@/components/wrappers/dashboard/organization/organization.action";
-import { toast } from "sonner";
-import {Member, Organization} from "better-auth/plugins";
+import {MemberWithUser, OrganizationWithMembers} from "@/db/schema/02_organization";
 
 export type organizationFormProps = {
-    defaultValues?: Organization;
-    members: Member[];
+    defaultValues?: OrganizationWithMembers;
+    members: MemberWithUser[];
 };
 
 export const OrganizationForm = (props: organizationFormProps) => {
+
     const router = useRouter();
     const isCreate = !Boolean(props.defaultValues);
 
-    const formatUsersList = (members: Member[]) => {
+    const formatUsersList = (members: MemberWithUser[]) => {
+
         return members.map((member) => ({
-            value: member.id,
+            value: member.user.id,
             label: `${member.user.name} | ${member.user.email}`,
         }));
     };
 
-    const formatDefaultUsers = (members: OrganizationFormType["members"]): string[] => {
-        console.log(members);
+    const formatDefaultUsers = (members: MemberWithUser[]): string[] => {
+        console.log("ici",members);
         return members.map((member) => member.userId);
     };
 
     const formattedDefaultValues = {
-        ...props.defaultValues,
-        users: !isCreate ? formatDefaultUsers(props.defaultValues?.members) : [],
+        name: props.defaultValues?.name,
+        slug: props.defaultValues?.slug,
+        users: !isCreate ? formatDefaultUsers(props.defaultValues?.members as MemberWithUser[]) : [],
     };
 
     const form = useZodForm({
@@ -58,6 +59,8 @@ export const OrganizationForm = (props: organizationFormProps) => {
             // }
         },
     });
+
+    console.log(formatUsersList(props.members))
 
     return (
         <Card>
@@ -110,13 +113,13 @@ export const OrganizationForm = (props: organizationFormProps) => {
                         name="users"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Databases</FormLabel>
+                                <FormLabel>Users</FormLabel>
                                 <FormControl>
                                     <MultiSelect
                                         options={formatUsersList(props.members)}
                                         onValueChange={field.onChange}
                                         defaultValue={field.value ?? []}
-                                        placeholder="Select databases"
+                                        placeholder="Select users"
                                         variant="inverted"
                                         animation={2}
                                         // maxCount={100}

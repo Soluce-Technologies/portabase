@@ -23,9 +23,9 @@ export async function AppSidebar() {
         return notFound();
     }
 
-    const organization = await getOrganization({organizationId: member.organizationId});
+    // const organization = await getOrganization({organizationId: member.organizationId});
 
-    console.log("organization", organization);
+    // console.log("organization", organization);
 
 
     return (

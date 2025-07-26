@@ -1,13 +1,14 @@
 import {betterAuth} from "better-auth";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
+import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {env} from "@/env.mjs";
 import {nextCookies} from "better-auth/next-js";
 import {admin as adminPlugin, openAPI, organization} from "better-auth/plugins";
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
-import * as drizzleDb from "@/db";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
+import {OrganizationWithMembers, OrganizationWithMembersAndUsers} from "@/db/schema/02_organization";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -40,9 +41,9 @@ export const auth = betterAuth({
         organization({
             ac,
             roles: {
-                orgOwner,
-                orgAdmin,
-                orgMember,
+                owner: orgOwner,
+                admin: orgAdmin,
+                member: orgMember,
             },
         }),
         adminPlugin({
@@ -98,7 +99,7 @@ export const auth = betterAuth({
                             await db.insert(drizzleDb.schemas.member).values({
                                 userId: user.id,
                                 organizationId: defaultOrg.id,
-                                role: "owner",
+                                role: "orgOwner",
                             });
                         } else {
                             console.warn("Default organization not found. Cannot assign member.");
@@ -277,13 +278,39 @@ export const unlinkAccount = async (provider: string, account: string) => {
 //         return null;
 //     }
 // };
+// export const getOrganization = async ({
+//                                           organizationId,
+//                                           organizationSlug,
+//                                       }: {
+//     organizationId?: string;
+//     organizationSlug?: string;
+// } = {}) => {
+//     const query =
+//         organizationId != null
+//             ? {organizationId}
+//             : organizationSlug != null
+//                 ? {organizationSlug}
+//                 : undefined;
+//
+//     console.log(query);
+//
+//     try {
+//         return await auth.api.getFullOrganization({
+//             headers: await headers(),
+//             ...(query ? {query} : {}),
+//         });
+//     } catch (e) {
+//         console.error(e);
+//         return null;
+//     }
+// };
 export const getOrganization = async ({
                                           organizationId,
                                           organizationSlug,
                                       }: {
     organizationId?: string;
     organizationSlug?: string;
-} = {}) => {
+} = {}): Promise<OrganizationWithMembersAndUsers | null> => {
     const query =
         organizationId != null
             ? { organizationId }
@@ -291,13 +318,13 @@ export const getOrganization = async ({
                 ? { organizationSlug }
                 : undefined;
 
-    console.log(query);
-
     try {
-        return await auth.api.getFullOrganization({
+        const response = await auth.api.getFullOrganization({
             headers: await headers(),
             ...(query ? { query } : {}),
         });
+
+        return response as OrganizationWithMembersAndUsers;
     } catch (e) {
         console.error(e);
         return null;
@@ -328,21 +355,62 @@ export const getLastOrganizationOrFirst = async (userId: string) => {
         return null;
     }
 };
+
 export const createOrganization = async (name: string, slug: string) => {
     try {
-        const organization = await auth.api.createOrganization({
-            headers: await headers(),
+        return await auth.api.createOrganization({
+            headers:  await headers(),
             body: {
                 name,
                 slug,
             },
         });
+    } catch (e: any) {
+        const errorMessage = e?.response?.data?.message || e?.message || "Unknown auth error";
+        const status = e?.response?.status || 500;
 
-        return organization;
-    } catch (e) {
-        console.log("err", e);
+        console.error("Auth API createOrganization error:", {
+            message: errorMessage,
+            status,
+            raw: e,
+        });
+
+        throw {
+            name: "AuthCreateOrganizationError",
+            message: errorMessage,
+            status,
+            cause: e,
+        };
     }
 };
+
+export const deleteOrganization = async (organizationId: string) => {
+    try {
+        return await auth.api.deleteOrganization({
+            body: {
+                organizationId,
+            },
+            headers: await headers(),
+        });
+    } catch (e: any) {
+        const errorMessage = e?.response?.data?.message || e?.message || "Unknown auth error";
+        const status = e?.response?.status || 500;
+
+        console.error("Auth API deleteOrganization error:", {
+            message: errorMessage,
+            status,
+            raw: e,
+        });
+
+        throw {
+            name: "AuthDeleteOrganizationError",
+            message: errorMessage,
+            status,
+            cause: e,
+        };
+    }
+};
+
 
 export const checkSlugOrganization = async (slug: string) => {
     try {
