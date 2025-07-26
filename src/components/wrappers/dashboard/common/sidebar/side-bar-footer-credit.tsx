@@ -10,7 +10,7 @@ export const SideBarFooterCredit = (props: SideBarFooterCreditProps) => {
     return (
         <>
             {state === "expanded" && (
-                <div className="text-center">
+                <div className="text-center mb-2">
                     <h1 className="text-[10px]">Portabase Community Edition v{env.NEXT_PUBLIC_PROJECT_VERSION}</h1>
                 </div>
             )}

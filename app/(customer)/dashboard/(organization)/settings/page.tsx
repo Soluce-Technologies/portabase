@@ -7,6 +7,9 @@ import {
     DeleteOrganizationButton
 } from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
 import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/EditButtonSettings/EditButtonSettings";
+import {
+    SettingsOrganizationMembersTable
+} from "@/components/wrappers/dashboard/settings/settings-organization-members-table";
 
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
@@ -17,11 +20,14 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
         notFound();
     }
 
+
+    console.log(organization);
+
     return (
         <Page>
             <PageHeader>
                 <PageTitle className="flex items-center">
-                    Settings
+                    Organization settings
                     {organization.slug != "default" ?
                         <EditButtonSettings/>
                         : null}
@@ -32,11 +38,11 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                         : null}
                 </PageActions>
             </PageHeader>
-            <PageDescription>
-                Manage your organization settings.
-            </PageDescription>
+            {/*<PageDescription>*/}
+            {/*    Manage your organization settings.*/}
+            {/*</PageDescription>*/}
             <PageContent>
-            {/*    TODO add the list of organisation members (add, remove, edit) */}
+                <SettingsOrganizationMembersTable organization={organization} />
             </PageContent>
         </Page>
     )

@@ -13,7 +13,7 @@ export const AdminUsersTable = (props: AdminUsersTableProps) => {
             <div className="flex gap-4 h-fit justify-between">
                 <h1>List of Portabase's users</h1>
             </div>
-            <div className="mt-5">
+            <div className="mt-5 h-full">
                 <DataTable columns={usersColumnsAdmin} data={users} />
             </div>
         </div>

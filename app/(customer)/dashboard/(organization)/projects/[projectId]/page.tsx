@@ -69,7 +69,12 @@ export default async function RoutePage(props: PageParams<{
                         numberOfColumns={1}
                         extendedProps={proj}
                     />
-                ) : null}
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-20">
+                        <p className="text-lg font-medium">No databases found</p>
+                        <p className="text-sm mt-2">You haven’t added any databases to this project yet.</p>
+                    </div>
+                )}
             </PageContent>
         </Page>
     );

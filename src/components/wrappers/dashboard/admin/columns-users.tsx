@@ -19,6 +19,8 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
         header: "Role",
         cell: ({row}) => {
             const [role, setRole] = useState<string>(row.getValue("role"));
+            const { data: session } = useSession();
+            const isCurrentUser = session?.user.email === row.original.email;
 
             const updateMutation = useMutation({
                 mutationFn: () => updateUserAction({id: row.original.id, data: {role: role}}),
@@ -37,7 +39,11 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
             };
 
             return (
-                <Badge className="cursor-pointer" onClick={() => handleUpdateRole()} variant="outline">
+                <Badge
+                    className={isCurrentUser ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+                    onClick={isCurrentUser ? undefined : () => handleUpdateRole()}
+                    variant="outline"
+                >
                     {role}
                 </Badge>
             );
@@ -73,23 +79,18 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
                 },
             });
 
-
-
             return (
                 <div className="flex items-center gap-2">
-                    {!session || session?.user.email === row.original.email ? null :
                         <ButtonWithLoading
+                            disabled={!session || session?.user.email === row.original.email}
                             variant="outline"
                             text=""
                             icon={<Trash2 color="red" size={15}/>}
                             onClick={async () => {
                                 await mutation.mutateAsync();
                             }}
-                            size="icon"
+                            size="sm"
                         />
-
-                    }
-
                 </div>
             );
         },

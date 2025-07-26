@@ -35,7 +35,7 @@ export const DatabaseCard = (props: databaseCardProps) => {
 
         <Card className="flex flex-row justify-between">
             <div className="flex items-center space-x-4 px-4">
-                <Image src="/PostgreSQL.png" alt="Database type Icon" width={60} height={60} className="object-cover ml-4" />
+                <Image src="/images/postgresql.png" alt="Database type Icon" width={60} height={60} className="object-cover ml-4" />
 
                 <div className="justify-between">
                     <div className="font-medium">Name: {database.name}</div>

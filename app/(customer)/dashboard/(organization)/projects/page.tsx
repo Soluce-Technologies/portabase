@@ -41,7 +41,7 @@ export default async function RoutePage(props: PageParams<{ }>) {
                 )}
             </PageHeader>
 
-            <PageContent className="mt-10">
+            <PageContent>
                 {projects.length > 0 ? (
                     <CardsWithPagination organizationSlug={organization.slug} data={projects} cardItem={ProjectCard}
                                          cardsPerPage={4} numberOfColumns={1}/>
