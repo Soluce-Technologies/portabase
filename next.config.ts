@@ -1,9 +1,9 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 import {PORTABASE_DEFAULT_SETTINGS} from "./portabase.config";
 
 
 function buildCSPHeader(): string {
-    const { CSP } = PORTABASE_DEFAULT_SETTINGS.SECURITY;
+    const {CSP} = PORTABASE_DEFAULT_SETTINGS.SECURITY;
 
     const directives = [
         `default-src ${CSP.DEFAULT_SRC.join(" ")}`,
@@ -12,6 +12,7 @@ function buildCSPHeader(): string {
         `img-src ${CSP.IMG_SRC.join(" ")}`,
         `font-src ${CSP.FONT_SRC.join(" ")}`,
         `object-src ${CSP.OBJECT_SRC.join(" ")}`,
+        `connect-src ${CSP.CONNECT_SRC.join(" ")}`,
         `base-uri ${CSP.BASE_URI.join(" ")}`,
         `form-action ${CSP.FORM_ACTION.join(" ")}`,
         `frame-ancestors ${CSP.FRAME_ANCESTORS.join(" ")}`,
@@ -35,7 +36,6 @@ function buildPermissionsPolicy(): string {
 }
 
 
-
 const nextConfig: NextConfig = {
     output: "standalone",
     typescript: {
@@ -50,40 +50,40 @@ const nextConfig: NextConfig = {
     experimental: {
         nodeMiddleware: true,
     },
-    // async headers() {
-    //     return [
-    //         {
-    //             source: "/(.*)",
-    //             headers: [
-    //                 {
-    //                     key: "Content-Security-Policy",
-    //                     value: buildCSPHeader(),
-    //                 },
-    //                 {
-    //                     key: "Permissions-Policy",
-    //                     value: buildPermissionsPolicy(),
-    //                 },
-    //                 {
-    //                     key: 'X-Content-Type-Options',
-    //                     value: 'nosniff',
-    //                 },
-    //                 {
-    //                     key: 'X-Frame-Options',
-    //                     value: 'DENY',
-    //                 },
-    //                 {
-    //                     key: 'Referrer-Policy',
-    //                     value: 'strict-origin-when-cross-origin',
-    //                 },
-    //                 {
-    //                     key: 'Strict-Transport-Security',
-    //                     value: 'max-age=63072000; includeSubDomains; preload',
-    //                 }
-    //                 // ...other security headers
-    //             ],
-    //         },
-    //     ];
-    // },
+    async headers() {
+        return [
+            {
+                source: "/(.*)",
+                headers: [
+                    {
+                        key: "Content-Security-Policy",
+                        value: buildCSPHeader(),
+                    },
+                    {
+                        key: "Permissions-Policy",
+                        value: buildPermissionsPolicy(),
+                    },
+                    {
+                        key: 'X-Content-Type-Options',
+                        value: 'nosniff',
+                    },
+                    {
+                        key: 'X-Frame-Options',
+                        value: 'DENY',
+                    },
+                    {
+                        key: 'Referrer-Policy',
+                        value: 'strict-origin-when-cross-origin',
+                    },
+                    {
+                        key: 'Strict-Transport-Security',
+                        value: 'max-age=63072000; includeSubDomains; preload',
+                    }
+                    // ...other security headers
+                ],
+            },
+        ];
+    },
 };
 
 export default nextConfig;
