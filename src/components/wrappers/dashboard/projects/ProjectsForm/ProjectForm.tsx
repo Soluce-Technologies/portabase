@@ -105,27 +105,6 @@ export const ProjectForm = (props: projectFormProps) => {
                     />
                     <FormField
                         control={form.control}
-                        name="slug"
-                        defaultValue=""
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Slug</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="project-1"
-                                        {...field}
-                                        onChange={(e) => {
-                                            const value = e.target.value.replaceAll(" ", "-").toLowerCase();
-                                            field.onChange(value);
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
                         name="databases"
                         render={({ field }) => (
                             <FormItem>

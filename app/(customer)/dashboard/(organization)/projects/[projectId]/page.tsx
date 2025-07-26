@@ -41,6 +41,7 @@ export default async function RoutePage(props: PageParams<{
 
     if (!proj) notFound();
 
+
     return (
         <Page>
             <div className="justify-between gap-2 sm:flex">
@@ -62,6 +63,7 @@ export default async function RoutePage(props: PageParams<{
                     <CardsWithPagination
                         data={proj.databases}
                         organizationSlug={organization.slug}
+                        // @ts-ignore
                         cardItem={ProjectDatabaseCard}
                         cardsPerPage={4}
                         numberOfColumns={1}

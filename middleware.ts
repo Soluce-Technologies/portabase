@@ -3,9 +3,11 @@ import { loggingMiddleware } from "@/middleware/loggingMiddleware";
 import { errorHandler } from "@/middleware/errorHandler";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
+import { signOut } from "@/lib/auth/auth-client";
 
 export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
+    const redirectUrl = encodeURIComponent(request.nextUrl.pathname)
 
     if (url.pathname.startsWith("/dashboard")) {
         const session = await auth.api.getSession({
@@ -13,7 +15,17 @@ export async function middleware(request: NextRequest) {
         });
 
         if (!session) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL(`/login?redirect=${redirectUrl}`, request.url));
+        }
+
+        if (session.user.banned) {
+            signOut();
+            return NextResponse.redirect(new URL("/login?error=banned", request.url));
+        }
+
+        if (session.user.role === "pending") {
+            signOut();
+            return NextResponse.redirect(new URL(`/login?error=pending?redirect=${redirectUrl}`, request.url));
         }
 
         return NextResponse.next();

@@ -113,25 +113,41 @@ export const auth = betterAuth({
                 before: async (session, context) => {
                     const userId = session.userId;
 
-                    const memberships = await db.query.member.findMany({
+
+                    let memberships = await db.query.member.findMany({
                         where: eq(drizzleDb.schemas.member.userId, userId),
                     });
 
                     if (!memberships.length) {
-                        // Fail the login attempt explicitly
-                        throw new Error("User is not part of any organization.");
-                    }
+                        const defaultOrgSlug = "default";
+                        const defaultOrg = await db.query.organization.findFirst({
+                            where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
+                        });
 
-                    const firstOrgId = memberships[0].organizationId;
+                        if (!defaultOrg) {
+                            throw new Error("No organization found. Cannot assign member.");
+                        }
+
+                        await db.insert(drizzleDb.schemas.member).values({
+                            userId,
+                            organizationId: defaultOrg.id,
+                            role: "member",
+                        });
+
+                        memberships = await db.query.member.findMany({
+                            where: eq(drizzleDb.schemas.member.userId, userId),
+                        });
+                    }
 
                     return {
                         data: {
-                            activeOrganizationId: firstOrgId,
+                            activeOrganizationId: memberships[0].organizationId,
                         },
                     };
                 },
             },
         },
+
     },
     session: {
         additionalFields: {

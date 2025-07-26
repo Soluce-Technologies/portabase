@@ -14,13 +14,13 @@ export const AgentCard = (props: agentCardProps) => {
     const { data: agent } = props;
 
     return (
-        <Link href={`/dashboard/agents/${agent.id}`}>
+        <Link href={`/dashboard/agents/${agent.id}`} className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md">
             <Card className="flex flex-row justify-between">
-                <div className="">
-                    <CardHeader>{agent.name}</CardHeader>
-                    <CardContent>Last contact : {formatDateLastContact(agent.lastContact)}</CardContent>
+                <div>
+                    <CardHeader className="text-2xl font-bold">{agent.name}</CardHeader>
+                    <CardContent>Last contact: {formatDateLastContact(agent.lastContact)}</CardContent>
                 </div>
-                <div className="mt-3 mr-3">
+                <div className="flex items-center px-4">
                     <ConnectionCircle date={agent.lastContact} />
                 </div>
             </Card>

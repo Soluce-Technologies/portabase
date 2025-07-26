@@ -1,16 +1,24 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { AgentSchema, AgentType } from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.schema";
-import { toast } from "sonner";
-import { createAgentAction, updateAgentAction } from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.action";
+import {Card, CardContent} from "@/components/ui/card";
+import {
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    useZodForm
+} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Form} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
+import {useMutation} from "@tanstack/react-query";
+import {TooltipProvider} from "@/components/ui/tooltip";
+import {AgentSchema, AgentType} from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.schema";
+import {toast} from "sonner";
+import {createAgentAction, updateAgentAction} from "@/components/wrappers/dashboard/agent/AgentForm/agent-form.action";
 
 export type agentFormProps = {
     defaultValues?: AgentType;
@@ -29,14 +37,13 @@ export const AgentForm = (props: agentFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: AgentType) => {
-            console.log("values", values);
 
             const createAgent = isCreate
                 ? await createAgentAction(values)
                 : await updateAgentAction({
-                      id: props.agentId ?? "-",
-                      data: values,
-                  });
+                    id: props.agentId ?? "-",
+                    data: values,
+                });
 
             const data = createAgent?.data?.data;
             if (createAgent?.serverError || !data) {
@@ -44,7 +51,7 @@ export const AgentForm = (props: agentFormProps) => {
                 toast.error(createAgent?.serverError);
                 return;
             }
-            toast.success(`Success`);
+            toast.success(`Success ${isCreate ? "creating" : "updating"} agent`);
             router.push(`/dashboard/agents/${data.id}`);
             router.refresh();
         },
@@ -65,37 +72,14 @@ export const AgentForm = (props: agentFormProps) => {
                             control={form.control}
                             name="name"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Agent 1" {...field} />
                                     </FormControl>
                                     <FormDescription>Your agent project name</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            defaultValue=""
-                            name="slug"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Slug</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            //value={field.value ?? ""}
-                                            placeholder="agent-1"
-                                            {...field}
-                                            onChange={(e) => {
-                                                const value = e.target.value.replaceAll(" ", "-").toLowerCase();
-                                                field.onChange(value);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>The slug is used in the url of the agent</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -103,14 +87,15 @@ export const AgentForm = (props: agentFormProps) => {
                             control={form.control}
                             defaultValue=""
                             name="description"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="This agent is for the client exemple.com" {...field} value={field.value ?? ""} />
+                                        <Input placeholder="This agent is for the client exemple.com" {...field}
+                                               value={field.value ?? ""}/>
                                     </FormControl>
                                     <FormDescription>Enter your project agent description</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />

@@ -48,7 +48,7 @@ export function CardsWithPagination<T>(props: CardsWithPaginationProps<T>) {
                 ))}
             </div>
             <PaginationNavigation
-                className="justify-end"
+                className="justify-end mt-4"
                 totalPages={totalPages}
                 currentPage={currentPage}
                 goToPage={goToPage}

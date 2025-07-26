@@ -9,6 +9,7 @@ import { eq, inArray } from "drizzle-orm";
 import {Project} from "@/db/schema/05_project";
 import * as drizzleDb from "@/db";
 import {Database} from "@/db/schema/06_database";
+import {slugify} from "@/utils/slugify";
 
 export const createProjectAction = userAction
     .schema(
@@ -19,11 +20,12 @@ export const createProjectAction = userAction
     )
     .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
         try {
+            const slug = slugify(parsedInput.data.name);
             const [createdProject] = await db
                 .insert(drizzleDb.schemas.project)
                 .values({
                     name: parsedInput.data.name,
-                    slug: parsedInput.data.slug,
+                    slug: slug,
                     organizationId: parsedInput.organizationId,
                 })
                 .returning();
@@ -87,12 +89,13 @@ export const updateProjectAction = userAction
             if (databasesToRemove.length > 0) {
                 await db.update(drizzleDb.schemas.database).set({ projectId: null }).where(inArray(drizzleDb.schemas.database.id, databasesToRemove));
             }
+            const slug = slugify(parsedInput.data.name);
 
             const [updatedProject] = await db
                 .update(drizzleDb.schemas.project)
                 .set({
                     name: parsedInput.data.name,
-                    slug: parsedInput.data.slug,
+                    slug: slug,
                 })
                 .where(eq(drizzleDb.schemas.project.id, parsedInput.projectId))
                 .returning();

@@ -24,8 +24,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
             databases: true
         }
     })
-    //
-    console.log(agent)
+
 
     if (!agent) {
         notFound()
@@ -33,6 +32,13 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
     //
     // const databaseId = 'db-123';
     //
+
+    console.log("agent",agent)
+
+
+
+
+
     // const totalBackupsResult = await db
     //     .select({ count: drizzleDb.schemas.backup.id })
     //     .from(drizzleDb.schemas.backup)
@@ -67,11 +73,6 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                           href={`/dashboard/agents/${agent.id}/edit`}>
                         <GearIcon className="w-7 h-7"/>
                     </Link>
-                    {/*<AgentModalKey agent={agent}>*/}
-                    {/*    <Button variant="outline">*/}
-                    {/*        <KeyRound/>*/}
-                    {/*    </Button>*/}
-                    {/*</AgentModalKey>*/}
                 </PageTitle>
 
             </div>
@@ -80,9 +81,9 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-8 mb-6">
                     <Card className="w-full sm:w-auto flex-1">
                         <CardHeader className="font-bold text-xl">
-                            Backups
+                            Databases
                         </CardHeader>
-                        <CardContent></CardContent>
+                        <CardContent>{agent.databases.length}</CardContent>
                     </Card>
                     <Card className="w-full sm:w-auto flex-1">
                         <CardHeader className="font-bold text-xl">
@@ -102,7 +103,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     </Card>
 
                 </div>
-                <Card className="w-full sm:w-auto flex-1">
+                <Card className="w-full sm:w-auto flex-1 mb-4">
                     <CardHeader className="font-bold text-xl">
                         Edge Key
                     </CardHeader>
@@ -110,7 +111,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         <AgentCardKey agent={agent}/>
                     </CardContent>
                 </Card>
-                <CardsWithPagination data={agent.databases} cardItem={DatabaseCard}/>
+                <CardsWithPagination cardsPerPage={2} data={agent.databases} cardItem={DatabaseCard}/>
             </PageContent>
         </Page>
     )

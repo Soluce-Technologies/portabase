@@ -13,10 +13,10 @@ export const ProjectCard = (props: projectCardProps) => {
     const { data: project, organizationSlug } = props;
 
     return (
-        <Link href={`/dashboard/projects/${project.id}`}>
+        <Link href={`/dashboard/projects/${project.id}`} className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md">
             <Card className="flex flex-row justify-between">
                 <div className="">
-                    <CardHeader>{project.name}</CardHeader>
+                    <CardHeader className="text-2xl font-bold">{project.name}</CardHeader>
                     <CardContent>{project.databases.length} databases</CardContent>
                 </div>
             </Card>
