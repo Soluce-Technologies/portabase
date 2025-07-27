@@ -32,13 +32,13 @@ export default function Layout({children}: { children: React.ReactNode }) {
         <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 ">
             <div className="mx-auto w-full max-w-md">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md flex items-center justify-center space-x-2">
-                    <Image
+                    <img
                         className="p-12 text-black dark:text-white"
                         src={imageTheme}
-                        loading="eager"
+                        // loading="eager"
                         alt="Logo"
-                        width={1024}
-                        height={1024}
+                        // width={1024}
+                        // height={1024}
                     />
                     <span
                         className="text-sm text-muted-foreground -ml-12 -mb-12">

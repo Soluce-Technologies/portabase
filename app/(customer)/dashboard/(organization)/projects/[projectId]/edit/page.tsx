@@ -1,7 +1,7 @@
 import {notFound} from "next/navigation";
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {ProjectForm} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm";
+import {ProjectForm} from "@/components/wrappers/dashboard/projects/project-form/project-form";
 import * as drizzleDb from "@/db";
 
 import {db} from "@/db";

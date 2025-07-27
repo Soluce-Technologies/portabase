@@ -3,9 +3,9 @@ import { Page, PageActions, PageContent, PageDescription, PageTitle } from "@/fe
 import { buttonVariants } from "@/components/ui/button";
 import { GearIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { ButtonDeleteProject } from "@/components/wrappers/dashboard/projects/ButtonDeleteProject/ButtonDeleteProject";
+import { ButtonDeleteProject } from "@/components/wrappers/dashboard/projects/button-delete-project/button-delete-project";
 import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
-import { ProjectDatabaseCard } from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
+import { ProjectDatabaseCard } from "@/components/wrappers/dashboard/projects/project-card/project-database-card";
 import { notFound } from "next/navigation";
 
 import { db } from "@/db";

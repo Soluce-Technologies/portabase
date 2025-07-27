@@ -79,6 +79,7 @@ export const auth = betterAuth({
                     const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
                     const role = userCount === 0 ? "superadmin" : "pending";
 
+
                     return {
                         data: {
                             ...user,
@@ -87,24 +88,23 @@ export const auth = betterAuth({
                     };
                 },
                 async after(user, context) {
-                    const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
+                    // const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
 
-                    if (userCount === 1) {
-                        const defaultOrgSlug = "default"; // change this if your default org has a different slug
-                        const defaultOrg = await db.query.organization.findFirst({
-                            where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
+                    const defaultOrgSlug = "default"; // change this if your default org has a different slug
+                    const defaultOrg = await db.query.organization.findFirst({
+                        where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
+                    });
+
+                    if (defaultOrg) {
+                        await db.insert(drizzleDb.schemas.member).values({
+                            userId: user.id,
+                            organizationId: defaultOrg.id,
+                            role: "owner",
                         });
-
-                        if (defaultOrg) {
-                            await db.insert(drizzleDb.schemas.member).values({
-                                userId: user.id,
-                                organizationId: defaultOrg.id,
-                                role: "orgOwner",
-                            });
-                        } else {
-                            console.warn("Default organization not found. Cannot assign member.");
-                        }
+                    } else {
+                        console.warn("Default organization not found. Cannot assign member.");
                     }
+
                 },
             },
         },
@@ -118,26 +118,26 @@ export const auth = betterAuth({
                         where: eq(drizzleDb.schemas.member.userId, userId),
                     });
 
-                    if (!memberships.length) {
-                        const defaultOrgSlug = "default";
-                        const defaultOrg = await db.query.organization.findFirst({
-                            where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
-                        });
-
-                        if (!defaultOrg) {
-                            throw new Error("No organization found. Cannot assign member.");
-                        }
-
-                        await db.insert(drizzleDb.schemas.member).values({
-                            userId,
-                            organizationId: defaultOrg.id,
-                            role: "member",
-                        });
-
-                        memberships = await db.query.member.findMany({
-                            where: eq(drizzleDb.schemas.member.userId, userId),
-                        });
-                    }
+                    // if (!memberships.length) {
+                    //     const defaultOrgSlug = "default";
+                    //     const defaultOrg = await db.query.organization.findFirst({
+                    //         where: eq(drizzleDb.schemas.organization.slug, defaultOrgSlug),
+                    //     });
+                    //
+                    //     if (!defaultOrg) {
+                    //         throw new Error("No organization found. Cannot assign member.");
+                    //     }
+                    //
+                    //     await db.insert(drizzleDb.schemas.member).values({
+                    //         userId,
+                    //         organizationId: defaultOrg.id,
+                    //         role: "member",
+                    //     });
+                    //
+                    //     memberships = await db.query.member.findMany({
+                    //         where: eq(drizzleDb.schemas.member.userId, userId),
+                    //     });
+                    // }
 
                     return {
                         data: {

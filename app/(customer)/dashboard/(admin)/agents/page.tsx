@@ -1,15 +1,22 @@
 import { PageParams } from "@/types/next";
-import { AgentCard } from "@/components/wrappers/dashboard/agent/AgentCard/AgentCard";
+import { AgentCard } from "@/components/wrappers/dashboard/agent/agent-card/agent-card";
 import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
+import * as drizzleDb from "@/db";
+
+import {and, eq, not} from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 export default async function RoutePage(props: PageParams<{}>) {
-    const agents = await db.query.agent.findMany();
+
+    const agents = await db.query.agent.findMany({
+        where: not(eq(drizzleDb.schemas.agent.isArchived, true))
+    });
+
 
     if (!agents) {
         notFound();

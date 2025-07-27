@@ -1,17 +1,21 @@
 import Link from "next/link";
 import {GearIcon} from "@radix-ui/react-icons";
 import {PageParams} from "@/types/next";
-import {Page, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
+import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {formatDateLastContact} from "@/utils/date-formatting";
 import {buttonVariants} from "@/components/ui/button";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
-import {DatabaseCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectDatabaseCard";
-import {AgentCardKey} from "@/components/wrappers/dashboard/agent/AgentCardKey/AgentCardKey";
+import {DatabaseCard} from "@/components/wrappers/dashboard/projects/project-card/project-database-card";
+import {AgentCardKey} from "@/components/wrappers/dashboard/agent/agent-card-key/agent-card-key";
 import { db } from "@/db";
 import * as drizzleDb from "@/db";
 import {and, eq} from "drizzle-orm";
 import {notFound} from "next/navigation";
+import {
+    ButtonDeleteProject
+} from "@/components/wrappers/dashboard/projects/button-delete-project/button-delete-project";
+import {ButtonDeleteAgent} from "@/components/wrappers/dashboard/agent/button-delete-agent/button-delete-agent";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
@@ -24,6 +28,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
             databases: true
         }
     })
+
 
 
     if (!agent) {
@@ -74,7 +79,9 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         <GearIcon className="w-7 h-7"/>
                     </Link>
                 </PageTitle>
-
+                <PageActions className="justify-between">
+                    <ButtonDeleteAgent agentId={agentId} text={"Delete Agent"} />
+                </PageActions>
             </div>
             <PageDescription className="mt-5 sm:mt-0">{agent.description}</PageDescription>
             <PageContent className="flex flex-col w-full h-full">

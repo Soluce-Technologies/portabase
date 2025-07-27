@@ -4,14 +4,14 @@ import { userAction } from "@/safe-actions";
 import { OrganizationSchema } from "@/components/wrappers/dashboard/organization/organization.schema";
 import { ServerActionResult } from "@/types/action-type";
 import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { OrganizationFormSchema } from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
+import { OrganizationFormSchema } from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
 import { db } from "@/db";
-import { eq } from "drizzle-orm";
-import {checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
+import {and, eq, inArray} from "drizzle-orm";
+import {auth, checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
 import {slugify} from "@/utils/slugify";
 import {Organization} from "@/db/schema/02_organization";
 import * as drizzleDb from "@/db";
+import {headers} from "next/headers";
 
 export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({ parsedInput }): Promise<ServerActionResult<Organization>> => {
     try {
@@ -72,53 +72,117 @@ export const updateOrganizationAction = userAction
             organizationId: z.string(),
         })
     )
-    .action(async ({ parsedInput }): Promise<ServerActionResult<Organization>> => {
+    .action(async ({ parsedInput, ctx }): Promise<ServerActionResult<Organization>> => {
         try {
             const newUserList = parsedInput.data.users;
+            console.log(parsedInput);
+            const organization = await db.query.organization.findFirst({
+                where: eq(drizzleDb.schemas.organization.id, parsedInput.organizationId),
+                with: {
+                    members: true,
+                }
+            });
 
-            const organization = await db.select().from(drizzleDb.schemas.organization).where(eq(drizzleDb.schemas.organization.id, parsedInput.organizationId)).execute();
 
-            if (organization.length === 0) {
-                throw new Error("Organization not found.");
+            if (!organization) {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "Organization not found.",
+                        status: 404,
+                        cause: "not_found",
+                    },
+                };
             }
 
-            const existingItemIds = organization[0].users.map((user) => user.userId);
+            const existingItemIds = organization.members
+                .filter((member) => member.userId !== ctx.user.id)
+                .map((member) => member.userId);
             const usersToAdd = newUserList.filter((id) => !existingItemIds.includes(id));
             const usersToRemove = existingItemIds.filter((id) => !newUserList.includes(id));
 
             if (usersToAdd.length > 0) {
-                await db
-                    .insert(drizzleDb.schemas.organization)
-                    .values(
-                        usersToAdd.map((userId) => ({
-                            userId,
-                            organizationId: organization[0].id,
+                for (const userToAdd of usersToAdd) {
+                    await auth.api.addMember({
+                        body: {
+                            userId: userToAdd,
                             role: "member",
-                        }))
-                    )
-                    .execute();
+                            organizationId: organization.id,
+                        },
+
+                    });
+                }
+
+                //
+                // await db
+                //     .insert(drizzleDb.schemas.member)
+                //     .values(
+                //         usersToAdd.map((userId) => ({
+                //             userId,
+                //             organizationId: organization.id,
+                //             role: "member",
+                //         }))
+                //     )
+                //     .execute();
             }
 
             if (usersToRemove.length > 0) {
-                await db.delete().from(userOrganization).where(inArray(userOrganization.userId, usersToRemove)).execute();
+                await db.delete(drizzleDb.schemas.member).where(inArray(drizzleDb.schemas.member.userId, usersToRemove)).execute();
+                // TODO : Do not delete, go permission error with better auth
+                // for (const userToRemove of usersToRemove) {
+                //
+                //     const memberToRemove = await db.query.member.findFirst({
+                //         where: and(eq(drizzleDb.schemas.member.userId, userToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id)),
+                //         with: {
+                //             user: true
+                //         }
+                //     })
+                //     console.log(memberToRemove)
+                //
+                //     if (memberToRemove) {
+                //         console.log("ici")
+                //         await auth.api.removeMember({
+                //             body: {
+                //                 memberIdOrEmail: memberToRemove.user.email,
+                //                 organizationId: organization.id,
+                //             },
+                //             headers: await headers()
+                //         });
+                //     }
+                //
+                // }
+
+
             }
 
+            // const updatedOrganization = await auth.api.updateOrganization({
+            //     body: {
+            //         data: {
+            //             name: parsedInput.data.name,
+            //             slug: parsedInput.data.slug,
+            //         },
+            //         organizationId: organization.id,
+            //     },
+            //     headers: await headers(),
+            // });
+
+
             const updatedOrganization = await db
-                .update(organization)
+                .update(drizzleDb.schemas.organization)
                 .set({
                     name: parsedInput.data.name,
                     slug: parsedInput.data.slug,
                 })
-                .where(eq(organization.id, parsedInput.organizationId))
+                .where(eq(drizzleDb.schemas.organization.id, parsedInput.organizationId))
                 .returning()
                 .execute();
 
             return {
                 success: true,
-                value: updatedOrganization[0],
+                value: updatedOrganization as unknown as Organization,
                 actionSuccess: {
                     message: "Organization has been successfully updated.",
-                    messageParams: { organizationId: updatedOrganization[0].id },
+                    messageParams: { organizationId: organization.id},
                 },
             };
         } catch (error) {
@@ -128,7 +192,7 @@ export const updateOrganizationAction = userAction
                 actionError: {
                     message: "Failed to update organization.",
                     status: 500,
-                    cause: error.message ?? "Unknown error",
+                    cause: "server_error",
                     messageParams: { message: "Error updating the organization" },
                 },
             };

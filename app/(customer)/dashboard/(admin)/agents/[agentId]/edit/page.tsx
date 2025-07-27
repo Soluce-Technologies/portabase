@@ -1,6 +1,6 @@
 import { PageParams } from "@/types/next";
 import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
-import { AgentForm } from "@/components/wrappers/dashboard/agent/AgentForm/AgentForm";
+import { AgentForm } from "@/components/wrappers/dashboard/agent/agent-form/agent-form";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 

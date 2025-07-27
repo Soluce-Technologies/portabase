@@ -18,9 +18,9 @@ import {createRestorationAction, deleteBackupAction} from "@/features/dashboard/
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {StatusBadge} from "@/components/wrappers/common/status-badge";
-import {TooltipCustom} from "@/components/wrappers/common/tooltipCustom/TooltipCustom";
 import {Backup} from "@/db/schema/06_database";
 import {formatFrenchDate} from "@/utils/date-formatting";
+import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
 
 
 export function backupColumns(isAlreadyRestore: boolean): ColumnDef<Backup>[] {

@@ -1,6 +1,6 @@
 import { createAccessControl } from "better-auth/plugins/access";
 import { defaultStatements, adminAc } from "better-auth/plugins/admin/access";
-import { defaultStatements as orgDefaultStatements, adminAc as orgAdminAc, ownerAc as orgOwnerAc } from "better-auth/plugins/organization/access";
+import { defaultStatements as orgDefaultStatements, adminAc as orgAdminAc, ownerAc as orgOwnerAc, memberAc as orgMemberAc } from "better-auth/plugins/organization/access";
 
 const statement = {
     ...defaultStatements,
@@ -19,6 +19,8 @@ const superadmin = ac.newRole({
     ...adminAc.statements,
     ...orgAdminAc.statements,
     ...orgOwnerAc.statements,
+    ...orgMemberAc.statements
+
 });
 
 const admin = ac.newRole({
@@ -56,6 +58,7 @@ const orgOwner = ac.newRole({
     project: ["create", "update", "delete"],
     ...orgAdminAc.statements,
     ...orgOwnerAc.statements,
+    ...orgMemberAc.statements
 });
 
 export { ac, admin, superadmin, user, pending, orgAdmin, orgMember, orgOwner };

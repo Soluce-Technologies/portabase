@@ -5,7 +5,7 @@ import {MemberWithUser} from "@/db/schema/02_organization";
 import {useState} from "react";
 import {useSession} from "@/lib/auth/auth-client";
 import {useMutation} from "@tanstack/react-query";
-import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
+import {updateUserAction} from "@/components/wrappers/dashboard/profile/user-form/user-form.action";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
 

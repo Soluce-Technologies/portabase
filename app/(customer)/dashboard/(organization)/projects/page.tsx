@@ -4,7 +4,7 @@ import {PageParams} from "@/types/next";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {Button} from "@/components/ui/button";
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {ProjectCard} from "@/components/wrappers/dashboard/projects/ProjectCard/ProjectCard";
+import {ProjectCard} from "@/components/wrappers/dashboard/projects/project-card/project-card";
 import {db} from "@/db";
 import {notFound} from "next/navigation";
 import {getOrganization} from "@/lib/auth/auth";

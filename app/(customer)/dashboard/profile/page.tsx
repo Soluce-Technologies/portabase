@@ -1,10 +1,10 @@
 import {PageParams} from "@/types/next";
 import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {notFound} from "next/navigation";
-import {UserForm} from "@/components/wrappers/dashboard/profile/UserForm/UserForm";
+import {UserForm} from "@/components/wrappers/dashboard/profile/user-form/user-form";
 import {Badge} from "@/components/ui/badge";
-import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/ButtonDeleteAccount";
-import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/Avatar/AvatarWithUpload";
+import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/button-delete-account/button-delete-account";
+import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/avatar/avatar-with-upload";
 import {currentUser} from "@/lib/auth/current-user";
 import {getAccounts, getSessions} from "@/lib/auth/auth";
 //import { getAccounts, getSessions } from "@/lib/auth/auth";

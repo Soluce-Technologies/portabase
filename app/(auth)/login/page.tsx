@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from "react";
 import {useSearchParams} from "next/navigation";
 
-import {LoginForm} from "@/components/wrappers/auth/login/loginForm/LoginForm";
+import {LoginForm} from "@/components/wrappers/auth/login/login-form/login-form";
 import {toast} from "sonner";
 
 export default function SignInPage(props: {

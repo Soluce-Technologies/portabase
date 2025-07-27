@@ -1,8 +1,8 @@
-import { createAuthClient } from "better-auth/react";
+import {createAuthClient} from "better-auth/react";
 
-import { adminClient, organizationClient } from "better-auth/client/plugins";
-import { env } from "@/env.mjs";
-import { ac, user, admin as adminRole, pending, superadmin, orgAdmin, orgMember, orgOwner } from "./permissions";
+import {adminClient, organizationClient} from "better-auth/client/plugins";
+import {env} from "@/env.mjs";
+import {ac, user, admin as adminRole, pending, superadmin, orgAdmin, orgMember, orgOwner} from "./permissions";
 
 export const authClient = createAuthClient({
     baseURL: env.NEXT_PUBLIC_PROJECT_URL,
@@ -10,15 +10,15 @@ export const authClient = createAuthClient({
         organizationClient({
             ac,
             roles: {
-                orgOwner,
-                orgAdmin,
-                orgMember,
+                owner: orgOwner,
+                admin: orgAdmin,
+                member: orgMember,
             },
         }),
         adminClient({
             ac,
             roles: {
-                adminRole,
+                admin: adminRole,
                 user,
                 pending,
                 superadmin,
@@ -27,4 +27,4 @@ export const authClient = createAuthClient({
     ],
 });
 
-export const { signIn, signOut, signUp, useSession, listAccounts, admin } = authClient;
+export const {signIn, signOut, signUp, useSession, listAccounts, admin} = authClient;

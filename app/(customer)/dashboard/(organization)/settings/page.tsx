@@ -5,8 +5,8 @@ import {getOrganization} from "@/lib/auth/auth";
 import {notFound} from "next/navigation";
 import {
     DeleteOrganizationButton
-} from "@/components/wrappers/dashboard/organization/DeleteOrganization/DeleteOrganizationButton";
-import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/EditButtonSettings/EditButtonSettings";
+} from "@/components/wrappers/dashboard/organization/delete-organization/delete-organization-button";
+import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/edit-button-settings/edit-button-settings";
 import {
     SettingsOrganizationMembersTable
 } from "@/components/wrappers/dashboard/settings/settings-organization-members-table";

@@ -1,6 +1,6 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {ProjectForm} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm";
+import {ProjectForm} from "@/components/wrappers/dashboard/projects/project-form/project-form";
 import {notFound} from "next/navigation";
 import {db} from "@/db";
 import {eq} from "drizzle-orm";

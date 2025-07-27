@@ -1,4 +1,25 @@
+# Ignore Docker-related configs
+.dockerignore
 docker-compose.yml
-README.md
+docker-compose*.yml
+
+# Development/Editor config
 .idea
+.vscode
+
+# Node-related
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Next.js build output
 .next
+out
+
+
+
+# Docs and markdowns
+README.md
+*.md

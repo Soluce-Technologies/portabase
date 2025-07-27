@@ -12,7 +12,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { RegisterSchema, RegisterType } from "@/components/wrappers/auth/register/register-form/register-form.schema";
-import { PasswordInput } from "@/components/wrappers/auth/PaswordInput/password-input";
+import { PasswordInput } from "@/components/wrappers/auth/password-input/password-input";
 import {signUp} from "@/lib/auth/auth-client";
 
 export type registerFormProps = {

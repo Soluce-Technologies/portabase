@@ -4,6 +4,8 @@ import {ComboBox} from "@/components/wrappers/common/combobox";
 import {useSidebar} from "@/components/ui/sidebar";
 import {useRouter} from "next/navigation";
 import {authClient} from "@/lib/auth/auth-client";
+import {auth} from "@/lib/auth/auth";
+
 
 export function OrganizationCombobox() {
     const router = useRouter();
@@ -24,11 +26,15 @@ export function OrganizationCombobox() {
         };
     });
 
+
+
     const onValueChange = async (slug: string) => {
+
         await authClient.organization.setActive({
             organizationSlug: slug,
         });
         router.refresh();
+
     };
 
     const handleReset = () => {

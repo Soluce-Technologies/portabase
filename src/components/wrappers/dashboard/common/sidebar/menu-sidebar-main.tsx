@@ -15,6 +15,7 @@ export const SidebarMenuCustomMain = () => {
     const member = authClient.useActiveMember();
 
 
+
     if (isPending) return null;
 
     if (error || !session) {

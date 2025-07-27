@@ -23,7 +23,7 @@ import {
 } from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {TooltipCustom} from "@/components/wrappers/common/tooltipCustom/TooltipCustom";
+import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
 
 
 export function restoreColumns(isAlreadyRestore: boolean): ColumnDef<Restoration>[] {

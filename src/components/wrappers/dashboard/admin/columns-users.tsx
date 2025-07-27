@@ -1,13 +1,13 @@
 "use client"
 import {ColumnDef} from "@tanstack/react-table";
 import {Badge} from "@/components/ui/badge";
-import {updateUserAction} from "@/components/wrappers/dashboard/profile/UserForm/user-form.action";
+import {updateUserAction} from "@/components/wrappers/dashboard/profile/user-form/user-form.action";
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {Trash2} from "lucide-react";
-import {deleteUserAction} from "@/components/wrappers/dashboard/profile/ButtonDeleteAccount/delete-account.action";
+import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-delete-account/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {User} from "@/db/schema/01_user";
 import {useSession} from "@/lib/auth/auth-client";

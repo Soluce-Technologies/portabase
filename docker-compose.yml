@@ -1,36 +1,29 @@
 name: portabase-dev
 
 services:
-    app:
-        build:
-            context: .
-            dockerfile: docker/dockerfile/Dockerfile
-            target: dev
-        ports:
-            - "8887:80"
-        environment:
-            - TIME_ZONE="Europe/Paris"
-            - NODE_ENV=development
-        depends_on:
-            db:
-                condition: service_healthy
-        volumes:
-            - .:/app
-            - /app/node_modules
-        container_name: portabase-app
-
-        develop:
-            watch:
-                - action: sync
-                  path: .
-                  target: /app
-                - action: rebuild
-                  path: package.json
+#    app:
+#        build:
+#            context: .
+#            dockerfile: docker/dockerfile/Dockerfile
+#            target: dev
+#        ports:
+#            - "8887:8887"
+#        environment:
+#            - TIME_ZONE="Europe/Paris"
+#            - NODE_ENV=development
+#        depends_on:
+#            db:
+#                condition: service_healthy
+#        volumes:
+#            - .:/app
+#            - /app/node_modules
+#        container_name: portabase-app
+#
 
     db:
         image: postgres:16-alpine
         ports:
-            - "5433:5432"
+            - "5432:5432"
         volumes:
             - postgres-data:/var/lib/postgresql/data
         environment:
@@ -43,21 +36,21 @@ services:
             timeout: 5s
             retries: 5
 
-    db-pgadmin:
-        image: dpage/pgadmin4
-        environment:
-            PGADMIN_DEFAULT_EMAIL: "devuser@devuser.devuser"
-            PGADMIN_DEFAULT_PASSWORD: "changeme"
-            PGADMIN_CONFIG_SERVER_MODE: "False"
-            POSTGRES_USER: "devuser"
-            POSTGRES_PASSWORD: "changeme"
-        volumes:
-            - pgadmin-data:/var/lib/pgadmin
-        ports:
-            - "8080:80"
-        restart: unless-stopped
-        depends_on:
-            - db
+#    db-pgadmin:
+#        image: dpage/pgadmin4
+#        environment:
+#            PGADMIN_DEFAULT_EMAIL: "devuser@devuser.devuser"
+#            PGADMIN_DEFAULT_PASSWORD: "changeme"
+#            PGADMIN_CONFIG_SERVER_MODE: "False"
+#            POSTGRES_USER: "devuser"
+#            POSTGRES_PASSWORD: "changeme"
+#        volumes:
+#            - pgadmin-data:/var/lib/pgadmin
+#        ports:
+#            - "8080:80"
+#        restart: unless-stopped
+#        depends_on:
+#            - db
 
     s3:
         image: docker.io/bitnami/minio:latest
@@ -74,4 +67,4 @@ services:
 volumes:
     postgres-data:
     minio_data:
-    pgadmin-data:
+#    pgadmin-data:

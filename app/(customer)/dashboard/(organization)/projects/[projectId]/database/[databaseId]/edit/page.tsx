@@ -1,7 +1,7 @@
 import { PageParams } from "@/types/next";
 import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
 import { notFound } from "next/navigation";
-import { DatabaseForm } from "@/components/wrappers/dashboard/database/DatabaseForm/DatabaseForm";
+import { DatabaseForm } from "@/components/wrappers/dashboard/database/database-form/database-form";
 
 import { db } from "@/db";
 import * as drizzleDb from "@/db";
