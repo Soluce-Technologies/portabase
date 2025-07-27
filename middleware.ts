@@ -28,6 +28,10 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL(`/login?error=pending?redirect=${redirectUrl}`, request.url));
         }
 
+        if (url.pathname === "/dashboard") {
+            return NextResponse.redirect(new URL(`/dashboard/home`, request.url));
+        }
+
         return NextResponse.next();
     }
 

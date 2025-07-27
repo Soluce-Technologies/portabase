@@ -4,13 +4,21 @@ import {LayoutAdmin} from "@/components/layout";
 import Image from "next/image";
 import {env} from "@/env.mjs";
 import {useTheme} from "next-themes";
+import {useSession} from "@/lib/auth/auth-client";
+import {useRouter} from "next/navigation";
 
 
 export default function Layout({children}: { children: React.ReactNode }) {
 
     const { resolvedTheme } = useTheme();
-
     const [mounted, setMounted] = useState(false);
+    const router = useRouter();
+    const { data: session } = useSession();
+
+    if (session && session.user && !session.user.banned && session.user.role !== "pending") {
+        router.replace("/dashboard/home");
+    }
+
 
     useEffect(() => {
         setMounted(true);
