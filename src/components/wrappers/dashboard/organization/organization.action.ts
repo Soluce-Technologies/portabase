@@ -1,11 +1,13 @@
 "use server";
 
-import { userAction } from "@/safe-actions";
-import { OrganizationSchema } from "@/components/wrappers/dashboard/organization/organization.schema";
-import { ServerActionResult } from "@/types/action-type";
-import { z } from "zod";
-import { OrganizationFormSchema } from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
-import { db } from "@/db";
+import {userAction} from "@/safe-actions";
+import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
+import {ServerActionResult} from "@/types/action-type";
+import {z} from "zod";
+import {
+    OrganizationFormSchema
+} from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
+import {db} from "@/db";
 import {and, eq, inArray} from "drizzle-orm";
 import {auth, checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
 import {slugify} from "@/utils/slugify";
@@ -13,7 +15,7 @@ import {Organization} from "@/db/schema/02_organization";
 import * as drizzleDb from "@/db";
 import {headers} from "next/headers";
 
-export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({ parsedInput }): Promise<ServerActionResult<Organization>> => {
+export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({parsedInput}): Promise<ServerActionResult<Organization>> => {
     try {
         const slug = slugify(parsedInput.name);
         if (!await checkSlugOrganization(slug)) {
@@ -22,7 +24,7 @@ export const createOrganizationAction = userAction.schema(OrganizationSchema).ac
                 actionError: {
                     message: "Slug is already taken",
                     status: 500,
-                    messageParams: { message: "Error creating the organization" },
+                    messageParams: {message: "Error creating the organization"},
                 },
             };
         }
@@ -39,7 +41,7 @@ export const createOrganizationAction = userAction.schema(OrganizationSchema).ac
                     message: authError.message || "Authentication service error.",
                     status: authError.status || 500,
                     cause: "auth_error",
-                    messageParams: { message: authError.message },
+                    messageParams: {message: authError.message},
                 },
             };
         }
@@ -49,7 +51,7 @@ export const createOrganizationAction = userAction.schema(OrganizationSchema).ac
             value: createdOrganization,
             actionSuccess: {
                 message: "Organization has been successfully created.",
-                messageParams: { organizationId: createdOrganization!.id },
+                messageParams: {organizationId: createdOrganization!.id},
             },
         };
     } catch (error) {
@@ -59,7 +61,7 @@ export const createOrganizationAction = userAction.schema(OrganizationSchema).ac
             actionError: {
                 message: "Failed to create organization.",
                 status: 500,
-                messageParams: { message: "Error creating the organization" },
+                messageParams: {message: "Error creating the organization"},
             },
         };
     }
@@ -72,7 +74,7 @@ export const updateOrganizationAction = userAction
             organizationId: z.string(),
         })
     )
-    .action(async ({ parsedInput, ctx }): Promise<ServerActionResult<Organization>> => {
+    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
             const newUserList = parsedInput.data.users;
             console.log(parsedInput);
@@ -127,7 +129,7 @@ export const updateOrganizationAction = userAction
             }
 
             if (usersToRemove.length > 0) {
-                await db.delete(drizzleDb.schemas.member).where(inArray(drizzleDb.schemas.member.userId, usersToRemove)).execute();
+                await db.delete(drizzleDb.schemas.member).where(and(inArray(drizzleDb.schemas.member.userId, usersToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id))).execute();
                 // TODO : Do not delete, go permission error with better auth
                 // for (const userToRemove of usersToRemove) {
                 //
@@ -182,7 +184,7 @@ export const updateOrganizationAction = userAction
                 value: updatedOrganization as unknown as Organization,
                 actionSuccess: {
                     message: "Organization has been successfully updated.",
-                    messageParams: { organizationId: organization.id},
+                    messageParams: {organizationId: organization.id},
                 },
             };
         } catch (error) {
@@ -193,14 +195,14 @@ export const updateOrganizationAction = userAction
                     message: "Failed to update organization.",
                     status: 500,
                     cause: "server_error",
-                    messageParams: { message: "Error updating the organization" },
+                    messageParams: {message: "Error updating the organization"},
                 },
             };
         }
     });
 
 export const deleteOrganizationAction = userAction.schema(z.string()).action(
-    async ({ parsedInput, ctx }): Promise<ServerActionResult<Organization>> => {
+    async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
             const org = await db.query.organization.findFirst({
                 where: eq(drizzleDb.schemas.organization.slug, parsedInput),
@@ -229,7 +231,7 @@ export const deleteOrganizationAction = userAction.schema(z.string()).action(
                         message: authError.message || "Authentication service error.",
                         status: authError.status || 500,
                         cause: "auth_error",
-                        messageParams: { message: authError.message },
+                        messageParams: {message: authError.message},
                     },
                 };
             }
@@ -239,7 +241,7 @@ export const deleteOrganizationAction = userAction.schema(z.string()).action(
                 value: deletedOrganization,
                 actionSuccess: {
                     message: "Organization has been successfully deleted.",
-                    messageParams: { organizationId: deletedOrganization.id },
+                    messageParams: {organizationId: deletedOrganization.id},
                 },
             };
         } catch (error) {
@@ -250,7 +252,7 @@ export const deleteOrganizationAction = userAction.schema(z.string()).action(
                     message: "Failed to delete organization due to a server error.",
                     status: 500,
                     cause: "server_error",
-                    messageParams: { message: "Internal server error while deleting the organization" },
+                    messageParams: {message: "Internal server error while deleting the organization"},
                 },
             };
         }

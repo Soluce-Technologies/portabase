@@ -22,6 +22,7 @@ export const SidebarMenuCustomMain = () => {
         return null;
     }
 
+
     const groupContent: SidebarGroupItem["group_content"] = [
         { title: "Dashboard", url: "/home", icon: Home },
         { title: "Projects", url: "/projects", icon: Layers, details:true },

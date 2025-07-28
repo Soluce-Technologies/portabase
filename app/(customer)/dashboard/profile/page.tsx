@@ -1,13 +1,11 @@
 import {PageParams} from "@/types/next";
-import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {Page, PageContent, PageTitle} from "@/features/layout/page";
 import {notFound} from "next/navigation";
 import {UserForm} from "@/components/wrappers/dashboard/profile/user-form/user-form";
 import {Badge} from "@/components/ui/badge";
 import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/button-delete-account/button-delete-account";
 import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/avatar/avatar-with-upload";
 import {currentUser} from "@/lib/auth/current-user";
-import {getAccounts, getSessions} from "@/lib/auth/auth";
-//import { getAccounts, getSessions } from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await currentUser();
@@ -15,7 +13,6 @@ export default async function RoutePage(props: PageParams<{}>) {
     if (!user) {
         return notFound();
     }
-
 
     if (user.role !== "user" && user.role !== "admin" && user.role !== "superadmin") {
         return notFound();
@@ -42,9 +39,9 @@ export default async function RoutePage(props: PageParams<{}>) {
                     {user.name}
                     <Badge className="ml-3 hidden lg:block">{user.role}</Badge>
                 </PageTitle>
-                <PageActions className="mt-2 hidden sm:block">
-                    <ButtonDeleteAccount text="Delete my account"/>
-                </PageActions>
+                {/*<PageActions className="mt-2 hidden sm:block">*/}
+                {/*    <ButtonDeleteAccount text="Delete my account"/>*/}
+                {/*</PageActions>*/}
             </div>
             <PageContent>
                 <UserForm

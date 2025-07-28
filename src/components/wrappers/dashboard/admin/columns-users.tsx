@@ -10,7 +10,7 @@ import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-delete-account/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {User} from "@/db/schema/01_user";
-import {useSession} from "@/lib/auth/auth-client";
+import {authClient, useSession} from "@/lib/auth/auth-client";
 import {formatFrenchDate} from "@/utils/date-formatting";
 
 export const usersColumnsAdmin: ColumnDef<User>[] = [
@@ -19,7 +19,12 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
         header: "Role",
         cell: ({row}) => {
             const [role, setRole] = useState<string>(row.getValue("role"));
-            const { data: session } = useSession();
+
+
+            const {data: session, isPending, error} = authClient.useSession();
+
+
+
             const isCurrentUser = session?.user.email === row.original.email;
 
             const updateMutation = useMutation({
@@ -37,6 +42,15 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
                 setRole(nextRole);
                 await updateMutation.mutateAsync();
             };
+
+
+            if (isPending) return null;
+
+            if (error || !session) {
+                return null;
+            }
+
+
 
             return (
                 <Badge

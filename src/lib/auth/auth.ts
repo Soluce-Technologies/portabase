@@ -64,6 +64,9 @@ export const auth = betterAuth({
         },
     },
     user: {
+        deleteUser: {
+            enabled: true,
+        },
         additionalFields: {
             deletedAt: {
                 type: "number", //pg timestamp
@@ -88,7 +91,9 @@ export const auth = betterAuth({
                     };
                 },
                 async after(user, context) {
-                    // const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
+                    const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
+                    const role = userCount === 0 ? "owner" : "admin";
+
 
                     const defaultOrgSlug = "default"; // change this if your default org has a different slug
                     const defaultOrg = await db.query.organization.findFirst({
@@ -96,10 +101,11 @@ export const auth = betterAuth({
                     });
 
                     if (defaultOrg) {
+                        console.log(user)
                         await db.insert(drizzleDb.schemas.member).values({
                             userId: user.id,
                             organizationId: defaultOrg.id,
-                            role: "owner",
+                            role: role,
                         });
                     } else {
                         console.warn("Default organization not found. Cannot assign member.");
