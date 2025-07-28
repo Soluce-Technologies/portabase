@@ -1,6 +1,6 @@
 {
-  "id": "2284df92-d3ee-4a3b-8430-44a62ef0d4eb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "1fb78bef-e0dd-452c-abaa-f8cff3119b62",
+  "prevId": "2284df92-d3ee-4a3b-8430-44a62ef0d4eb",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1067,6 +1067,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "is_archived": {
+          "name": "is_archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",

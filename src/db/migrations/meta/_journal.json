@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1753637475061,
-      "tag": "0000_misty_liz_osborn",
+      "when": 1753718291841,
+      "tag": "0000_chilly_the_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753718314666,
+      "tag": "0001_easy_red_skull",
       "breakpoints": true
     }
   ]
