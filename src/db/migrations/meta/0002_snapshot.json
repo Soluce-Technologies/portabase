@@ -1,6 +1,6 @@
 {
-  "id": "3d165821-b11d-4be7-b3fb-83c4485e44a8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ca73d698-19da-458a-b07d-887f32f581d4",
+  "prevId": "d782a269-0b75-41b0-b70e-e3bf214f4f80",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -814,29 +814,7 @@
           "notNull": true
         }
       },
-      "indexes": {
-        "database_id_status_unique": {
-          "name": "database_id_status_unique",
-          "columns": [
-            {
-              "expression": "database_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "backups_database_id_databases_id_fk": {
           "name": "backups_database_id_databases_id_fk",
@@ -1089,6 +1067,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "is_archived": {
+          "name": "is_archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
