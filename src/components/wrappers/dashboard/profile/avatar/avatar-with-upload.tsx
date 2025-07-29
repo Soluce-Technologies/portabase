@@ -53,6 +53,8 @@ export const AvatarWithUpload = (props: AvatarWithUploadProps) => {
         submitImage.mutate(file);
     };
 
+
+
     return (
         <div className="relative ">
             <Avatar className="size-14 mr-3 ">

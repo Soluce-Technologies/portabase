@@ -2,9 +2,17 @@ import path from "path";
 import fs from "fs/promises";
 import { NextResponse } from "next/server";
 
-export async function GET({ params }: { params: Promise<{ fileName: string }> }) {
+export async function GET(
+    request: Request,
+    {params}: { params: Promise<{ fileName: string }> }
+) {
+
     try {
         const fileName = (await params).fileName;
+
+
+        console.log("fileName", fileName);
+
         const filePath = path.join(process.cwd(), "private/uploads/images", fileName);
 
         // Check if the file exists

@@ -5,37 +5,6 @@ import {db} from "@/db";
 import * as drizzleDb from "@/db";
 import {eq} from "drizzle-orm";
 
-// const settings = await prisma.settings.findUnique({
-//     where:{
-//         name: "system"
-//     }
-// })
-
-// Create a new Minio client with the S3 endpoint, access key, and secret key
-// export const s3Client = env.NODE_ENV === "production" ?
-//     new Minio.Client({
-//         endPoint: env.S3_ENDPOINT ?? "",
-//         accessKey: env.S3_ACCESS_KEY ?? "",
-//         secretKey: env.S3_SECRET_KEY ?? "",
-//     }) : new Minio.Client({
-//         endPoint: env.S3_ENDPOINT ?? "",
-//         port: Number(env.S3_PORT ?? 0),
-//         accessKey: env.S3_ACCESS_KEY ?? "",
-//         secretKey: env.S3_SECRET_KEY ?? "",
-//         useSSL: env.S3_USE_SSL === 'true'
-//     })
-// export const s3Client = env.NODE_ENV === "production" ?
-//     new Minio.Client({
-//         endPoint: settings.s3EndPointUrl ?? "",
-//         accessKey: settings.s3AccessKeyId ?? "",
-//         secretKey: settings.s3SecretAccessKey ?? "",
-//     }) : new Minio.Client({
-//         endPoint: settings.s3EndPointUrl ?? "",
-//         port: Number(env.S3_PORT ?? 0),
-//         accessKey: settings.s3AccessKeyId ?? "",
-//         secretKey: settings.s3SecretAccessKey ?? "",
-//         useSSL: env.S3_USE_SSL === 'true'
-//     })
 
 async function getS3Client() {
     const settings = await db
