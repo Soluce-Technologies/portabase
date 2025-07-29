@@ -22,9 +22,11 @@ export const SidebarMenuCustomMain = () => {
         return null;
     }
 
+    const groupContentApplication: SidebarGroupItem["group_content"] = [
+        { title: "Dashboard", url: "/home", icon: Home },
+    ];
 
     const groupContent: SidebarGroupItem["group_content"] = [
-        { title: "Dashboard", url: "/home", icon: Home },
         { title: "Projects", url: "/projects", icon: Layers, details:true },
         { title: "Statistics", url: "/statistics", icon: ChartArea },
     ];
@@ -36,6 +38,11 @@ export const SidebarMenuCustomMain = () => {
     const items: SidebarGroupItem[] = [
         {
             label: "Application",
+            type: "list",
+            group_content: groupContentApplication,
+        },
+        {
+            label: "Organization",
             type: "list",
             group_content: groupContent,
         },

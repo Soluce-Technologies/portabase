@@ -5,7 +5,7 @@ import {EvolutionLineChart} from "@/components/wrappers/dashboard/statistics/cha
 import {PercentageLineChart} from "@/components/wrappers/dashboard/statistics/charts/percentage-line-chart";
 import {notFound} from "next/navigation";
 import {db} from "@/db";
-import {asc, count, eq, inArray} from "drizzle-orm";
+import {and, asc, count, eq, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {getOrganization} from "@/lib/auth/auth";
 import {DatabaseBackup, Folder, RefreshCcw} from "lucide-react";
@@ -53,7 +53,7 @@ export default async function RoutePage(props: PageParams<{}>) {
             _count: count(),
         })
         .from(drizzleDb.schemas.backup)
-        .where(inArray(drizzleDb.schemas.backup.status, ["success", "failed"]))
+        .where(and(inArray(drizzleDb.schemas.backup.status, ["success", "failed"]), inArray(drizzleDb.schemas.backup.databaseId, databaseIds)))
         .groupBy(drizzleDb.schemas.backup.createdAt, drizzleDb.schemas.backup.status)
         .orderBy(drizzleDb.schemas.backup.createdAt);
 

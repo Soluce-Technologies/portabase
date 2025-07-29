@@ -4,7 +4,7 @@ import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {env} from "@/env.mjs";
 import {nextCookies} from "better-auth/next-js";
-import {admin as adminPlugin, openAPI, organization} from "better-auth/plugins";
+import {admin as adminPlugin, openAPI, Organization, organization} from "better-auth/plugins";
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
@@ -353,12 +353,13 @@ export const getOrganization = async ({
     }
 };
 
-export const listOrganizations = async () => {
+export const listOrganizations = async (): Promise<Organization[] | null> => {
     try {
         return await auth.api.listOrganizations({
             headers: await headers(),
-        });
+        }) as Organization[];
     } catch (e) {
+        return null;
     }
 };
 
