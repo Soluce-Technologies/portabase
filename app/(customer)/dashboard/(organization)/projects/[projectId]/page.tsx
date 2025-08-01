@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ButtonDeleteProject } from "@/components/wrappers/dashboard/projects/button-delete-project/button-delete-project";
 import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
 import { ProjectDatabaseCard } from "@/components/wrappers/dashboard/projects/project-card/project-database-card";
-import { notFound } from "next/navigation";
+import {notFound, redirect} from "next/navigation";
 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
@@ -14,15 +14,12 @@ import {getOrganization} from "@/lib/auth/auth";
 import * as drizzleDb from "@/db";
 
 export default async function RoutePage(props: PageParams<{
-    // slug: string;
     projectId: string
 }>) {
     const {
-        // slug: organizationSlug,
         projectId } = await props.params;
 
     const organization = await getOrganization({});
-
     if (!organization) {
         notFound();
     }
@@ -39,7 +36,9 @@ export default async function RoutePage(props: PageParams<{
         },
     });
 
-    if (!proj) notFound();
+    if (!proj) {
+        redirect("/dashboard/projects");
+    }
 
 
     return (

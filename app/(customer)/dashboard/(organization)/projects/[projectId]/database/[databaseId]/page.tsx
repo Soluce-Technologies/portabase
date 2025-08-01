@@ -1,5 +1,5 @@
 import {PageParams} from "@/types/next";
-import {notFound} from "next/navigation";
+import {notFound, redirect} from "next/navigation";
 import {Page, PageActions, PageContent, PageDescription, PageTitle} from "@/features/layout/page";
 import {BackupButton} from "@/components/wrappers/dashboard/backup/backup-button/backup-button";
 import {DatabaseTabs} from "@/components/wrappers/dashboard/projects/database/database-tabs";
@@ -8,18 +8,38 @@ import {EditButton} from "@/components/wrappers/dashboard/database/edit-button/e
 import {CronButton} from "@/components/wrappers/dashboard/database/cron-button/cron-button";
 
 import {db} from "@/db";
-import {eq, and} from "drizzle-orm";
+import {eq, and, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {getOrganizationProjectDatabases} from "@/lib/services";
+import {getOrganization} from "@/lib/auth/auth";
 
-export default async function RoutePage(props: PageParams<{ databaseId: string }>) {
-    const {databaseId} = await props.params;
+export default async function RoutePage(props: PageParams<{
+    projectId: string;
+    databaseId: string
+}>) {
+    const {projectId, databaseId} = await props.params;
+
+    console.log("ici", projectId);
+    console.log("laa", databaseId);
+
+    const organization = await getOrganization({});
+
+    if (!organization) {
+        notFound();
+    }
+
+
+    const databasesProject = await getOrganizationProjectDatabases({
+        organizationSlug: organization.slug,
+        projectId: projectId
+    })
 
     const dbItem = await db.query.database.findFirst({
-        where: eq(drizzleDb.schemas.database.id, databaseId),
+        where: and(inArray(drizzleDb.schemas.backup.id, databasesProject.ids ?? []), eq(drizzleDb.schemas.database.id, databaseId), eq(drizzleDb.schemas.database.projectId, projectId)),
     });
 
     if (!dbItem) {
-        notFound();
+        redirect("/dashboard/projects");
     }
 
     const backups = await db.query.backup.findMany({
@@ -67,8 +87,9 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
             </div>
             <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             <PageContent className="flex flex-col w-full h-full">
-                <DatabaseKpi successRate={successRate} database={dbItem} totalBackups={totalBackups} />
-                <DatabaseTabs database={dbItem} isAlreadyRestore={isAlreadyRestore} backups={backups} restorations={restorations} />
+                <DatabaseKpi successRate={successRate} database={dbItem} totalBackups={totalBackups}/>
+                <DatabaseTabs database={dbItem} isAlreadyRestore={isAlreadyRestore} backups={backups}
+                              restorations={restorations}/>
             </PageContent>
         </Page>
     );
