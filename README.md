@@ -188,14 +188,6 @@ major.minor.patch-rc.release-tag
 # Example: 1.0.0-rc.1-dev
 ```
 
-### Zenstack Support
-
-To regenerate schema:
-
-```bash
-zenstack generate
-```
-
 ---
 
 ## 📄 License
