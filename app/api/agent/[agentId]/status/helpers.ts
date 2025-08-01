@@ -1,16 +1,19 @@
-import {Agent, Database} from "@prisma/client";
-import {prisma} from "@/prisma";
 import {NextResponse} from "next/server";
 import {Body} from "./route";
 import {isUuidv4} from "@/utils/verify-uuid";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
-
+import {Agent} from "@/db/schema/07_agent";
+import {Database} from "@/db/schema/06_database";
+import * as drizzleDb from "@/db";
+import {db as dbClient} from "@/db";
+import {and, eq} from "drizzle-orm";
+import {dbmsEnumSchema, EDbmsSchema} from "@/db/schema/types";
 
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
 
     const formatDatabase = (database: Database, backupAction: boolean, restoreAction: boolean, UrlBackup: string) => ({
-        generatedId: database.generatedId,
+        generatedId: database.agentDatabaseId,
         dbms: database.dbms,
         data: {
             backup: {
@@ -25,15 +28,14 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
     });
 
     for (const db of body.databases) {
-        const existingDatabase = await prisma.database.findFirst({
-            where: {
-                generatedId: db.generatedId,
-            },
+
+        const existingDatabase = await dbClient.query.database.findFirst({
+            where: eq(drizzleDb.schemas.database.agentDatabaseId, db.generatedId)
         });
 
         let backupAction: boolean = false
         let restoreAction: boolean = false
-        let UrlBackup: string = null
+        let UrlBackup: string = ""
 
         if (!existingDatabase) {
             if (!isUuidv4(db.generatedId)) {
@@ -42,74 +44,70 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                     { status: 500 }
                 );
             }
-            const databaseCreated = await prisma.database.create({
-                data: {
+            console.log(db)
+            console.log(dbmsEnumSchema.parse(db.dbms))
+            const [databaseCreated] = await dbClient
+                .insert(drizzleDb.schemas.database)
+                .values({
                     agentId: agent.id,
                     name: db.name,
-                    dbms: db.dbms,
-                    generatedId: db.generatedId,
+                    dbms: db.dbms as EDbmsSchema,
+                    agentDatabaseId: db.generatedId,
                     lastContact: lastContact,
-                },
-            });
+                })
+                .returning();
 
             if (databaseCreated) {
                 databasesResponse.push(formatDatabase(databaseCreated, backupAction,restoreAction, UrlBackup));
             }
         } else {
-            const databaseUpdated = await prisma.database.update({
-                where: {
-                    id: existingDatabase.id,
-                },
-                data: {
-                    lastContact: lastContact,
-                },
-            });
 
-            const backup = await prisma.backup.findFirst({
-                where: {
-                    databaseId: databaseUpdated.id,
-                    status: "waiting"
-                }
+
+
+            const [databaseUpdated] = await dbClient
+                .update(drizzleDb.schemas.database)
+                .set({ lastContact: lastContact })
+                .where(eq(drizzleDb.schemas.database.id, existingDatabase.id))
+                .returning();
+
+
+
+            const backup = await dbClient.query.backup.findFirst({
+                where: and(eq(drizzleDb.schemas.backup.databaseId, databaseUpdated.id), eq(drizzleDb.schemas.backup.status,"waiting"))
             })
 
-            const restoration = await prisma.restoration.findFirst({
-                where:{
-                    databaseId: databaseUpdated.id,
-                    status: "waiting"
-                }
+
+            const restoration = await dbClient.query.restoration.findFirst({
+                where: and(eq(drizzleDb.schemas.restoration.databaseId, databaseUpdated.id), eq(drizzleDb.schemas.restoration.status,"waiting"))
             })
 
 
             if(backup){
                 backupAction = true
-                await prisma.backup.update({
-                    where:{
-                        id: backup.id
-                    },
-                    data: {
-                        status: "ongoing"
-                    }
-                })
+
+                await dbClient
+                    .update(drizzleDb.schemas.backup)
+                    .set({ status: "ongoing" })
+                    .where(eq(drizzleDb.schemas.backup.id, backup.id));
             }
 
             if(restoration){
                 restoreAction = true
 
-                const backupToRestore = await prisma.backup.findFirst({
-                    where:{
-                        id: restoration.backupId
-                    }
+
+                const backupToRestore = await dbClient.query.backup.findFirst({
+                    where: eq(drizzleDb.schemas.backup.id, restoration.backupId),
                 })
-                const fileName = backupToRestore.file
-                UrlBackup = await getFileUrlPresignedLocal(fileName)
-                await prisma.restoration.update({
-                    where: {
-                        id: restoration.id
-                    },
-                    data:{
-                        status: "ongoing"
-                    }
-                })
+
+
+                const fileName = backupToRestore?.file
+                UrlBackup = await getFileUrlPresignedLocal(fileName ?? "")
+
+                await dbClient
+                    .update(drizzleDb.schemas.restoration)
+                    .set({ status: "ongoing" })
+                    .where(eq(drizzleDb.schemas.restoration.id, restoration.id));
+
             }
 
 

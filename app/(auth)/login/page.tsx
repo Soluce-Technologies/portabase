@@ -1,28 +1,31 @@
 "use client"
 
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useSearchParams} from "next/navigation";
 
-import {LoginForm} from "@/components/wrappers/auth/login/loginForm/LoginForm";
+import {LoginForm} from "@/components/wrappers/auth/login/login-form/login-form";
 import {toast} from "sonner";
 
 export default function SignInPage(props: {
     searchParams: Promise<{ callbackUrl: string | undefined }>
 }) {
 
-    const searchParams = useSearchParams();
-    const error = searchParams.get("error");
-    const isFirstRender = useRef(true);
+    const [urlParams, setUrlParams] = useState<URLSearchParams>();
 
     useEffect(() => {
-        if (isFirstRender.current && error) {
-            toast.error("Error occurred.");
-            isFirstRender.current = false;
+        const urlParams = new URLSearchParams(window.location.search);
+        setUrlParams(urlParams);
+        const error = urlParams.get("error");
+        console.log(urlParams.get("redirect"));
+        if (error?.includes("pending")) {
+            toast.error("Your account is not active.");
+            urlParams.delete("error");
+            window.history.replaceState({}, document.title, window.location.pathname + "?" + urlParams.toString());
         }
-    }, [error]);
+    }, []);
 
     return (
-        <div className="mx-auto grid w-[350px] gap-6">
+        <div className="mx-auto grid w-full gap-6">
             <LoginForm/>
         </div>
     )

@@ -1,21 +1,15 @@
-<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://portabase.io">
+    <img src="/public/images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-[//]: # (<br />)
-
-[//]: # (<div align="center">)
-
-[//]: # (  <a href="https://github.com/othneildrew/Best-README-Template">)
-
-[//]: # (    <img src="images/logo.png" alt="Logo" width="80" height="80">)
-
-[//]: # (  </a>)
-
-<h3 align="center">Portabase</h3>
+  <h3 align="center">Portabase</h3>
 
   <p align="center">
-    Backup / Restore your databases instances
+    Easily backup and restore your database instances with Portabase
     <br />
-    <a href="https://portabase.io"><strong>Explore the docs »</strong></a>
+    <a href="https://portabase.io"><strong>Explore the Docs »</strong></a>
     <br />
     <br />
     <a href="https://portabase.io">View Demo</a>
@@ -25,158 +19,209 @@
     <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=D9uFrGxLc4s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
 
+## 📚 Table of Contents
 
-<!-- ABOUT THE PROJECT -->
+- [About The Project](#about-the-project)
+    - [Built With](#built-with)
+- [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+- [Usage](#usage)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
+
+---
+
 ## About The Project
 
-Portabase is the server dashboard service working with portabase agents.
-<a href="https://github.com/Soluce-Technologies/portabase">see Portabase</a>
+**Portabase** is a server dashboard tool designed to simplify the backup and restoration of your database instances. It integrates seamlessly with Portabase agents for managing operations securely and efficiently.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+GitHub Repository: [Portabase](https://github.com/Soluce-Technologies/portabase)
 
+### 🔧 Built With
 
+- [![NextJS][NextJS]][NextJS-url] (v15 with App Router)
+- [![Drizzle][Drizzle]][Drizzle-url]
+- [![ShadcnUI][ShadcnUI]][ShadcnUI-url]
+- BetterAuth
+- React Email
 
-### Built With
+---
 
-* [![NextJS][NextJS]][NextJS-url]
-* [![Prisma][Prisma]][Prisma-url]
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- GETTING STARTED -->
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-Install docker on your machine
+Ensure Docker is installed on your machine before getting started.
 
 ### Installation
 
-Installation steps in order to use it locally and work on some features improvements
+To run Portabase locally:
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Soluce-Technologies/portabase
-   ```
-3. Start the project
-   ```sh
-   docker compose up 
-   ```
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/Soluce-Technologies/portabase
+    cd portabase
+    ```
+2. Start the development environment:
+    ```bash
+    docker compose up
+    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
 
+## 🛠️ Usage
 
-<!-- ROADMAP -->
-## Roadmap
+Portabase provides a dashboard to manage database instances and backups. It supports:
 
-- [ ] Add Changelog
-- [ ] Improve documentation and repositories
-- [ ] Add tests procedure
-- [ ] Add Release File
-- [ ] Security improvements
-- [ ] Improve UX/UI
-- [ ] Improve Workspace system
-- [ ] Migrate to Drizzle ORM
-- [ ] Multi locale support
-- [ ] Multi db support
+- PostgreSQL (current)
+- MongoDB (coming soon)
+- MySQL (coming soon)
+
+You can access the dashboard at `http://localhost:3000` after starting the project.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Add changelog
+- [ ] Enhance documentation
+- [ ] Implement testing procedures
+- [ ] Include release file
+- [ ] Improve security
+- [ ] Enhance UX/UI
+- [ ] Improve workspace management system
+- [x] Migrate to Drizzle ORM
+- [ ] Add multi-language support
+- [ ] Extend multi-database support:
     - [x] PostgreSQL
     - [ ] MongoDB
     - [ ] MySQL
 
-See the [open issues](https://github.com/Soluce-Technologies/portabase/issues) for a full list of proposed features (and known issues).
+Check out [open issues](https://github.com/Soluce-Technologies/portabase/issues) for more.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
 
+## 🤝 Contributing
 
+Contributions are welcome and appreciated! Here's how to get started:
 
-<!-- CONTRIBUTING -->
-## Contributing
+1. Fork the repository
+2. Create a new branch:
+    ```bash
+    git checkout -b feature/YourFeature
+    ```
+3. Commit your changes:
+    ```bash
+    git commit -m "Add YourFeature"
+    ```
+4. Push to the branch:
+    ```bash
+    git push origin feature/YourFeature
+    ```
+5. Open a pull request
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Give the project a ⭐ if you like it!
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+### Top Contributors
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+[![Contributors](https://contrib.rocks/image?repo=Soluce-Technologies/portabase)](https://github.com/Soluce-Technologies/portabase/graphs/contributors)
 
-### Top contributors:
+---
 
-<a href="https://github.com/Soluce-Technologies/portabase/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Soluce-Technologies/portabase" alt="contrib.rocks image" />
-</a>
+## Developer Notes
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Environment Variables
 
+```yml
+# Environment
+NODE_ENV=production
 
-## Memo
+# Database
+DATABASE_URL=postgresql://devuser:changeme@db:5432/devdb?schema=public
 
-If you're using Semantic Versioning (SemVer) to version your Docker images, you can use the following format:
+# Project Info
+NEXT_PUBLIC_PROJECT_NAME="Portabase"
+NEXT_PUBLIC_PROJECT_DESCRIPTION="Portabase is a powerful database manager"
+NEXT_PUBLIC_PROJECT_URL=http://app.portabase.io
+PROJECT_SECRET=
 
-```major.minor.patch-rc.release (e.g. 1.0.0-rc.1)```
+# SMTP (Email)
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_FROM=
 
-```major.minor.patch-rc.release-tag (e.g. 1.0.0-rc.1-dev)```
+# Google OAuth
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
 
-For zenstask 
+# S3/MinIO Configuration
+S3_ENDPOINT=http://app.s3.portabase.io
+S3_ACCESS_KEY=
+S3_SECRET_KEY=
+S3_BUCKET_NAME=portabase
+S3_PORT=9000
+S3_USE_SSL=true
 
-```zenstack generate```
+# Storage Backend: 'local' or 's3'
+STORAGE_TYPE=local
+```
 
-<!-- LICENSE -->
-## License
+### Semantic Versioning
 
-Distributed under the  Apache License. See `LICENSE.txt` for more information.
+Use the following format for Docker image versioning:
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```bash
+major.minor.patch-rc.release
+# Example: 1.0.0-rc.1
 
+major.minor.patch-rc.release-tag
+# Example: 1.0.0-rc.1-dev
+```
 
-<!-- CONTACT -->
-## Contact
+### Zenstack Support
 
-Killian Larcher - killian.larcher@soluce-technologies.com
-Charles Gauthereau - charles.gauthereau@soluce-technologies.com
+To regenerate schema:
 
-Project Link: [https://github.com/Soluce-Technologies/portabase](https://github.com/Soluce-Technologies/agent-portabase)
+```bash
+zenstack generate
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+## 📄 License
+
+Distributed under the Apache License. See `LICENSE.txt` for more details.
+
+---
+
+## 📬 Contact
+
+- Killian Larcher - killian.larcher@soluce-technologies.com
+- Charles Gauthereau - charles.gauthereau@soluce-technologies.com
+- Project Link: [Portabase GitHub](https://github.com/Soluce-Technologies/portabase)
+
+---
+
+## 🙏 Acknowledgments
+
+Thanks to all contributors and the open-source community!
+
+---
 
 [NextJS]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Prisma]: https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white
-[Prisma-url]: https://www.prisma.io/
+[Drizzle]: https://img.shields.io/badge/Drizzle-111?style=for-the-badge&logo=Drizzle&logoColor=c5f74f
+[ShadcnUI]: https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcn/ui&logoColor=white
 [NextJS-url]: https://nextjs.org/
+[Drizzle-url]: https://orm.drizzle.team/
+[ShadcnUI-url]: https://ui.shadcn.com/

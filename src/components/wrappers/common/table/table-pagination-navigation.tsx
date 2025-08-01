@@ -1,32 +1,28 @@
-import {PaginationNavigation} from "@/components/wrappers/common/pagination/pagination-navigation";
-
+import { PaginationNavigation } from "@/components/wrappers/common/pagination/pagination-navigation";
 
 export type paginationNavigationProps = {
-    className?: string
-    table: any
-    maxVisiblePages?: number
-}
-
+    className?: string;
+    table: any;
+    maxVisiblePages?: number;
+};
 
 export const TablePaginationNavigation = (props: paginationNavigationProps) => {
+    const { className, table, maxVisiblePages = 3 } = props;
 
-    const {className, table, maxVisiblePages = 3} = props
-
-
-    const totalPages = table.getPageCount()
-    const currentPage = table.getState().pagination.pageIndex + 1
+    const totalPages = table.getPageCount();
+    const currentPage = table.getState().pagination.pageIndex + 1;
 
     const goToPage = (page: number) => {
-        table.setPageIndex(page - 1)
-    }
+        table.setPageIndex(page - 1);
+    };
 
     const goToPrevPage = () => {
-        if (table.getCanPreviousPage()) table.previousPage()
-    }
+        if (table.getCanPreviousPage()) table.previousPage();
+    };
 
     const goToNextPage = () => {
-        if (table.getCanNextPage()) table.nextPage()
-    }
+        if (table.getCanNextPage()) table.nextPage();
+    };
 
     return (
         <PaginationNavigation
@@ -36,6 +32,7 @@ export const TablePaginationNavigation = (props: paginationNavigationProps) => {
             goToPage={goToPage}
             goToPrevPage={goToPrevPage}
             goToNextPage={goToNextPage}
-            maxVisiblePages={maxVisiblePages}/>
-    )
-}
+            maxVisiblePages={maxVisiblePages}
+        />
+    );
+};

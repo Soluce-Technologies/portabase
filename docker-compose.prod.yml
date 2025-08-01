@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: docker/dockerfile/Dockerfile
       target: prod
-
     ports:
       - '8887:80'
     env_file:

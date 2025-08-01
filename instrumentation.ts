@@ -1,6 +1,6 @@
-import {init} from "@/utils/init";
-
-
-export function register() {
-    init();
+export async function register() {
+    if (process.env.NEXT_RUNTIME === "nodejs") {
+        const init = await import("@/utils/init");
+        init.init();
+    }
 }

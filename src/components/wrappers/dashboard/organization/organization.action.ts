@@ -1,218 +1,260 @@
-"use server"
+"use server";
 
-import {ActionError, userAction} from "@/safe-actions";
-import {prisma} from "@/prisma";
+import {userAction} from "@/safe-actions";
 import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
 import {ServerActionResult} from "@/types/action-type";
-import {Organization} from "@prisma/client";
 import {z} from "zod";
-import {v4 as uuidv4} from "uuid";
-import {getDb} from "@/db";
 import {
     OrganizationFormSchema
-} from "@/components/wrappers/dashboard/organization/OrganizationForm/organization-form.schema";
-import {ProjectSchema} from "@/components/wrappers/dashboard/projects/ProjectsForm/ProjectForm.schema";
+} from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
+import {db} from "@/db";
+import {and, eq, inArray} from "drizzle-orm";
+import {auth, checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
+import {slugify} from "@/utils/slugify";
+import {Organization} from "@/db/schema/02_organization";
+import * as drizzleDb from "@/db";
+import {headers} from "next/headers";
 
-
-const verifySlugUniqueness = async (slug: string) => {
-    const slugExists = await prisma.organization.count({
-        where: {
-            slug: slug
-        },
-    })
-
-    if (slugExists) {
-        throw new ActionError("Slug already exists.");
-    }
-}
-
-
-export const createOrganizationAction = userAction
-    .schema(OrganizationSchema)
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
-
-        try {
-
-            await verifySlugUniqueness(parsedInput.slug)
-
-            const organization = await prisma.organization.create({
-                data: {
-                    ...parsedInput
-                }
-            })
-
-            await prisma.userOrganization.create({
-                data: {
-                    userId: ctx.user.id,
-                    organizationId: organization.id,
-                    role: "admin"
-                },
-            });
-
-            return {
-                success: true,
-                value: organization,
-                actionSuccess: {
-                    message: "Organization has been successfully created.",
-                    messageParams: {organizationId: organization.id},
-                },
-            };
-
-        } catch (error) {
-            console.error("Error creating organization:", error);
+export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({parsedInput}): Promise<ServerActionResult<Organization>> => {
+    try {
+        const slug = slugify(parsedInput.name);
+        if (!await checkSlugOrganization(slug)) {
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to create organization.",
+                    message: "Slug is already taken",
                     status: 500,
-                    cause: error.message ?? "Unknown error",
                     messageParams: {message: "Error creating the organization"},
                 },
             };
         }
 
-    });
+        let createdOrganization: Organization;
 
+        try {
+            createdOrganization = await createOrganization(parsedInput.name, slug) as unknown as Organization;
+        } catch (authError: any) {
+            console.error("Auth deletion failed:", authError);
+            return {
+                success: false,
+                actionError: {
+                    message: authError.message || "Authentication service error.",
+                    status: authError.status || 500,
+                    cause: "auth_error",
+                    messageParams: {message: authError.message},
+                },
+            };
+        }
 
-
+        return {
+            success: true,
+            value: createdOrganization,
+            actionSuccess: {
+                message: "Organization has been successfully created.",
+                messageParams: {organizationId: createdOrganization!.id},
+            },
+        };
+    } catch (error) {
+        console.error("Error creating organization:", error);
+        return {
+            success: false,
+            actionError: {
+                message: "Failed to create organization.",
+                status: 500,
+                messageParams: {message: "Error creating the organization"},
+            },
+        };
+    }
+});
 
 export const updateOrganizationAction = userAction
     .schema(
         z.object({
             data: OrganizationFormSchema,
-            organizationId: z.string()
-        }))
+            organizationId: z.string(),
+        })
+    )
     .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
-
-            const newUserList = parsedInput.data.users
-
-            const organization = await prisma.organization.findFirst({
-                where:{
-                    id: parsedInput.organizationId,
-                },
-                include: {
-                    users : {}
+            const newUserList = parsedInput.data.users;
+            console.log(parsedInput);
+            const organization = await db.query.organization.findFirst({
+                where: eq(drizzleDb.schemas.organization.id, parsedInput.organizationId),
+                with: {
+                    members: true,
                 }
-            })
+            });
 
-            const existingItemIds = organization.users.map((user) => user.userId);
-            const usersToAdd = newUserList.filter(
-                (id) => !existingItemIds.includes(id)
-            );
-            const usersToRemove = existingItemIds.filter(
-                (id) => !newUserList.includes(id)
-            );
 
-            console.log(usersToAdd);
-            console.log(usersToRemove);
+            if (!organization) {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "Organization not found.",
+                        status: 404,
+                        cause: "not_found",
+                    },
+                };
+            }
 
+            const existingItemIds = organization.members
+                .filter((member) => member.userId !== ctx.user.id)
+                .map((member) => member.userId);
+            const usersToAdd = newUserList.filter((id) => !existingItemIds.includes(id));
+            const usersToRemove = existingItemIds.filter((id) => !newUserList.includes(id));
 
             if (usersToAdd.length > 0) {
+                for (const userToAdd of usersToAdd) {
+                    await auth.api.addMember({
+                        body: {
+                            userId: userToAdd,
+                            role: "member",
+                            organizationId: organization.id,
+                        },
 
-                await prisma.userOrganization.createMany({
-                    data: usersToAdd.map((userId) => ({
-                        userId: userId,
-                        organizationId: organization.id,
-                        role: "member"
-                    })),
-                    skipDuplicates: true, // Optional: to avoid duplicate insertion errors
-                });
+                    });
+                }
+
+                //
+                // await db
+                //     .insert(drizzleDb.schemas.member)
+                //     .values(
+                //         usersToAdd.map((userId) => ({
+                //             userId,
+                //             organizationId: organization.id,
+                //             role: "member",
+                //         }))
+                //     )
+                //     .execute();
             }
+
             if (usersToRemove.length > 0) {
-                await prisma.userOrganization.deleteMany({
-                    where: {
-                        userId: { in: usersToRemove },
-                    },
+                await db.delete(drizzleDb.schemas.member).where(and(inArray(drizzleDb.schemas.member.userId, usersToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id))).execute();
+                // TODO : Do not delete, go permission error with better auth
+                // for (const userToRemove of usersToRemove) {
+                //
+                //     const memberToRemove = await db.query.member.findFirst({
+                //         where: and(eq(drizzleDb.schemas.member.userId, userToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id)),
+                //         with: {
+                //             user: true
+                //         }
+                //     })
+                //     console.log(memberToRemove)
+                //
+                //     if (memberToRemove) {
+                //         console.log("ici")
+                //         await auth.api.removeMember({
+                //             body: {
+                //                 memberIdOrEmail: memberToRemove.user.email,
+                //                 organizationId: organization.id,
+                //             },
+                //             headers: await headers()
+                //         });
+                //     }
+                //
+                // }
 
-                });
+
             }
 
-            const updatedOrganization = await prisma.organization.update({
-                where:{
-                    id: organization.id
-                },
-                data:{
+            // const updatedOrganization = await auth.api.updateOrganization({
+            //     body: {
+            //         data: {
+            //             name: parsedInput.data.name,
+            //             slug: parsedInput.data.slug,
+            //         },
+            //         organizationId: organization.id,
+            //     },
+            //     headers: await headers(),
+            // });
+
+
+            const updatedOrganization = await db
+                .update(drizzleDb.schemas.organization)
+                .set({
                     name: parsedInput.data.name,
                     slug: parsedInput.data.slug,
-                }
-            })
-
+                })
+                .where(eq(drizzleDb.schemas.organization.id, parsedInput.organizationId))
+                .returning()
+                .execute();
 
             return {
                 success: true,
-                value: updatedOrganization,
+                value: updatedOrganization as unknown as Organization,
                 actionSuccess: {
                     message: "Organization has been successfully updated.",
-                    messageParams: {organizationId: updatedOrganization.id},
+                    messageParams: {organizationId: organization.id},
                 },
             };
-
         } catch (error) {
+            console.error("Error updating organization:", error);
             return {
                 success: false,
                 actionError: {
                     message: "Failed to update organization.",
                     status: 500,
-                    cause: error.message ?? "Unknown error",
+                    cause: "server_error",
                     messageParams: {message: "Error updating the organization"},
                 },
             };
         }
-
     });
 
-
-
-
-
-export const deleteOrganizationAction = userAction
-    .schema(z.string())
-    .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
-        console.log(parsedInput);
+export const deleteOrganizationAction = userAction.schema(z.string()).action(
+    async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
+            const org = await db.query.organization.findFirst({
+                where: eq(drizzleDb.schemas.organization.slug, parsedInput),
+            });
 
-            const db = await getDb()
-            const uuid = uuidv4()
-            const organization = await db.organization.findFirst({
-                where: {
-                    slug: parsedInput,
-                }
-            })
-            console.log(organization);
-            const organizationUpdated = await db.organization.update({
-                where: {
-                    slug: parsedInput,
-                },
-                data: {
-                    name: `${organization.name}-${uuid}`,
-                    slug: `${organization.slug}-${uuid}`,
-                    deleted : true
+            if (!org) {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "Organization not found.",
+                        status: 404,
+                        cause: "not_found",
+                    },
+                };
+            }
 
-                }
-            })
+            let deletedOrganization: Organization;
 
+            try {
+                deletedOrganization = await deleteOrganization(org.id) as Organization;
+            } catch (authError: any) {
+                console.error("Auth deletion failed:", authError);
+                return {
+                    success: false,
+                    actionError: {
+                        message: authError.message || "Authentication service error.",
+                        status: authError.status || 500,
+                        cause: "auth_error",
+                        messageParams: {message: authError.message},
+                    },
+                };
+            }
 
             return {
                 success: true,
-                value: organizationUpdated,
+                value: deletedOrganization,
                 actionSuccess: {
                     message: "Organization has been successfully deleted.",
-                    messageParams: {organizationId: organizationUpdated.id},
+                    messageParams: {organizationId: deletedOrganization.id},
                 },
             };
-
         } catch (error) {
-            console.error("Error deleting organization:", error);
+            console.error("Unexpected error in deleteOrganizationAction:", error);
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to delete organization.",
+                    message: "Failed to delete organization due to a server error.",
                     status: 500,
-                    cause: error.message ?? "Unknown error",
-                    messageParams: {message: "Error deleting the organization"},
+                    cause: "server_error",
+                    messageParams: {message: "Internal server error while deleting the organization"},
                 },
             };
         }
-
-    });
+    }
+);

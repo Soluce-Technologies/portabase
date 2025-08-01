@@ -1,14 +1,16 @@
-import {prisma} from "@/prisma";
 import {NextResponse} from "next/server";
-import {Dbms} from "@prisma/client";
 import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {handleDatabases} from "./helpers";
 import {eventEmitter} from "../../../events/route";
-
+import * as drizzleDb from "@/db";
+import {db} from "@/db";
+import {EDbmsSchema} from "@/db/schema/types";
+import {eq} from "drizzle-orm";
+import {isUuidv4} from "@/utils/verify-uuid";
 
 export type databaseAgent = {
     name: string,
-    dbms: Dbms,
+    dbms: EDbmsSchema,
     generatedId: string
 }
 
@@ -33,25 +35,31 @@ export async function POST(
         const body: Body = await request.json();
         const lastContact = new Date();
 
-        const agent = await prisma.agent.findFirst({
-            where: {
-                id: agentId
-            }
+        if (!isUuidv4(agentId)) {
+            return NextResponse.json(
+                {error: "agentId is not a valid uuid"},
+                {status: 500}
+            );
+        }
+
+
+
+        const agent = await db.query.agent.findFirst({
+            where: eq(drizzleDb.schemas.agent.id, agentId),
         })
+
         if (!agent) {
             return NextResponse.json({error: "Agent not found"}, {status: 404})
         }
         const databasesResponse = await handleDatabases(body, agent, lastContact)
-        await prisma.agent.update({
-            where:{
-                id: agentId,
-            },
-            data:{
-                lastContact: lastContact,
-            }
-        })
 
-        eventEmitter.emit('modification', { update: true });
+
+        await db
+            .update(drizzleDb.schemas.agent)
+            .set({ lastContact: lastContact })
+            .where(eq(drizzleDb.schemas.agent.id, agentId));
+
+        eventEmitter.emit('modification', {update: true});
 
         const response = {
             agent: {

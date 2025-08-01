@@ -1,13 +1,18 @@
 #!/bin/bash
+#
+#npx drizzle-kit generate
+#npx drizzle-kit migrate
+#
+#npm run dev
+#
+#exec "$@"
+set -euo pipefail
 
-npm install -g npm@11.0.0
-npm -v
+echo "▶ Running Drizzle codegen..."
+npx drizzle-kit generate
 
+echo "▶ Applying migrations..."
+npx drizzle-kit migrate
 
-current_date=$(date +"%Y-%m-%d")
-npx zenstack generate
-npx prisma migrate dev --name $current_date
-
-npm run dev
-
-exec "$@"
+echo "▶ Starting Next.js dev server..."
+exec npm run dev

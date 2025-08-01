@@ -1,5 +1,3 @@
-
-
 export type eventUpdate = {
-    update : boolean
-}
+    update: boolean;
+};

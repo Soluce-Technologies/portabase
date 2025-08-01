@@ -1,2 +1,4 @@
-migrate:
-	docker compose run --rm app sh -c "npx prisma migrate dev"
+CLUSTER_SCRIPT=docker/entrypoints/app-dev-entrypoint.sh
+
+up:
+	@bash $(CLUSTER_SCRIPT)

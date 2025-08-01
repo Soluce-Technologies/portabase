@@ -29,6 +29,16 @@ jobs:
         with:
           images: solucetechnologies/portabase
 
+      - name: Set tags
+        id: set-tags
+        run: |
+          echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          TAGS="solucetechnologies/portabase:${GITHUB_REF#refs/tags/}"
+          if [ "${{ github.event.release.target_commitish }}" = "main" ]; then
+            TAGS="$TAGS,solucetechnologies/portabase:latest"
+          fi
+          echo "tags=$TAGS" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v6
@@ -36,10 +46,20 @@ jobs:
           context: .
           file: ./docker/dockerfile/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.set-tags.outputs.tags }}
           target: prod
 
+# Do not delete
+#      - name: Build and push Docker image
+#        id: push
+#        uses: docker/build-push-action@v6
+#        with:
+#          context: .
+#          file: ./docker/dockerfile/Dockerfile
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#          target: prod
 
 #      - name: Generate artifact attestation
 #        uses: actions/attest-build-provenance@v2

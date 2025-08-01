@@ -1,42 +1,28 @@
-import {PageParams} from "@/types/next";
-
-import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
-import {requiredCurrentUser} from "@/auth/current-user";
-import {prisma} from "@/prisma";
-import {AdminTabs} from "@/components/wrappers/dashboard/admin/admin-tabs";
+import { PageParams } from "@/types/next";
+import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
+import { AdminTabs } from "@/components/wrappers/dashboard/admin/admin-tabs";
+import { db } from "@/db";
+import {isNull} from "drizzle-orm";
 
 
 export default async function RoutePage(props: PageParams<{}>) {
 
+    const users = await db.query.user.findMany({
+        where: (fields) => isNull(fields.deletedAt)
+    });
 
-    const user = await requiredCurrentUser()
-
-    const users = await prisma.user.findMany({
-        where: {
-            // id: {
-            //     not: user.id
-            // },
-            deleted: {not: true},
-
-        }
-    })
-
-    const settings = await prisma.settings.findUnique({
-        where: {
-            name: "system"
-        }
-    })
+    const settings = await db.query.setting.findFirst({
+        where: (fields, { eq }) => eq(fields.name, "system"),
+    });
 
     return (
         <Page>
             <PageHeader>
-                <PageTitle>
-                    Administration Panel
-                </PageTitle>
+                <PageTitle>Administration Panel</PageTitle>
             </PageHeader>
-            <PageContent className="mt-10">
-                <AdminTabs settings={settings} currentUser={user} users={users}/>
+            <PageContent>
+                <AdminTabs settings={settings!} users={users} />
             </PageContent>
         </Page>
-    )
+    );
 }

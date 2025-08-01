@@ -1,43 +1,41 @@
-"use server"
+"use server";
 
-import {z} from "zod";
+import { z } from "zod";
+import { userAction } from "@/safe-actions";
+import { db } from "@/db";
+import { ServerActionResult } from "@/types/action-type";
+import * as drizzleDb from "@/db";
+import {Backup} from "@/db/schema/06_database";
 
-import {userAction} from "@/safe-actions";
-import {prisma} from "@/prisma";
-import {ServerActionResult} from "@/types/action-type";
-import {Backup} from "@prisma/client";
+export const backupButtonAction = userAction.schema(z.string()).action(async ({ parsedInput }): Promise<ServerActionResult<Backup>> => {
+    try {
+        const [createdBackup] = await db
+            .insert(drizzleDb.schemas.backup)
+            .values({
+                databaseId: parsedInput,
+                status: "waiting",
+            })
+            .returning();
 
+        return {
+            success: true,
+            value: createdBackup,
+            actionSuccess: {
+                message: "Backup has been successfully created.",
+                messageParams: { databaseId: parsedInput },
+            },
+        };
+    } catch (error) {
+        console.error("Error creating backup:", error);
 
-export const backupButtonAction = userAction
-    .schema(z.string())
-    .action(async ({ parsedInput, ctx }): Promise<ServerActionResult<Backup>> => {
-        try {
-            const backup = await prisma.backup.create({
-                data: {
-                    databaseId: parsedInput,
-                    status: "waiting",
-                },
-            });
-
-            return {
-                success: true,
-                value: backup,
-                actionSuccess: {
-                    message: "Backup has been successfully created.",
-                    messageParams: { databaseId: parsedInput },
-                },
-            };
-        } catch (error) {
-            console.error("Error creating backup:", error);
-
-            return {
-                success: false,
-                actionError: {
-                    message: "Failed to create backup.",
-                    status: 500,
-                    cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: { databaseId: parsedInput },
-                },
-            };
-        }
-    });
+        return {
+            success: false,
+            actionError: {
+                message: "Failed to create backup.",
+                status: 500,
+                cause: error instanceof Error ? error.message : "Unknown error",
+                messageParams: { databaseId: parsedInput },
+            },
+        };
+    }
+});

@@ -1,20 +1,14 @@
-import {NextResponse} from "next/server";
-
+import { NextResponse } from "next/server";
 
 export type BodyInit = {
-    initialize: boolean
-}
+    initialize: boolean;
+};
 
-
-
-export async function POST(
-    request: Request,
-) {
+export async function POST(request: Request) {
     try {
         const body: BodyInit = await request.json();
 
-        console.log(body)
-
+        console.log(body);
 
         return NextResponse.json(
             {
@@ -24,9 +18,6 @@ export async function POST(
         );
     } catch (error) {
         console.error("Error in POST initialization:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

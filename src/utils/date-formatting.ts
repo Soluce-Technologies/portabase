@@ -1,7 +1,7 @@
 import {format} from "date-fns";
 
 export function humanReadableDate(rawDate: string | number | Date) {
-    return format(new Date(rawDate), 'dd/MM/yyyy HH:mm')
+    return formatFrenchDate(rawDate);
 }
 
 export function timeAgo(rawDate: string | number | Date) {
@@ -12,6 +12,12 @@ export function timeAgo(rawDate: string | number | Date) {
 export function formatDateLastContact(lastContact: string | number | Date | null) {
     console.log(lastContact)
     return lastContact
-        ? format(new Date(lastContact), 'dd/MM/yyyy HH:mm')
+        ? formatFrenchDate(lastContact)
         : "Never connected."
+}
+
+export function formatFrenchDate(date: string | number | Date) {
+    return new Date(date).toLocaleString("fr-FR", {
+        timeZone: "Europe/Paris",
+    });
 }

@@ -1,14 +1,17 @@
 import {NextResponse} from "next/server";
 import {isUuidv4} from "@/utils/verify-uuid";
-import {prisma} from "@/prisma";
 import {eventEmitter} from "../../../events/route";
-
+import * as drizzleDb from "@/db";
+import {db} from "@/db";
+import {and, eq} from "drizzle-orm";
 
 
 export type BodyResultRestore = {
     generatedId: string
     status: string
 }
+type RestorationStatus = 'waiting' | 'ongoing' | 'failed' | 'success';
+
 
 
 export async function POST(
@@ -17,7 +20,7 @@ export async function POST(
 ) {
 
     try {
-        eventEmitter.emit('modification', { update: true });
+        eventEmitter.emit('modification', {update: true});
 
         const agentId = (await params).agentId
         const body: BodyResultRestore = await request.json();
@@ -33,53 +36,44 @@ export async function POST(
             );
         }
 
-        const agent = await prisma.agent.findFirst({
-            where: {
-                id: agentId
-            }
+        const agent = await db.query.agent.findFirst({
+            where: eq(drizzleDb.schemas.agent.id, agentId)
         })
         if (!agent) {
             return NextResponse.json({error: "Agent not found"}, {status: 404})
         }
 
-        const database = await prisma.database.findFirst({
-            where: {
-                generatedId: body.generatedId
-            }
+        const database = await db.query.database.findFirst({
+            where: eq(drizzleDb.schemas.database.agentDatabaseId, body.generatedId)
+
         })
 
         if (!database) {
             return NextResponse.json({error: "Database associated with generatedId provided not found"}, {status: 404})
         }
 
-        const restoration = await prisma.restoration.findFirst({
-            where: {
-                status : "ongoing",
-                databaseId: database.id
-            }
+        const restoration = await db.query.restoration.findFirst({
+            where: and(eq(drizzleDb.schemas.restoration.status, "ongoing"), eq(drizzleDb.schemas.restoration.databaseId, database.id),)
         })
+
         if (!restoration) {
             return NextResponse.json({error: "Unable to fin the corresponding restoration"}, {status: 404})
         }
 
-        await prisma.restoration.update({
-            where:{
-                id : restoration.id
-            },
-            data: {
-                status: body.status
-            }
-        })
+        await db
+            .update(drizzleDb.schemas.restoration)
+            .set({ status: body.status as RestorationStatus })
+            .where(eq(drizzleDb.schemas.restoration.id, restoration.id));
 
         const response = {
             message: true,
             details: "Restoration successfully updated"
         }
 
-        eventEmitter.emit('modification', { update: true });
+        eventEmitter.emit('modification', {update: true});
 
 
-        return Response.json(response , {status: 200})
+        return Response.json(response, {status: 200})
 
 
     } catch (error) {

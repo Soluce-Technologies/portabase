@@ -1,76 +1,49 @@
-"use client"
-
-import {useEffect, useState} from "react";
+"use client";
 
 import {ComboBox} from "@/components/wrappers/common/combobox";
-import {Organization} from "@prisma/client";
-import {
-    getCurrentOrganizationSlug,
-    setCurrentOrganizationSlug
-} from "@/features/dashboard/organization-cookie";
 import {useSidebar} from "@/components/ui/sidebar";
 import {useRouter} from "next/navigation";
-
-export type organizationComboBoxProps = {
-    organizations: Organization[]
-    defaultOrganization: Organization
-}
+import {authClient} from "@/lib/auth/auth-client";
+import {auth} from "@/lib/auth/auth";
 
 
-export function OrganizationCombobox(props: organizationComboBoxProps) {
-    const router = useRouter()
-    // const {organizationId, moveToAnotherOrganization} = useStore((state) => state);
+export function OrganizationCombobox() {
+    const router = useRouter();
+    const {state} = useSidebar();
 
-    const [organizationSlug, setOrganizationSlug] = useState<string>()
+    const {data: organizations, refetch} = authClient.useListOrganizations();
+    const {data: activeOrganization, refetch: refetchActiveOrga} = authClient.useActiveOrganization();
 
-    const {organizations, defaultOrganization} = props
+    if (!organizations) return null;
 
-    useEffect(() => {
-        getCurrentOrganizationSlug().then(slug => {
+    console.log("organizations", organizations);
+    console.log("activeOrganization", activeOrganization);
 
-            if (slug == "") {
-                setOrganizationSlug(defaultOrganization.id)
-                setCurrentOrganizationSlug(defaultOrganization.slug)
-            } else {
-                setOrganizationSlug(slug)
-                const organization = organizations.find(organization => organization.slug === slug)
-                if (!organization) {
-                    setOrganizationSlug(defaultOrganization.id)
-                    setCurrentOrganizationSlug(defaultOrganization.slug)
-                }
-            }
-        })
-
-    }, [organizationSlug])
-
-    const values = organizations.map(organization => {
-        return ({
+    const values = organizations.map((organization) => {
+        return {
             value: organization.slug,
             label: organization.name,
-        })
-    })
+        };
+    });
 
-    const onValueChange = (slug: string) => {
-        if (organizationSlug !== slug) {
-            setOrganizationSlug(slug)
-            setCurrentOrganizationSlug(slug)
-            router.replace("/dashboard")
-        }
+
+
+    const onValueChange = async (slug: string) => {
+
+        await authClient.organization.setActive({
+            organizationSlug: slug,
+        });
+        router.refresh();
+
+    };
+
+    const handleReset = () => {
+        refetch();
+        refetchActiveOrga()
+        router.refresh();
     }
-    const {state, isMobile} = useSidebar();
 
-
-    return (
-        <>
-            {state === 'expanded' && (
-                <ComboBox
-                    sideBar
-                    values={values}
-                    defaultValue={organizationSlug}
-                    onValueChange={onValueChange}/>
-            )}
-
-        </>
-
-    )
+    return <>{state === "expanded" &&
+        <ComboBox sideBar values={values} defaultValue={activeOrganization?.slug} onValueChange={onValueChange}
+                  reload={handleReset}/>}</>;
 }

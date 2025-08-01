@@ -1,46 +1,40 @@
-"use client"
+"use client";
 
-import {useEffect, useState} from "react";
-import {CheckIcon, ClipboardIcon, Copy} from "lucide-react";
-import {Button, buttonVariants} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
-import {useTranslations} from "use-intl";
-
+import { useEffect, useState } from "react";
+import { CheckIcon, Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export async function copyToClipboardWithMeta(value: string) {
-    navigator.clipboard.writeText(value)
+    navigator.clipboard.writeText(value);
 }
-
 
 export type CopyButtonProps = {
-    value: string,
-    className: string
-}
-
+    value: string;
+    className?: string;
+};
 
 export const CopyButton = (props: CopyButtonProps) => {
+    const { value } = props;
 
-    const {value} = props
-
-    const [hasCopied, setHasCopied] = useState(false)
+    const [hasCopied, setHasCopied] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
-            setHasCopied(false)
-        }, 2000)
-    }, [hasCopied])
+            setHasCopied(false);
+        }, 2000);
+    }, [hasCopied]);
 
     return (
         <Button
             // className={cn(buttonVariants({size: "sm"}))}
             onClick={() => {
-                copyToClipboardWithMeta(value)
-                setHasCopied(true)
+                copyToClipboardWithMeta(value);
+                setHasCopied(true);
             }}
             {...props}
         >
             <span className="mr-2">Copy</span>
-            {hasCopied ? <CheckIcon/> : <Copy size="18"/>}
+            {hasCopied ? <CheckIcon /> : <Copy size="18" />}
         </Button>
-    )
-}
+    );
+};

@@ -10,7 +10,6 @@ echo " Community Edition v1.0.0                                 "
 echo "                                                          "
 
 
-npx prisma migrate deploy
 node server.js
 
 exec "$@"

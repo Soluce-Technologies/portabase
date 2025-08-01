@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import {useMutation} from "@tanstack/react-query";
 
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
@@ -10,53 +10,63 @@ import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/o
 import {createOrganizationAction} from "@/components/wrappers/dashboard/organization/organization.action";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {authClient} from "@/lib/auth/auth-client";
+import {toast} from "sonner";
 
 export type createOrganizationModalProps = {
-    children: any
-}
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSuccess?: () => void;
+
+};
+
+export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createOrganizationModalProps) {
 
 
-export function CreateOrganizationModal(props: createOrganizationModalProps) {
-    const [open, setOpen] = useState(false);
-
-    const {children} = props;
-
-    const router = useRouter()
+    const router = useRouter();
 
     const form = useZodForm({
         schema: OrganizationSchema,
     });
 
+
     const mutation = useMutation({
         mutationFn: async (values: OrganizationSchema) => {
-            console.log(values)
-            const result = await createOrganizationAction(values)
-            setOpen(false);
-            router.refresh()
-        }
-    })
+            console.log(values);
 
+            const result = await createOrganizationAction(values);
+
+            if (result?.data?.success && result.data.value) {
+                onOpenChange(false);
+                await authClient.organization.setActive({organizationSlug: result.data.value.slug});
+                onSuccess?.();
+                toast.success(result.data.actionSuccess?.message || "Organization Created.");
+                // router.push("/");
+                router.replace(`/dashboard/home`);
+            } else {
+                // @ts-ignore
+                const errorMsg = result?.data?.actionError?.message || result?.data?.actionError?.messageParams?.message || "Failed to create the organization.";
+                toast.error(errorMsg);
+            }
+
+        },
+    });
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px] w-full">
-
                 <DialogHeader>
                     <DialogTitle>Create a new organization</DialogTitle>
                 </DialogHeader>
 
                 <div className="sm:max-w-[375px] w-full">
-                    <Form form={form}
-                          className="flex flex-col gap-4"
-                          onSubmit={async (values) => {
-                              console.log(values)
-                              await mutation.mutateAsync(values);
-                          }}
+                    <Form
+                        form={form}
+                        className="flex flex-col gap-4"
+                        onSubmit={async (values) => {
+                            console.log(values);
+                            await mutation.mutateAsync(values);
+                        }}
                     >
                         <FormField
                             control={form.control}
@@ -72,25 +82,26 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="slug"
-                            defaultValue=""
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Slug</FormLabel>
-                                    <FormControl>
-                                        <Input {...field}
-                                               onChange={(e) => {
-                                                   const value = e.target.value.replaceAll(" ", "-").toLowerCase()
-                                                   field.onChange(value)
-                                               }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+                        {/*<FormField*/}
+                        {/*    control={form.control}*/}
+                        {/*    name="slug"*/}
+                        {/*    defaultValue=""*/}
+                        {/*    render={({field}) => (*/}
+                        {/*        <FormItem>*/}
+                        {/*            <FormLabel>Slug</FormLabel>*/}
+                        {/*            <FormControl>*/}
+                        {/*                <Input*/}
+                        {/*                    {...field}*/}
+                        {/*                    onChange={(e) => {*/}
+                        {/*                        const value = e.target.value.replaceAll(" ", "-").toLowerCase();*/}
+                        {/*                        field.onChange(value);*/}
+                        {/*                    }}*/}
+                        {/*                />*/}
+                        {/*            </FormControl>*/}
+                        {/*            <FormMessage/>*/}
+                        {/*        </FormItem>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
                         <DialogFooter>
                             <div className="flex items-center justify-between w-full">
                                 <Button type="submit">Create</Button>
@@ -98,10 +109,7 @@ export function CreateOrganizationModal(props: createOrganizationModalProps) {
                         </DialogFooter>
                     </Form>
                 </div>
-
-
             </DialogContent>
-
         </Dialog>
-    )
+    );
 }
