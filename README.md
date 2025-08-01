@@ -12,14 +12,13 @@
     <a href="https://portabase.io"><strong>Explore the Docs »</strong></a>
     <br />
     <br />
-    <a href="https://portabase.io">View Demo</a>
+    <a href="https://www.youtube.com/watch?v=D9uFrGxLc4s">View Demo</a>
     ·
     <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
     <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=D9uFrGxLc4s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
 
