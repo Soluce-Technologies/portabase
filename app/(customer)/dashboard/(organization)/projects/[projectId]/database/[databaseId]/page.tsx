@@ -36,6 +36,9 @@ export default async function RoutePage(props: PageParams<{
 
     const dbItem = await db.query.database.findFirst({
         where: and(inArray(drizzleDb.schemas.backup.id, databasesProject.ids ?? []), eq(drizzleDb.schemas.database.id, databaseId), eq(drizzleDb.schemas.database.projectId, projectId)),
+        with: {
+            project: true
+        }
     });
 
     if (!dbItem) {
@@ -71,6 +74,12 @@ export default async function RoutePage(props: PageParams<{
             .then((rows) => rows.length),
     ]);
 
+
+    const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
+    if (!settings) {
+        notFound();
+    }
+
     const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
     return (
@@ -88,7 +97,8 @@ export default async function RoutePage(props: PageParams<{
             <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             <PageContent className="flex flex-col w-full h-full">
                 <DatabaseKpi successRate={successRate} database={dbItem} totalBackups={totalBackups}/>
-                <DatabaseTabs database={dbItem} isAlreadyRestore={isAlreadyRestore} backups={backups}
+                <DatabaseTabs settings={settings} database={dbItem} isAlreadyRestore={isAlreadyRestore}
+                              backups={backups}
                               restorations={restorations}/>
             </PageContent>
         </Page>

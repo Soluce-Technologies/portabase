@@ -7,13 +7,15 @@ import { eventUpdate } from "@/types/events";
 import { backupColumns } from "@/features/dashboard/backup/columns";
 import { restoreColumns } from "@/features/dashboard/restore/columns";
 import { DataTable } from "@/components/wrappers/common/table/data-table";
-import {Backup, Database, Restoration} from "@/db/schema/06_database";
+import {Backup, Database, DatabaseWith, Restoration} from "@/db/schema/06_database";
+import {Setting} from "@/db/schema/00_setting";
 
 export type DatabaseTabsProps = {
+    settings: Setting
     backups: Backup[];
     restorations: Restoration[];
     isAlreadyRestore: boolean;
-    database: Database;
+    database: DatabaseWith;
 };
 
 export const DatabaseTabs = (props: DatabaseTabsProps) => {
@@ -41,7 +43,7 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
             </TabsList>
 
             <TabsContent className="h-full justify-between" value="backup">
-                <DataTable columns={backupColumns(props.isAlreadyRestore)} data={props.backups} enablePagination />
+                <DataTable columns={backupColumns(props.isAlreadyRestore, props.settings, props.database)} data={props.backups} enablePagination />
             </TabsContent>
             <TabsContent className="h-full justify-between" value="restore">
                 <DataTable columns={restoreColumns(props.isAlreadyRestore)} data={props.restorations} enablePagination />

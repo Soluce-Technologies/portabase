@@ -23,16 +23,23 @@ async function getS3Client() {
         secretKey: settings.s3SecretAccessKey ?? "",
     };
 
-    const s3Client =
-        env.NODE_ENV === "production"
-            ? new Minio.Client({
-                ...baseConfig,
-            })
-            : new Minio.Client({
-                ...baseConfig,
-                port: Number(env.S3_PORT ?? 0),
-                useSSL: env.S3_USE_SSL === "true",
-            });
+    // const s3Client =
+    //     env.NODE_ENV === "production"
+    //         ? new Minio.Client({
+    //             ...baseConfig,
+    //             useSSL: env.S3_USE_SSL === "true",
+    //         })
+    //         : new Minio.Client({
+    //             ...baseConfig,
+    //             port: Number(env.S3_PORT ?? 0),
+    //             useSSL: env.S3_USE_SSL === "true",
+    //         });
+
+    const s3Client = new Minio.Client({
+        ...baseConfig,
+        port: Number(env.S3_PORT ?? 0),
+        useSSL: env.S3_USE_SSL === "true",
+    })
 
     return s3Client;
 }
@@ -167,4 +174,31 @@ export async function createPublicBucket({bucketName}: { bucketName: string }) {
     } catch (error) {
         console.error("Error creating bucket:", error);
     }
+}
+
+/**
+ * Generate a presigned URL for downloading a file from a private S3 bucket
+ * @param bucketName name of the bucket
+ * @param fileName name of the file
+ * @param expiry expiry time in seconds (default 1 hour)
+ * @returns presigned download URL
+ */
+export async function createPresignedUrlToDownload({
+                                                       bucketName,
+                                                       fileName,
+                                                       expiry = 60 * 60, // 1 hour
+                                                   }: {
+    bucketName: string;
+    fileName: string;
+    expiry?: number;
+}) {
+    const s3Client = await getS3Client();
+
+    // Optionally: ensure file exists
+    const fileExists = await checkFileExistsInBucket({ bucketName, fileName });
+    if (!fileExists) {
+        throw new Error("File does not exist in the bucket.");
+    }
+
+    return await s3Client.presignedGetObject(bucketName, fileName, expiry);
 }

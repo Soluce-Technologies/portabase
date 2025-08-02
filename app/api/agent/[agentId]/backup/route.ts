@@ -1,12 +1,13 @@
 import {NextResponse} from "next/server";
 import {isUuidv4} from "@/utils/verify-uuid";
-import {uploadLocalPrivate} from "@/features/upload/private/upload.action";
+import {uploadLocalPrivate, uploadS3Private} from "@/features/upload/private/upload.action";
 import {v4 as uuidv4} from "uuid";
 import {eventEmitter} from "../../../events/route";
 import {db} from "@/db";
 import {Backup} from "@/db/schema/06_database";
 import {and, eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {env} from "@/env.mjs";
 
 export async function POST(
     request: Request,
@@ -48,6 +49,9 @@ export async function POST(
 
         const database = await db.query.database.findFirst({
             where: eq(drizzleDb.schemas.database.agentDatabaseId, generatedId),
+            with: {
+                project: true
+            }
         });
 
         if (!database) {
@@ -108,7 +112,19 @@ export async function POST(
             const fileName = `${uuid}.dump`;
             const buffer = Buffer.from(await file.arrayBuffer());
 
-            const {success, message, filePath} = await uploadLocalPrivate(fileName, buffer);
+            const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
+            if (!settings) {
+                throw new Error("System settings not found.");
+            }
+
+            let success: boolean, message: string, filePath: string;
+
+            const result =
+                settings.storage === "local"
+                    ? await uploadLocalPrivate(fileName, buffer)
+                    : await uploadS3Private(`${database.project?.slug}/${fileName}`, buffer, env.S3_BUCKET_NAME!);
+
+            ({success, message, filePath} = result);
 
             if (!success) {
                 return NextResponse.json(

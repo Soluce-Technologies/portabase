@@ -1,16 +1,25 @@
 "use server";
 
-import { mkdir, writeFile } from "fs/promises";
+import {mkdir, writeFile} from "fs/promises";
 import path from "path";
 import * as fs from "node:fs";
-import { getServerUrl } from "@/utils/get-server-url";
+import {getServerUrl} from "@/utils/get-server-url";
+import {createPresignedUrlToDownload, saveFileInBucket} from "@/utils/s3-file-management";
+import crypto from "crypto";
+import {env} from "@/env.mjs";
+import {userAction} from "@/safe-actions";
+import {z} from "zod";
+import {ServerActionResult} from "@/types/action-type";
+import {Backup} from "@/db/schema/06_database";
+import {db} from "@/db";
+import * as drizzleDb from "@/db";
 
 const privateLocalDir = "private/uploads/files/";
+const privateS3Dir = "backups/";
 
 export async function uploadLocalPrivate(fileName: string, buffer: any) {
     try {
-        await mkdir(path.join(process.cwd(), privateLocalDir), { recursive: true });
-
+        await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
         await writeFile(path.join(process.cwd(), privateLocalDir, fileName), buffer);
 
         return {
@@ -24,10 +33,31 @@ export async function uploadLocalPrivate(fileName: string, buffer: any) {
     }
 }
 
+export async function uploadS3Private(fileName: string, buffer: any, bucketName: string) {
+    try {
+
+        await saveFileInBucket({
+            bucketName,
+            fileName: `${privateS3Dir}${fileName}`,
+            file: buffer,
+        });
+
+        return {
+            success: true,
+            filePath: `${privateS3Dir}${fileName}`,
+            message: "File uploaded successfully",
+        };
+    } catch (error) {
+        console.error("Error occurred:", error);
+        throw new Error("An error occurred while importing the private file");
+    }
+}
+
+
 export async function getFileUrlPresignedLocal(fileName: string) {
     try {
         const filePath = path.join(privateLocalDir, fileName);
-        await mkdir(path.join(process.cwd(), privateLocalDir), { recursive: true });
+        await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
 
         if (!fs.existsSync(filePath)) {
             console.error("File not found at:", filePath);
@@ -43,3 +73,46 @@ export async function getFileUrlPresignedLocal(fileName: string) {
         throw error;
     }
 }
+
+export async function getFileUrlPresignedS3(fileName: string) {
+    try {
+        return await createPresignedUrlToDownload({
+            bucketName: env.S3_BUCKET_NAME!,
+            fileName: fileName,
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const getFileUrlPreSignedS3Action = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<string>> => {
+    try {
+        const url = await createPresignedUrlToDownload({
+            bucketName: env.S3_BUCKET_NAME!,
+            fileName: parsedInput,
+        });
+        return {
+            success: true,
+            value: url,
+            actionSuccess: {
+                message: "Successfully get url",
+                messageParams: {fileName: parsedInput},
+            },
+        };
+    } catch (error) {
+        console.error("Error creating backup:", error);
+        return {
+            success: false,
+            actionError: {
+                message: "Failed to create url pre signed s3.",
+                status: 500,
+                cause: error instanceof Error ? error.message : "Unknown error",
+                messageParams: {fileName: parsedInput},
+            },
+        };
+    }
+});
+
+
+
