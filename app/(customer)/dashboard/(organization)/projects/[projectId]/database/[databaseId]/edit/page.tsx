@@ -19,6 +19,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
         notFound();
     }
 
+
     return (
         <Page>
             <PageHeader>
@@ -27,6 +28,7 @@ export default async function RoutePage(props: PageParams<{ databaseId: string }
             <PageContent>
                 <DatabaseForm
                     databaseId={databaseId}
+                    // @ts-ignore
                     defaultValues={{ ...dbItem, dbms: dbItem.dbms ?? "inactive", description: dbItem.description ?? undefined }}
                 />
             </PageContent>

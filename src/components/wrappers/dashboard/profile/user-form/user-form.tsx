@@ -11,13 +11,26 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { UserSchema, UserType } from "@/components/wrappers/dashboard/profile/user-form/user-form.schema";
 import { toast } from "sonner";
 import { updateUserAction } from "@/components/wrappers/dashboard/profile/user-form/user-form.action";
+import {DataTable} from "@/components/wrappers/common/table/data-table";
+import {sessionsColumns} from "@/components/wrappers/dashboard/admin/admin-user-tab/sessions/table-columns";
+import {accountsColumns} from "@/components/wrappers/dashboard/admin/admin-user-tab/accounts/table-columns";
+import {Session} from "better-auth";
 
-export type userFormProps = {
+export type UserFormProps = {
     defaultValues?: UserType;
     userId?: string;
+    sessions: Session[];
+    accounts: {
+        id: string;
+        provider: string;
+        createdAt: Date;
+        updatedAt: Date;
+        accountId: string;
+        scopes: string[];
+    }[];
 };
 
-export const UserForm = (props: userFormProps) => {
+export const UserForm = (props: UserFormProps) => {
     const isCreate = !Boolean(props.defaultValues);
 
     const form = useZodForm({
@@ -49,6 +62,7 @@ export const UserForm = (props: userFormProps) => {
     });
 
     return (
+        <div className="flex flex-col gap-y-4 h-full py-4">
         <TooltipProvider>
             <Card>
                 <CardHeader>
@@ -93,6 +107,25 @@ export const UserForm = (props: userFormProps) => {
                     </Form>
                 </CardContent>
             </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Active sessions</CardTitle>
+                    <CardDescription>Manage your active sessions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DataTable columns={sessionsColumns} data={props.sessions} enableSelect={false}/>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Auth providers</CardTitle>
+                    <CardDescription>Manage your active auth providers</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <DataTable columns={accountsColumns} data={props.accounts} enableSelect={false}/>
+                </CardContent>
+            </Card>
         </TooltipProvider>
+        </div>
     );
 };

@@ -27,13 +27,15 @@ export default async function RoutePage(props: PageParams<{  }>) {
             },
             orderBy: (db, {desc}) => [desc(db.createdAt)],
         })
-    ).filter((db) => db.project !== null) as DatabaseWith[];
+    ).filter((db) => db.project == null) as DatabaseWith[];
 
     const org = await db.query.organization.findFirst({
         where: eq(drizzleDb.schemas.organization.slug, organization.slug),
     });
 
     if (!org) notFound();
+
+    console.log("ici",availableDatabases)
 
     return (
         <Page>

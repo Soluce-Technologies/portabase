@@ -4,13 +4,19 @@ import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
 import {ServerActionResult} from "@/types/action-type";
-import {eq} from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
 
 export const deleteProjectAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<typeof drizzleDb.schemas.project.$inferSelect>> => {
     try {
         const uuid = uuidv4();
+        await db
+            .update(drizzleDb.schemas.database)
+            .set({
+                projectId: null,
+            })
+            .where(eq(drizzleDb.schemas.database.projectId, parsedInput));
 
         const updatedProjects = await db
             .update(drizzleDb.schemas.project)
@@ -27,6 +33,7 @@ export const deleteProjectAction = userAction.schema(z.string()).action(async ({
             throw new Error("Project not found or update failed");
         }
 
+
         return {
             success: true,
             value: updatedProject,
@@ -36,6 +43,7 @@ export const deleteProjectAction = userAction.schema(z.string()).action(async ({
             },
         };
     } catch (error) {
+        console.log(error);
         return {
             success: false,
             actionError: {

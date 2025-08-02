@@ -6,6 +6,7 @@ import {Badge} from "@/components/ui/badge";
 import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/button-delete-account/button-delete-account";
 import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/avatar/avatar-with-upload";
 import {currentUser} from "@/lib/auth/current-user";
+import {getAccounts, getSessions} from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await currentUser();
@@ -18,8 +19,8 @@ export default async function RoutePage(props: PageParams<{}>) {
         return notFound();
     }
 
-    // const sessions = await getSessions();
-    // const accounts = await getAccounts();
+    const sessions = await getSessions();
+    const accounts = await getAccounts();
 
     return (
         <Page>
@@ -43,18 +44,19 @@ export default async function RoutePage(props: PageParams<{}>) {
                 {/*    <ButtonDeleteAccount text="Delete my account"/>*/}
                 {/*</PageActions>*/}
             </div>
-            <PageContent>
+            <PageContent >
                 <UserForm
                     userId={user.id}
+                    sessions={sessions} accounts={accounts}
                     defaultValues={{
                         name: user.name,
                         email: user.email,
                         role: user.role ?? undefined,
                     }}
                 />
-                <div className="mt-4 sm:hidden">
-                    <ButtonDeleteAccount text="Delete my account"/>
-                </div>
+                {/*<div className="mt-4 sm:hidden ">*/}
+                {/*    <ButtonDeleteAccount  text="Delete my account"/>*/}
+                {/*</div>*/}
             </PageContent>
         </Page>
     );
