@@ -7,7 +7,7 @@ import {getServerUrl} from "@/utils/get-server-url";
 import {createPresignedUrlToDownload, saveFileInBucket} from "@/utils/s3-file-management";
 import crypto from "crypto";
 import {env} from "@/env.mjs";
-import {userAction} from "@/safe-actions";
+import {action, userAction} from "@/safe-actions";
 import {z} from "zod";
 import {ServerActionResult} from "@/types/action-type";
 import {Backup} from "@/db/schema/06_database";
@@ -54,25 +54,25 @@ export async function uploadS3Private(fileName: string, buffer: any, bucketName:
 }
 
 
-export async function getFileUrlPresignedLocal(fileName: string) {
-    try {
-        const filePath = path.join(privateLocalDir, fileName);
-        await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
-
-        if (!fs.existsSync(filePath)) {
-            console.error("File not found at:", filePath);
-            return `File not found at: ${filePath}`;
-        }
-        const crypto = require("crypto");
-        const baseUrl = getServerUrl();
-
-        const expiresAt = Date.now() + 60 * 1000; // expires in 1 minute
-        const token = crypto.createHash("sha256").update(`${fileName}${expiresAt}`).digest("hex");
-        return `${baseUrl}/api/files/${fileName}?token=${token}&expires=${expiresAt}`;
-    } catch (error) {
-        throw error;
-    }
-}
+// export async function getFileUrlPresignedLocal(fileName: string) {
+//     try {
+//         const filePath = path.join(privateLocalDir, fileName);
+//         await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
+//
+//         if (!fs.existsSync(filePath)) {
+//             console.error("File not found at:", filePath);
+//             return `File not found at: ${filePath}`;
+//         }
+//         const crypto = require("crypto");
+//         const baseUrl = getServerUrl();
+//
+//         const expiresAt = Date.now() + 60 * 1000; // expires in 1 minute
+//         const token = crypto.createHash("sha256").update(`${fileName}${expiresAt}`).digest("hex");
+//         return `${baseUrl}/api/files/${fileName}?token=${token}&expires=${expiresAt}`;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 export async function getFileUrlPresignedS3(fileName: string) {
     try {
@@ -86,33 +86,85 @@ export async function getFileUrlPresignedS3(fileName: string) {
 }
 
 
-export const getFileUrlPreSignedS3Action = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<string>> => {
-    try {
-        const url = await createPresignedUrlToDownload({
-            bucketName: env.S3_BUCKET_NAME!,
-            fileName: parsedInput,
-        });
-        return {
-            success: true,
-            value: url,
-            actionSuccess: {
-                message: "Successfully get url",
-                messageParams: {fileName: parsedInput},
-            },
-        };
-    } catch (error) {
-        console.error("Error creating backup:", error);
-        return {
-            success: false,
-            actionError: {
-                message: "Failed to create url pre signed s3.",
-                status: 500,
-                cause: error instanceof Error ? error.message : "Unknown error",
-                messageParams: {fileName: parsedInput},
-            },
-        };
-    }
-});
+export const getFileUrlPresignedLocal = action
+    .schema(z.string())
+    .action(async ({parsedInput}): Promise<ServerActionResult<string>> => {
+        try {
+            const filePath = path.join(privateLocalDir, parsedInput);
+            await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
 
+            if (!fs.existsSync(filePath)) {
+                console.error("File not found at:", filePath);
+                throw new Error(`File not found at: ${filePath}`);
+            }
+            const crypto = require("crypto");
+            const baseUrl = getServerUrl();
+
+            const expiresAt = Date.now() + 60 * 1000; // expires in 1 minute
+            const token = crypto.createHash("sha256").update(`${parsedInput}${expiresAt}`).digest("hex");
+
+            return {
+                success: true,
+                value: `${baseUrl}/api/files/${parsedInput}?token=${token}&expires=${expiresAt}`,
+                actionSuccess: {
+                    message: "Successfully retrieved presigned URL Local",
+                    messageParams: {fileName: parsedInput},
+                },
+            };
+        } catch (error) {
+
+            return {
+                success: false,
+                actionError: {
+                    message: "Failed to generate presigned URL",
+                    status: 500,
+                    cause: error instanceof Error ? error.message : "Unknown error",
+                    messageParams: {fileName: parsedInput},
+                },
+            };
+        }
+    });
+
+
+export const getFileUrlPreSignedS3Action = action
+    .schema(z.string())
+    .action(async ({parsedInput}): Promise<ServerActionResult<string>> => {
+        try {
+            const data = await createPresignedUrlToDownload({
+                bucketName: env.S3_BUCKET_NAME!,
+                fileName: parsedInput,
+            });
+
+            return {
+                success: true,
+                value: data.url,
+                actionSuccess: {
+                    message: "Successfully retrieved presigned URL",
+                    messageParams: {fileName: parsedInput},
+                },
+            };
+        } catch (error) {
+            const isNotFound = error instanceof Error && error.message.includes("File does not exist");
+
+            const logContext = {
+                file: parsedInput,
+                reason: error instanceof Error ? error.message : "Unknown",
+            };
+
+            console.error("Presigned URL generation failed:", logContext);
+
+            return {
+                success: false,
+                actionError: {
+                    message: isNotFound
+                        ? "File not found in S3 bucket"
+                        : "Failed to generate presigned URL",
+                    status: isNotFound ? 404 : 500,
+                    cause: error instanceof Error ? error.message : "Unknown error",
+                    messageParams: {fileName: parsedInput},
+                },
+            };
+        }
+    });
 
 

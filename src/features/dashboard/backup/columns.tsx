@@ -14,7 +14,6 @@ import {Download, MoreHorizontal, Trash2} from "lucide-react";
 import {ReloadIcon} from "@radix-ui/react-icons";
 import {
     getFileUrlPresignedLocal,
-    getFileUrlPresignedS3,
     getFileUrlPreSignedS3Action
 } from "@/features/upload/private/upload.action";
 import {useMutation} from "@tanstack/react-query";
@@ -26,6 +25,9 @@ import {Backup, DatabaseWith} from "@/db/schema/06_database";
 import {formatFrenchDate} from "@/utils/date-formatting";
 import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
 import {Setting} from "@/db/schema/00_setting";
+import {SafeActionResult} from "next-safe-action";
+import {ZodString} from "zod";
+import {ServerActionResult} from "@/types/action-type";
 
 
 export function backupColumns(isAlreadyRestore: boolean, settings: Setting, database: DatabaseWith): ColumnDef<Backup>[] {
@@ -103,19 +105,26 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                 };
 
                 const handleDownload = async (fileName: string) => {
+
                     let url: string = "";
+                    let data: SafeActionResult<string, ZodString, readonly [], {
+                        _errors?: string[] | undefined;
+                    }, readonly [], ServerActionResult<string>, object> | undefined
+
                     if (settings.storage == "local") {
-                        url = await getFileUrlPresignedLocal(fileName);
+                        data = await getFileUrlPresignedLocal(fileName!)
                     } else if (settings.storage == "s3") {
-                        const data = await getFileUrlPreSignedS3Action(`backups/${database.project?.slug}/${fileName}`)
-                        if (data?.data?.success) {
-                            url = data.data.value ?? "";
-                        } else {
-                            // @ts-ignore
-                            const errorMessage = data?.data?.actionError?.message || "Failed to get file!";
-                            toast.error(errorMessage);
-                        }
+                        data = await getFileUrlPreSignedS3Action(`backups/${database.project?.slug}/${fileName}`);
                     }
+                    console.log(data)
+                    if (data?.data?.success) {
+                        url = data.data.value ?? "";
+                    } else {
+                        // @ts-ignore
+                        const errorMessage = data?.data?.actionError?.message || "Failed to get file!";
+                        toast.error(errorMessage);
+                    }
+
                     window.open(url, "_self");
                 };
 

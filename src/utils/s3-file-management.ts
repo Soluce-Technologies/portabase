@@ -108,15 +108,35 @@ export async function saveFileInBucket({bucketName, fileName, file}: {
  * @param fileName name of the file
  * @returns true if file exists, false if not
  */
-export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
-    const s3Client = await getS3Client();
-
+// export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
+//     const s3Client = await getS3Client();
+//
+//     try {
+//         await s3Client.statObject(bucketName, fileName);
+//     } catch (error) {
+//         return false;
+//     }
+//     return true;
+// }
+export async function checkFileExistsInBucket({
+                                                  bucketName,
+                                                  fileName,
+                                              }: {
+    bucketName: string;
+    fileName: string;
+}): Promise<boolean> {
+    const s3 = await getS3Client();
     try {
-        await s3Client.statObject(bucketName, fileName);
-    } catch (error) {
+        const stat = await s3.statObject(bucketName, fileName);
+        return !!stat;
+    } catch (error: any) {
+        if (error.code === 'NoSuchKey' || error.message?.includes('not found')) {
+            return false;
+        }
+        // Instead of throwing, return false to prevent crashes
+        // console.error("Unexpected S3 statObject error:", error);
         return false;
     }
-    return true;
 }
 
 /**
@@ -186,19 +206,34 @@ export async function createPublicBucket({bucketName}: { bucketName: string }) {
 export async function createPresignedUrlToDownload({
                                                        bucketName,
                                                        fileName,
-                                                       expiry = 60 * 60, // 1 hour
+                                                       expiry = 60 * 60,
                                                    }: {
     bucketName: string;
     fileName: string;
     expiry?: number;
 }) {
-    const s3Client = await getS3Client();
+    try {
+        const s3Client = await getS3Client();
 
-    // Optionally: ensure file exists
-    const fileExists = await checkFileExistsInBucket({ bucketName, fileName });
-    if (!fileExists) {
-        throw new Error("File does not exist in the bucket.");
+        console.debug("Checking if file exists in bucket:", {bucketName, fileName});
+
+        const fileExists = await checkFileExistsInBucket({bucketName, fileName});
+
+        if (!fileExists) {
+            console.warn("File does not exist:", {bucketName, fileName});
+            throw new Error("File does not exist in the bucket.");
+        }
+        const presignedUrl = await s3Client.presignedGetObject(bucketName, fileName, expiry);
+        console.debug("Generated pre signed URL:", presignedUrl);
+
+        return {url: presignedUrl};
+    } catch (err: any) {
+        console.error("Error in createPreSignedUrlToDownload:", {
+            bucketName,
+            fileName,
+            errorMessage: err?.message,
+            // stack: err?.stack,
+        });
+        throw {error: err.message ?? "Unknown error"};
     }
-
-    return await s3Client.presignedGetObject(bucketName, fileName, expiry);
 }
