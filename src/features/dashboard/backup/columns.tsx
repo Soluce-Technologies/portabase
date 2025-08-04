@@ -24,6 +24,7 @@ import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
 
 
 export function backupColumns(isAlreadyRestore: boolean): ColumnDef<Backup>[] {
+
     return [
 
         {
