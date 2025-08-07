@@ -15,25 +15,38 @@ export type evolutionLineChartProps = {
 export function EvolutionLineChart(props: evolutionLineChartProps) {
     const { data } = props;
 
-    // Process data to calculate cumulative count
-    const cumulativeData = data.reduce(
-        (acc, backup) => {
-            const date = backup.createdAt.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+    // const cumulativeData = data.reduce(
+    //     (acc, backup) => {
+    //         const date = backup.createdAt.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+    //
+    //         // Increment count for the current date or initialize it
+    //         if (acc.length && acc[acc.length - 1].date === date) {
+    //             acc[acc.length - 1].count += 1;
+    //         } else {
+    //             const lastCount = acc.length ? acc[acc.length - 1].count : 0;
+    //             acc.push({ date, count: lastCount + 1 });
+    //         }
+    //
+    //         return acc;
+    //     },
+    //     [] as { date: string; count: number }[]
+    // );
+    const dailyData = data
+        .reduce((acc, backup) => {
+            const date = backup.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
-            // Increment count for the current date or initialize it
-            if (acc.length && acc[acc.length - 1].date === date) {
-                acc[acc.length - 1].count += 1;
+            // Find if the date already exists in the accumulator
+            const existing = acc.find(item => item.date === date);
+
+            if (existing) {
+                existing.count += 1;
             } else {
-                const lastCount = acc.length ? acc[acc.length - 1].count : 0;
-                acc.push({ date, count: lastCount + 1 });
+                acc.push({ date, count: 1 });
             }
 
             return acc;
-        },
-        [] as { date: string; count: number }[]
-    );
+        }, [] as { date: string; count: number }[]);
 
-    console.log(cumulativeData);
 
     const chartConfig = {
         date: {
@@ -50,7 +63,7 @@ export function EvolutionLineChart(props: evolutionLineChartProps) {
         <ChartContainer config={chartConfig}>
             <LineChart
                 accessibilityLayer
-                data={cumulativeData}
+                data={dailyData}
                 margin={{
                     left: 12,
                     right: 12,
@@ -68,7 +81,9 @@ export function EvolutionLineChart(props: evolutionLineChartProps) {
                 />
                 <YAxis />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                <Line dataKey="count" type="linear" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+                <Line dataKey="count" type="linear" stroke="#60a5fa" strokeWidth={2} dot={false} />
+
+                {/*<Line dataKey="count" type="linear" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />*/}
             </LineChart>
         </ChartContainer>
     );

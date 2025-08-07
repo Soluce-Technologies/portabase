@@ -37,7 +37,7 @@ export const schemas = {
 
 export const db = drizzle({
     client: pool,
-    logger: true,
+    // logger: true,
     schema: schemas,
 });
 

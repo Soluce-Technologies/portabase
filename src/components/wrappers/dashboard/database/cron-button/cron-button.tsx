@@ -20,9 +20,11 @@ export type CronButtonProps = {
 export const CronButton = (props: CronButtonProps) => {
     const router = useRouter();
     const [isSwitched, setIsSwitched] = useState(props.database.backupPolicy !== null);
+    const [open, setOpen] = useState(false);
 
     const updateDatabaseBackupPolicy = useMutation({
-        mutationFn: (value: string) => updateDatabaseBackupPolicyAction({ databaseId: props.database.id, backupPolicy: value }),
+        mutationFn: (value: string) =>
+            updateDatabaseBackupPolicyAction({ databaseId: props.database.id, backupPolicy: value }),
         onSuccess: () => {
             toast.success(`Method updated successfully.`);
             router.refresh();
@@ -34,15 +36,15 @@ export const CronButton = (props: CronButtonProps) => {
 
     const handleTypeChange = async (state: boolean) => {
         setIsSwitched(state);
-        if (state == false) {
+        if (!state) {
             await updateDatabaseBackupPolicy.mutateAsync("");
         }
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" {...props}>
+                <Button variant="outline" {...props} onClick={() => setOpen(true)}>
                     <Clock9 />
                 </Button>
             </DialogTrigger>
@@ -64,7 +66,14 @@ export const CronButton = (props: CronButtonProps) => {
                         id="type-mode"
                     />
                 </div>
-                {isSwitched ? <CronInput database={props.database} /> : null}
+                {isSwitched ? (
+                    <CronInput
+                        database={props.database}
+                        onSuccess={() => {
+                            setOpen(false);
+                        }}
+                    />
+                ) : null}
             </DialogContent>
         </Dialog>
     );

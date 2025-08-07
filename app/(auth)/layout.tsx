@@ -15,12 +15,9 @@ export default function Layout({children}: { children: React.ReactNode }) {
     const router = useRouter();
     const { data: session } = useSession();
 
-
-
     if (session && session.user && !session.user.banned && session.user.role !== "pending") {
         router.replace("/dashboard/home");
     }
-
 
     useEffect(() => {
         setMounted(true);

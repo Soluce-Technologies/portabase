@@ -9,22 +9,20 @@ import {useState} from "react";
 import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-delete-account/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
-import {User} from "@/db/schema/01_user";
+import {UserWithAccounts} from "@/db/schema/01_user";
 import {authClient, useSession} from "@/lib/auth/auth-client";
 import {formatFrenchDate} from "@/utils/date-formatting";
+import {providerSwitch} from "@/components/wrappers/common/provider-switch";
 
-export const usersColumnsAdmin: ColumnDef<User>[] = [
+export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
     {
         accessorKey: "role",
         header: "Role",
         cell: ({row}) => {
             const [role, setRole] = useState<string>(row.getValue("role"));
 
-
             const {data: session, isPending, error} = authClient.useSession();
-
-
-
+            const isSuperAdmin = session?.user.role == "superadmin";
             const isCurrentUser = session?.user.email === row.original.email;
 
             const updateMutation = useMutation({
@@ -51,11 +49,10 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
             }
 
 
-
             return (
                 <Badge
-                    className={isCurrentUser ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
-                    onClick={isCurrentUser ? undefined : () => handleUpdateRole()}
+                    className={isCurrentUser || !isSuperAdmin ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+                    onClick={isCurrentUser || !isSuperAdmin ? undefined : () => handleUpdateRole()}
                     variant="outline"
                 >
                     {role}
@@ -72,6 +69,21 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
         header: "Email",
     },
     {
+        accessorKey: "accounts",
+        header: "Provider ID",
+        cell: ({row}) => {
+            return(
+                <div>
+                    {row.original.accounts.map((item) => (
+                        <div key={item.id}>
+                            {providerSwitch(item.providerId)}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+    },
+    {
         accessorKey: "updatedAt",
         header: "Updated At",
         cell: ({row}) => {
@@ -84,6 +96,7 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
         cell: ({row}) => {
             const router = useRouter();
             const {data: session, isPending} = useSession();
+            const isSuperAdmin = session?.user.role == "superadmin";
 
             const mutation = useMutation({
                 mutationFn: () => deleteUserAction(row.original.id),
@@ -95,16 +108,16 @@ export const usersColumnsAdmin: ColumnDef<User>[] = [
 
             return (
                 <div className="flex items-center gap-2">
-                        <ButtonWithLoading
-                            disabled={!session || session?.user.email === row.original.email}
-                            variant="outline"
-                            text=""
-                            icon={<Trash2 color="red" size={15}/>}
-                            onClick={async () => {
-                                await mutation.mutateAsync();
-                            }}
-                            size="sm"
-                        />
+                    <ButtonWithLoading
+                        disabled={!isSuperAdmin || !session || session?.user.email === row.original.email}
+                        variant="outline"
+                        text=""
+                        icon={<Trash2 color="red" size={15}/>}
+                        onClick={async () => {
+                            await mutation.mutateAsync();
+                        }}
+                        size="sm"
+                    />
                 </div>
             );
         },

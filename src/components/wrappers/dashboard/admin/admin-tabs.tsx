@@ -1,20 +1,20 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SettingsEmailTab } from "@/components/wrappers/dashboard/admin/admin-email-tab/settings-email-tab";
-import { SettingsStorageTab } from "@/components/wrappers/dashboard/admin/admin-storage-tab/settings-storage-tab";
-import { AdminUsersTable } from "@/components/wrappers/dashboard/admin/admin-user-table";
-import { User } from "@/db/schema/01_user";
-import { Setting } from "@/db/schema/00_setting";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {SettingsEmailTab} from "@/components/wrappers/dashboard/admin/admin-email-tab/settings-email-tab";
+import {SettingsStorageTab} from "@/components/wrappers/dashboard/admin/admin-storage-tab/settings-storage-tab";
+import {User, UserWithAccounts} from "@/db/schema/01_user";
+import {Setting} from "@/db/schema/00_setting";
+import {useEffect, useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {AdminUsersTable} from "@/components/wrappers/dashboard/admin/admin-user-tab/admin-user-table";
 
 export type AdminTabsProps = {
-    users: User[];
+    users: UserWithAccounts[];
     settings: Setting;
 };
 
-export const AdminTabs = ({ users, settings }: AdminTabsProps) => {
+export const AdminTabs = ({users, settings}: AdminTabsProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -44,13 +44,13 @@ export const AdminTabs = ({ users, settings }: AdminTabsProps) => {
             </TabsList>
 
             <TabsContent value="users">
-                <AdminUsersTable users={users} />
+                <AdminUsersTable users={users}/>
             </TabsContent>
             <TabsContent value="email">
-                <SettingsEmailTab settings={settings} />
+                <SettingsEmailTab settings={settings}/>
             </TabsContent>
             <TabsContent value="storage">
-                <SettingsStorageTab settings={settings} />
+                <SettingsStorageTab settings={settings}/>
             </TabsContent>
         </Tabs>
     );

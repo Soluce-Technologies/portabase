@@ -1,25 +1,27 @@
-import { AdvancedCronSelect } from "./advanced-cron-select";
-import { updateDatabaseBackupPolicyAction } from "@/components/wrappers/dashboard/database/cron-button/cron.action";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import {AdvancedCronSelect} from "./advanced-cron-select";
+import {updateDatabaseBackupPolicyAction} from "@/components/wrappers/dashboard/database/cron-button/cron.action";
+import {useMutation} from "@tanstack/react-query";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {Button} from "@/components/ui/button";
+import {Separator} from "@/components/ui/separator";
 import {Database} from "@/db/schema/06_database";
 
 export type CronInputProps = {
     database: Database;
+    onSuccess?: () => void;
 };
 
-export const CronInput = ({ database }: CronInputProps) => {
+export const CronInput = ({database, onSuccess}: CronInputProps) => {
     const [cron, setCron] = useState<string>(database.backupPolicy ?? "* * * * *");
     const router = useRouter();
 
     const updateBackupPolicy = useMutation({
-        mutationFn: (value: string) => updateDatabaseBackupPolicyAction({ databaseId: database.id, backupPolicy: value }),
+        mutationFn: (value: string) => updateDatabaseBackupPolicyAction({databaseId: database.id, backupPolicy: value}),
         onSuccess: () => {
             toast.success(`Cron updated successfully.`);
+            onSuccess?.()
             router.refresh();
         },
         onError: () => {
@@ -29,7 +31,7 @@ export const CronInput = ({ database }: CronInputProps) => {
 
     const handleChangeCron = (type: "minute" | "hour" | "day-of-month" | "month" | "day-of-week", value: string) => {
         const cronParts = cron.split(" ");
-        const indexMap = { minute: 0, hour: 1, "day-of-month": 2, month: 3, "day-of-week": 4 };
+        const indexMap = {minute: 0, hour: 1, "day-of-month": 2, month: 3, "day-of-week": 4};
         cronParts[indexMap[type]] = value;
         setCron(cronParts.join(" "));
     };
@@ -44,7 +46,7 @@ export const CronInput = ({ database }: CronInputProps) => {
             <AdvancedCronSelect
                 id="minute"
                 label="Minute"
-                options={Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))}
+                options={Array.from({length: 60}, (_, i) => String(i).padStart(2, "0"))}
                 type="minute"
                 value={cron.split(" ")[0]}
                 defaultValue={cron.split(" ")[0]}
@@ -53,7 +55,7 @@ export const CronInput = ({ database }: CronInputProps) => {
             <AdvancedCronSelect
                 id="hour"
                 label="Hour"
-                options={Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"))}
+                options={Array.from({length: 24}, (_, i) => String(i).padStart(2, "0"))}
                 type="hour"
                 value={cron.split(" ")[1]}
                 defaultValue={cron.split(" ")[1]}
@@ -62,7 +64,7 @@ export const CronInput = ({ database }: CronInputProps) => {
             <AdvancedCronSelect
                 id="day-of-month"
                 label="Day of Month"
-                options={Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0"))}
+                options={Array.from({length: 31}, (_, i) => String(i + 1).padStart(2, "0"))}
                 type="day-of-month"
                 value={cron.split(" ")[2]}
                 defaultValue={cron.split(" ")[2]}
@@ -86,13 +88,14 @@ export const CronInput = ({ database }: CronInputProps) => {
                 defaultValue={cron.split(" ")[4]}
                 onValueChange={(value) => handleChangeCron("day-of-week", value)}
             />
-            <Separator />
+            <Separator/>
             <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                     <div className="font-semibold">Cron Expression</div>
                     <div className="font-mono text-muted-foreground">{cron}</div>
                 </div>
-                <div className="text-sm text-muted-foreground">This cron expression determines when the job will run.</div>
+                <div className="text-sm text-muted-foreground">This cron expression determines when the job will run.
+                </div>
             </div>
             <div className="flex justify-between gap-2">
                 <Button

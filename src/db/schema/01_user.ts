@@ -3,9 +3,10 @@ import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { project } from "./05_project";
-import {member} from "@/db/schema/03_member";
+import {member, OrganizationMember} from "@/db/schema/03_member";
 import {invitation} from "@/db/schema/04_invitation";
 import {organization} from "@/db/schema/02_organization";
+import {Account} from "better-auth";
 
 export const user = pgTable("user", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -94,3 +95,11 @@ export const projectRelations = relations(project, ({ one }) => ({
 
 export const userSchema = createSelectSchema(user);
 export type User = z.infer<typeof userSchema>;
+
+type FixedAccount = Omit<Account, 'updatedAt'> & {
+    updatedAt: Date | null;
+};
+
+export type UserWithAccounts = User & {
+    accounts: FixedAccount[];
+};

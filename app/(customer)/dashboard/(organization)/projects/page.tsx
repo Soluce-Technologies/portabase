@@ -8,6 +8,7 @@ import {ProjectCard} from "@/components/wrappers/dashboard/projects/project-card
 import {db} from "@/db";
 import {notFound} from "next/navigation";
 import {getOrganization} from "@/lib/auth/auth";
+import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
 
 export default async function RoutePage(props: PageParams<{ }>) {
 
@@ -46,12 +47,10 @@ export default async function RoutePage(props: PageParams<{ }>) {
                     <CardsWithPagination organizationSlug={organization.slug} data={projects} cardItem={ProjectCard}
                                          cardsPerPage={4} numberOfColumns={1}/>
                 ) : (
-                    <Link
-                        href={`/dashboard/projects/new`}
-                        className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md"
-                    >
-                        Create new Project
-                    </Link>
+                    <EmptyStatePlaceholder
+                        url={"/dashboard/projects/new"}
+                        text={"Create new Project"}
+                    />
                 )}
             </PageContent>
         </Page>

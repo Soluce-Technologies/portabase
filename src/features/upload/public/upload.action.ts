@@ -30,11 +30,13 @@ export const uploadImageAction = userAction.schema(z.instanceof(FormData)).actio
     let result: void | UploadedObjectInfo;
     const bucketName = "public-image-bucket";
 
-    if (settings.storage === "local") {
-        result = await uploadLocal(fileName, buffer);
-    } else if (settings.storage === "s3") {
-        result = await uploadS3Compatible(bucketName, fileName, buffer);
-    }
+    // TODO : Do not delete
+    // if (settings.storage === "local") {
+    //     result = await uploadLocal(fileName, buffer);
+    // } else if (settings.storage === "s3") {
+    //     result = await uploadS3Compatible(bucketName, fileName, buffer);
+    // }
+    result = await uploadLocal(fileName, buffer);
 
     const url = getUrl(fileName, settings, bucketName);
     console.log(url);

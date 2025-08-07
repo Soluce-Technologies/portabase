@@ -13,6 +13,7 @@ export const PORTABASE_DEFAULT_SETTINGS = {
                 "https://code.iconify.com",
                 "https://cdn.iconify.design",
                 "https://api.iconify.design",
+
             ],
             STYLE_SRC: [
                 "'self'",
@@ -31,6 +32,7 @@ export const PORTABASE_DEFAULT_SETTINGS = {
                 "https://cdn.iconify.design",
                 "https://code.iconify.com",
                 "https://api.iconify.design",
+                "http://localhost:9000",
             ],
             FONT_SRC: [
                 "'self'",

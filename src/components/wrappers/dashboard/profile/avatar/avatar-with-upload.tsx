@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateImageUserAction } from "@/components/wrappers/dashboard/profile/avatar/avatar.action";
 import { useRouter } from "next/navigation";
 import { User } from "@/db/schema/01_user";
+import {ChangeEvent} from "react";
 
 export type AvatarWithUploadProps = {
     user: User;
@@ -43,7 +44,7 @@ export const AvatarWithUpload = (props: AvatarWithUploadProps) => {
         },
     });
 
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
         if (!file.type.includes("image")) {

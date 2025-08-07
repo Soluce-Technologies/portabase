@@ -9,6 +9,9 @@ import { db } from "@/db";
 import * as drizzleDb from "@/db";
 
 import {and, eq, not} from "drizzle-orm";
+import {Plus} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
 export const dynamic = "force-dynamic";
 
 export default async function RoutePage(props: PageParams<{}>) {
@@ -38,12 +41,10 @@ export default async function RoutePage(props: PageParams<{}>) {
                 {agents.length > 0 ? (
                     <CardsWithPagination data={agents} cardItem={AgentCard} cardsPerPage={4} numberOfColumns={1} />
                 ) : (
-                    <Link
-                        href={"/dashboard/agents/new"}
-                        className="  flex item-center justify-center border-2 border-dashed transition-colors border-primary p-8 lg:p-12 w-full rounded-md"
-                    >
-                        Create new Agent
-                    </Link>
+                    <EmptyStatePlaceholder
+                        url={"/dashboard/agents/new"}
+                        text={"Create new Agent"}
+                    />
                 )}
             </PageContent>
         </Page>

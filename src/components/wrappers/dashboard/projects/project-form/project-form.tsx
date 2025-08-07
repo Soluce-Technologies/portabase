@@ -27,7 +27,7 @@ export const ProjectForm = (props: projectFormProps) => {
     const formatDatabasesList = (databases: DatabaseWith[]) => {
         return databases.map((database) => ({
             value: database.id,
-            label: `${database.name} (${database.id}) | ${database.agent.name}`,
+            label: `${database.name} (${database.agentDatabaseId}) | ${database.agent.name}`,
         }));
     };
 
@@ -89,15 +89,15 @@ export const ProjectForm = (props: projectFormProps) => {
                         await mutation.mutateAsync(values);
                     }}
                 >
+
                     <FormField
                         control={form.control}
                         name="name"
-                        defaultValue=""
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Project 1" {...field} />
+                                    <Input placeholder="Project 1" {...field} value={field.value ?? ""} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
