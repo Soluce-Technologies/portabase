@@ -30,7 +30,7 @@ export const env = createEnv({
         S3_PORT: z.string().optional(),
         S3_USE_SSL: z.string().optional(),
 
-        STORAGE_TYPE: z.string().optional(),
+        STORAGE_TYPE: z.enum(["local", "s3"]).optional(),
     },
     client: {
         NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),

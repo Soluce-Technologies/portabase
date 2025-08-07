@@ -1,6 +1,6 @@
-import { env } from "@/env.mjs";
+import {env} from "@/env.mjs";
 import {db, makeMigration} from "@/db";
-import { eq } from "drizzle-orm";
+import {eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 
 
@@ -10,17 +10,13 @@ export async function init() {
     await makeMigration();
     await createDefaultOrganization();
     await createSettingsIfNotExist()
-        .then(() => {
-            console.log("====Initialization completed====");
-        })
-        .catch((err) => {
-            console.error("Error during initialization:", err);
-        });
+    console.log("====Initialization completed====");
 }
 
 async function createSettingsIfNotExist() {
     const configSettings = {
         name: "system",
+        storage: env.STORAGE_TYPE!,
         smtpPassword: env.SMTP_PASSWORD ?? null,
         smtpFrom: env.SMTP_FROM ?? null,
         smtpHost: env.SMTP_HOST ?? null,
@@ -61,11 +57,11 @@ async function createDefaultOrganization() {
 function consoleAscii() {
     console.log(
         "\n" +
-            "    ____                __          __                          _____                               \n" +
-            "   / __ \\ ____   _____ / /_ ____ _ / /_   ____ _ _____ ___     / ___/ ___   _____ _   __ ___   _____\n" +
-            "  / /_/ // __ \\ / ___// __// __  // __ \\ / __  // ___// _ \\    \\__ \\ / _ \\ / ___/| | / // _ \\ / ___/\n" +
-            " / ____// /_/ // /   / /_ / /_/ // /_/ // /_/ /(__  )/  __/   ___/ //  __// /    | |/ //  __// /    \n" +
-            "/_/     \\____//_/    \\__/ \\__,_//_.___/ \\__,_//____/ \\___/   /____/ \\___//_/     |___/ \\___//_/     \n" +
-            "                                                                                                    \n"
+        "    ____                __          __                          _____                               \n" +
+        "   / __ \\ ____   _____ / /_ ____ _ / /_   ____ _ _____ ___     / ___/ ___   _____ _   __ ___   _____\n" +
+        "  / /_/ // __ \\ / ___// __// __  // __ \\ / __  // ___// _ \\    \\__ \\ / _ \\ / ___/| | / // _ \\ / ___/\n" +
+        " / ____// /_/ // /   / /_ / /_/ // /_/ // /_/ /(__  )/  __/   ___/ //  __// /    | |/ //  __// /    \n" +
+        "/_/     \\____//_/    \\__/ \\__,_//_.___/ \\__,_//____/ \\___/   /____/ \\___//_/     |___/ \\___//_/     \n" +
+        "                                                                                                    \n"
     );
 }
