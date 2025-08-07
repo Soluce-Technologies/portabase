@@ -50,6 +50,9 @@ export default async function RoutePage(props: PageParams<{}>) {
     // const tomorrow = new Date();
     // tomorrow.setDate(tomorrow.getDate() + 1);
     //
+    // const before = new Date();
+    // before.setDate(before.getDate() - 1);
+    //
     // const backupsEvolution = [
     //     {
     //         id: '22e84aa4-228c-45b3-82ec-846a639cd509',
@@ -60,8 +63,20 @@ export default async function RoutePage(props: PageParams<{}>) {
     //         createdAt: new Date()
     //     },
     //     {
-    //         id: '6a6106fe-7f45-48eb-a56f-0a1e734126a1',
+    //         id: '2c114dc3-1fa6-4ef1-972c-9765c65e9331',
     //         createdAt: new Date()
+    //     },
+    //     {
+    //         id: '2c114dc3-1fa6-4ef1-972c-9765c65e9331',
+    //         createdAt: new Date()
+    //     },
+    //     {
+    //         id: '2c114dc3-1fa6-4ef1-972c-9765c65e9331',
+    //         createdAt: new Date(before)
+    //     },
+    //     {
+    //         id: '6a6106fe-7f45-48eb-a56f-0a1e734126a1',
+    //         createdAt: new Date(before)
     //     },
     //     {
     //         id: 'a529d790-502e-4609-ad37-9b1c00c73477',
@@ -74,6 +89,14 @@ export default async function RoutePage(props: PageParams<{}>) {
     //     {
     //         id: 'd33aaf4f-8525-4490-addb-12e3c8650d6d',
     //         createdAt: new Date()
+    //     },
+    //     {
+    //         id: 'f1d5a4e2-1c33-41c4-932b-02456c2a6f1d',
+    //         createdAt: new Date(tomorrow)
+    //     },
+    //     {
+    //         id: 'f1d5a4e2-1c33-41c4-932b-02456c2a6f1d',
+    //         createdAt: new Date(tomorrow)
     //     },
     //     {
     //         id: 'e88a588a-2353-4470-9976-8c3eb2ffc88d',
@@ -123,6 +146,10 @@ export default async function RoutePage(props: PageParams<{}>) {
     const backupsEvolutionCount = backupsEvolution.length;
 
 
+    const sortedBackupsEvolution = backupsEvolution.sort(
+        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
     return (
         <Page>
             <PageHeader>
@@ -158,7 +185,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                             <CardTitle>Evolution of the number of backups</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <EvolutionLineChart data={backupsEvolution}/>
+                            <EvolutionLineChart data={sortedBackupsEvolution}/>
                         </CardContent>
                     </Card>
                     <Card className="w-full">
