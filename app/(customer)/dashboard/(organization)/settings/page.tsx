@@ -17,7 +17,6 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     const user = await currentUser();
     const activeMember = await getActiveMember()
 
-
     if (!organization) {
         notFound();
     }
@@ -35,12 +34,12 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                 <PageTitle className="flex items-center">
                     Organization settings
                     {!isMember && organization.slug !== "default" && (
-                        <EditButtonSettings />
+                        <EditButtonSettings/>
                     )}
                 </PageTitle>
                 <PageActions>
                     {!isMember && organization.slug !== "default" && (
-                        <DeleteOrganizationButton organizationSlug={organization.slug} />
+                        <DeleteOrganizationButton organizationSlug={organization.slug}/>
                     )}
                 </PageActions>
             </PageHeader>
@@ -48,7 +47,7 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
             {/*    Manage your organization settings.*/}
             {/*</PageDescription>*/}
             <PageContent>
-                <SettingsOrganizationMembersTable organization={organization} />
+                <SettingsOrganizationMembersTable organization={organization}/>
             </PageContent>
         </Page>
     )

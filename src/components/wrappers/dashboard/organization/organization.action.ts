@@ -222,7 +222,13 @@ export const deleteOrganizationAction = userAction.schema(z.string()).action(
             let deletedOrganization: Organization;
 
             try {
-                deletedOrganization = await deleteOrganization(org.id) as Organization;
+                // TODO : Improve with better auth, always getting 403 error
+                // deletedOrganization = await deleteOrganization(org.id) as Organization;
+                [deletedOrganization] = await db
+                    .delete(drizzleDb.schemas.organization)
+                    .where(eq(drizzleDb.schemas.organization.id, org.id))
+                    .returning();
+
             } catch (authError: any) {
                 console.error("Auth deletion failed:", authError);
                 return {

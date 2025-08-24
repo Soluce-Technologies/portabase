@@ -19,8 +19,7 @@ const superadmin = ac.newRole({
     ...adminAc.statements,
     ...orgAdminAc.statements,
     ...orgOwnerAc.statements,
-    ...orgMemberAc.statements
-
+    ...orgMemberAc.statements,
 });
 
 const admin = ac.newRole({
