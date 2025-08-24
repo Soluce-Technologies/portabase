@@ -2,6 +2,8 @@ import {env} from "@/env.mjs";
 import {db, makeMigration} from "@/db";
 import {eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import cron from "node-cron";
+import {retentionJob} from "@/lib/tasks";
 
 
 export async function init() {
@@ -11,7 +13,15 @@ export async function init() {
     await createDefaultOrganization();
     await createSettingsIfNotExist()
     console.log("====Initialization completed====");
+    await setupCronJobs()
 }
+
+async function setupCronJobs() {
+    console.log("==== Setting up Cron Jobs ====");
+    retentionJob.start();
+    console.log(`==== Cron job started ====`);
+}
+
 
 async function createSettingsIfNotExist() {
     const configSettings = {

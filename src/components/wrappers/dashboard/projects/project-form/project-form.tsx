@@ -27,7 +27,7 @@ export const ProjectForm = (props: projectFormProps) => {
     const formatDatabasesList = (databases: DatabaseWith[]) => {
         return databases.map((database) => ({
             value: database.id,
-            label: `${database.name} (${database.agentDatabaseId}) | ${database.agent.name}`,
+            label: `${database.name} (${database.agentDatabaseId}) | ${database.agent?.name}`,
         }));
     };
 

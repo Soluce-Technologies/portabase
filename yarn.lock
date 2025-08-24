@@ -8197,6 +8197,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-cron@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "node-cron@npm:4.2.1"
+  checksum: 10c0/804df01df230e96fd2f8ffcde004f4d5af953bccdf3ccf993dc450526dd65f553a2f2ad4bc0faf55c90c38cbc99c9ddbb88ee16cba3fc6bc74e606da6efb249e
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
@@ -8801,6 +8808,7 @@ __metadata:
     next: "npm:15.4.2-canary.10"
     next-safe-action: "npm:^7.10.8"
     next-themes: "npm:^0.4.6"
+    node-cron: "npm:^4.2.1"
     nodemailer: "npm:^7.0.3"
     npm-check-updates: "npm:^18.0.1"
     pg: "npm:^8.16.0"

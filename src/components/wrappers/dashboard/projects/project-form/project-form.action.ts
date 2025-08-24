@@ -89,13 +89,13 @@ export const updateProjectAction = userAction
             if (databasesToRemove.length > 0) {
                 await db.update(drizzleDb.schemas.database).set({ projectId: null }).where(inArray(drizzleDb.schemas.database.id, databasesToRemove));
             }
-            const slug = slugify(parsedInput.data.name);
+            // const slug = slugify(parsedInput.data.name);
 
             const [updatedProject] = await db
                 .update(drizzleDb.schemas.project)
                 .set({
                     name: parsedInput.data.name,
-                    slug: slug,
+                    // slug: slug,
                 })
                 .where(eq(drizzleDb.schemas.project.id, parsedInput.projectId))
                 .returning();
