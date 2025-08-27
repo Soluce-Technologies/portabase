@@ -12,6 +12,7 @@ import { S3FormSchema, S3FormType } from "@/components/wrappers/dashboard/admin/
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { updateS3SettingsAction } from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.action";
+import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
 
 export type S3FormProps = {
     defaultValues?: S3FormType;
@@ -86,7 +87,7 @@ export const StorageS3Form = (props: S3FormProps) => {
                                 <FormItem>
                                     <FormLabel>Secret Key *</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={"The secret key token"} {...field} />
+                                        <PasswordInput placeholder={"The secret key token"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"Add your secret key"}</FormDescription>
                                     <FormMessage />

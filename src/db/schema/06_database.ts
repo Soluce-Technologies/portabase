@@ -24,6 +24,7 @@ export const database = pgTable("databases", {
 
     projectId: uuid("project_id")
         .references(() => project.id),
+
 });
 
 export const backup = pgTable(
@@ -41,6 +42,23 @@ export const backup = pgTable(
     // (table) => [uniqueIndex("database_id_status_unique").on(table.databaseId, table.status)]
 );
 
+export const retentionPolicyType = pgEnum("retention_policy_type", ["count", "days", "gfs"]);
+
+export const retentionPolicy = pgTable("retention_policies", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    databaseId: uuid("database_id").notNull().references(() => database.id, {onDelete: "cascade"}),
+    type: retentionPolicyType("type").notNull(),
+    count: integer("count").default(7),   // for "count"
+    days: integer("days").default(30),    // for "days"
+    gfsDaily: integer("gfs_daily").default(7),
+    gfsWeekly: integer("gfs_weekly").default(4),
+    gfsMonthly: integer("gfs_monthly").default(12),
+    gfsYearly: integer("gfs_yearly").default(3),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at"),
+});
+
+
 export const restoration = pgTable("restorations", {
     id: uuid("id").primaryKey().defaultRandom(),
     status: statusEnum("status").default("waiting").notNull(),
@@ -53,6 +71,7 @@ export const restoration = pgTable("restorations", {
 });
 
 export const databaseRelations = relations(database, ({one, many}) => ({
+    retentionPolicy: one(retentionPolicy),
     agent: one(agent, {fields: [database.agentId], references: [agent.id]}),
     project: one(project, {fields: [database.projectId], references: [project.id]}),
     backups: many(backup),
@@ -78,10 +97,16 @@ export type Backup = z.infer<typeof backupSchema>;
 export const restorationSchema = createSelectSchema(restoration);
 export type Restoration = z.infer<typeof restorationSchema>;
 
+export const retentionPolicySchema = createSelectSchema(retentionPolicy);
+export type RetentionPolicy = z.infer<typeof retentionPolicySchema>;
+
+
 export type DatabaseWith = Database & {
     agent?: Agent | null;
     project?: Project | null;
     backups?: Backup[] | null;
     restorations?: Restoration[] | null;
+    retentionPolicy?: RetentionPolicy | null;
+
 };
 

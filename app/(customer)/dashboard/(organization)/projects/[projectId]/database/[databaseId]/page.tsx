@@ -12,6 +12,7 @@ import {eq, and, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {getOrganizationProjectDatabases} from "@/lib/services";
 import {getOrganization} from "@/lib/auth/auth";
+import {RetentionPolicySheet} from "@/components/wrappers/dashboard/database/retention-policy/retention-policy-sheet";
 
 export default async function RoutePage(props: PageParams<{
     projectId: string;
@@ -89,9 +90,11 @@ export default async function RoutePage(props: PageParams<{
                     {dbItem.name}
                     <EditButton/>
                     <CronButton database={dbItem}/>
+                    <RetentionPolicySheet/>
                 </PageTitle>
                 <PageActions className="justify-between">
                     <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
+
                 </PageActions>
             </div>
             <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>

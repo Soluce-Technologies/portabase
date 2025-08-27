@@ -1,18 +1,31 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {Card, CardContent} from "@/components/ui/card";
+import {
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    useZodForm
+} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Form} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {useMutation} from "@tanstack/react-query";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
-import { EmailFormSchema, EmailFormType } from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
-import { PasswordInput } from "@/components/wrappers/auth/password-input/password-input";
-import { updateEmailSettingsAction } from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.action";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import {
+    EmailFormSchema,
+    EmailFormType
+} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
+import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {
+    updateEmailSettingsAction
+} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.action";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 export type EmailFormProps = {
     defaultValues?: EmailFormType;
@@ -27,7 +40,7 @@ export const EmailForm = (props: EmailFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: EmailFormType) => {
-            const updateEmailSettings = await updateEmailSettingsAction({ name: "system", data: values });
+            const updateEmailSettings = await updateEmailSettingsAction({name: "system", data: values});
             const data = updateEmailSettings?.data?.data;
             if (updateEmailSettings?.serverError || !data) {
                 toast.error(updateEmailSettings?.serverError);
@@ -53,14 +66,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpFrom"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>From Email *</FormLabel>
                                     <FormControl>
                                         <Input placeholder={"exemple@portabase.com"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"The email from where the email will be send"}</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -68,14 +81,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpHost"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Server Host *</FormLabel>
                                     <FormControl>
                                         <Input placeholder={"ssl0.ovh.net"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"Your email server host"}</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -83,14 +96,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpPort"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Server Port *</FormLabel>
                                     <FormControl>
                                         <Input placeholder={"465"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"Your email server port (send)"}</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -99,7 +112,7 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpPassword"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
@@ -107,7 +120,7 @@ export const EmailForm = (props: EmailFormProps) => {
                                     </FormControl>
                                     <FormDescription>{"Your email server password"}</FormDescription>
 
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -115,14 +128,14 @@ export const EmailForm = (props: EmailFormProps) => {
                             control={form.control}
                             name="smtpUser"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>User Email *</FormLabel>
                                     <FormControl>
                                         <Input placeholder={"exemple@portabase.com"} {...field} />
                                     </FormControl>
                                     <FormDescription>{"The email server user"}</FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />

@@ -7,6 +7,7 @@ import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
 import { render } from "@react-email/render";
 import { toast } from "sonner";
 import {Setting} from "@/db/schema/00_setting";
+import {EmailFormType} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
 
 export type SettingsEmailTabProps = {
     settings: Setting;
@@ -53,7 +54,7 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
                 )}
             </div>
             <div className="mt-5">
-                <EmailForm defaultValues={props.settings.smtpFrom ? props.settings : null} />
+                <EmailForm defaultValues={props.settings.smtpFrom ? props.settings as EmailFormType  : undefined } />
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import {retentionCleanTask} from "@/lib/tasks/project";
+import {retentionCleanTask} from "@/lib/tasks/database";
 
 
 export const retentionJob = cron.schedule("* * * * *", async () => {

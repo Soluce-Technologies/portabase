@@ -22,6 +22,13 @@
       "when": 1753720983182,
       "tag": "0002_pink_groot",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756321312852,
+      "tag": "0003_absent_maestro",
+      "breakpoints": true
     }
   ]
 }
