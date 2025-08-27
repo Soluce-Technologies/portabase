@@ -69,18 +69,9 @@ export function BackupRetentionSettings() {
 
     return (
         <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-balance">
-                        <Database className="h-5 w-5" />
-                        Backup Retention Policy
-                    </CardTitle>
-                    <CardDescription className="text-pretty">
-                        Configure how long to keep your .dump backup files. Choose from simple count-based, time-based, or
-                        enterprise GFS rotation strategies.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
+            <div className="flex flex-col">
+
+                <div className="px-3 space-y-6">
                     <div className="space-y-4">
                         <Label className="text-sm font-medium">Retention Policy Type</Label>
                         <RadioGroup
@@ -314,8 +305,8 @@ export function BackupRetentionSettings() {
                         <Save className="h-4 w-4 mr-2" />
                         {isLoading ? "Saving Policy..." : "Save Retention Policy"}
                     </Button>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     )
 }

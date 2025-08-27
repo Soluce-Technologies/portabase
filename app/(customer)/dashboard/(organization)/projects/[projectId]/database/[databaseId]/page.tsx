@@ -13,6 +13,7 @@ import * as drizzleDb from "@/db";
 import {getOrganizationProjectDatabases} from "@/lib/services";
 import {getOrganization} from "@/lib/auth/auth";
 import {RetentionPolicySheet} from "@/components/wrappers/dashboard/database/retention-policy/retention-policy-sheet";
+import {capitalizeFirstLetter} from "@/utils/text";
 
 export default async function RoutePage(props: PageParams<{
     projectId: string;
@@ -87,7 +88,7 @@ export default async function RoutePage(props: PageParams<{
         <Page>
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
-                    {dbItem.name}
+                    {capitalizeFirstLetter(dbItem.name)}
                     <EditButton/>
                     <CronButton database={dbItem}/>
                     <RetentionPolicySheet/>
