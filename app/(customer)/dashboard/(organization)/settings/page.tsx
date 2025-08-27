@@ -1,5 +1,5 @@
 import {PageParams} from "@/types/next";
-import {Page, PageActions, PageContent, PageDescription, PageHeader, PageTitle} from "@/features/layout/page";
+import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {currentUser} from "@/lib/auth/current-user";
 import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {notFound} from "next/navigation";
@@ -26,7 +26,6 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     if (isMember) {
         notFound();
     }
-
 
     return (
         <Page>

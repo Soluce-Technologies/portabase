@@ -14,6 +14,8 @@ export type DeleteOrganizationButtonProps = {
 
 export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) => {
     const router = useRouter();
+    const {data: organizations, refetch} = authClient.useListOrganizations();
+
     const mutation = useMutation({
         mutationFn: () => deleteOrganizationAction(props.organizationSlug),
 
@@ -25,6 +27,7 @@ export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) =
                 router.push("/");
                 toast.success(result.data.actionSuccess?.message || "Organization deleted.");
                 router.refresh()
+                refetch()
             } else {
                 // @ts-ignore
                 const errorMsg = result?.data?.actionError?.message || result?.data?.actionError?.messageParams?.message || "Failed to delete the organization.";

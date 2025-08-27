@@ -1,9 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-
 import {Check, ChevronDown} from "lucide-react";
-
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
@@ -110,7 +108,6 @@ export type comboBoxFormItemProps = comboBoxProps & {
     onChange: any;
 };
 
-/** Combobox to use when working with zodForm. */
 export function ComboBoxFormItem(props: comboBoxFormItemProps) {
     const {values: choices, searchField = false, value, name, onChange} = props;
 
