@@ -1,11 +1,13 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
-import { ButtonWithConfirm } from "@/components/wrappers/common/button/button-with-confirm";
-import { useMutation } from "@tanstack/react-query";
-import { deleteProjectAction } from "@/components/wrappers/dashboard/projects/button-delete-project/delete-project.action";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import {Trash2} from "lucide-react";
+import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
+import {useMutation} from "@tanstack/react-query";
+import {
+    deleteProjectAction
+} from "@/components/wrappers/dashboard/projects/button-delete-project/delete-project.action";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 export type ButtonDeleteProjectProps = {
     text?: string;
@@ -27,15 +29,33 @@ export const ButtonDeleteProject = (props: ButtonDeleteProjectProps) => {
     });
 
     return (
+
         <ButtonWithConfirm
-            text={props.text ? props.text : ""}
-            onClick={() => {
-                mutation.mutate();
+            title={props.text ? props.text : ""}
+            description="Are you sure you want to delete this project ? This action cannot be undone."
+            button={{
+                main: {
+                    text: props.text ? props.text : "",
+                    variant: "outline",
+                    icon: <Trash2 color="red"/>,
+                },
+                confirm: {
+                    className: "w-full",
+                    text: "Delete",
+                    icon: <Trash2/>,
+                    variant: "destructive",
+                    onClick: () => {
+                        mutation.mutate();
+                    },
+                },
+                cancel: {
+                    className: "w-full",
+                    text: "Cancel",
+                    icon: <Trash2/>,
+                    variant: "outline",
+                },
             }}
-            variant={"destructive"}
             isPending={mutation.isPending}
-            className="gap-2"
-            icon={<Trash2 />}
         />
     );
 };

@@ -1,11 +1,11 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
-import { ButtonWithConfirm } from "@/components/wrappers/common/button/button-with-confirm";
-import { signOut } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { deleteUserAction } from "./delete-account.action";
+import {useMutation} from "@tanstack/react-query";
+import {Trash2} from "lucide-react";
+import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
+import {signOut} from "@/lib/auth/auth-client";
+import {useRouter} from "next/navigation";
+import {deleteUserAction} from "./delete-account.action";
 
 export type ButtonDeleteAccountProps = {
     text?: string;
@@ -29,14 +29,33 @@ export const ButtonDeleteAccount = (props: ButtonDeleteAccountProps) => {
 
     return (
         <ButtonWithConfirm
-            text={props.text ? props.text : ""}
-            onClick={() => {
-                mutation.mutate();
+            title={props.text ? props.text : ""}
+            description="Are you sure you want to delete your account ? This action cannot be undone."
+            button={{
+                main: {
+                    text: props.text ? props.text : "",
+                    variant: "outline",
+                    icon: <Trash2 color="red"/>,
+                },
+                confirm: {
+                    className: "w-full",
+                    text: "Delete",
+                    icon: <Trash2/>,
+                    variant: "destructive",
+                    onClick: () => {
+                        mutation.mutate();
+                    },
+                },
+                cancel: {
+                    className: "w-full",
+                    text: "Cancel",
+                    icon: <Trash2/>,
+                    variant: "outline",
+                },
             }}
-            variant={"destructive"}
             isPending={mutation.isPending}
-            className="gap-2"
-            icon={<Trash2 />}
         />
+
+
     );
 };

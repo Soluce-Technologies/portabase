@@ -35,6 +35,8 @@ const buttonVariants = cva(
   }
 )
 
+export type ButtonVariantsProps = VariantProps<typeof buttonVariants>;
+
 function Button({
   className,
   variant,
