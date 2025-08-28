@@ -1,0 +1,38 @@
+name: Security Checks
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  sca-deps: # Dependency & container scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+  sast-semgrep: # Static code analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/owasp-top-ten
+            p/secrets
+            p/javascript
+          generateSarif: true
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+
+  secrets-gitleaks: # Secrets exposure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gitleaks/gitleaks-action@v2
