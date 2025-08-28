@@ -2,7 +2,7 @@ name: Security Checks
 on:
   pull_request:
   push:
-    branches: [ main, feature ]
+    branches: [ main ]
 
 jobs:
   sca-deps: # Dependency & container scan
