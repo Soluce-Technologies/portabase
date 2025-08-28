@@ -4,7 +4,6 @@ title = "Custom gitleaks config"
 # Global allowlist patterns (won’t be flagged)
 regexes = [
     "s3SecretAccessKey: env.S3_SECRET_KEY ?? null",
-    "smtpPassword: env.SMTP_PASSWORD ?? null"
 ]
 paths = [
     "src/utils/init.ts"
