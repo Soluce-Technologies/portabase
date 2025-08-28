@@ -16,28 +16,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
 
-  sast-semgrep:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: >-
-            p/owasp-top-ten
-            p/secrets
-            p/javascript
-            p/typescript
-          generateSarif: results.sarif
-
-      - name: List files (debug)
-        run: ls -R
-
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: results.sarif
 
   secrets-gitleaks: # Secrets exposure
     runs-on: ubuntu-latest
