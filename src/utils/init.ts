@@ -36,7 +36,6 @@ async function createSettingsIfNotExist() {
         s3AccessKeyId: env.S3_ACCESS_KEY ?? null,
         s3SecretAccessKey: env.S3_SECRET_KEY ?? null,
         S3BucketName: env.S3_BUCKET_NAME ?? null,
-
     };
 
     const [existing] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
