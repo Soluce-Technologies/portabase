@@ -35,4 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Fetch full history for gitleaks
       - uses: gitleaks/gitleaks-action@v2
+        with:
+          config-path: .gitleaks.toml  # Optional, if you have a custom config
