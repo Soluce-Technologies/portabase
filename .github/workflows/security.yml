@@ -19,20 +19,23 @@ jobs:
   sast-semgrep:
     runs-on: ubuntu-latest
     steps:
-      # Checkout code
       - uses: actions/checkout@v4
 
-      # Run Semgrep
-      - uses: returntocorp/semgrep-action@v1
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
         with:
           config: >-
             p/owasp-top-ten
             p/secrets
             p/javascript
-          generateSarif: results.sarif   # specify the SARIF output file
+            p/typescript
+          generateSarif: results.sarif
 
-      # Upload SARIF to GitHub Code Scanning
-      - uses: github/codeql-action/upload-sarif@v3
+      - name: List files (debug)
+        run: ls -R
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
 
