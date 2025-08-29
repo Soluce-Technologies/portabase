@@ -6,7 +6,7 @@ import {db} from "@/db";
 import {eq} from "drizzle-orm";
 import {getOrganization} from "@/lib/auth/auth";
 import * as drizzleDb from "@/db";
-import {DatabaseWith} from "@/db/schema/06_database";
+import {DatabaseWith} from "@/db/schema/07_database";
 
 export default async function RoutePage(props: PageParams<{  }>) {
 

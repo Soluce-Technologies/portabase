@@ -20,14 +20,14 @@ import {
     OrganizationFormSchema,
     OrganizationFormType
 } from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
-import {MemberWithUser, OrganizationWithMembers} from "@/db/schema/02_organization";
+import {MemberWithUser, OrganizationWithMembers} from "@/db/schema/03_organization";
 import {
     deleteOrganizationAction,
     updateOrganizationAction
 } from "@/components/wrappers/dashboard/organization/organization.action";
 import {toast} from "sonner";
 import {User as BetterAuthUser} from "better-auth";
-import {User} from "@/db/schema/01_user";
+import {User} from "@/db/schema/02_user";
 
 export type organizationFormProps = {
     defaultValues?: OrganizationWithMembers;

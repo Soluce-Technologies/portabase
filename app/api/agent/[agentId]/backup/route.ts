@@ -4,10 +4,11 @@ import {uploadLocalPrivate, uploadS3Private} from "@/features/upload/private/upl
 import {v4 as uuidv4} from "uuid";
 import {eventEmitter} from "../../../events/route";
 import {db} from "@/db";
-import {Backup} from "@/db/schema/06_database";
+import {Backup} from "@/db/schema/07_database";
 import {and, eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {env} from "@/env.mjs";
+import {withUpdatedAt} from "@/db/utils";
 
 export async function POST(
     request: Request,
@@ -135,10 +136,10 @@ export async function POST(
 
             await db
                 .update(drizzleDb.schemas.backup)
-                .set({
+                .set(withUpdatedAt({
                     file: fileName,
                     status: 'success',
-                })
+                }))
                 .where(eq(drizzleDb.schemas.backup.id, backup.id));
 
             eventEmitter.emit('modification', {update: true});
@@ -153,7 +154,7 @@ export async function POST(
 
             await db
                 .update(drizzleDb.schemas.backup)
-                .set({status: 'failed'})
+                .set(withUpdatedAt({status: 'failed'}))
                 .where(eq(drizzleDb.schemas.backup.id, backup.id));
 
             eventEmitter.emit('modification', {update: true});

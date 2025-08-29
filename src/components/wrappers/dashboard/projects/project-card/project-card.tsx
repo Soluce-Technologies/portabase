@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
-import {ProjectWith} from "@/db/schema/05_project";
+import {ProjectWith} from "@/db/schema/06_project";
 
 export type projectCardProps = {
     data: ProjectWith;

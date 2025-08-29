@@ -1,13 +1,14 @@
 "use server";
 
-import { z } from "zod";
-import { userAction } from "@/safe-actions";
-import { db } from "@/db";
-import { ServerActionResult } from "@/types/action-type";
+import {z} from "zod";
+import {userAction} from "@/safe-actions";
+import {db} from "@/db";
+import {ServerActionResult} from "@/types/action-type";
 import * as drizzleDb from "@/db";
-import {Backup} from "@/db/schema/06_database";
+import {Backup} from "@/db/schema/07_database";
+import {withUpdatedAt} from "@/db/utils";
 
-export const backupButtonAction = userAction.schema(z.string()).action(async ({ parsedInput }): Promise<ServerActionResult<Backup>> => {
+export const backupButtonAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<Backup>> => {
     try {
         const [createdBackup] = await db
             .insert(drizzleDb.schemas.backup)
@@ -22,7 +23,7 @@ export const backupButtonAction = userAction.schema(z.string()).action(async ({ 
             value: createdBackup,
             actionSuccess: {
                 message: "Backup has been successfully created.",
-                messageParams: { databaseId: parsedInput },
+                messageParams: {databaseId: parsedInput},
             },
         };
     } catch (error) {
@@ -34,7 +35,7 @@ export const backupButtonAction = userAction.schema(z.string()).action(async ({ 
                 message: "Failed to create backup.",
                 status: 500,
                 cause: error instanceof Error ? error.message : "Unknown error",
-                messageParams: { databaseId: parsedInput },
+                messageParams: {databaseId: parsedInput},
             },
         };
     }

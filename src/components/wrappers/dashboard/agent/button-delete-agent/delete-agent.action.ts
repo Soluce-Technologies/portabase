@@ -7,7 +7,7 @@ import {ServerActionResult} from "@/types/action-type";
 import {eq} from "drizzle-orm";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
-import {Agent} from "@/db/schema/07_agent";
+import {Agent} from "@/db/schema/08_agent";
 
 export const deleteAgentAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<Agent>> => {
     try {

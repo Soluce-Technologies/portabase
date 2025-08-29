@@ -2,8 +2,8 @@ import {NextResponse} from "next/server";
 import {Body} from "./route";
 import {isUuidv4} from "@/utils/verify-uuid";
 import {getFileUrlPresignedLocal, getFileUrlPreSignedS3Action} from "@/features/upload/private/upload.action";
-import {Agent} from "@/db/schema/07_agent";
-import {Database} from "@/db/schema/06_database";
+import {Agent} from "@/db/schema/08_agent";
+import {Database} from "@/db/schema/07_database";
 import * as drizzleDb from "@/db";
 import {db as dbClient} from "@/db";
 import {and, eq} from "drizzle-orm";
@@ -11,6 +11,7 @@ import {dbmsEnumSchema, EDbmsSchema} from "@/db/schema/types";
 import {ServerActionResult} from "@/types/action-type";
 import {SafeActionResult} from "next-safe-action";
 import {ZodString} from "zod";
+import {withUpdatedAt} from "@/db/utils";
 
 export async function handleDatabases(body: Body, agent: Agent, lastContact: Date) {
     const databasesResponse = [];
@@ -88,7 +89,7 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
 
                 await dbClient
                     .update(drizzleDb.schemas.backup)
-                    .set({status: "ongoing"})
+                    .set(withUpdatedAt({status: "ongoing"}))
                     .where(eq(drizzleDb.schemas.backup.id, backup.id));
             }
 

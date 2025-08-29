@@ -2,7 +2,7 @@ import {db} from "@/db";
 import {enforceRetentionCount} from "@/lib/tasks/database/retention-count";
 import {enforceRetentionDays} from "@/lib/tasks/database/retention-days";
 import {enforceRetentionGFS} from "@/lib/tasks/database/retention-gsf";
-import {retentionPolicy} from "@/db/schema/06_database";
+import {retentionPolicy} from "@/db/schema/07_database";
 
 
 export const retentionCleanTask = async () => {

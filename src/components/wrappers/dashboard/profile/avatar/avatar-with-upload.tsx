@@ -6,7 +6,7 @@ import { uploadImageAction } from "@/features/upload/public/upload.action";
 import { useMutation } from "@tanstack/react-query";
 import { updateImageUserAction } from "@/components/wrappers/dashboard/profile/avatar/avatar.action";
 import { useRouter } from "next/navigation";
-import { User } from "@/db/schema/01_user";
+import { User } from "@/db/schema/02_user";
 import {ChangeEvent} from "react";
 
 export type AvatarWithUploadProps = {

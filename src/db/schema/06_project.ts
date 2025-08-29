@@ -1,20 +1,21 @@
 import { pgTable, text, boolean, uuid, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { Organization, organization } from "./02_organization";
+import { Organization, organization } from "./03_organization";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { Database, database } from "./06_database";
+import { Database, database } from "./07_database";
+import {timestamps} from "@/db/schema/00_common";
 
 export const project = pgTable("projects", {
     id: uuid("id").primaryKey().defaultRandom(),
     slug: text("slug").notNull().unique(),
     name: text("name").notNull().notNull(),
     isArchived: boolean("is_archived").default(false),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
     organizationId: uuid("organization_id")
         .notNull()
         .references(() => organization.id),
+    ...timestamps
+
 });
 
 export const projectRelations = relations(project, ({ one, many }) => ({

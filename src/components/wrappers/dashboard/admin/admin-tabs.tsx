@@ -3,8 +3,8 @@
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {SettingsEmailTab} from "@/components/wrappers/dashboard/admin/admin-email-tab/settings-email-tab";
 import {SettingsStorageTab} from "@/components/wrappers/dashboard/admin/admin-storage-tab/settings-storage-tab";
-import {User, UserWithAccounts} from "@/db/schema/01_user";
-import {Setting} from "@/db/schema/00_setting";
+import {User, UserWithAccounts} from "@/db/schema/02_user";
+import {Setting} from "@/db/schema/01_setting";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {AdminUsersTable} from "@/components/wrappers/dashboard/admin/admin-user-tab/admin-user-table";

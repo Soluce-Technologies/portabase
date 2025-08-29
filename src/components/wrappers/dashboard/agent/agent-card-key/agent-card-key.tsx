@@ -4,7 +4,7 @@ import {getServerUrl} from "@/utils/get-server-url";
 import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
 import {useState} from "react";
 import {CopyButton} from "@/components/wrappers/common/button/copy-button";
-import {Agent} from "@/db/schema/07_agent";
+import {Agent} from "@/db/schema/08_agent";
 
 export type AgentCardKeyProps = {
     agent: Agent;

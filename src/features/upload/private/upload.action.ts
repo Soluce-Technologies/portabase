@@ -4,15 +4,12 @@ import {mkdir, writeFile} from "fs/promises";
 import path from "path";
 import * as fs from "node:fs";
 import {getServerUrl} from "@/utils/get-server-url";
-import {createPresignedUrlToDownload, saveFileInBucket} from "@/utils/s3-file-management";
-import crypto from "crypto";
+import {createPresignedUrlToDownload, deleteFileFromBucket, saveFileInBucket} from "@/utils/s3-file-management";
 import {env} from "@/env.mjs";
-import {action, userAction} from "@/safe-actions";
+import {action} from "@/safe-actions";
 import {z} from "zod";
 import {ServerActionResult} from "@/types/action-type";
-import {Backup} from "@/db/schema/06_database";
-import {db} from "@/db";
-import * as drizzleDb from "@/db";
+import {unlink} from "fs/promises";
 
 const privateLocalDir = "private/uploads/files/";
 const privateS3Dir = "backups/";
@@ -50,6 +47,53 @@ export async function uploadS3Private(fileName: string, buffer: any, bucketName:
     } catch (error) {
         console.error("Error occurred:", error);
         throw new Error("An error occurred while importing the private file");
+    }
+}
+
+
+export async function deleteFileS3Private(fileName: string, bucketName: string) {
+    try {
+
+        await deleteFileFromBucket({
+            bucketName,
+            fileName: `${privateS3Dir}${fileName}`,
+        });
+
+        return {
+            success: true,
+            message: "File deleted successfully",
+        };
+    } catch (error) {
+        console.error("Error occurred:", error);
+        throw new Error("An error occurred while deleting the private file");
+    }
+}
+
+
+/**
+ * Delete a file from local private storage
+ */
+export async function deleteLocalPrivate(fileName: string) {
+    try {
+        const filePath = path.join(process.cwd(), privateLocalDir, fileName);
+
+        // Delete locally
+        await unlink(filePath);
+
+        return {
+            success: true,
+            message: `File '${fileName}' deleted successfully`,
+        };
+    } catch (error: any) {
+        if (error.code === "ENOENT") {
+            return {
+                success: false,
+                message: `File '${fileName}' not found`,
+            };
+        }
+
+        console.error("Error occurred while deleting file:", error);
+        throw new Error("An error occurred while deleting the file");
     }
 }
 

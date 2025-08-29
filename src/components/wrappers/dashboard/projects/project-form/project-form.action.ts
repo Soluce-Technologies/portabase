@@ -6,9 +6,9 @@ import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";
 import { db } from "@/db";
 import { eq, inArray } from "drizzle-orm";
-import {Project} from "@/db/schema/05_project";
+import {Project} from "@/db/schema/06_project";
 import * as drizzleDb from "@/db";
-import {Database} from "@/db/schema/06_database";
+import {Database} from "@/db/schema/07_database";
 import {slugify} from "@/utils/slugify";
 
 export const createProjectAction = userAction

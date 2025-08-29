@@ -8,7 +8,7 @@ import {admin as adminPlugin, openAPI, Organization, organization} from "better-
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
-import {OrganizationWithMembers, OrganizationWithMembersAndUsers} from "@/db/schema/02_organization";
+import {OrganizationWithMembers, OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {

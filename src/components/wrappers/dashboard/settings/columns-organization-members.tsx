@@ -1,7 +1,7 @@
 "use client";
 
 import {ColumnDef} from "@tanstack/react-table";
-import {MemberWithUser} from "@/db/schema/02_organization";
+import {MemberWithUser} from "@/db/schema/03_organization";
 import {useState} from "react";
 import {authClient, useSession} from "@/lib/auth/auth-client";
 import {useMutation} from "@tanstack/react-query";

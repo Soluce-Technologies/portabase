@@ -1,9 +1,10 @@
 import {pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
-import {user} from "@/db/schema/01_user";
-import {organization} from "@/db/schema/02_organization";
+import {user} from "@/db/schema/02_user";
+import {organization} from "@/db/schema/03_organization";
 import {relations} from "drizzle-orm";
 import {createSelectSchema} from "drizzle-zod";
 import {z} from "zod";
+import {timestamps} from "@/db/schema/00_common";
 
 
 export const member = pgTable("member", {
@@ -15,8 +16,7 @@ export const member = pgTable("member", {
         .notNull()
         .references(() => user.id, { onDelete: "cascade" }),
     role: text("role").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
+    ...timestamps
 });
 
 export const memberRelations = relations(member, ({ one }) => ({

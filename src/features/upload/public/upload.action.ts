@@ -11,7 +11,7 @@ import { UploadedObjectInfo } from "minio/src/internal/type";
 import { getServerUrl } from "@/utils/get-server-url";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import {Setting} from "@/db/schema/00_setting";
+import {Setting} from "@/db/schema/01_setting";
 import * as drizzleDb from "@/db";
 
 export const uploadImageAction = userAction.schema(z.instanceof(FormData)).action(async ({ parsedInput: formData, ctx }) => {

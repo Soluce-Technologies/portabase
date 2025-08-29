@@ -6,7 +6,7 @@ import * as drizzleDb from "@/db";
 
 import {db} from "@/db";
 import {eq} from "drizzle-orm";
-import {DatabaseWith} from "@/db/schema/06_database";
+import {DatabaseWith} from "@/db/schema/07_database";
 
 export default async function RoutePage(props: PageParams<{ projectId: string }>) {
     const {projectId} = await props.params;

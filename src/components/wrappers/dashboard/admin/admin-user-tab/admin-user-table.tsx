@@ -1,4 +1,4 @@
-import {User, UserWithAccounts} from "@/db/schema/01_user";
+import {User, UserWithAccounts} from "@/db/schema/02_user";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {DataTable} from "@/components/wrappers/common/table/data-table";
 import {usersColumnsAdmin} from "@/components/wrappers/dashboard/admin/admin-user-tab/columns-users";

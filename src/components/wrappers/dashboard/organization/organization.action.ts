@@ -11,7 +11,7 @@ import {db} from "@/db";
 import {and, eq, inArray} from "drizzle-orm";
 import {auth, checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
 import {slugify} from "@/utils/slugify";
-import {Organization} from "@/db/schema/02_organization";
+import {Organization} from "@/db/schema/03_organization";
 import * as drizzleDb from "@/db";
 import {headers} from "next/headers";
 

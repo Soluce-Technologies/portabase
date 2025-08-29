@@ -1,13 +1,13 @@
 import {drizzle} from "drizzle-orm/node-postgres";
 
-import * as settings from "./schema/00_setting";
-import * as user from "./schema/01_user";
-import * as organisation from "./schema/02_organization";
-import * as invitation from "./schema/03_member";
-import * as member from "./schema/04_invitation";
-import * as project from "./schema/05_project";
-import * as agent from "./schema/07_agent";
-import * as database from "./schema/06_database";
+import * as settings from "./schema/01_setting";
+import * as user from "./schema/02_user";
+import * as organisation from "./schema/03_organization";
+import * as invitation from "./schema/04_member";
+import * as member from "./schema/05_invitation";
+import * as project from "./schema/06_project";
+import * as agent from "./schema/08_agent";
+import * as database from "./schema/07_database";
 
 
 import {Pool} from "pg";

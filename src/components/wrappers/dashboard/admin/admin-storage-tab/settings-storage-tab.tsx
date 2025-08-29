@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 import {
     updateStorageSettingsAction
 } from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.action";
-import {Setting} from "@/db/schema/00_setting";
+import {Setting} from "@/db/schema/01_setting";
 import {S3FormType} from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.schema";
 
 export type SettingsStorageTabProps = {

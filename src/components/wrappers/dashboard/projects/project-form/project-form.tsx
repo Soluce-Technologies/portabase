@@ -11,8 +11,8 @@ import { createProjectAction, updateProjectAction } from "@/components/wrappers/
 import { useRouter } from "next/navigation";
 import { MultiSelect } from "@/components/wrappers/common/multiselect/multi-select";
 import { toast } from "sonner";
-import {DatabaseWith} from "@/db/schema/06_database";
-import {Organization} from "@/db/schema/02_organization";
+import {DatabaseWith} from "@/db/schema/07_database";
+import {Organization} from "@/db/schema/03_organization";
 
 export type projectFormProps = {
     defaultValues?: ProjectType;

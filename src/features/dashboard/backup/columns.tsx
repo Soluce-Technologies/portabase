@@ -21,10 +21,10 @@ import {createRestorationAction, deleteBackupAction} from "@/features/dashboard/
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {StatusBadge} from "@/components/wrappers/common/status-badge";
-import {Backup, DatabaseWith} from "@/db/schema/06_database";
+import {Backup, DatabaseWith} from "@/db/schema/07_database";
 import {formatFrenchDate} from "@/utils/date-formatting";
 import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
-import {Setting} from "@/db/schema/00_setting";
+import {Setting} from "@/db/schema/01_setting";
 import {SafeActionResult} from "next-safe-action";
 import {ZodString} from "zod";
 import {ServerActionResult} from "@/types/action-type";
@@ -80,18 +80,22 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
 
                 const mutationDeleteBackup = useMutation({
                     mutationFn: async () => {
-                        const restoration = await deleteBackupAction({
+
+
+                        const deletion = await deleteBackupAction({
                             backupId: rowData.id,
                             databaseId: rowData.databaseId,
+                            file: rowData.file!,
+                            projectSlug: database.project?.slug!
                         });
                         // @ts-ignore
-                        if (restoration.data.success) {
+                        if (deletion.data.success) {
                             // @ts-ignore
-                            toast.success(restoration.data.actionSuccess.message);
+                            toast.success(deletion.data.actionSuccess.message);
                             router.refresh();
                         } else {
                             // @ts-ignore
-                            toast.error(restoration.data.actionError.message);
+                            toast.error(deletion.data.actionError.message);
                         }
                     },
                 });

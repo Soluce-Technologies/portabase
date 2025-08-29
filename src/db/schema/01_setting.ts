@@ -2,6 +2,7 @@ import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { typeStorageEnum } from "./types";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import {timestamps} from "@/db/schema/00_common";
 
 export const setting = pgTable("settings", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -16,8 +17,7 @@ export const setting = pgTable("settings", {
     smtpHost: varchar("smtp_host", { length: 255 }),
     smtpPort: varchar("smtp_port", { length: 255 }),
     smtpUser: varchar("smtp_user", { length: 255 }),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
+    ...timestamps
 });
 
 export const settingSchema = createSelectSchema(setting);

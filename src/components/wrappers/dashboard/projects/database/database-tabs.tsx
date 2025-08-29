@@ -7,8 +7,8 @@ import {eventUpdate} from "@/types/events";
 import {backupColumns} from "@/features/dashboard/backup/columns";
 import {restoreColumns} from "@/features/dashboard/restore/columns";
 import {DataTable} from "@/components/wrappers/common/table/data-table";
-import {Backup, Database, DatabaseWith, Restoration} from "@/db/schema/06_database";
-import {Setting} from "@/db/schema/00_setting";
+import {Backup, Database, DatabaseWith, Restoration} from "@/db/schema/07_database";
+import {Setting} from "@/db/schema/01_setting";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {MoreHorizontal, Trash2} from "lucide-react";
 import {useMutation} from "@tanstack/react-query";
@@ -62,6 +62,8 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
                     const backupDeleted = await deleteBackupAction({
                         backupId: backup.id,
                         databaseId: backup.databaseId,
+                        file: backup.file!,
+                        projectSlug: props.database?.project?.slug!
                     });
                     return {
                         success: backupDeleted?.data?.success,

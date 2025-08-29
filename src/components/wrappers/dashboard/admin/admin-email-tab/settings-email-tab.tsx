@@ -6,7 +6,7 @@ import { sendEmail } from "@/utils/email-helper";
 import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
 import { render } from "@react-email/render";
 import { toast } from "sonner";
-import {Setting} from "@/db/schema/00_setting";
+import {Setting} from "@/db/schema/01_setting";
 import {EmailFormType} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
 
 export type SettingsEmailTabProps = {

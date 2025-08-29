@@ -1,7 +1,7 @@
 import {DataTable} from "@/components/wrappers/common/table/data-table";
 import {usersColumnsAdmin} from "@/components/wrappers/dashboard/admin/columns-users";
-import {MemberWithUser, Organization, OrganizationWithMembers} from "@/db/schema/02_organization";
-import {OrganizationInvitation} from "@/db/schema/04_invitation";
+import {MemberWithUser, Organization, OrganizationWithMembers} from "@/db/schema/03_organization";
+import {OrganizationInvitation} from "@/db/schema/05_invitation";
 import {organizationMemberColumns} from "@/components/wrappers/dashboard/settings/columns-organization-members";
 
 

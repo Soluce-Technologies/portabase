@@ -1,10 +1,11 @@
 import {pgTable, text, boolean, timestamp, uuid, integer, pgEnum, uniqueIndex} from "drizzle-orm/pg-core";
-import {Agent, agent} from "./07_agent";
-import {Project, project} from "./05_project";
+import {Agent, agent} from "./08_agent";
+import {Project, project} from "./06_project";
 import {relations} from "drizzle-orm";
 import {dbmsEnum, statusEnum} from "./types";
 import {createSelectSchema} from "drizzle-zod";
 import {z} from "zod";
+import {timestamps} from "@/db/schema/00_common";
 
 export const database = pgTable("databases", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -15,8 +16,6 @@ export const database = pgTable("databases", {
     backupPolicy: text("backup_policy"),
     isWaitingForBackup: boolean("is_waiting_for_backup").default(false).notNull(),
     backupToRestore: text("backup_to_restore"),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
     agentId: uuid("agent_id")
         .notNull()
         .references(() => agent.id, {onDelete: "cascade"}),
@@ -24,6 +23,7 @@ export const database = pgTable("databases", {
 
     projectId: uuid("project_id")
         .references(() => project.id),
+    ...timestamps
 
 });
 
@@ -33,11 +33,10 @@ export const backup = pgTable(
         id: uuid("id").primaryKey().defaultRandom(),
         status: statusEnum("status").default("waiting").notNull(),
         file: text("file"),
-        createdAt: timestamp("created_at").notNull().defaultNow(),
-        updatedAt: timestamp("updated_at"),
         databaseId: uuid("database_id")
             .notNull()
             .references(() => database.id, {onDelete: "cascade"}),
+        ...timestamps
     },
     // (table) => [uniqueIndex("database_id_status_unique").on(table.databaseId, table.status)]
 );
@@ -54,20 +53,19 @@ export const retentionPolicy = pgTable("retention_policies", {
     gfsWeekly: integer("gfs_weekly").default(4),
     gfsMonthly: integer("gfs_monthly").default(12),
     gfsYearly: integer("gfs_yearly").default(3),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
+    ...timestamps
 });
 
 
 export const restoration = pgTable("restorations", {
     id: uuid("id").primaryKey().defaultRandom(),
     status: statusEnum("status").default("waiting").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at"),
     backupId: uuid("backup_id")
         .notNull()
         .references(() => backup.id, {onDelete: "cascade"}),
     databaseId: uuid("database_id").references(() => database.id, {onDelete: "cascade"}),
+    ...timestamps
+
 });
 
 export const databaseRelations = relations(database, ({one, many}) => ({
@@ -107,6 +105,5 @@ export type DatabaseWith = Database & {
     backups?: Backup[] | null;
     restorations?: Restoration[] | null;
     retentionPolicy?: RetentionPolicy | null;
-
 };
 

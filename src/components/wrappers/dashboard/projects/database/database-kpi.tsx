@@ -2,7 +2,7 @@
 
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {formatDateLastContact} from "@/utils/date-formatting";
-import {Database} from "@/db/schema/06_database";
+import {Database} from "@/db/schema/07_database";
 
 export type DatabaseKpiPro = {
     successRate: any;

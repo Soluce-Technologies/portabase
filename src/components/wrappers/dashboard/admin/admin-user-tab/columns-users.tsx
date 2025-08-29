@@ -9,7 +9,7 @@ import {useState} from "react";
 import {Trash2} from "lucide-react";
 import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-delete-account/delete-account.action";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
-import {UserWithAccounts} from "@/db/schema/01_user";
+import {UserWithAccounts} from "@/db/schema/02_user";
 import {authClient, useSession} from "@/lib/auth/auth-client";
 import {formatFrenchDate} from "@/utils/date-formatting";
 import {providerSwitch} from "@/components/wrappers/common/provider-switch";

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { CircleUser, LogOut, ShieldHalf } from "lucide-react";
 import { signOut } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
-import { User } from "@/db/schema/01_user";
+import { User } from "@/db/schema/02_user";
 
 export type LoggedInDropdownProps = PropsWithChildren<{
     user: User;

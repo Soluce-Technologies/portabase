@@ -69,6 +69,46 @@ export async function createBucketIfNotExists(bucketName: string) {
 }
 
 /**
+ * Delete a file from a bucket
+ * @param bucketName name of the bucket
+ * @param fileName name of the file
+ * @returns true if deleted, false if not
+ */
+export async function deleteFileFromBucket({
+                                               bucketName,
+                                               fileName,
+                                           }: {
+    bucketName: string;
+    fileName: string;
+}): Promise<boolean> {
+    const s3Client = await getS3Client();
+
+    try {
+        const fileExists = await checkFileExistsInBucket({ bucketName, fileName });
+
+        if (!fileExists) {
+            console.warn(`File not found: ${bucketName}/${fileName}`);
+            return false;
+        }
+
+        await s3Client.removeObject(bucketName, fileName);
+        console.log(`Deleted file: ${bucketName}/${fileName}`);
+        return true;
+    } catch (error: any) {
+        console.error("Error deleting file from bucket:", {
+            bucketName,
+            fileName,
+            error: error.message,
+        });
+        return false;
+    }
+}
+
+
+
+
+
+/**
  * Save file in S3 bucket
  * @param bucketName name of the bucket
  * @param fileName name of the file

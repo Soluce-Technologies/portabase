@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import {MoreHorizontal, Trash2} from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { StatusBadge } from "@/components/wrappers/common/status-badge";
-import {Backup, Restoration} from "@/db/schema/06_database";
+import {Backup, Restoration} from "@/db/schema/07_database";
 import {formatFrenchDate} from "@/utils/date-formatting";
 import {useMutation} from "@tanstack/react-query";
 import {
