@@ -89,13 +89,13 @@ export default async function RoutePage(props: PageParams<{
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {capitalizeFirstLetter(dbItem.name)}
-                    <EditButton/>
-                    <CronButton database={dbItem}/>
-                    <RetentionPolicySheet/>
+                        <EditButton/>
+                        <RetentionPolicySheet database={dbItem}/>
+                        <CronButton database={dbItem}/>
+
                 </PageTitle>
                 <PageActions className="justify-between">
                     <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
-
                 </PageActions>
             </div>
             <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>

@@ -1,15 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Clock, Database, Save, Settings, Calendar, RotateCcw } from "lucide-react"
+import {useState} from "react"
+import {Label} from "@/components/ui/label"
+import {Button} from "@/components/ui/button"
+import {Badge} from "@/components/ui/badge"
+import {Input} from "@/components/ui/input"
+import {Separator} from "@/components/ui/separator"
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
+import {Clock, Database, Save, Settings, Calendar, RotateCcw} from "lucide-react"
 import {toast} from "sonner";
+import {useMutation} from "@tanstack/react-query";
+import {useRouter} from "next/navigation";
+import {
+    updateOrCreateBackupRetentionPolicyAction
+} from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings.action";
+import {Database as DbSchema} from "@/db/schema/07_database";
 
 type RetentionPolicyType = "count" | "days" | "gfs"
 
@@ -20,14 +25,19 @@ interface GFSSettings {
     yearly: number
 }
 
-interface RetentionSettings {
+export interface RetentionSettings {
     type: RetentionPolicyType
     count: number
     days: number
     gfs: GFSSettings
 }
 
-export function BackupRetentionSettings() {
+type BackupRetentionSettingsProps = {
+    database: DbSchema,
+}
+
+
+export function BackupRetentionSettings({database}: BackupRetentionSettingsProps) {
     const [settings, setSettings] = useState<RetentionSettings>({
         type: "gfs",
         count: 7,
@@ -39,20 +49,25 @@ export function BackupRetentionSettings() {
             yearly: 3,
         },
     })
-    const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
 
-    const handleSave = async () => {
-        setIsLoading(true)
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            toast.success("Your backup retention settings have been saved successfully.")
-        } catch (error) {
-            toast.error("Failed to save retention settings")
-        } finally {
-            setIsLoading(false)
-        }
+    const updateRetentionPolicy = useMutation({
+        mutationFn: async (payload: RetentionSettings) => await updateOrCreateBackupRetentionPolicyAction({
+            databaseId: database.id,
+            settings: payload
+        }),
+        onSuccess: () => {
+            toast.success("Retention policy updated successfully.")
+            router.refresh()
+        },
+        onError: () => {
+            toast.error("An error occurred while updating retention policy.")
+        },
+    })
+
+    const handleSave = () => {
+        updateRetentionPolicy.mutate(settings)
     }
-
     const calculateTotalFiles = () => {
         if (settings.type === "gfs") {
             return settings.gfs.daily + settings.gfs.weekly + settings.gfs.monthly + settings.gfs.yearly
@@ -76,11 +91,15 @@ export function BackupRetentionSettings() {
                         <Label className="text-sm font-medium">Retention Policy Type</Label>
                         <RadioGroup
                             value={settings.type}
-                            onValueChange={(value: RetentionPolicyType) => setSettings((prev) => ({ ...prev, type: value }))}
+                            onValueChange={(value: RetentionPolicyType) => setSettings((prev) => ({
+                                ...prev,
+                                type: value
+                            }))}
                             className="grid grid-cols-1 gap-4"
                         >
-                            <div className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
-                                <RadioGroupItem value="count" id="count" />
+                            <div
+                                className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
+                                <RadioGroupItem value="count" id="count"/>
                                 <div className="flex-1">
                                     <Label htmlFor="count" className="font-medium cursor-pointer">
                                         Keep last N backups
@@ -91,18 +110,21 @@ export function BackupRetentionSettings() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
-                                <RadioGroupItem value="days" id="days" />
+                            <div
+                                className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors">
+                                <RadioGroupItem value="days" id="days"/>
                                 <div className="flex-1">
                                     <Label htmlFor="days" className="font-medium cursor-pointer">
                                         Keep backups for X days
                                     </Label>
-                                    <p className="text-sm text-muted-foreground">Time-based retention (e.g., keep backups for 30 days)</p>
+                                    <p className="text-sm text-muted-foreground">Time-based retention (e.g., keep
+                                        backups for 30 days)</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors bg-accent/5">
-                                <RadioGroupItem value="gfs" id="gfs" />
+                            <div
+                                className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors bg-accent/5">
+                                <RadioGroupItem value="gfs" id="gfs"/>
                                 <div className="flex-1">
                                     <Label htmlFor="gfs" className="font-medium cursor-pointer flex items-center gap-2">
                                         GFS Rotation
@@ -118,12 +140,12 @@ export function BackupRetentionSettings() {
                         </RadioGroup>
                     </div>
 
-                    <Separator />
+                    <Separator/>
 
                     {settings.type === "count" && (
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
-                                <Settings className="h-4 w-4 text-muted-foreground" />
+                                <Settings className="h-4 w-4 text-muted-foreground"/>
                                 <Label className="font-medium">Count-Based Configuration</Label>
                             </div>
                             <div className="space-y-2">
@@ -134,7 +156,10 @@ export function BackupRetentionSettings() {
                                     min="1"
                                     max="100"
                                     value={settings.count}
-                                    onChange={(e) => setSettings((prev) => ({ ...prev, count: Number.parseInt(e.target.value) || 1 }))}
+                                    onChange={(e) => setSettings((prev) => ({
+                                        ...prev,
+                                        count: Number.parseInt(e.target.value) || 1
+                                    }))}
                                     className="w-32"
                                 />
                                 <p className="text-xs text-muted-foreground">
@@ -147,7 +172,7 @@ export function BackupRetentionSettings() {
                     {settings.type === "days" && (
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
-                                <Clock className="h-4 w-4 text-muted-foreground" />
+                                <Clock className="h-4 w-4 text-muted-foreground"/>
                                 <Label className="font-medium">Time-Based Configuration</Label>
                             </div>
                             <div className="space-y-2">
@@ -158,7 +183,10 @@ export function BackupRetentionSettings() {
                                     min="1"
                                     max="3650"
                                     value={settings.days}
-                                    onChange={(e) => setSettings((prev) => ({ ...prev, days: Number.parseInt(e.target.value) || 1 }))}
+                                    onChange={(e) => setSettings((prev) => ({
+                                        ...prev,
+                                        days: Number.parseInt(e.target.value) || 1
+                                    }))}
                                     className="w-32"
                                 />
                                 <p className="text-xs text-muted-foreground">
@@ -171,7 +199,7 @@ export function BackupRetentionSettings() {
                     {settings.type === "gfs" && (
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
-                                <RotateCcw className="h-4 w-4 text-muted-foreground" />
+                                <RotateCcw className="h-4 w-4 text-muted-foreground"/>
                                 <Label className="font-medium">GFS Rotation Configuration</Label>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -186,7 +214,7 @@ export function BackupRetentionSettings() {
                                         onChange={(e) =>
                                             setSettings((prev) => ({
                                                 ...prev,
-                                                gfs: { ...prev.gfs, daily: Number.parseInt(e.target.value) || 1 },
+                                                gfs: {...prev.gfs, daily: Number.parseInt(e.target.value) || 1},
                                             }))
                                         }
                                     />
@@ -204,7 +232,7 @@ export function BackupRetentionSettings() {
                                         onChange={(e) =>
                                             setSettings((prev) => ({
                                                 ...prev,
-                                                gfs: { ...prev.gfs, weekly: Number.parseInt(e.target.value) || 0 },
+                                                gfs: {...prev.gfs, weekly: Number.parseInt(e.target.value) || 0},
                                             }))
                                         }
                                     />
@@ -222,7 +250,7 @@ export function BackupRetentionSettings() {
                                         onChange={(e) =>
                                             setSettings((prev) => ({
                                                 ...prev,
-                                                gfs: { ...prev.gfs, monthly: Number.parseInt(e.target.value) || 0 },
+                                                gfs: {...prev.gfs, monthly: Number.parseInt(e.target.value) || 0},
                                             }))
                                         }
                                     />
@@ -240,7 +268,7 @@ export function BackupRetentionSettings() {
                                         onChange={(e) =>
                                             setSettings((prev) => ({
                                                 ...prev,
-                                                gfs: { ...prev.gfs, yearly: Number.parseInt(e.target.value) || 0 },
+                                                gfs: {...prev.gfs, yearly: Number.parseInt(e.target.value) || 0},
                                             }))
                                         }
                                     />
@@ -259,12 +287,12 @@ export function BackupRetentionSettings() {
                         </div>
                     )}
 
-                    <Separator />
+                    <Separator/>
 
                     <div className="rounded-lg border p-4 space-y-3 bg-card">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
+                                <Calendar className="h-4 w-4 text-muted-foreground"/>
                                 <span className="font-medium">Storage Impact Summary</span>
                             </div>
                             <Badge
@@ -294,16 +322,18 @@ export function BackupRetentionSettings() {
                         </div>
 
                         {settings.type === "gfs" && (
-                            <div className="text-xs text-muted-foreground bg-accent/10 p-2 rounded border border-accent/20">
-                                <strong>Note:</strong> With GFS rotation, you'll have approximately {calculateTotalFiles()} files per
+                            <div
+                                className="text-xs text-muted-foreground bg-accent/10 p-2 rounded border border-accent/20">
+                                <strong>Note:</strong> With GFS rotation, you'll have
+                                approximately {calculateTotalFiles()} files per
                                 database per year, providing excellent long-term retention with optimized storage usage.
                             </div>
                         )}
                     </div>
 
-                    <Button onClick={handleSave} disabled={isLoading} className="w-full">
-                        <Save className="h-4 w-4 mr-2" />
-                        {isLoading ? "Saving Policy..." : "Save Retention Policy"}
+                    <Button onClick={handleSave} disabled={updateRetentionPolicy.isPending} className="w-full">
+                        <Save className="h-4 w-4 mr-2"/>
+                        {updateRetentionPolicy.isPending ? "Saving Policy..." : "Save Retention Policy"}
                     </Button>
                 </div>
             </div>

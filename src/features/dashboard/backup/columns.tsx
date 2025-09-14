@@ -38,6 +38,14 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
             header: "Reference",
         },
         {
+            accessorKey: "deletedAt",
+            header: "Deleted At",
+            cell: ({row}) => {
+
+                return row.original.deletedAt ? formatFrenchDate(row.getValue("deletedAt")) : ""
+            },
+        },
+        {
             accessorKey: "createdAt",
             header: "Created At",
             cell: ({row}) => {

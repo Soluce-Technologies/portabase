@@ -1,14 +1,45 @@
 import {db} from "@/db";
-import {eq, lt} from "drizzle-orm";
+import {eq, lt, and, desc} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {deleteBackupCronAction} from "@/lib/tasks/database/utils/delete";
 
 export async function enforceRetentionDays(databaseId: string, days: number) {
-    const cutoff = new Date(Date.now() - days * 86400000); // days → ms
+    const cutoff = new Date(Date.now() - days * 86400000);
 
-    await db.delete(drizzleDb.schemas.backup).where(
-        eq(drizzleDb.schemas.backup.databaseId, databaseId) &&
-        lt(drizzleDb.schemas.backup.createdAt, cutoff)
-    );
+    const expiredBackups = await db.query.backup.findMany({
+        where: and(
+            eq(drizzleDb.schemas.backup.databaseId, databaseId),
+            lt(drizzleDb.schemas.backup.createdAt, cutoff)
+        ),
+        with: {
+            database: {
+                with: {
+                    project: true
+                }
+            }
+        }
+    });
 
-    // Note: files should also be deleted from storage
+
+    for (const backup of expiredBackups) {
+
+        const deletion = await deleteBackupCronAction({
+            backupId: backup.id,
+            databaseId: backup.databaseId,
+            file: backup.file!,
+            projectSlug: backup.database.project?.slug!
+        });
+
+        // @ts-ignore
+        if (deletion.data.success) {
+            // @ts-ignore
+            console.log(deletion.data.actionSuccess.message);
+        } else {
+            // @ts-ignore
+            console.log(deletion.data.actionError.message);
+        }
+
+    }
+
 }
+

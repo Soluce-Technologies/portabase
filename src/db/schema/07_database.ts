@@ -69,7 +69,10 @@ export const restoration = pgTable("restorations", {
 });
 
 export const databaseRelations = relations(database, ({one, many}) => ({
-    retentionPolicy: one(retentionPolicy),
+    retentionPolicy: one(retentionPolicy, {
+        fields: [database.id],
+        references: [retentionPolicy.databaseId],
+    }),
     agent: one(agent, {fields: [database.agentId], references: [agent.id]}),
     project: one(project, {fields: [database.projectId], references: [project.id]}),
     backups: many(backup),
@@ -84,6 +87,14 @@ export const backupRelations = relations(backup, ({one, many}) => ({
 export const restorationRelations = relations(restoration, ({one}) => ({
     backup: one(backup, {fields: [restoration.backupId], references: [backup.id]}),
     database: one(database, {fields: [restoration.databaseId], references: [database.id]}),
+}));
+
+
+export const retentionPolicyRelations = relations(retentionPolicy, ({one}) => ({
+    database: one(database, {
+        fields: [retentionPolicy.databaseId],
+        references: [database.id],
+    }),
 }));
 
 export const databaseSchema = createSelectSchema(database);

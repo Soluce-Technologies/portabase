@@ -4,9 +4,13 @@ import {Database, DatabaseZap} from "lucide-react";
 import {
     BackupRetentionSettings
 } from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings";
+import {Database as DbSchema} from "@/db/schema/07_database";
 
+type RetentionPolicySheetProps = {
+    database: DbSchema
+}
 
-export const RetentionPolicySheet = () => {
+export const RetentionPolicySheet = (props: RetentionPolicySheetProps) => {
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -19,15 +23,16 @@ export const RetentionPolicySheet = () => {
             >
                 <SheetHeader>
                     <SheetTitle className="flex items-center gap-2 text-balance">
-                        <Database className="h-5 w-5" />
+                        <Database className="h-5 w-5"/>
                         Backup Retention Policy
                     </SheetTitle>
                     <SheetDescription className="text-pretty">
-                        Configure how long to keep your .dump backup files. Choose from simple count-based, time-based, or
+                        Configure how long to keep your .dump backup files. Choose from simple count-based, time-based,
+                        or
                         enterprise GFS rotation strategies.
                     </SheetDescription>
                 </SheetHeader>
-                <BackupRetentionSettings/>
+                <BackupRetentionSettings database={props.database}/>
             </SheetContent>
         </Sheet>
     )
