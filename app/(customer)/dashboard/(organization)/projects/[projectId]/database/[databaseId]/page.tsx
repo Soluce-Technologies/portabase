@@ -39,7 +39,8 @@ export default async function RoutePage(props: PageParams<{
     const dbItem = await db.query.database.findFirst({
         where: and(inArray(drizzleDb.schemas.backup.id, databasesProject.ids ?? []), eq(drizzleDb.schemas.database.id, databaseId), eq(drizzleDb.schemas.database.projectId, projectId)),
         with: {
-            project: true
+            project: true,
+            retentionPolicy: true
         }
     });
 

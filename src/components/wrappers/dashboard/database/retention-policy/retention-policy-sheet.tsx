@@ -4,7 +4,10 @@ import {Database, DatabaseZap} from "lucide-react";
 import {
     BackupRetentionSettings
 } from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings";
-import {Database as DbSchema} from "@/db/schema/07_database";
+import {DatabaseWith as DbSchema, RetentionPolicy} from "@/db/schema/07_database";
+import {
+    BackupRetentionSettingsForm
+} from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings-form";
 
 type RetentionPolicySheetProps = {
     database: DbSchema
@@ -32,7 +35,10 @@ export const RetentionPolicySheet = (props: RetentionPolicySheetProps) => {
                         enterprise GFS rotation strategies.
                     </SheetDescription>
                 </SheetHeader>
-                <BackupRetentionSettings database={props.database}/>
+
+                <BackupRetentionSettingsForm database={props.database} defaultValues={props.database.retentionPolicy as RetentionPolicy}/>
+
+                {/*<BackupRetentionSettings database={props.database}/>*/}
             </SheetContent>
         </Sheet>
     )
