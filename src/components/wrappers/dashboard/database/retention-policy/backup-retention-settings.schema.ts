@@ -8,7 +8,7 @@ const GFSSettingsSchema = z.object({
 });
 
 export const RetentionSettingsSchema = z.object({
-    type: z.enum(["count", "days", "gfs"]),
+    type: z.enum(["count", "days", "gfs"]).optional(),
     count: z.number().min(1).max(100),
     days: z.number().min(1).max(3650),
     gfs: GFSSettingsSchema,

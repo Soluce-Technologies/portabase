@@ -4,15 +4,17 @@ import {userAction} from "@/safe-actions"
 import {z} from "zod"
 import {db} from "@/db"
 import {eq} from "drizzle-orm"
-import {retentionSettingsSchema} from "@/components/wrappers/dashboard/database/retention-policy/schema";
 import * as drizzleDb from "@/db";
+import {
+    RetentionSettingsSchema
+} from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings.schema";
 
 
 export const updateOrCreateBackupRetentionPolicyAction = userAction
     .schema(
         z.object({
             databaseId: z.string(),
-            settings: retentionSettingsSchema,
+            settings: RetentionSettingsSchema,
         })
     )
     .action(async ({parsedInput}) => {
@@ -44,11 +46,12 @@ export const updateOrCreateBackupRetentionPolicyAction = userAction
                 .returning()
         } else {
             // Insert new policy
+
             updated = await db
                 .insert(drizzleDb.schemas.retentionPolicy)
                 .values({
                     databaseId,
-                    type: settings.type,
+                    type: settings.type ?? "gfs",
                     count: settings.count,
                     days: settings.days,
                     gfsDaily: settings.gfs.daily,
@@ -58,7 +61,6 @@ export const updateOrCreateBackupRetentionPolicyAction = userAction
                 })
                 .returning()
         }
-
         return {
             data: updated[0],
         }

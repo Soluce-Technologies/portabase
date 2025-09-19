@@ -30,7 +30,6 @@ export default async function RoutePage(props: PageParams<{
         notFound();
     }
 
-
     const databasesProject = await getOrganizationProjectDatabases({
         organizationSlug: organization.slug,
         projectId: projectId
@@ -64,18 +63,20 @@ export default async function RoutePage(props: PageParams<{
     const isAlreadyBackup = backups.some((b) => b.status === "waiting");
     const isAlreadyRestore = restorations.some((r) => r.status === "waiting");
 
-    const [totalBackups, successfulBackups] = await Promise.all([
-        db
-            .select({count: drizzleDb.schemas.backup.id})
-            .from(drizzleDb.schemas.backup)
-            .where(eq(drizzleDb.schemas.backup.databaseId, dbItem.id))
-            .then((rows) => rows.length),
-        db
-            .select({count: drizzleDb.schemas.backup.id})
-            .from(drizzleDb.schemas.backup)
-            .where(and(eq(drizzleDb.schemas.backup.databaseId, dbItem.id), eq(drizzleDb.schemas.backup.status, "success")))
-            .then((rows) => rows.length),
-    ]);
+    const totalBackups = await db.select({count: drizzleDb.schemas.backup.id})
+        .from(drizzleDb.schemas.backup)
+        .where(eq(drizzleDb.schemas.backup.databaseId, dbItem.id))
+        .then(rows => rows.length);
+
+    const availableBackups = backups.filter(b => !b.deletedAt).length;
+
+    const successfulBackups = await db.select({count: drizzleDb.schemas.backup.id})
+        .from(drizzleDb.schemas.backup)
+        .where(and(
+            eq(drizzleDb.schemas.backup.databaseId, dbItem.id),
+            eq(drizzleDb.schemas.backup.status, "success")
+        ))
+        .then(rows => rows.length);
 
 
     const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
@@ -90,9 +91,9 @@ export default async function RoutePage(props: PageParams<{
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {capitalizeFirstLetter(dbItem.name)}
-                        <EditButton/>
-                        <RetentionPolicySheet database={dbItem}/>
-                        <CronButton database={dbItem}/>
+                    <EditButton/>
+                    <RetentionPolicySheet database={dbItem}/>
+                    <CronButton database={dbItem}/>
 
                 </PageTitle>
                 <PageActions className="justify-between">
@@ -101,7 +102,8 @@ export default async function RoutePage(props: PageParams<{
             </div>
             <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             <PageContent className="flex flex-col w-full h-full">
-                <DatabaseKpi successRate={successRate} database={dbItem} totalBackups={totalBackups}/>
+                <DatabaseKpi successRate={successRate} database={dbItem} availableBackups={availableBackups}
+                             totalBackups={totalBackups}/>
                 <DatabaseTabs settings={settings} database={dbItem} isAlreadyRestore={isAlreadyRestore}
                               backups={backups}
                               restorations={restorations}/>

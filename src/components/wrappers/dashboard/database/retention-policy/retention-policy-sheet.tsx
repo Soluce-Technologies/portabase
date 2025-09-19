@@ -1,9 +1,6 @@
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
 import {Database, DatabaseZap} from "lucide-react";
-import {
-    BackupRetentionSettings
-} from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings";
 import {DatabaseWith as DbSchema, RetentionPolicy} from "@/db/schema/07_database";
 import {
     BackupRetentionSettingsForm
@@ -13,7 +10,7 @@ type RetentionPolicySheetProps = {
     database: DbSchema
 }
 
-export const RetentionPolicySheet = (props: RetentionPolicySheetProps) => {
+export const RetentionPolicySheet = ({database}: RetentionPolicySheetProps) => {
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -35,10 +32,17 @@ export const RetentionPolicySheet = (props: RetentionPolicySheetProps) => {
                         enterprise GFS rotation strategies.
                     </SheetDescription>
                 </SheetHeader>
-
-                <BackupRetentionSettingsForm database={props.database} defaultValues={props.database.retentionPolicy as RetentionPolicy}/>
-
-                {/*<BackupRetentionSettings database={props.database}/>*/}
+                {database.backupPolicy !== null ?
+                    <BackupRetentionSettingsForm database={database}
+                                                 defaultValues={database.retentionPolicy as RetentionPolicy}/>
+                    :
+                    <div
+                        className="flex flex-col items-center justify-center text-center py-12 gap-4 border  rounded-lg">
+                        <p className="text-muted-foreground">
+                            No backup policy configured yet. Please configure one !
+                        </p>
+                    </div>
+                }
             </SheetContent>
         </Sheet>
     )
