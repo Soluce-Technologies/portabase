@@ -8,6 +8,7 @@ import * as drizzleDb from "@/db";
 import {and, eq} from "drizzle-orm";
 import {deleteFileS3Private, deleteLocalPrivate} from "@/features/upload/private/upload.action";
 import {env} from "@/env.mjs";
+import {withUpdatedAt} from "@/db/utils";
 
 
 export const deleteBackupCronAction = action
@@ -35,15 +36,12 @@ export const deleteBackupCronAction = action
                 };
             }
 
-
             await db
                 .update(drizzleDb.schemas.backup)
-                .set({
+                .set(withUpdatedAt({
                     deletedAt: new Date(),
-                })
+                }))
                 .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
-
-
 
             let success: boolean, message: string;
 
@@ -71,12 +69,10 @@ export const deleteBackupCronAction = action
             //     .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
             //     .execute();
 
-
-
             return {
                 success: true,
                 actionSuccess: {
-                    message: "Backup deleted successfully.",
+                    message: `Backup deleted successfully (${parsedInput.backupId}).`,
                 },
             };
 
@@ -85,7 +81,7 @@ export const deleteBackupCronAction = action
             return {
                 success: false,
                 actionError: {
-                    message: "Failed to delete backup.",
+                    message: `Failed to delete backup(${parsedInput.backupId}).`,
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
                     messageParams: {message: "Error deleting the backup"},

@@ -141,47 +141,54 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                 };
 
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4"/>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            {status == "success" ? (
-                                <>
-                                    <TooltipCustom disabled={isAlreadyRestore} text="Already a restoration waiting">
-                                        <DropdownMenuItem
-                                            disabled={mutationRestore.isPending || isAlreadyRestore}
-                                            onClick={async () => {
-                                                await handleRestore();
-                                            }}
-                                        >
-                                            <ReloadIcon/> Restore
-                                        </DropdownMenuItem>
-                                    </TooltipCustom>
+                    <>
+                        {rowData.deletedAt == null && (
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                        <span className="sr-only">Open menu</span>
+                                        <MoreHorizontal className="h-4 w-4"/>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    {status == "success" ? (
+                                        <>
+                                            <TooltipCustom disabled={isAlreadyRestore}
+                                                           text="Already a restoration waiting">
+                                                <DropdownMenuItem
+                                                    disabled={mutationRestore.isPending || isAlreadyRestore}
+                                                    onClick={async () => {
+                                                        await handleRestore();
+                                                    }}
+                                                >
+                                                    <ReloadIcon/> Restore
+                                                </DropdownMenuItem>
+                                            </TooltipCustom>
+                                            <DropdownMenuItem
+                                                onClick={async () => {
+                                                    await handleDownload(fileName ?? "");
+                                                }}
+                                            >
+                                                <Download/> Download
+                                            </DropdownMenuItem>
+                                        </>
+                                    ) : null}
+                                    <DropdownMenuSeparator/>
                                     <DropdownMenuItem
+                                        className="text-red-600"
                                         onClick={async () => {
-                                            await handleDownload(fileName ?? "");
+                                            await handleDelete();
                                         }}
                                     >
-                                        <Download/> Download
+                                        <Trash2/> Delete
                                     </DropdownMenuItem>
-                                </>
-                            ) : null}
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={async () => {
-                                    await handleDelete();
-                                }}
-                            >
-                                <Trash2/> Delete
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
+                    </>
+
                 );
             },
         },

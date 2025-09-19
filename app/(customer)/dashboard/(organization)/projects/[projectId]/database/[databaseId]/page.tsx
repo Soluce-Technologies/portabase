@@ -21,9 +21,6 @@ export default async function RoutePage(props: PageParams<{
 }>) {
     const {projectId, databaseId} = await props.params;
 
-    console.log("ici", projectId);
-    console.log("laa", databaseId);
-
     const organization = await getOrganization({});
 
     if (!organization) {
@@ -100,7 +97,9 @@ export default async function RoutePage(props: PageParams<{
                     <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
                 </PageActions>
             </div>
-            <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
+            {dbItem.description && (
+                <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
+            )}
             <PageContent className="flex flex-col w-full h-full">
                 <DatabaseKpi successRate={successRate} database={dbItem} availableBackups={availableBackups}
                              totalBackups={totalBackups}/>

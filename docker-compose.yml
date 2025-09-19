@@ -54,7 +54,7 @@ services:
 
     s3:
         container_name: s3-portabase-dev
-        image: minio/minio:latest
+        image: docker.io/bitnami/minio:latest
         ports:
             - "9000:9000"
             - "9001:9001"
