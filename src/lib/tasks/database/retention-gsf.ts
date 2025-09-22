@@ -1,6 +1,6 @@
 import {db} from "@/db";
 import {subDays, subWeeks, subMonths, subYears, startOfWeek, startOfMonth, startOfYear} from "date-fns";
-import {eq, desc} from "drizzle-orm";
+import {eq, desc, isNull, and} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {deleteBackupCronAction} from "@/lib/tasks/database/utils/delete";
 
@@ -11,7 +11,7 @@ export async function enforceRetentionGFS(databaseId: string, gfsSettings: {
     yearly: number;
 }) {
     const backups = await db.query.backup.findMany({
-        where: eq(drizzleDb.schemas.backup.databaseId, databaseId),
+        where: and(eq(drizzleDb.schemas.backup.databaseId, databaseId), isNull(drizzleDb.schemas.backup.deletedAt)),
         orderBy: desc(drizzleDb.schemas.backup.createdAt),
         with: {
             database: {

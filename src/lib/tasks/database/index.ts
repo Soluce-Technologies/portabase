@@ -5,6 +5,7 @@ import {enforceRetentionGFS} from "@/lib/tasks/database/retention-gsf";
 import {retentionPolicy} from "@/db/schema/07_database";
 import {eq, isNull} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {eventEmitter} from "../../../../app/api/events/route";
 
 
 export const retentionCleanTask = async () => {
@@ -54,4 +55,5 @@ export async function enforceRetention(
             });
             break;
     }
+    eventEmitter.emit('modification', {update: true});
 }

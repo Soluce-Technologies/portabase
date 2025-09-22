@@ -15,6 +15,7 @@ import {
     uploadS3Private
 } from "@/features/upload/private/upload.action";
 import {env} from "@/env.mjs";
+import {withUpdatedAt} from "@/db/utils";
 
 export const deleteRestoreAction = userAction
     .schema(
@@ -63,6 +64,7 @@ export const deleteBackupAction = userAction
     .action(async ({parsedInput}): Promise<ServerActionResult<Backup>> => {
         try {
 
+
             const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
             if (!settings) {
                 return {
@@ -76,6 +78,12 @@ export const deleteBackupAction = userAction
                 };
             }
 
+            await db
+                .update(drizzleDb.schemas.backup)
+                .set(withUpdatedAt({
+                    deletedAt: new Date(),
+                }))
+                .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
 
             let success: boolean, message: string;
 
@@ -98,36 +106,79 @@ export const deleteBackupAction = userAction
                 };
             }
 
-            await db
-                .delete(drizzleDb.schemas.backup)
-                .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
-                .execute();
-
-            const backupExists = await db
-                .select()
-                .from(drizzleDb.schemas.backup)
-                .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
-                .execute();
+            return {
+                success: true,
+                actionSuccess: {
+                    message: `Backup deleted successfully (ref: ${parsedInput.backupId}).`,
+                },
+            };
 
 
-            if (backupExists.length === 0) {
-                return {
-                    success: true,
-                    actionSuccess: {
-                        message: "Backup deleted successfully.",
-                    },
-                };
-            } else {
-                return {
-                    success: false,
-                    actionError: {
-                        message: "Backup not found or already deleted.",
-                        status: 404,
-                        cause: "Backup could not be deleted (from database or remote storage).",
-                        messageParams: {message: "Error deleting the backup"},
-                    },
-                };
-            }
+            // const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
+            // if (!settings) {
+            //     return {
+            //         success: false,
+            //         actionError: {
+            //             message: "No settings found.",
+            //             status: 404,
+            //             cause: "No settings found.",
+            //             messageParams: {message: "Error deleting the backup"},
+            //         },
+            //     };
+            // }
+            //
+            //
+            // let success: boolean, message: string;
+            //
+            // const result =
+            //     settings.storage === "local"
+            //         ? await deleteLocalPrivate(parsedInput.file)
+            //         : await deleteFileS3Private(`${parsedInput.projectSlug}/${parsedInput.file}`, env.S3_BUCKET_NAME!);
+            //
+            // ({success, message} = result);
+            //
+            // if (!success) {
+            //     return {
+            //         success: false,
+            //         actionError: {
+            //             message: message,
+            //             status: 404,
+            //             cause: "Unable to delete backup from storage",
+            //             messageParams: {message: "Error deleting the backup"},
+            //         },
+            //     };
+            // }
+            //
+            // await db
+            //     .delete(drizzleDb.schemas.backup)
+            //     .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
+            //     .execute();
+            //
+            // const backupExists = await db
+            //     .select()
+            //     .from(drizzleDb.schemas.backup)
+            //     .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
+            //     .execute();
+            //
+            //
+            // if (backupExists.length === 0) {
+            //     return {
+            //         success: true,
+            //         actionSuccess: {
+            //             message: "Backup deleted successfully.",
+            //         },
+            //     };
+            // } else {
+            //     return {
+            //         success: false,
+            //         actionError: {
+            //             message: "Backup not found or already deleted.",
+            //             status: 404,
+            //             cause: "Backup could not be deleted (from database or remote storage).",
+            //             messageParams: {message: "Error deleting the backup"},
+            //         },
+            //     };
+            // }
         } catch (error) {
             return {
                 success: false,

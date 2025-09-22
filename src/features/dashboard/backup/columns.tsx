@@ -28,23 +28,43 @@ import {Setting} from "@/db/schema/01_setting";
 import {SafeActionResult} from "next-safe-action";
 import {ZodString} from "zod";
 import {ServerActionResult} from "@/types/action-type";
+import {cn} from "@/lib/utils";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 
 export function backupColumns(isAlreadyRestore: boolean, settings: Setting, database: DatabaseWith): ColumnDef<Backup>[] {
     return [
-
+        {
+            id: "availability",
+            cell: ({row}) => {
+                const colorStatus = row.original.deletedAt != null ? "bg-red-400 border-red-600" : "bg-green-400 border-green-600";
+                return (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div className={cn("w-5 h-5 rounded-full border-4", colorStatus)}/>
+                            </TooltipTrigger>
+                            {row.original.deletedAt != null && (
+                                <TooltipContent>
+                                    <p>{formatFrenchDate(row.getValue("deletedAt"))}</p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                    </TooltipProvider>
+                )
+            },
+        },
         {
             accessorKey: "id",
             header: "Reference",
         },
-        {
-            accessorKey: "deletedAt",
-            header: "Deleted At",
-            cell: ({row}) => {
-
-                return row.original.deletedAt ? formatFrenchDate(row.getValue("deletedAt")) : ""
-            },
-        },
+        // {
+        //     accessorKey: "deletedAt",
+        //     header: "Deleted At",
+        //     cell: ({row}) => {
+        //         return row.original.deletedAt ? formatFrenchDate(row.getValue("deletedAt")) : "-"
+        //     },
+        // },
         {
             accessorKey: "createdAt",
             header: "Created At",
