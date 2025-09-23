@@ -64,11 +64,6 @@ export const deleteBackupCronAction = action
                 };
             }
 
-            // await db
-            //     .delete(drizzleDb.schemas.backup)
-            //     .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
-            //     .execute();
-
             return {
                 success: true,
                 actionSuccess: {

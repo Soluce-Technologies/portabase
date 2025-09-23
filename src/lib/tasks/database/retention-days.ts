@@ -21,24 +21,13 @@ export async function enforceRetentionDays(databaseId: string, days: number) {
         }
     });
 
-
     for (const backup of expiredBackups) {
-
-        const deletion = await deleteBackupCronAction({
+        await deleteBackupCronAction({
             backupId: backup.id,
             databaseId: backup.databaseId,
             file: backup.file!,
             projectSlug: backup.database.project?.slug!
         });
-
-        // @ts-ignore
-        if (deletion.data.success) {
-            // @ts-ignore
-            console.log(deletion.data.actionSuccess.message);
-        } else {
-            // @ts-ignore
-            console.log(deletion.data.actionError.message);
-        }
 
     }
 

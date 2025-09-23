@@ -60,26 +60,13 @@ export async function enforceRetentionGFS(databaseId: string, gfsSettings: {
     // Delete backups not in `toKeep`
     for (const b of backups) {
         if (!toKeep.has(b.id)) {
-            // await db.delete(drizzleDb.schemas.backup).where(eq(drizzleDb.schemas.backup.id, b.id));
 
-
-            const deletion = await deleteBackupCronAction({
+            await deleteBackupCronAction({
                 backupId: b.id,
                 databaseId: b.databaseId,
                 file: b.file!,
                 projectSlug: b.database.project?.slug!
             });
-
-            // @ts-ignore
-            if (deletion.data.success) {
-                // @ts-ignore
-                console.log(deletion.data.actionSuccess.message);
-            } else {
-                // @ts-ignore
-                console.log(deletion.data.actionError.message);
-            }
-
-
         }
     }
 }
