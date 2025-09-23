@@ -19,15 +19,11 @@ export async function enforceRetentionCount(databaseId: string, count: number) {
     const toDelete = backups.slice(count); // keep first `count`, delete rest
 
     for (const b of toDelete) {
-
          await deleteBackupCronAction({
             backupId: b.id,
             databaseId: b.databaseId,
-            file: b.file!,
+            file: b.file ?? "",
             projectSlug: b.database.project?.slug!
         });
-
-
-
     }
 }

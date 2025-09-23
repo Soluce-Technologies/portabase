@@ -64,7 +64,7 @@ export async function enforceRetentionGFS(databaseId: string, gfsSettings: {
             await deleteBackupCronAction({
                 backupId: b.id,
                 databaseId: b.databaseId,
-                file: b.file!,
+                file: b.file ?? "",
                 projectSlug: b.database.project?.slug!
             });
         }

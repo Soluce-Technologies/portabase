@@ -1,8 +1,8 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
-import packageJson from "../package.json" with { type: "json" };
+import {createEnv} from "@t3-oss/env-nextjs";
+import {z} from "zod";
+import packageJson from "../package.json" with {type: "json"};
 
-const { version } = packageJson;
+const {version} = packageJson;
 
 export const env = createEnv({
     server: {
@@ -31,6 +31,10 @@ export const env = createEnv({
         S3_USE_SSL: z.string().optional(),
 
         STORAGE_TYPE: z.enum(["local", "s3"]).optional(),
+
+        RETENTION_CRON: z
+            .string()
+            .default(process.env.NODE_ENV === "production" ? "0 7 * * *" : "* * * * *"),
     },
     client: {
         NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
@@ -64,5 +68,8 @@ export const env = createEnv({
         S3_USE_SSL: process.env.S3_USE_SSL,
 
         STORAGE_TYPE: process.env.STORAGE_TYPE,
+
+        RETENTION_CRON: process.env.RETENTION_CRON,
+
     },
 });
