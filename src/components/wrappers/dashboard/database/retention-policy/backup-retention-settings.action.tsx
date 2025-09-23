@@ -1,6 +1,5 @@
 "use server"
 
-import {userAction} from "@/safe-actions"
 import {z} from "zod"
 import {db} from "@/db"
 import {eq} from "drizzle-orm"
@@ -8,6 +7,7 @@ import * as drizzleDb from "@/db";
 import {
     RetentionSettingsSchema
 } from "@/components/wrappers/dashboard/database/retention-policy/backup-retention-settings.schema";
+import {userAction} from "@/lib/safe-actions/actions";
 
 
 export const updateOrCreateBackupRetentionPolicyAction = userAction

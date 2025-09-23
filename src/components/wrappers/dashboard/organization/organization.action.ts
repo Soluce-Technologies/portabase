@@ -1,6 +1,6 @@
 "use server";
 
-import {userAction} from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import {OrganizationSchema} from "@/components/wrappers/dashboard/organization/organization.schema";
 import {ServerActionResult} from "@/types/action-type";
 import {z} from "zod";

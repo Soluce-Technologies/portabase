@@ -44,9 +44,6 @@ const nextConfig: NextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    experimental: {
-        nodeMiddleware: true,
-    },
     async headers() {
         return [
             {

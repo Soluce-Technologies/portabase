@@ -6,10 +6,10 @@ import * as fs from "node:fs";
 import {getServerUrl} from "@/utils/get-server-url";
 import {createPresignedUrlToDownload, deleteFileFromBucket, saveFileInBucket} from "@/utils/s3-file-management";
 import {env} from "@/env.mjs";
-import {action} from "@/safe-actions";
 import {z} from "zod";
 import {ServerActionResult} from "@/types/action-type";
 import {unlink} from "fs/promises";
+import {action} from "@/lib/safe-actions/actions";
 
 const privateLocalDir = "private/uploads/files/";
 const privateS3Dir = "backups/";

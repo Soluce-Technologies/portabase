@@ -3,7 +3,7 @@ import {enforceRetentionCount} from "@/lib/tasks/database/retention-count";
 import {enforceRetentionDays} from "@/lib/tasks/database/retention-days";
 import {enforceRetentionGFS} from "@/lib/tasks/database/retention-gsf";
 import {retentionPolicy} from "@/db/schema/07_database";
-import {eq, isNull} from "drizzle-orm";
+import {isNull} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {eventEmitter} from "../../../../app/api/events/route";
 

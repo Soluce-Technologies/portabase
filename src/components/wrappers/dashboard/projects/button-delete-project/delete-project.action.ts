@@ -1,6 +1,6 @@
 "use server";
 
-import {userAction} from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
 import {ServerActionResult} from "@/types/action-type";

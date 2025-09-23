@@ -1,5 +1,5 @@
 "use server";
-import {ActionError, userAction} from "@/safe-actions";
+import {ActionError, userAction} from "@/lib/safe-actions/actions";
 import {AgentSchema} from "@/components/wrappers/dashboard/agent/agent-form/agent-form.schema";
 import {z} from "zod";
 import {eq, and, ne, count} from "drizzle-orm";

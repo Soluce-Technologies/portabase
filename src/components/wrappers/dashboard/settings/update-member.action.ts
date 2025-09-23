@@ -1,5 +1,5 @@
 "use server";
-import {userAction} from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import {z} from "zod";
 import {auth} from "@/lib/auth/auth";
 import {ServerActionResult} from "@/types/action-type";

@@ -1,10 +1,10 @@
 "use server";
 
-import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {db} from "@/db";
 import {eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
+import {userAction} from "@/lib/safe-actions/actions";
 
 export const updateDatabaseBackupPolicyAction = userAction
     .schema(

@@ -1,10 +1,10 @@
 "use server";
-import { userAction } from "@/safe-actions";
 import { z } from "zod";
 import { EmailFormSchema } from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import * as drizzleDb from "@/db";
+import {userAction} from "@/lib/safe-actions/actions";
 
 export const updateEmailSettingsAction = userAction
     .schema(

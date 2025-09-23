@@ -1,6 +1,6 @@
 "use server";
 
-import { userAction } from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import { ProjectSchema } from "@/components/wrappers/dashboard/projects/project-form/project-form.schema";
 import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";

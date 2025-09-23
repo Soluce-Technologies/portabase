@@ -1,6 +1,5 @@
 "use server";
 
-import {userAction} from "@/safe-actions";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
 import {ServerActionResult} from "@/types/action-type";
@@ -8,6 +7,7 @@ import {eq} from "drizzle-orm";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
 import {Agent} from "@/db/schema/08_agent";
+import {userAction} from "@/lib/safe-actions/actions";
 
 export const deleteAgentAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<Agent>> => {
     try {

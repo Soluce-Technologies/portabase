@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db";
-import { userAction } from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import * as drizzleDb from "@/db";

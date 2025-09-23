@@ -1,5 +1,5 @@
 "use server";
-import { userAction } from "@/safe-actions";
+import {userAction} from "@/lib/safe-actions/actions";
 import { z } from "zod";
 import { UserSchema } from "@/components/wrappers/dashboard/profile/user-form/user-form.schema";
 import { db } from "@/db";

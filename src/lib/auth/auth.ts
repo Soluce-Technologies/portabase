@@ -8,7 +8,7 @@ import {admin as adminPlugin, openAPI, Organization, organization} from "better-
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
-import {OrganizationWithMembers, OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
+import {OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -81,8 +81,6 @@ export const auth = betterAuth({
                 async before(user, context) {
                     const userCount = (await db.select({count: count()}).from(drizzleDb.schemas.user))[0].count;
                     const role = userCount === 0 ? "superadmin" : "pending";
-
-
                     return {
                         data: {
                             ...user,
@@ -335,15 +333,15 @@ export const getOrganization = async ({
 } = {}): Promise<OrganizationWithMembersAndUsers | null> => {
     const query =
         organizationId != null
-            ? { organizationId }
+            ? {organizationId}
             : organizationSlug != null
-                ? { organizationSlug }
+                ? {organizationSlug}
                 : undefined;
 
     try {
         const response = await auth.api.getFullOrganization({
             headers: await headers(),
-            ...(query ? { query } : {}),
+            ...(query ? {query} : {}),
         });
 
         return response as OrganizationWithMembersAndUsers;
@@ -382,7 +380,7 @@ export const getLastOrganizationOrFirst = async (userId: string) => {
 export const createOrganization = async (name: string, slug: string) => {
     try {
         return await auth.api.createOrganization({
-            headers:  await headers(),
+            headers: await headers(),
             body: {
                 name,
                 slug,
@@ -465,13 +463,12 @@ export const getActiveMember = async () => {
 
 export const setActiveOrganization = async (slug: string) => {
     try {
-        const organization = await auth.api.setActiveOrganization({
+        return await auth.api.setActiveOrganization({
             headers: await headers(),
             body: {
                 organizationSlug: slug,
             },
         });
-        return organization;
     } catch (e) {
         console.log("error", e);
     }
