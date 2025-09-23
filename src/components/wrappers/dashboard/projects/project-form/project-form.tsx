@@ -47,7 +47,6 @@ export const ProjectForm = (props: projectFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: ProjectType) => {
-            console.log(values);
             if (!isCreate && !props.projectId) {
                 throw new Error("Project ID is required for updates");
             }

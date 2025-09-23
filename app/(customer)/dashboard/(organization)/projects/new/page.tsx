@@ -35,7 +35,6 @@ export default async function RoutePage(props: PageParams<{  }>) {
 
     if (!org) notFound();
 
-    console.log("ici",availableDatabases)
 
     return (
         <Page>

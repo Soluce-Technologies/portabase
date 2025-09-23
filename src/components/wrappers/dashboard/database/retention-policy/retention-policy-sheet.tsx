@@ -1,6 +1,6 @@
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
-import {Database, DatabaseZap} from "lucide-react";
+import {Database, Ruler} from "lucide-react";
 import {DatabaseWith as DbSchema, RetentionPolicy} from "@/db/schema/07_database";
 import {
     BackupRetentionSettingsForm
@@ -15,7 +15,7 @@ export const RetentionPolicySheet = ({database}: RetentionPolicySheetProps) => {
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="outline">
-                    <DatabaseZap/>
+                    <Ruler />
                 </Button>
             </SheetTrigger>
             <SheetContent

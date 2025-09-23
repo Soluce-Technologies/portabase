@@ -42,8 +42,6 @@ export const UserForm = (props: UserFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: UserType) => {
-            console.log("values", values);
-            console.log(props.userId);
             const updateUser = await updateUserAction({
                 id: props.userId ?? "-",
                 data: values,

@@ -1,12 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
 
-import { backupButtonAction } from "@/components/wrappers/dashboard/backup/backup-button/backup-button.action";
-import { ButtonWithLoading } from "@/components/wrappers/common/button/button-with-loading";
+import {backupButtonAction} from "@/components/wrappers/dashboard/backup/backup-button/backup-button.action";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import {Database, DatabaseZap} from "lucide-react";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 export type BackupButtonProps = {
     databaseId: string;
@@ -15,6 +17,8 @@ export type BackupButtonProps = {
 
 export const BackupButton = (props: BackupButtonProps) => {
     const router = useRouter();
+    const isMobile = useIsMobile()
+
     const mutation = useMutation({
         mutationFn: async (databaseId: string) => {
             const backup = await backupButtonAction(databaseId);
@@ -32,8 +36,9 @@ export const BackupButton = (props: BackupButtonProps) => {
 
     return (
         <ButtonWithLoading
+            icon={<DatabaseZap/>}
             disabled={props.disable}
-            text="Backup"
+            text={isMobile ? "" : "Backup"}
             isPending={mutation.isPending}
             size={"default"}
             onClick={async () => {

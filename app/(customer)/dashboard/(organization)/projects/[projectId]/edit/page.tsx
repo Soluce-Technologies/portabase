@@ -45,7 +45,6 @@ export default async function RoutePage(props: PageParams<{ projectId: string }>
     )
         // .filter((db) => db.project !== null) as DatabaseWith[];
 
-    console.log("ici34",availableDatabases);
 
 
     return (

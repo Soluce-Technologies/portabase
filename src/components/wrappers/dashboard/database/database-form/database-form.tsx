@@ -58,7 +58,6 @@ export const DatabaseForm = (props: DatabaseFormProps) => {
                         form={form}
                         className="flex flex-col gap-4 mt-3"
                         onSubmit={async (values) => {
-                            console.log("sssssss");
                             await mutation.mutateAsync(values);
                         }}
                     >

@@ -38,7 +38,6 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
     // const databaseId = 'db-123';
     //
 
-    console.log("agent",agent)
 
 
 

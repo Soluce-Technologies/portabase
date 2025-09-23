@@ -26,7 +26,6 @@ export async function POST(
         const body: BodyResultRestore = await request.json();
 
         console.log(body)
-        console.log(agentId)
 
 
         if (!isUuidv4(body.generatedId)) {

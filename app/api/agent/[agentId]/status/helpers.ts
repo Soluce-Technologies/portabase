@@ -48,8 +48,6 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                     {status: 500}
                 );
             }
-            console.log(db)
-            console.log(dbmsEnumSchema.parse(db.dbms))
             const [databaseCreated] = await dbClient
                 .insert(drizzleDb.schemas.database)
                 .values({

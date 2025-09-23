@@ -46,7 +46,7 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                             </TooltipTrigger>
                             {row.original.deletedAt != null && (
                                 <TooltipContent>
-                                    <p>{formatFrenchDate(row.getValue("deletedAt"))}</p>
+                                    <p>{formatFrenchDate(row.original.deletedAt)}</p>
                                 </TooltipContent>
                             )}
                         </Tooltip>
@@ -58,13 +58,6 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
             accessorKey: "id",
             header: "Reference",
         },
-        // {
-        //     accessorKey: "deletedAt",
-        //     header: "Deleted At",
-        //     cell: ({row}) => {
-        //         return row.original.deletedAt ? formatFrenchDate(row.getValue("deletedAt")) : "-"
-        //     },
-        // },
         {
             accessorKey: "createdAt",
             header: "Created At",

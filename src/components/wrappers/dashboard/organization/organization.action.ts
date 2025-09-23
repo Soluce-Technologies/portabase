@@ -77,7 +77,6 @@ export const updateOrganizationAction = userAction
     .action(async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
             const newUserList = parsedInput.data.users;
-            console.log(parsedInput);
             const organization = await db.query.organization.findFirst({
                 where: eq(drizzleDb.schemas.organization.id, parsedInput.organizationId),
                 with: {

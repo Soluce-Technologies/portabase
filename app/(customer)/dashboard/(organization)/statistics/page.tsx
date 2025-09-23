@@ -45,7 +45,6 @@ export default async function RoutePage(props: PageParams<{}>) {
     });
 
 
-    console.log("evolution",backupsEvolution);
 
     // const tomorrow = new Date();
     // tomorrow.setDate(tomorrow.getDate() + 1);

@@ -10,7 +10,6 @@ import {getAccounts, getSessions} from "@/lib/auth/auth";
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await currentUser();
-    console.log("my user",user);
     if (!user) {
         return notFound();
     }
