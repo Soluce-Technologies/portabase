@@ -86,11 +86,14 @@ export default async function RoutePage(props: PageParams<{
     return (
         <Page>
             <div className="justify-between gap-2 sm:flex">
-                <PageTitle className="flex items-center justify-between w-full">
-                    {capitalizeFirstLetter(dbItem.name)}
-                    <div className="flex items-center gap-2 justify-between w-full">
+                <PageTitle className="flex flex-col md:flex-row items-center justify-between w-full">
+                    <div className=" w-full md:w-fit">
+                        {capitalizeFirstLetter(dbItem.name)}
+                    </div>
+                    <div className="flex items-center gap-2 md:justify-between w-full">
                         <div className="flex items-center gap-2">
-                            <EditButton/>
+                            {/* Do not delete*/}
+                            {/*<EditButton/>*/}
                             <RetentionPolicySheet database={dbItem}/>
                             <CronButton database={dbItem}/>
                         </div>

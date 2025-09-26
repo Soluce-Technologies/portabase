@@ -8,3 +8,10 @@ export function truncateWords(text: string, wordLimit: number = 10): string {
 export function capitalizeFirstLetter(text: string): string {
     return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
 }
+
+
+
+
+export function isUUID(str: string) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str);
+}

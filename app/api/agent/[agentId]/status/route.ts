@@ -34,29 +34,33 @@ export async function POST(
         const agentId = (await params).agentId
         const body: Body = await request.json();
         const lastContact = new Date();
+        let message: string
+
 
         if (!isUuidv4(agentId)) {
+            message = "agentId is not a valid uuid"
+            console.log(message)
             return NextResponse.json(
                 {error: "agentId is not a valid uuid"},
                 {status: 500}
             );
         }
 
-
-
         const agent = await db.query.agent.findFirst({
             where: eq(drizzleDb.schemas.agent.id, agentId),
         })
 
         if (!agent) {
-            return NextResponse.json({error: "Agent not found"}, {status: 404})
+            message = "Agent not found"
+            console.log(message)
+            return NextResponse.json({error: message}, {status: 404})
         }
         const databasesResponse = await handleDatabases(body, agent, lastContact)
 
 
         await db
             .update(drizzleDb.schemas.agent)
-            .set({ lastContact: lastContact })
+            .set({lastContact: lastContact})
             .where(eq(drizzleDb.schemas.agent.id, agentId));
 
         eventEmitter.emit('modification', {update: true});
@@ -69,6 +73,7 @@ export async function POST(
             databases: databasesResponse
         }
         console.log(response)
+
         return Response.json(response)
     } catch (error) {
         console.error('Error in POST handler:', error);

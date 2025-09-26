@@ -101,12 +101,10 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
 
                 const mutationDeleteBackup = useMutation({
                     mutationFn: async () => {
-
-
                         const deletion = await deleteBackupAction({
                             backupId: rowData.id,
                             databaseId: rowData.databaseId,
-                            file: rowData.file!,
+                            file: rowData.file ?? "",
                             projectSlug: database.project?.slug!
                         });
                         // @ts-ignore

@@ -1,7 +1,7 @@
 import { twx } from "@/lib/twx";
 import { cn } from "@/lib/utils";
 
-export const Page = twx.div((props) => [cn(`flex flex-col h-full px-10 py-6`, props.className)]);
+export const Page = twx.div((props) => [cn(`flex flex-col h-full px-5 md:px-10 py-6`, props.className)]);
 
 export const PageHeader = twx.div((props) => [cn(`flex justify-between`, props.className)]);
 
