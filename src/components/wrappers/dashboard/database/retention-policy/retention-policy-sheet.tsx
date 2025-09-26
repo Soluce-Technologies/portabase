@@ -19,7 +19,7 @@ export const RetentionPolicySheet = ({database}: RetentionPolicySheetProps) => {
                 </Button>
             </SheetTrigger>
             <SheetContent
-                className="flex gap-4 p-4 w-[540px] sm:w-[800px] max-w-[800px] max-h-screen overflow-y-scroll"
+                className="flex gap-4 p-4 w-full md:w-[800px] max-w-[800px] max-h-screen overflow-y-scroll"
             >
                 <SheetHeader>
                     <SheetTitle className="flex items-center gap-2 text-balance">
