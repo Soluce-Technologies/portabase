@@ -43,7 +43,7 @@ export default async function RoutePage(props: PageParams<{}>) {
         where: inArray(drizzleDb.schemas.backup.databaseId, databaseIds),
     });
 
-    const availableBackups = backupsEvolution.map(backup => backup.deletedAt == null);
+    const availableBackups = backupsEvolution.filter(backup => backup.deletedAt == null);
 
 
     return (
