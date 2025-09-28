@@ -31,13 +31,23 @@ export async function enforceRetentionGFS(databaseId: string, gfsSettings: {
     });
 
     // WEEKLY
-    const weekStartDates = Array.from({length: gfsSettings.weekly}, (_, i) => startOfWeek(subWeeks(now, i)));
+    // const weekStartDates = Array.from({length: gfsSettings.weekly}, (_, i) => startOfWeek(subWeeks(now, i)));
+    // weekStartDates.forEach((weekStart) => {
+    //     const backupOfWeek = backups.find(
+    //         (b) => b.createdAt >= weekStart && b.createdAt < subWeeks(weekStart, -1)
+    //     );
+    //     if (backupOfWeek) toKeep.add(backupOfWeek.id);
+    // });
+    const weekStartDates = Array.from({length: gfsSettings.weekly}, (_, i) => startOfWeek(subWeeks(now, i), { weekStartsOn: 1 }));
     weekStartDates.forEach((weekStart) => {
         const backupOfWeek = backups.find(
             (b) => b.createdAt >= weekStart && b.createdAt < subWeeks(weekStart, -1)
         );
         if (backupOfWeek) toKeep.add(backupOfWeek.id);
     });
+
+
+
 
     // MONTHLY
     const monthStartDates = Array.from({length: gfsSettings.monthly}, (_, i) => startOfMonth(subMonths(now, i)));
