@@ -68,6 +68,7 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
                         const backupDeleted = await deleteBackupAction({
                             backupId: backup.id,
                             databaseId: backup.databaseId,
+                            status: backup.status,
                             file: backup.file!,
                             projectSlug: props.database?.project?.slug!
                         });

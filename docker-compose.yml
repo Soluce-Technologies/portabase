@@ -52,22 +52,22 @@ services:
 #        depends_on:
 #            - db
 
-    s3:
-        container_name: s3-portabase-dev
-        image: docker.io/bitnami/minio:latest
-        ports:
-            - "9000:9000"
-            - "9001:9001"
-        volumes:
-            - minio_data:/data
-
-        environment:
-            - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-            - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
-            - MINIO_DEFAULT_BUCKETS=${S3_BUCKET_NAME}
-            - MINIO_BROWSER=on
+#    s3:
+#        container_name: s3-portabase-dev
+#        image: docker.io/bitnami/minio:latest
+#        ports:
+#            - "9000:9000"
+#            - "9001:9001"
+#        volumes:
+#            - minio_data:/data
+#
+#        environment:
+#            - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+#            - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+#            - MINIO_DEFAULT_BUCKETS=${S3_BUCKET_NAME}
+#            - MINIO_BROWSER=on
 
 volumes:
     postgres-data:
-    minio_data:
+#    minio_data:
 #    pgadmin-data:

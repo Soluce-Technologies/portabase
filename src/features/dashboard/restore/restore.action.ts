@@ -58,6 +58,7 @@ export const deleteBackupAction = userAction
             backupId: z.string(),
             databaseId: z.string(),
             projectSlug: z.string(),
+            status: z.enum(["ongoing", "failed", "success", "waiting"]),
             file: z.string(),
         })
     )
@@ -82,6 +83,7 @@ export const deleteBackupAction = userAction
                 .update(drizzleDb.schemas.backup)
                 .set(withUpdatedAt({
                     deletedAt: new Date(),
+                    status: parsedInput.status == "ongoing" ? "failed" : parsedInput.status
                 }))
                 .where(and(eq(drizzleDb.schemas.backup.id, parsedInput.backupId), eq(drizzleDb.schemas.backup.databaseId, parsedInput.databaseId)))
 

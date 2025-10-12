@@ -104,6 +104,7 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                         const deletion = await deleteBackupAction({
                             backupId: rowData.id,
                             databaseId: rowData.databaseId,
+                            status: rowData.status,
                             file: rowData.file ?? "",
                             projectSlug: database.project?.slug!
                         });
