@@ -8,6 +8,7 @@ import {Setting} from "@/db/schema/01_setting";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {AdminUsersTable} from "@/components/wrappers/dashboard/admin/admin-user-tab/admin-user-table";
+import {AdminSettingsTab} from "@/components/wrappers/dashboard/admin/admin-settings-tab/admin-settings-tab";
 
 export type AdminTabsProps = {
     users: UserWithAccounts[];
@@ -41,6 +42,9 @@ export const AdminTabs = ({users, settings}: AdminTabsProps) => {
                 <TabsTrigger className="w-full" value="storage">
                     Storage
                 </TabsTrigger>
+                <TabsTrigger className="w-full" value="settings">
+                    Settings
+                </TabsTrigger>
             </TabsList>
 
             <TabsContent value="users">
@@ -51,6 +55,9 @@ export const AdminTabs = ({users, settings}: AdminTabsProps) => {
             </TabsContent>
             <TabsContent value="storage">
                 <SettingsStorageTab settings={settings}/>
+            </TabsContent>
+            <TabsContent value="settings">
+                <AdminSettingsTab/>
             </TabsContent>
         </Tabs>
     );

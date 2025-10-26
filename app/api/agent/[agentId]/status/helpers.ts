@@ -124,12 +124,11 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                 try {
 
                     if (settings.storage == "local") {
-                        data = await getFileUrlPresignedLocal(fileName!)
+                        data = await getFileUrlPresignedLocal({fileName: fileName!})
                     } else if (settings.storage == "s3") {
 
                         data = await getFileUrlPreSignedS3Action(`backups/${backupToRestore?.database.project?.slug}/${fileName}`);
                     }
-
 
                     if (data?.data?.success) {
                         urlBackup = data.data.value ?? "";

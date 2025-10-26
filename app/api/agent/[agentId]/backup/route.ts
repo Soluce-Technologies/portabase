@@ -3,12 +3,13 @@ import {isUuidv4} from "@/utils/verify-uuid";
 import {uploadLocalPrivate, uploadS3Private} from "@/features/upload/private/upload.action";
 import {v4 as uuidv4} from "uuid";
 import {eventEmitter} from "../../../events/route";
+import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {Backup} from "@/db/schema/07_database";
 import {and, eq} from "drizzle-orm";
-import * as drizzleDb from "@/db";
 import {env} from "@/env.mjs";
 import {withUpdatedAt} from "@/db/utils";
+import {decryptedDump} from "./helpers";
 
 export async function POST(
     request: Request,
@@ -27,8 +28,12 @@ export async function POST(
 
         const agentId = (await params).agentId;
         const formData = await request.formData();
+        const aesKeyHex = formData.get("aes_key") as string;
+        const ivHex = formData.get("iv") as string;
         const generatedId = formData.get("generatedId") as string | null;
         const method = formData.get("method") as string | null;
+
+
 
         if (!generatedId || !isUuidv4(generatedId)) {
             return NextResponse.json(
@@ -102,6 +107,11 @@ export async function POST(
         if (status === "success") {
             const file = formData.get("file") as File | null;
 
+            if (!aesKeyHex || !ivHex) {
+                return NextResponse.json({error: "Missing fields"}, {status: 400});
+            }
+
+
             if (!file) {
                 return NextResponse.json(
                     {error: "File is required for successful backup"},
@@ -109,9 +119,13 @@ export async function POST(
                 );
             }
 
+            const decryptedFile = await decryptedDump(file, aesKeyHex, ivHex);
+
             const uuid = uuidv4();
             const fileName = `${uuid}.dump`;
-            const buffer = Buffer.from(await file.arrayBuffer());
+            // const buffer = Buffer.from(await fileDecrypted.arrayBuffer());
+            const buffer = Buffer.from(await decryptedFile.arrayBuffer());
+            // const buffer = fileDecrypted
 
             const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
             if (!settings) {
@@ -174,3 +188,4 @@ export async function POST(
         );
     }
 }
+

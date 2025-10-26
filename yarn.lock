@@ -3539,6 +3539,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-forge@npm:^1":
+  version: 1.3.14
+  resolution: "@types/node-forge@npm:1.3.14"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/da6158fd34fa7652aa7f8164508f97a76b558724ab292f13c257e39d54d95d4d77604e8fb14dc454a867f1aeec7af70118294889195ec4400cecbb8a5c77a212
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=13.7.0":
   version: 24.1.0
   resolution: "@types/node@npm:24.1.0"
@@ -8218,6 +8227,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-forge@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "node-forge@npm:1.3.1"
+  checksum: 10c0/e882819b251a4321f9fc1d67c85d1501d3004b4ee889af822fd07f64de3d1a8e272ff00b689570af0465d65d6bf5074df9c76e900e0aff23e60b847f2a46fbe8
+  languageName: node
+  linkType: hard
+
 "node-gyp-build@npm:^4.8.4":
   version: 4.8.4
   resolution: "node-gyp-build@npm:4.8.4"
@@ -8778,6 +8794,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.21.3"
     "@types/eslint-plugin-tailwindcss": "npm:^3.17.0"
     "@types/node": "npm:^22.15.18"
+    "@types/node-forge": "npm:^1"
     "@types/nodemailer": "npm:^6.4.17"
     "@types/pg": "npm:^8.15.2"
     "@types/react": "npm:^19.1.4"
@@ -8809,6 +8826,7 @@ __metadata:
     next-safe-action: "npm:^7.10.8"
     next-themes: "npm:^0.4.6"
     node-cron: "npm:^4.2.1"
+    node-forge: "npm:^1.3.1"
     nodemailer: "npm:^7.0.3"
     npm-check-updates: "npm:^18.0.1"
     pg: "npm:^8.16.0"

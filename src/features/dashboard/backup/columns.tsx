@@ -136,7 +136,7 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                     }, readonly [], ServerActionResult<string>, object> | undefined
 
                     if (settings.storage == "local") {
-                        data = await getFileUrlPresignedLocal(fileName!)
+                        data = await getFileUrlPresignedLocal({fileName:fileName!})
                     } else if (settings.storage == "s3") {
                         data = await getFileUrlPreSignedS3Action(`backups/${database.project?.slug}/${fileName}`);
                     }

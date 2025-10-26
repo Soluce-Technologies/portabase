@@ -15,7 +15,6 @@ export const retentionCleanTask = async () => {
                 retentionPolicy: true,
                 backups: {
                     where: isNull(drizzleDb.schemas.backup.deletedAt),
-
                 },
             },
         });

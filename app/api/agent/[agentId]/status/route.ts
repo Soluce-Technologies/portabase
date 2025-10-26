@@ -20,7 +20,7 @@ export type Body = {
 
 // Function to test the get file url presigned local
 export async function GET(request: Request) {
-    const url = await getFileUrlPresignedLocal("d4a7fa35-2506-4d01-a612-a8ef2e2cc1c5.dump")
+    const url = await getFileUrlPresignedLocal({fileName:"d4a7fa35-2506-4d01-a612-a8ef2e2cc1c5.dump"})
     return Response.json({
         message: url
     })

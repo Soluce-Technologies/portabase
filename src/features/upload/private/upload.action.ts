@@ -131,10 +131,13 @@ export async function getFileUrlPresignedS3(fileName: string) {
 
 
 export const getFileUrlPresignedLocal = action
-    .schema(z.string())
+    .schema(z.object({
+        dir: z.string().optional(),
+        fileName: z.string()
+    }))
     .action(async ({parsedInput}): Promise<ServerActionResult<string>> => {
         try {
-            const filePath = path.join(privateLocalDir, parsedInput);
+            const filePath = path.join(parsedInput.dir ? parsedInput.dir : privateLocalDir, parsedInput.fileName);
             await mkdir(path.join(process.cwd(), privateLocalDir), {recursive: true});
 
             if (!fs.existsSync(filePath)) {
@@ -145,14 +148,14 @@ export const getFileUrlPresignedLocal = action
             const baseUrl = getServerUrl();
 
             const expiresAt = Date.now() + 60 * 1000; // expires in 1 minute
-            const token = crypto.createHash("sha256").update(`${parsedInput}${expiresAt}`).digest("hex");
+            const token = crypto.createHash("sha256").update(`${parsedInput.fileName}${expiresAt}`).digest("hex");
 
             return {
                 success: true,
-                value: `${baseUrl}/api/files/${parsedInput}?token=${token}&expires=${expiresAt}`,
+                value: `${baseUrl}/api/files/${parsedInput.fileName}?token=${token}&expires=${expiresAt}`,
                 actionSuccess: {
                     message: "Successfully retrieved presigned URL Local",
-                    messageParams: {fileName: parsedInput},
+                    messageParams: {fileName: parsedInput.fileName},
                 },
             };
         } catch (error) {
@@ -163,7 +166,7 @@ export const getFileUrlPresignedLocal = action
                     message: "Failed to generate presigned URL",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: {fileName: parsedInput},
+                    messageParams: {fileName: parsedInput.fileName},
                 },
             };
         }

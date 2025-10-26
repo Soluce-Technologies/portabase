@@ -3,11 +3,13 @@ import {db, makeMigration} from "@/db";
 import {eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {retentionJob} from "@/lib/tasks";
+import {generateRSAKeys} from "@/utils/rsa-keys";
 
 
 export async function init() {
     consoleAscii();
     console.log("====Init Functions====");
+    await generateRSAKeys();
     await makeMigration();
     await createDefaultOrganization();
     await createSettingsIfNotExist()
@@ -20,7 +22,6 @@ async function setupCronJobs() {
     retentionJob.start();
     console.log(`==== Cron job started ====`);
 }
-
 
 async function createSettingsIfNotExist() {
     const configSettings = {
