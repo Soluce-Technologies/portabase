@@ -1,10 +1,7 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Download} from "lucide-react";
-import {getFileUrlPresignedLocal, getFileUrlPreSignedS3Action} from "@/features/upload/private/upload.action";
-import {SafeActionResult} from "next-safe-action";
-import {ZodString} from "zod";
-import {ServerActionResult} from "@/types/action-type";
+import {getFileUrlPresignedLocal} from "@/features/upload/private/upload.action";
 import {toast} from "sonner";
 
 export type AdminSettingsTabProps = {};

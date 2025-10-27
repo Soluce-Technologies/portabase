@@ -11,13 +11,10 @@ services:
       - '8887:80'
     env_file:
       - .env
-
     depends_on:
       db:
         condition: service_healthy
-
     container_name: portabase-app-prod
-
 
   db:
     image: postgres:16-alpine
@@ -34,7 +31,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 
   s3:
     image: docker.io/bitnami/minio:latest

@@ -60,7 +60,7 @@ export async function middleware(request: NextRequest) {
 function checkRouteExists(pathname: string) {
     // Define static and dynamic routes with patterns
     const routePatterns = [
-        //do not delete
+        // Do not delete
         // /^\/api\/auth\/\d+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
         // /^\/api\/auth\/\w+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
         // /^\/api\/agent\/healthcheck\/\w+$/,           // Dynamic route with an alphanumeric parameter (e.g., /api/user/username)

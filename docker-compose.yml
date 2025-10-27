@@ -1,25 +1,6 @@
 name: portabase-dev
 
 services:
-#    app:
-#        build:
-#            context: .
-#            dockerfile: docker/dockerfile/Dockerfile
-#            target: dev
-#        ports:
-#            - "8887:8887"
-#        environment:
-#            - TIME_ZONE="Europe/Paris"
-#            - NODE_ENV=development
-#        depends_on:
-#            db:
-#                condition: service_healthy
-#        volumes:
-#            - .:/app
-#            - /app/node_modules
-#        container_name: portabase-app
-#
-
     db:
         image: postgres:16-alpine
         ports:
@@ -36,38 +17,5 @@ services:
             timeout: 5s
             retries: 5
 
-#    db-pgadmin:
-#        image: dpage/pgadmin4
-#        environment:
-#            PGADMIN_DEFAULT_EMAIL: "devuser@devuser.devuser"
-#            PGADMIN_DEFAULT_PASSWORD: "changeme"
-#            PGADMIN_CONFIG_SERVER_MODE: "False"
-#            POSTGRES_USER: "devuser"
-#            POSTGRES_PASSWORD: "changeme"
-#        volumes:
-#            - pgadmin-data:/var/lib/pgadmin
-#        ports:
-#            - "8080:80"
-#        restart: unless-stopped
-#        depends_on:
-#            - db
-
-#    s3:
-#        container_name: s3-portabase-dev
-#        image: docker.io/bitnami/minio:latest
-#        ports:
-#            - "9000:9000"
-#            - "9001:9001"
-#        volumes:
-#            - minio_data:/data
-#
-#        environment:
-#            - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-#            - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
-#            - MINIO_DEFAULT_BUCKETS=${S3_BUCKET_NAME}
-#            - MINIO_BROWSER=on
-
 volumes:
     postgres-data:
-#    minio_data:
-#    pgadmin-data:

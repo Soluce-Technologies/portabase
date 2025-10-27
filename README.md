@@ -19,7 +19,6 @@
     <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
  
   ![portabase-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/e3929e58-fefd-44cc-ab26-6f8e1a860c43)
-
   
   </p>
 </div>
@@ -178,6 +177,9 @@ S3_USE_SSL=true
 
 # Storage Backend: 'local' or 's3'
 STORAGE_TYPE=local
+
+# Retention
+RETENTION_CRON="* * * * *"
 ```
 
 ### Semantic Versioning
