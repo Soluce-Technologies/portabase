@@ -1,14 +1,17 @@
+"use server"
+import {getPublicServerKeyContent} from "@/features/keys/keys.action";
 
-export function generateEdgeKey(serverUrl: string, agentId: string): string {
+export async function generateEdgeKey(serverUrl: string, agentId: string): Promise<string> {
+    const publicKey = getPublicServerKeyContent()
     const edgeKeyData = {
         serverUrl,
         agentId,
+        publicKey
     };
     console.log(edgeKeyData);
     const edgeKeyJson = JSON.stringify(edgeKeyData);
     const edgeKeyBuffer = Buffer.from(edgeKeyJson, 'utf-8');
-    const edgeKeyBase64 = edgeKeyBuffer.toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
-    return edgeKeyBase64;
+    return edgeKeyBuffer.toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 
 function decodeEdgeKey(edgeKey: string): object {

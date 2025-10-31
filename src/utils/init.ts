@@ -4,6 +4,7 @@ import {eq} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {retentionJob} from "@/lib/tasks";
 import {generateRSAKeys} from "@/utils/rsa-keys";
+import {getPublicServerKeyContent} from "@/features/keys/keys.action";
 
 
 export async function init() {

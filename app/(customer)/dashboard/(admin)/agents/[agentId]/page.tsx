@@ -8,7 +8,7 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
 import {DatabaseCard} from "@/components/wrappers/dashboard/projects/project-card/project-database-card";
 import {AgentCardKey} from "@/components/wrappers/dashboard/agent/agent-card-key/agent-card-key";
-import { db } from "@/db";
+import {db} from "@/db";
 import * as drizzleDb from "@/db";
 import {and, eq} from "drizzle-orm";
 import {notFound} from "next/navigation";
@@ -18,6 +18,8 @@ import {
 import {ButtonDeleteAgent} from "@/components/wrappers/dashboard/agent/button-delete-agent/button-delete-agent";
 import {capitalizeFirstLetter} from "@/utils/text";
 import {Server} from "lucide-react";
+import {generateEdgeKey} from "@/utils/edge_key";
+import {getServerUrl} from "@/utils/get-server-url";
 
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
@@ -36,6 +38,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
         notFound()
     }
 
+    const edgeKey = await generateEdgeKey(getServerUrl(), agent.id);
 
     return (
         <Page>
@@ -48,7 +51,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     </Link>
                 </PageTitle>
                 <PageActions className="justify-between">
-                    <ButtonDeleteAgent agentId={agentId} text={"Delete Agent"} />
+                    <ButtonDeleteAgent agentId={agentId} text={"Delete Agent"}/>
                 </PageActions>
             </div>
             <PageDescription className="mt-5 sm:mt-0">{agent.description}</PageDescription>
@@ -58,7 +61,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     <Card className="w-full sm:w-auto flex-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Databases</CardTitle>
-                            <Server className="h-4 w-4 text-muted-foreground" />
+                            <Server className="h-4 w-4 text-muted-foreground"/>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{agent.databases.length}</div>
@@ -69,7 +72,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     <Card className="w-full sm:w-auto flex-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Last contact</CardTitle>
-                            <Server className="h-4 w-4 text-muted-foreground" />
+                            <Server className="h-4 w-4 text-muted-foreground"/>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{formatDateLastContact(agent.lastContact)}</div>
@@ -83,7 +86,9 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         Edge Key
                     </CardHeader>
                     <CardContent>
-                        <AgentCardKey agent={agent}/>
+                        <AgentCardKey
+                            edgeKey={edgeKey}
+                        />
                     </CardContent>
                 </Card>
                 <CardsWithPagination cardsPerPage={2} data={agent.databases} cardItem={DatabaseCard}/>
