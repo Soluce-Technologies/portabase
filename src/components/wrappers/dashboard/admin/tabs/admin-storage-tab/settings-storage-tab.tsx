@@ -70,7 +70,7 @@ export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
                 <AlertDescription>
                     Actually you can only store you data in one place : s3 compatible or in local. For exemple you
                     cannot choose to store images in one place
-                    and .dump files in another.
+                    and backups files in another.
                 </AlertDescription>
             </Alert>
             <div className="flex flex-col h-full  py-4 ">

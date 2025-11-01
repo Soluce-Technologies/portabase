@@ -43,6 +43,13 @@
       "when": 1762004436821,
       "tag": "0005_old_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1762028639833,
+      "tag": "0006_moaning_pete_wisdom",
+      "breakpoints": true
     }
   ]
 }

@@ -32,11 +32,9 @@ export const DatabaseCard = (props: databaseCardProps) => {
     const { data: database } = props;
 
     return (
-
         <Card className="flex flex-row justify-between">
             <div className="flex items-center space-x-4 px-4">
-                <Image src="/images/postgresql.png" alt="Database type Icon" width={60} height={60} className="object-cover ml-4" />
-
+                <Image src={`/images/${database.dbms}.png`} alt="Database type Icon" width={60} height={60} className="object-cover ml-4" />
                 <div className="justify-between">
                     <div className="font-medium">Name: {database.name}</div>
                     <div className="text-sm text-muted-foreground">Generated Id: {database.agentDatabaseId}</div>

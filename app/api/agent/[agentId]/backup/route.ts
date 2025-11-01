@@ -9,7 +9,7 @@ import {Backup} from "@/db/schema/07_database";
 import {and, eq} from "drizzle-orm";
 import {env} from "@/env.mjs";
 import {withUpdatedAt} from "@/db/utils";
-import {decryptedDump} from "./helpers";
+import {decryptedDump, getFileExtension} from "./helpers";
 
 export async function POST(
     request: Request,
@@ -116,11 +116,10 @@ export async function POST(
                     {status: 400}
                 );
             }
-
-            const decryptedFile = await decryptedDump(file, aesKeyHex, ivHex);
-
+            const fileExtension = getFileExtension(database.dbms)
+            const decryptedFile = await decryptedDump(file, aesKeyHex, ivHex, fileExtension);
             const uuid = uuidv4();
-            const fileName = `${uuid}.dump`;
+            const fileName = `${uuid}${fileExtension}`;
             const buffer = Buffer.from(await decryptedFile.arrayBuffer());
 
             const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
