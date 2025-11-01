@@ -11,7 +11,7 @@ import {db} from "@/db";
 import {eq, and, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {getOrganizationProjectDatabases} from "@/lib/services";
-import {getOrganization} from "@/lib/auth/auth";
+import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {RetentionPolicySheet} from "@/components/wrappers/dashboard/database/retention-policy/retention-policy-sheet";
 import {capitalizeFirstLetter} from "@/utils/text";
 
@@ -22,8 +22,9 @@ export default async function RoutePage(props: PageParams<{
     const {projectId, databaseId} = await props.params;
 
     const organization = await getOrganization({});
+    const activeMember = await getActiveMember()
 
-    if (!organization) {
+    if (!organization || !activeMember) {
         notFound();
     }
 
@@ -83,6 +84,9 @@ export default async function RoutePage(props: PageParams<{
 
     const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
+    const isMember = activeMember?.role === "member";
+
+
     return (
         <Page>
             <div className="justify-between gap-2 sm:flex">
@@ -90,17 +94,19 @@ export default async function RoutePage(props: PageParams<{
                     <div className=" w-full md:w-fit">
                         {capitalizeFirstLetter(dbItem.name)}
                     </div>
-                    <div className="flex items-center gap-2 md:justify-between w-full">
-                        <div className="flex items-center gap-2">
-                            {/* Do not delete*/}
-                            {/*<EditButton/>*/}
-                            <RetentionPolicySheet database={dbItem}/>
-                            <CronButton database={dbItem}/>
+                    {!isMember && (
+                        <div className="flex items-center gap-2 md:justify-between w-full">
+                            <div className="flex items-center gap-2">
+                                {/* Do not delete*/}
+                                {/*<EditButton/>*/}
+                                <RetentionPolicySheet database={dbItem}/>
+                                <CronButton database={dbItem}/>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
-                        </div>
-                    </div>
+                    )}
                 </PageTitle>
             </div>
 
@@ -108,9 +114,9 @@ export default async function RoutePage(props: PageParams<{
                 <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             )}
             <PageContent className="flex flex-col w-full h-full">
-                <DatabaseKpi successRate={successRate} database={dbItem} availableBackups={availableBackups}
+                <DatabaseKpi  successRate={successRate} database={dbItem} availableBackups={availableBackups}
                              totalBackups={totalBackups}/>
-                <DatabaseTabs settings={settings} database={dbItem} isAlreadyRestore={isAlreadyRestore}
+                <DatabaseTabs activeMember={activeMember}  settings={settings} database={dbItem} isAlreadyRestore={isAlreadyRestore}
                               backups={backups}
                               restorations={restorations}/>
             </PageContent>

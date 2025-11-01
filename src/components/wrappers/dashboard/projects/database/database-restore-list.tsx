@@ -9,11 +9,13 @@ import {useMutation} from "@tanstack/react-query";
 import {deleteRestoreAction} from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {MemberWithUser} from "@/db/schema/03_organization";
 
 
 type DatabaseRestoreListProps = {
     isAlreadyRestore: boolean;
     restorations: Restoration[];
+    activeMember: MemberWithUser
 }
 
 export const DatabaseRestoreList = (props: DatabaseRestoreListProps) => {
@@ -47,40 +49,46 @@ export const DatabaseRestoreList = (props: DatabaseRestoreListProps) => {
             router.refresh();
         },
     });
+    const isMember = props.activeMember.role === "member";
 
 
     return (
         <DataTable
-            columns={restoreColumns(props.isAlreadyRestore)}
+            enableSelect={!isMember}
+            columns={restoreColumns(props.isAlreadyRestore, props.activeMember)}
             data={props.restorations}
             enablePagination
             selectedActions={(rows) => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <ButtonWithLoading
-                            variant="outline"
-                            text="Actions"
-                            onClick={() => {
-                            }}
-                            disabled={rows.length === 0 || mutationDeleteRestorations.isPending}
-                            icon={<MoreHorizontal/>}
-                            isPending={mutationDeleteRestorations.isPending}
-                            size="sm"
-                        />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                        <DropdownMenuItem
-                            onClick={async () => {
-                                await mutationDeleteRestorations.mutateAsync(rows)
-                            }}
-                            disabled={props.isAlreadyRestore}
-                            className="text-red-600 focus:text-red-700"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2"/>
-                            Delete Selected
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <>
+                    {!isMember && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <ButtonWithLoading
+                                    variant="outline"
+                                    text="Actions"
+                                    onClick={() => {
+                                    }}
+                                    disabled={rows.length === 0 || mutationDeleteRestorations.isPending}
+                                    icon={<MoreHorizontal/>}
+                                    isPending={mutationDeleteRestorations.isPending}
+                                    size="sm"
+                                />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                                <DropdownMenuItem
+                                    onClick={async () => {
+                                        await mutationDeleteRestorations.mutateAsync(rows)
+                                    }}
+                                    disabled={props.isAlreadyRestore}
+                                    className="text-red-600 focus:text-red-700"
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2"/>
+                                    Delete Selected
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </>
             )}
         />
     )

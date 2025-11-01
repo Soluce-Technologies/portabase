@@ -39,5 +39,6 @@ export function OrganizationCombobox() {
 
     return <>{state === "expanded" &&
         <ComboBox sideBar values={values} defaultValue={activeOrganization?.slug} onValueChange={onValueChange}
-                  reload={handleReset}/>}</>;
+                  reload={handleReset}/>}
+    </>;
 }

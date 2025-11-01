@@ -22,10 +22,7 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     }
 
     const isMember = activeMember?.role === "member";
-
-    if (isMember) {
-        notFound();
-    }
+    const isOwner = activeMember?.role === "owner";
 
     return (
         <Page>
@@ -37,14 +34,11 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                     )}
                 </PageTitle>
                 <PageActions>
-                    {!isMember && organization.slug !== "default" && (
+                    {isOwner && organization.slug !== "default" && (
                         <DeleteOrganizationButton organizationSlug={organization.slug}/>
                     )}
                 </PageActions>
             </PageHeader>
-            {/*<PageDescription>*/}
-            {/*    Manage your organization settings.*/}
-            {/*</PageDescription>*/}
             <PageContent>
                 <SettingsOrganizationMembersTable organization={organization}/>
             </PageContent>

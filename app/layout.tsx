@@ -1,15 +1,13 @@
 import React from "react";
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
 import "./globals.css";
 import {Providers} from "./providers";
 import {cn} from "@/lib/utils";
 import {ConsoleSilencer} from "@/components/wrappers/common/console-silencer";
-
-const inter = Inter({subsets: ["latin"]});
+import {inter} from "@/fonts/fonts";
 
 export const metadata: Metadata = {
-    title: process.env.NEXT_PUBLIC_PROJECT_NAME ?? "App Title",
+    title: process.env.NEXT_PUBLIC_PROJECT_NAME ?? "Portabase",
     description: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION ?? undefined,
 };
 

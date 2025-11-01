@@ -1,5 +1,5 @@
 import {pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
-import {user} from "@/db/schema/02_user";
+import {User, user} from "@/db/schema/02_user";
 import {organization} from "@/db/schema/03_organization";
 import {relations} from "drizzle-orm";
 import {createSelectSchema} from "drizzle-zod";
@@ -33,3 +33,4 @@ export const memberRelations = relations(member, ({ one }) => ({
 
 export const organizationMemberSchema = createSelectSchema(member);
 export type OrganizationMember = z.infer<typeof organizationMemberSchema>;
+

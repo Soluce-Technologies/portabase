@@ -8,13 +8,15 @@ import {Backup, Database, DatabaseWith, Restoration} from "@/db/schema/07_databa
 import {Setting} from "@/db/schema/01_setting";
 import {DatabaseBackupList} from "@/components/wrappers/dashboard/projects/database/database-backup-list";
 import {DatabaseRestoreList} from "@/components/wrappers/dashboard/projects/database/database-restore-list";
+import {MemberWithUser} from "@/db/schema/03_organization";
 
 export type DatabaseTabsProps = {
-    settings: Setting
-    backups: Backup[];
-    restorations: Restoration[];
-    isAlreadyRestore: boolean;
-    database: DatabaseWith;
+    settings: Setting,
+    backups: Backup[],
+    restorations: Restoration[],
+    isAlreadyRestore: boolean,
+    database: DatabaseWith,
+    activeMember: MemberWithUser
 };
 
 export const DatabaseTabs = (props: DatabaseTabsProps) => {
@@ -58,12 +60,14 @@ export const DatabaseTabs = (props: DatabaseTabsProps) => {
                     settings={props.settings}
                     database={props.database}
                     backups={props.backups}
+                    activeMember={props.activeMember}
                 />
             </TabsContent>
             <TabsContent className="h-full justify-between" value="restore">
                 <DatabaseRestoreList
                     isAlreadyRestore={props.isAlreadyRestore}
                     restorations={props.restorations}
+                    activeMember={props.activeMember}
                 />
             </TabsContent>
         </Tabs>

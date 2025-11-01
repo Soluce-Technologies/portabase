@@ -30,9 +30,15 @@ import {ZodString} from "zod";
 import {ServerActionResult} from "@/types/action-type";
 import {cn} from "@/lib/utils";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {MemberWithUser} from "@/db/schema/03_organization";
 
 
-export function backupColumns(isAlreadyRestore: boolean, settings: Setting, database: DatabaseWith): ColumnDef<Backup>[] {
+export function backupColumns(
+    isAlreadyRestore: boolean,
+    settings: Setting,
+    database: DatabaseWith,
+    activeMember: MemberWithUser
+): ColumnDef<Backup>[] {
     return [
         {
             id: "availability",
@@ -136,7 +142,7 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
                     }, readonly [], ServerActionResult<string>, object> | undefined
 
                     if (settings.storage == "local") {
-                        data = await getFileUrlPresignedLocal({fileName:fileName!})
+                        data = await getFileUrlPresignedLocal({fileName: fileName!})
                     } else if (settings.storage == "s3") {
                         data = await getFileUrlPreSignedS3Action(`backups/${database.project?.slug}/${fileName}`);
                     }
@@ -154,8 +160,7 @@ export function backupColumns(isAlreadyRestore: boolean, settings: Setting, data
 
                 return (
                     <>
-                        {rowData.deletedAt == null && (
-
+                        {(rowData.deletedAt == null && activeMember.role != "member") && (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="h-8 w-8 p-0">

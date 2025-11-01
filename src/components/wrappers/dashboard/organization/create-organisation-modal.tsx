@@ -41,7 +41,6 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
                 await authClient.organization.setActive({organizationSlug: result.data.value.slug});
                 onSuccess?.();
                 toast.success(result.data.actionSuccess?.message || "Organization Created.");
-                // router.push("/");
                 router.replace(`/dashboard/home`);
             } else {
                 // @ts-ignore
@@ -82,26 +81,6 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
                                 </FormItem>
                             )}
                         />
-                        {/*<FormField*/}
-                        {/*    control={form.control}*/}
-                        {/*    name="slug"*/}
-                        {/*    defaultValue=""*/}
-                        {/*    render={({field}) => (*/}
-                        {/*        <FormItem>*/}
-                        {/*            <FormLabel>Slug</FormLabel>*/}
-                        {/*            <FormControl>*/}
-                        {/*                <Input*/}
-                        {/*                    {...field}*/}
-                        {/*                    onChange={(e) => {*/}
-                        {/*                        const value = e.target.value.replaceAll(" ", "-").toLowerCase();*/}
-                        {/*                        field.onChange(value);*/}
-                        {/*                    }}*/}
-                        {/*                />*/}
-                        {/*            </FormControl>*/}
-                        {/*            <FormMessage/>*/}
-                        {/*        </FormItem>*/}
-                        {/*    )}*/}
-                        {/*/>*/}
                         <DialogFooter>
                             <div className="flex items-center justify-between w-full">
                                 <Button type="submit">Create</Button>

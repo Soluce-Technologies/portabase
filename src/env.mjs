@@ -22,6 +22,7 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: z.string().optional(),
         AUTH_GOOGLE_SECRET: z.string().optional(),
+        NEXT_PUBLIC_GOOGLE_AUTH:  z.boolean().default(false).optional(),
 
         S3_ENDPOINT: z.string().optional(),
         S3_ACCESS_KEY: z.string().optional(),
@@ -41,6 +42,8 @@ export const env = createEnv({
         NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
         NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
         NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
+
+        NEXT_PUBLIC_GOOGLE_AUTH: z.boolean().default(false).optional(),
     },
     runtimeEnv: {
         NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
@@ -59,6 +62,7 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
         AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+        NEXT_PUBLIC_GOOGLE_AUTH: process.env.NEXT_PUBLIC_GOOGLE_AUTH === "true",
 
         S3_ENDPOINT: process.env.S3_ENDPOINT,
         S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,

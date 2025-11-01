@@ -72,7 +72,7 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
         accessorKey: "accounts",
         header: "Provider ID",
         cell: ({row}) => {
-            return(
+            return (
                 <div>
                     {row.original.accounts.map((item) => (
                         <div key={item.id}>
@@ -107,18 +107,20 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
             });
 
             return (
-                <div className="flex items-center gap-2">
-                    <ButtonWithLoading
-                        disabled={!isSuperAdmin || !session || session?.user.email === row.original.email}
-                        variant="outline"
-                        text=""
-                        icon={<Trash2 color="red" size={15}/>}
-                        onClick={async () => {
-                            await mutation.mutateAsync();
-                        }}
-                        size="sm"
-                    />
-                </div>
+                <>
+                    <div className="flex items-center gap-2">
+                        <ButtonWithLoading
+                            disabled={!isSuperAdmin || !session || session?.user.email === row.original.email}
+                            variant="outline"
+                            text=""
+                            icon={<Trash2 color="red" size={15}/>}
+                            onClick={async () => {
+                                await mutation.mutateAsync();
+                            }}
+                            size="sm"
+                        />
+                    </div>
+                </>
             );
         },
     },

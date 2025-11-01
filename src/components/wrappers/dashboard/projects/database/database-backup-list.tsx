@@ -12,6 +12,7 @@ import {useMutation} from "@tanstack/react-query";
 import {deleteBackupAction} from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {MemberWithUser} from "@/db/schema/03_organization";
 
 
 type DatabaseBackupListProps = {
@@ -19,6 +20,7 @@ type DatabaseBackupListProps = {
     settings: Setting;
     database: DatabaseWith;
     backups: Backup[];
+    activeMember: MemberWithUser
 }
 
 
@@ -69,7 +71,7 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
                             backupId: backup.id,
                             databaseId: backup.databaseId,
                             status: backup.status,
-                            file: backup.file!,
+                            file: backup.file ?? "",
                             projectSlug: props.database?.project?.slug!
                         });
                         return {
@@ -97,50 +99,58 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
         },
     });
 
+    const isMember = props.activeMember.role === "member";
 
     return (
         <DataTable
-            columns={backupColumns(props.isAlreadyRestore, props.settings, props.database)}
+            enableSelect={!isMember}
+            columns={backupColumns(props.isAlreadyRestore, props.settings, props.database, props.activeMember)}
             data={filteredBackups}
             enablePagination
             selectedActions={(rows) => (
-                <div className="flex justify-start md:justify-between gap-3 md:gap-0 items-center w-full ml-0">
-                    <div className="flex gap-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <ButtonWithLoading
-                                    variant="outline"
-                                    text="Actions"
-                                    onClick={() => {
+                <>
 
-                                    }}
-                                    disabled={rows.length === 0 || mutationDeleteBackups.isPending}
-                                    icon={<MoreHorizontal/>}
-                                    isPending={mutationDeleteBackups.isPending}
-                                    size="sm"
+                        <div className="flex justify-start md:justify-between gap-3 md:gap-0 items-center w-full ml-0">
+                            <div className="flex gap-2">
+                                {!isMember && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <ButtonWithLoading
+                                            variant="outline"
+                                            text="Actions"
+                                            onClick={() => {
+
+                                            }}
+                                            disabled={rows.length === 0 || mutationDeleteBackups.isPending}
+                                            icon={<MoreHorizontal/>}
+                                            isPending={mutationDeleteBackups.isPending}
+                                            size="sm"
+                                        />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start">
+                                        <DropdownMenuItem
+                                            onClick={async () => {
+                                                console.log("Deleting rows:", rows)
+                                                await mutationDeleteBackups.mutateAsync(rows)
+                                            }}
+                                            className="text-red-600 focus:text-red-700"
+                                        >
+                                            <Trash2 className="w-4 h-4 mr-2"/>
+                                            Delete Selected
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                                )}
+                                <FiltersDropdown
+                                    items={items}
+                                    selectedItems={selectedFilters}
+                                    onSelect={handleSelectFilter}
+                                    clearFilters={clearFilters}
                                 />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start">
-                                <DropdownMenuItem
-                                    onClick={async () => {
-                                        console.log("Deleting rows:", rows)
-                                        await mutationDeleteBackups.mutateAsync(rows)
-                                    }}
-                                    className="text-red-600 focus:text-red-700"
-                                >
-                                    <Trash2 className="w-4 h-4 mr-2"/>
-                                    Delete Selected
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <FiltersDropdown
-                            items={items}
-                            selectedItems={selectedFilters}
-                            onSelect={handleSelectFilter}
-                            clearFilters={clearFilters}
-                        />
-                    </div>
-                </div>
+                            </div>
+                        </div>
+
+                </>
             )}
         />
     )

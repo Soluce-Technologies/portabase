@@ -12,6 +12,8 @@ const statement = {
 
 const ac = createAccessControl(statement);
 
+
+
 const superadmin = ac.newRole({
     project: ["create", "list", "update", "delete"],
     database: ["create", "list", "update", "delete"],

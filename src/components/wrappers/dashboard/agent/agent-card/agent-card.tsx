@@ -14,7 +14,9 @@ export const AgentCard = (props: agentCardProps) => {
     const { data: agent } = props;
 
     return (
-        <Link href={`/dashboard/agents/${agent.id}`} className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md">
+        <Link href={`/dashboard/agents/${agent.id}`}
+              className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md rounded-xl"
+        >
             <Card className="flex flex-row justify-between">
                 <div className="flex-1 text-left">
                     <CardHeader className="text-2xl font-bold">{agent.name}</CardHeader>

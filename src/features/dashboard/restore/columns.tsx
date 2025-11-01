@@ -24,9 +24,13 @@ import {
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
+import {MemberWithUser} from "@/db/schema/03_organization";
 
 
-export function restoreColumns(isAlreadyRestore: boolean): ColumnDef<Restoration>[] {
+export function restoreColumns(
+    isAlreadyRestore: boolean,
+    activeMember: MemberWithUser
+): ColumnDef<Restoration>[] {
     return[
     {
         accessorKey: "id",
@@ -102,39 +106,43 @@ export function restoreColumns(isAlreadyRestore: boolean): ColumnDef<Restoration
 
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <>
+                    {activeMember.role != "member" && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreHorizontal className="h-4 w-4"/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <TooltipCustom disabled={isAlreadyRestore} text="Already a restoration waiting">
+                                    <DropdownMenuItem
+                                        disabled={mutationRerunRestore.isPending || isAlreadyRestore}
+                                        onClick={async () => {
+                                            await handleRerunRestore();
+                                        }}
+                                    >
+                                        <ReloadIcon/> Rerun
+                                    </DropdownMenuItem>
+                                </TooltipCustom>
+                                <DropdownMenuSeparator/>
 
-                        <TooltipCustom disabled={isAlreadyRestore} text="Already a restoration waiting">
-                            <DropdownMenuItem
-                                disabled={mutationRerunRestore.isPending || isAlreadyRestore}
-                                onClick={async () => {
-                                    await handleRerunRestore();
-                                }}
-                            >
-                                <ReloadIcon/> Rerun
-                            </DropdownMenuItem>
-                        </TooltipCustom>
-                        <DropdownMenuSeparator/>
+                                <DropdownMenuItem
+                                    disabled={status == "waiting"}
+                                    className="text-red-600"
+                                    onClick={async () => {
+                                        await handleDelete();
+                                    }}
+                                >
+                                    <Trash2/> Delete
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </>
 
-                        <DropdownMenuItem
-                            disabled={status == "waiting"}
-                            className="text-red-600"
-                            onClick={async () => {
-                                await handleDelete();
-                            }}
-                        >
-                            <Trash2/> Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
             );
         },
     },

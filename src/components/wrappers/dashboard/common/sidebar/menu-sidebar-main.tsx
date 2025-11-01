@@ -29,11 +29,12 @@ export const SidebarMenuCustomMain = () => {
     const groupContent: SidebarGroupItem["group_content"] = [
         { title: "Projects", url: "/projects", icon: Layers, details:true },
         { title: "Statistics", url: "/statistics", icon: ChartArea },
+        { title: "Settings", url: "/settings", icon: Settings, details:true }
     ];
 
-    if (activeOrganization && (member?.data?.role === "admin" || member?.data?.role === "owner")) {
-        groupContent.push({ title: "Settings", url: "/settings", icon: Settings, details:true });
-    }
+    // if (activeOrganization && (member?.data?.role === "admin" || member?.data?.role === "owner")) {
+    //     groupContent.push({ title: "Settings", url: "/settings", icon: Settings, details:true });
+    // }
 
     const items: SidebarGroupItem[] = [
         {

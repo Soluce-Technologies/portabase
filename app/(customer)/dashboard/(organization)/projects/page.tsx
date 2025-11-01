@@ -7,12 +7,13 @@ import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/
 import {ProjectCard} from "@/components/wrappers/dashboard/projects/project-card/project-card";
 import {db} from "@/db";
 import {notFound} from "next/navigation";
-import {getOrganization} from "@/lib/auth/auth";
+import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
 
-export default async function RoutePage(props: PageParams<{ }>) {
+export default async function RoutePage(props: PageParams<{}>) {
 
     const organization = await getOrganization({});
+    const activeMember = await getActiveMember()
 
     if (!organization) {
         notFound();
@@ -28,12 +29,14 @@ export default async function RoutePage(props: PageParams<{ }>) {
             databases: true,
         },
     });
+    const isMember = activeMember?.role === "member";
+
 
     return (
         <Page>
             <PageHeader>
                 <PageTitle>Projects</PageTitle>
-                {projects.length > 0 && (
+                {(projects.length > 0 && !isMember) && (
                     <PageActions>
                         <Link href={`/dashboard/projects/new`}>
                             <Button>+ Create Project</Button>
@@ -44,13 +47,17 @@ export default async function RoutePage(props: PageParams<{ }>) {
 
             <PageContent>
                 {projects.length > 0 ? (
-                    <CardsWithPagination organizationSlug={organization.slug} data={projects} cardItem={ProjectCard}
-                                         cardsPerPage={4} numberOfColumns={1}/>
-                ) : (
-                    <EmptyStatePlaceholder
-                        url={"/dashboard/projects/new"}
-                        text={"Create new Project"}
+                    <CardsWithPagination
+                        organizationSlug={organization.slug}
+                        data={projects}
+                        cardItem={ProjectCard}
+                        cardsPerPage={4}
+                        numberOfColumns={1}
                     />
+                ) : isMember ? (
+                    <EmptyStatePlaceholder text="No project available"/>
+                ) : (
+                    <EmptyStatePlaceholder url="/dashboard/projects/new" text="Create new Project"/>
                 )}
             </PageContent>
         </Page>

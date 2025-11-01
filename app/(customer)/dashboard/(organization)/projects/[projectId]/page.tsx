@@ -12,7 +12,7 @@ import {notFound, redirect} from "next/navigation";
 
 import {db} from "@/db";
 import {eq} from "drizzle-orm";
-import {getOrganization} from "@/lib/auth/auth";
+import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import * as drizzleDb from "@/db";
 import {capitalizeFirstLetter} from "@/utils/text";
 
@@ -24,6 +24,8 @@ export default async function RoutePage(props: PageParams<{
     } = await props.params;
 
     const organization = await getOrganization({});
+    const activeMember = await getActiveMember()
+
     if (!organization) {
         notFound();
     }
@@ -48,23 +50,27 @@ export default async function RoutePage(props: PageParams<{
         redirect("/dashboard/projects");
     }
 
+    const isMember = activeMember?.role === "member";
 
     return (
         <Page>
             <div className="justify-between gap-2 sm:flex">
                 <PageTitle className="flex items-center">
                     {capitalizeFirstLetter(proj.name)}
-                    <Link className={buttonVariants({variant: "outline"})} href={`/dashboard/projects/${proj.id}/edit`}>
-                        <GearIcon className="w-7 h-7"/>
-                    </Link>
+                    {!isMember && (
+                        <Link className={buttonVariants({variant: "outline"})}
+                              href={`/dashboard/projects/${proj.id}/edit`}>
+                            <GearIcon className="w-7 h-7"/>
+                        </Link>
+                    )}
                 </PageTitle>
-                <PageActions className="justify-between">
-                    <ButtonDeleteProject projectId={projectId} text={"Delete Project"}/>
-                </PageActions>
+                {!isMember && (
+                    <PageActions className="justify-between">
+                        <ButtonDeleteProject projectId={projectId} text={"Delete Project"}/>
+                    </PageActions>
+                )}
             </div>
-
             <PageDescription>The list of associated databases</PageDescription>
-
             <PageContent className="flex flex-col w-full h-full">
                 {proj.databases.length > 0 ? (
                     <CardsWithPagination

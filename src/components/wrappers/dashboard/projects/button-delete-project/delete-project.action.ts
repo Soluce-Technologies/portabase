@@ -23,6 +23,7 @@ export const deleteProjectAction = userAction.schema(z.string()).action(async ({
             .set({
                 isArchived: true,
                 slug: uuid,
+                name: uuid,
             })
             .where(eq(drizzleDb.schemas.project.id, parsedInput))
             .returning();

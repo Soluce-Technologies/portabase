@@ -1,20 +1,21 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Form} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
+import {useMutation} from "@tanstack/react-query";
+import {TooltipProvider} from "@/components/ui/tooltip";
 import Link from "next/link";
-import { PasswordInput } from "@/components/wrappers/auth/password-input/password-input";
-import { LoginSchema, LoginType } from "@/components/wrappers/auth/login/login-form/login-form.schema";
-import { SocialAuthButton, SocialProviderType } from "@/components/wrappers/auth/login/button-auth/social-auth-button";
-import { signIn } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { Icon } from "@iconify/react";
+import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {LoginSchema, LoginType} from "@/components/wrappers/auth/login/login-form/login-form.schema";
+import {SocialAuthButton, SocialProviderType} from "@/components/wrappers/auth/login/button-auth/social-auth-button";
+import {signIn} from "@/lib/auth/auth-client";
+import {useRouter} from "next/navigation";
+import {Icon} from "@iconify/react";
+import {env} from "@/env.mjs";
 
 export type loginFormProps = {
     defaultValues?: LoginType;
@@ -29,7 +30,7 @@ export const LoginForm = (props: loginFormProps) => {
 
     const mutation = useMutation({
         mutationFn: async (values: LoginType) => {
-            const { error } = await signIn.email(values, {
+            const {error} = await signIn.email(values, {
                 onSuccess: () => {
                     toast.success("Login success");
                     router.push("/dashboard/profile");
@@ -41,13 +42,18 @@ export const LoginForm = (props: loginFormProps) => {
         },
     });
 
-    const availableProviders: SocialProviderType[] = [
-        {
-            id: "google",
-            name: "Google",
-            icon: <Icon icon={"logos:google-icon"} width="25" height="25" />,
-        },
-    ];
+    const availableProviders: SocialProviderType[] = [];
+
+    if (env.NEXT_PUBLIC_GOOGLE_AUTH) {
+        availableProviders.push(
+            {
+                id: "google",
+                name: "Google",
+                icon: <Icon icon={"logos:google-icon"} width="25" height="25"/>,
+            },
+        )
+    }
+
 
     return (
         <TooltipProvider>
@@ -70,13 +76,14 @@ export const LoginForm = (props: loginFormProps) => {
                             control={form.control}
                             name="email"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input autoComplete="email webauthn" placeholder="exemple@portabase.io" {...field} />
+                                        <Input autoComplete="email webauthn"
+                                               placeholder="exemple@portabase.io" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -84,7 +91,7 @@ export const LoginForm = (props: loginFormProps) => {
                             control={form.control}
                             name="password"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <div className="flex items-center">
                                         <FormLabel>Password</FormLabel>
@@ -93,9 +100,10 @@ export const LoginForm = (props: loginFormProps) => {
                                         </Link>*/}
                                     </div>
                                     <FormControl>
-                                        <PasswordInput autoComplete="current-password webauthn" placeholder="Your password" {...field} />
+                                        <PasswordInput autoComplete="current-password webauthn"
+                                                       placeholder="Your password" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -107,7 +115,7 @@ export const LoginForm = (props: loginFormProps) => {
                             </Link>
                         </div>
                     </Form>
-                    <SocialAuthButton providers={availableProviders} />
+                    <SocialAuthButton providers={availableProviders}/>
                 </CardContent>
             </Card>
         </TooltipProvider>

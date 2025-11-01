@@ -15,7 +15,7 @@ export const ProjectCard = (props: projectCardProps) => {
     return (
         <Link
             href={`/dashboard/projects/${project.id}`}
-            className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md"
+            className="block transition-all duration-200 hover:scale-[1.01] hover:shadow-md rounded-xl"
         >
             <Card className="flex flex-row justify-between">
                 <div className="flex-1 text-left">

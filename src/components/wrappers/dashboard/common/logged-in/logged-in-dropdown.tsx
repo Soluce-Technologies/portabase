@@ -18,7 +18,7 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
-            <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+            <DropdownMenuContent side="top" className="min-w-[var(--radix-popper-anchor-width)]">
                 <DropdownMenuItem
                     onClick={() => {
                         redirect("/dashboard/profile");

@@ -8,7 +8,7 @@ import {admin as adminPlugin, openAPI, Organization, organization} from "better-
 import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} from "@/lib/auth/permissions";
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
-import {OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
+import {MemberWithUser, OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -455,7 +455,7 @@ export const getActiveMember = async () => {
         });
         console.log(member);
 
-        return member;
+        return member as MemberWithUser;
     } catch (e) {
         console.log("err", e);
     }

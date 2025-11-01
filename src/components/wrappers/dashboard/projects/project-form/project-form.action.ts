@@ -5,7 +5,7 @@ import { ProjectSchema } from "@/components/wrappers/dashboard/projects/project-
 import { z } from "zod";
 import { ServerActionResult } from "@/types/action-type";
 import { db } from "@/db";
-import { eq, inArray } from "drizzle-orm";
+import {and, eq, inArray} from "drizzle-orm";
 import {Project} from "@/db/schema/06_project";
 import * as drizzleDb from "@/db";
 import {Database} from "@/db/schema/07_database";
@@ -21,6 +21,22 @@ export const createProjectAction = userAction
     .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
         try {
             const slug = slugify(parsedInput.data.name);
+
+            const existingProject = await db.query.project.findFirst({
+                where: and(eq(drizzleDb.schemas.project.name, parsedInput.data.name) ),
+            })
+
+            if (existingProject) {
+                return {
+                    success: false,
+                    actionError: {
+                        message: "A project with this name already exists.",
+                        status: 400,
+                        messageParams: { projectName: parsedInput.data.name },
+                    },
+                };
+            }
+
             const [createdProject] = await db
                 .insert(drizzleDb.schemas.project)
                 .values({
@@ -31,7 +47,10 @@ export const createProjectAction = userAction
                 .returning();
 
             if (parsedInput.data.databases.length > 0) {
-                await db.update(drizzleDb.schemas.database).set({ projectId: createdProject.id }).where(inArray(drizzleDb.schemas.database.id, parsedInput.data.databases));
+                await db
+                    .update(drizzleDb.schemas.database)
+                    .set({ projectId: createdProject.id })
+                    .where(inArray(drizzleDb.schemas.database.id, parsedInput.data.databases));
             }
 
             return {
@@ -43,6 +62,7 @@ export const createProjectAction = userAction
                 },
             };
         } catch (error) {
+            console.log(error);
             return {
                 success: false,
                 actionError: {
@@ -54,6 +74,9 @@ export const createProjectAction = userAction
             };
         }
     });
+
+
+
 
 export const updateProjectAction = userAction
     .schema(
