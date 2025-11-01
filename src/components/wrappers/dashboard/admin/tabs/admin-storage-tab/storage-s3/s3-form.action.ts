@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { db } from "@/db";
-import { S3FormSchema, StorageSwitchSchema } from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.schema";
+import { S3FormSchema, StorageSwitchSchema } from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/storage-s3/s3-form.schema";
 import { eq } from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {userAction} from "@/lib/safe-actions/actions";

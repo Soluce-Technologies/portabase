@@ -14,9 +14,17 @@ export default async function RoutePage(props: PageParams<{}>) {
         }
     });
 
+    const organizations = await db.query.organization.findMany({
+        where: (fields) => isNull(fields.deletedAt),
+        with: {
+            members: true,
+        },
+    });
+
     const settings = await db.query.setting.findFirst({
         where: (fields, {eq}) => eq(fields.name, "system"),
     });
+
 
     return (
         <Page>
@@ -24,7 +32,10 @@ export default async function RoutePage(props: PageParams<{}>) {
                 <PageTitle>Administration Panel</PageTitle>
             </PageHeader>
             <PageContent>
-                <AdminTabs settings={settings!} users={users}/>
+                <AdminTabs
+                    organizations={organizations}
+                    settings={settings!}
+                    users={users}/>
             </PageContent>
         </Page>
     );

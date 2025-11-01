@@ -33,8 +33,6 @@ export async function POST(
         const generatedId = formData.get("generatedId") as string | null;
         const method = formData.get("method") as string | null;
 
-
-
         if (!generatedId || !isUuidv4(generatedId)) {
             return NextResponse.json(
                 {error: "generatedId is not a valid UUID"},
@@ -123,9 +121,7 @@ export async function POST(
 
             const uuid = uuidv4();
             const fileName = `${uuid}.dump`;
-            // const buffer = Buffer.from(await fileDecrypted.arrayBuffer());
             const buffer = Buffer.from(await decryptedFile.arrayBuffer());
-            // const buffer = fileDecrypted
 
             const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
             if (!settings) {

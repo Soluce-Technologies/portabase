@@ -19,11 +19,11 @@ import {TooltipProvider} from "@/components/ui/tooltip";
 import {
     EmailFormSchema,
     EmailFormType
-} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
+} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.schema";
 import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
 import {
     updateEmailSettingsAction
-} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.action";
+} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 

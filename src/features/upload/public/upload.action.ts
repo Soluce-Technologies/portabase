@@ -1,54 +1,62 @@
 "use server";
 import {userAction} from "@/lib/safe-actions/actions";
-import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { mkdir, writeFile } from "fs/promises";
+import {z} from "zod";
+import {v4 as uuidv4} from "uuid";
+import {mkdir, writeFile} from "fs/promises";
 import path from "path";
-import { env } from "@/env.mjs";
-import { checkMinioAlive, createPublicBucket, saveFileInBucket } from "@/utils/s3-file-management";
+import {env} from "@/env.mjs";
+import {checkMinioAlive, saveFileInBucket} from "@/utils/s3-file-management";
 //@ts-ignore
-import { UploadedObjectInfo } from "minio/src/internal/type";
-import { getServerUrl } from "@/utils/get-server-url";
-import { db } from "@/db";
-import { eq } from "drizzle-orm";
+import {UploadedObjectInfo} from "minio/src/internal/type";
+import {getServerUrl} from "@/utils/get-server-url";
+import {db} from "@/db";
+import {eq} from "drizzle-orm";
 import {Setting} from "@/db/schema/01_setting";
 import * as drizzleDb from "@/db";
 
-export const uploadImageAction = userAction.schema(z.instanceof(FormData)).action(async ({ parsedInput: formData, ctx }) => {
-    const file = formData.get("file") as File;
-    const uuid = uuidv4();
-    const fileFormat = file.name.split(".").slice(-1)[0];
-    const fileName = uuid + "." + fileFormat;
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
 
-    const [settings] = await db.select().from(drizzleDb.schemas.setting).where(eq(drizzleDb.schemas.setting.name, "system")).limit(1);
-    if (!settings) {
-        throw new Error("System settings not found.");
-    }
+const privateS3ImageDir = "images/";
 
-    let result: void | UploadedObjectInfo;
-    const bucketName = "public-image-bucket";
 
-    // TODO : Do not delete
-    // if (settings.storage === "local") {
-    //     result = await uploadLocal(fileName, buffer);
-    // } else if (settings.storage === "s3") {
-    //     result = await uploadS3Compatible(bucketName, fileName, buffer);
-    // }
-    result = await uploadLocal(fileName, buffer);
+export const uploadImageAction = userAction
+    .schema(z.instanceof(FormData))
+    .action(async ({parsedInput: formData, ctx}) => {
+        const file = formData.get("file") as File;
+        const uuid = uuidv4();
+        const fileFormat = file.name.split(".").pop();
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
-    const url = getUrl(fileName, settings, bucketName);
-    console.log(url);
-    return {
-        data: { result: result, url: url },
-    };
-});
+        const [settings] = await db
+            .select()
+            .from(drizzleDb.schemas.setting)
+            .where(eq(drizzleDb.schemas.setting.name, "system"))
+            .limit(1);
+
+        if (!settings) throw new Error("System settings not found.");
+
+        let fileName: string | null = null;
+        let result: void | UploadedObjectInfo;
+
+        if (settings.storage === "local") {
+            fileName = `${uuid}.${fileFormat}`;
+            result = await uploadLocal(fileName, buffer);
+        } else if (settings.storage === "s3") {
+            fileName = `${privateS3ImageDir}${uuid}.${fileFormat}`;
+            result = await uploadS3Compatible(env.S3_BUCKET_NAME ?? "", fileName, buffer);
+        } else {
+            throw new Error(`Unsupported storage type: ${settings.storage}`);
+        }
+
+        const url = `${getServerUrl()}/api/${fileName}`
+        return {data: {result, url}};
+    });
+
 
 async function uploadLocal(fileName: string, buffer: any) {
     const localDir = "private/uploads/images/";
     try {
-        await mkdir(path.join(process.cwd(), localDir), { recursive: true });
+        await mkdir(path.join(process.cwd(), localDir), {recursive: true});
         return await writeFile(path.join(process.cwd(), localDir + fileName), buffer);
     } catch (error) {
         console.log("Error occured ", error);
@@ -57,7 +65,6 @@ async function uploadLocal(fileName: string, buffer: any) {
 }
 
 async function uploadS3Compatible(bucketName: string, fileName: string, buffer: any) {
-    await createPublicBucket({ bucketName });
     return await saveFileInBucket({
         bucketName,
         fileName,
@@ -66,20 +73,11 @@ async function uploadS3Compatible(bucketName: string, fileName: string, buffer: 
 }
 
 function getUrl(fileName: string, settings: Setting, bucketName: string): string {
-    if (env.NODE_ENV === "production") {
-        if (settings.storage === "s3") {
-            return `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`;
-        } else if (settings.storage === "local") {
-            const url = getServerUrl();
-            return `${url}/api/images/${fileName}`;
-        }
-    } else {
-        if (settings.storage === "s3") {
-            return `http://localhost:${env.S3_PORT}/${bucketName}/${fileName}`;
-        } else if (settings.storage === "local") {
-            const url = getServerUrl();
-            return `${url}/api/images/${fileName}`;
-        }
+    if (settings.storage === "s3") {
+        return `https://${env.S3_ENDPOINT}/${bucketName}/${fileName}`;
+    } else if (settings.storage === "local") {
+        const url = getServerUrl();
+        return `${url}/api/images/${fileName}`;
     }
     throw new Error("Invalid storage configuration");
 }

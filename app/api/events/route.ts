@@ -1,9 +1,19 @@
-import { EventEmitter } from 'events';
+import {EventEmitter} from 'events';
+import {auth} from "@/lib/auth/auth";
+import {headers} from "next/headers";
+import {NextResponse} from "next/server";
 
 export const eventEmitter = new EventEmitter();
 
 export async function GET(request: Request) {
-    console.log('GET request received');
+
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session) {
+        return NextResponse.json({error: "Unauthorized"}, {status: 403});
+    }
 
     return new Response(
         new ReadableStream({
@@ -37,13 +47,13 @@ export async function GET(request: Request) {
     );
 }
 
-export async function POST(request: Request) {
-    console.log('POST request received');
-    const data = await request.json();
-    console.log('Data received:', data);
-
-    // Emit the event to all connected clients
-    eventEmitter.emit('modification', data);
-
-    return new Response('Event sent', { status: 200 });
-}
+// export async function POST(request: Request) {
+//     console.log('POST request received');
+//     const data = await request.json();
+//     console.log('Data received:', data);
+//
+//     // Emit the event to all connected clients
+//     eventEmitter.emit('modification', data);
+//
+//     return new Response('Event sent', {status: 200});
+// }

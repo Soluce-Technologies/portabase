@@ -1,20 +1,25 @@
 "use client";
 
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {SettingsEmailTab} from "@/components/wrappers/dashboard/admin/admin-email-tab/settings-email-tab";
-import {SettingsStorageTab} from "@/components/wrappers/dashboard/admin/admin-storage-tab/settings-storage-tab";
+import {SettingsEmailTab} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/settings-email-tab";
+import {SettingsStorageTab} from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/settings-storage-tab";
 import {User, UserWithAccounts} from "@/db/schema/02_user";
 import {Setting} from "@/db/schema/01_setting";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {AdminUsersTable} from "@/components/wrappers/dashboard/admin/admin-user-tab/admin-user-table";
+import {AdminUsersTable} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/admin-user-table";
+import {
+    AdminOrganizationsTable
+} from "@/components/wrappers/dashboard/admin/tabs/admin-organizations-tab/admin-organizations-table";
+import {OrganizationWithMembers} from "@/db/schema/03_organization";
 
 export type AdminTabsProps = {
     users: UserWithAccounts[];
     settings: Setting;
+    organizations: OrganizationWithMembers[];
 };
 
-export const AdminTabs = ({users, settings}: AdminTabsProps) => {
+export const AdminTabs = ({users, settings, organizations}: AdminTabsProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -35,6 +40,9 @@ export const AdminTabs = ({users, settings}: AdminTabsProps) => {
                 <TabsTrigger className="w-full" value="users">
                     Users
                 </TabsTrigger>
+                <TabsTrigger className="w-full" value="organizations">
+                    Organizations
+                </TabsTrigger>
                 <TabsTrigger className="w-full" value="email">
                     Email
                 </TabsTrigger>
@@ -44,6 +52,9 @@ export const AdminTabs = ({users, settings}: AdminTabsProps) => {
             </TabsList>
             <TabsContent value="users">
                 <AdminUsersTable users={users}/>
+            </TabsContent>
+            <TabsContent value="organizations">
+                <AdminOrganizationsTable organizations={organizations}/>
             </TabsContent>
             <TabsContent value="email">
                 <SettingsEmailTab settings={settings}/>

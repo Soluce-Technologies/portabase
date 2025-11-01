@@ -4,6 +4,7 @@ import internal from "node:stream";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
 import {eq} from "drizzle-orm";
+import stream from "node:stream";
 
 
 async function getS3Client() {
@@ -158,6 +159,20 @@ export async function saveFileInBucket({bucketName, fileName, file}: {
 //     }
 //     return true;
 // }
+
+export async function getObjectFromClient({
+                                              bucketName,
+                                              fileName,
+                                          }: {
+    bucketName: string;
+    fileName: string;
+}): Promise<stream.Readable> {
+    const s3 = await getS3Client();
+    return await s3.getObject(bucketName, fileName);
+}
+
+
+
 export async function checkFileExistsInBucket({
                                                   bucketName,
                                                   fileName,

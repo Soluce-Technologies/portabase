@@ -13,6 +13,7 @@ import {UserWithAccounts} from "@/db/schema/02_user";
 import {authClient, useSession} from "@/lib/auth/auth-client";
 import {formatFrenchDate} from "@/utils/date-formatting";
 import {providerSwitch} from "@/components/wrappers/common/provider-switch";
+import {ButtonDeleteUser} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/button-delete-use";
 
 export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
     {
@@ -98,29 +99,10 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
             const {data: session, isPending} = useSession();
             const isSuperAdmin = session?.user.role == "superadmin";
 
-            const mutation = useMutation({
-                mutationFn: () => deleteUserAction(row.original.id),
-                onSuccess: async () => {
-                    toast.success("User deleted successfully.");
-                    router.refresh();
-                },
-            });
-
             return (
-                <>
-                    <div className="flex items-center gap-2">
-                        <ButtonWithLoading
-                            disabled={!isSuperAdmin || !session || session?.user.email === row.original.email}
-                            variant="outline"
-                            text=""
-                            icon={<Trash2 color="red" size={15}/>}
-                            onClick={async () => {
-                                await mutation.mutateAsync();
-                            }}
-                            size="sm"
-                        />
-                    </div>
-                </>
+                <ButtonDeleteUser
+                    disabled={!isSuperAdmin || !session || session?.user.email === row.original.email}
+                    userId={row.original.id}/>
             );
         },
     },

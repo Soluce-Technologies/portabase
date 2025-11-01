@@ -86,8 +86,6 @@ export const OrganizationForm = (props: organizationFormProps) => {
             console.error("Mutation network error:", error);
             toast.error(error?.message || "A network error occurred.");
         },
-
-
     });
 
 

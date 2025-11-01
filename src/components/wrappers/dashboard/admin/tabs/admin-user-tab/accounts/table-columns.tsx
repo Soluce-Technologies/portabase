@@ -66,7 +66,6 @@ export const accountsColumns: ColumnDef<{
                 <div className="flex items-center gap-2">
                     <ButtonWithLoading
                         variant="outline"
-                        text=""
                         disabled={row.original.provider === "credential" || table.getRowModel().rows.length <= 1}
                         icon={<Unlink color="red" size={15}/>}
                         onClick={async () => {

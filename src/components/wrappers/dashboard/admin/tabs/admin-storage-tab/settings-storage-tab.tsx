@@ -2,7 +2,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info, ShieldCheck} from "lucide-react";
 import {Switch} from "@/components/ui/switch";
 import {Label} from "@/components/ui/label";
-import {StorageS3Form} from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/storage-s3-form";
+import {StorageS3Form} from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/storage-s3/storage-s3-form";
 import {useState} from "react";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {useMutation} from "@tanstack/react-query";
@@ -11,9 +11,9 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {
     updateStorageSettingsAction
-} from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.action";
+} from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/storage-s3/s3-form.action";
 import {Setting} from "@/db/schema/01_setting";
-import {S3FormType} from "@/components/wrappers/dashboard/admin/admin-storage-tab/storage-s3/s3-form.schema";
+import {S3FormType} from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/storage-s3/s3-form.schema";
 
 export type SettingsStorageTabProps = {
     settings: Setting;
@@ -93,9 +93,7 @@ export const SettingsStorageTab = (props: SettingsStorageTabProps) => {
                             onClick={async () => {
                                 await mutation.mutateAsync();
                             }}
-                            icon={<ShieldCheck/>}
-                            text="Test connexion"
-                        />
+                            icon={<ShieldCheck/>}>Test connexion</ButtonWithLoading>
                     </div>
                 </div>
                 {isSwitched && (

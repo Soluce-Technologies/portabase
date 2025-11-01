@@ -117,7 +117,6 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
                                     <DropdownMenuTrigger asChild>
                                         <ButtonWithLoading
                                             variant="outline"
-                                            text="Actions"
                                             onClick={() => {
 
                                             }}
@@ -125,7 +124,7 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
                                             icon={<MoreHorizontal/>}
                                             isPending={mutationDeleteBackups.isPending}
                                             size="sm"
-                                        />
+                                        >Actions</ButtonWithLoading>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="start">
                                         <DropdownMenuItem

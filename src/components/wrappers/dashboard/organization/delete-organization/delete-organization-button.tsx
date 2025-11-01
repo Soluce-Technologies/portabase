@@ -2,7 +2,6 @@
 import {ButtonWithConfirm} from "@/components/wrappers/common/button/button-with-confirm";
 import {deleteOrganizationAction} from "@/components/wrappers/dashboard/organization/organization.action";
 import {useMutation} from "@tanstack/react-query";
-import {setCurrentOrganizationSlug} from "@/features/dashboard/organization-cookie";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {authClient} from "@/lib/auth/auth-client";
@@ -17,7 +16,7 @@ export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) =
     const {data: organizations, refetch} = authClient.useListOrganizations();
 
     const mutation = useMutation({
-        mutationFn: () => deleteOrganizationAction(props.organizationSlug),
+        mutationFn: () => deleteOrganizationAction({slug: props.organizationSlug}),
 
         onSuccess: async (result) => {
             if (result?.data?.success) {

@@ -12,21 +12,16 @@ export async function GET(
     const expires = searchParams.get('expires');
     const fileName = (await params).fileName
 
-    console.log(token);
-    console.log(fileName);
-
     const uploadsDir = "private/uploads/files/";
-    const keysDir = "private/keys/";
     const uploadPath = path.join(uploadsDir, fileName);
-    const keyPath = path.join(keysDir, fileName);
 
     const crypto = require('crypto');
 
-    let filePath = uploadPath;
-    if (!fs.existsSync(uploadPath)) {
-        if (fs.existsSync(keyPath)) filePath = keyPath;
-        else
-            return NextResponse.json({error: "File not found"}, {status: 404});
+    let filePath = null;
+    if (fs.existsSync(uploadPath)) {
+        filePath = uploadPath;
+    } else {
+        return NextResponse.json({error: "File not found"}, {status: 404})
     }
 
     const expectedToken = crypto.createHash('sha256').update(`${fileName}${expires}`).digest('hex');
@@ -36,8 +31,8 @@ export async function GET(
             {status: 403}
         );
     }
-    //@ts-ignore
-    const expiresAt = parseInt(expires, 10);
+
+    const expiresAt = parseInt(expires!, 10);
     if (Date.now() > expiresAt) {
         return NextResponse.json(
             {error: 'Signed token expired'},

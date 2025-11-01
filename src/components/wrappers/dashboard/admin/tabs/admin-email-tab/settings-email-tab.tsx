@@ -1,13 +1,13 @@
-import { EmailForm } from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form";
-import { Send } from "lucide-react";
-import { ButtonWithLoading } from "@/components/wrappers/common/button/button-with-loading";
-import { useMutation } from "@tanstack/react-query";
-import { sendEmail } from "@/utils/email-helper";
-import TestEmailSettings from "../../../../../../emails/TestEmailSettings";
-import { render } from "@react-email/render";
-import { toast } from "sonner";
+import {EmailForm} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form";
+import {Send} from "lucide-react";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import {useMutation} from "@tanstack/react-query";
+import {sendEmail} from "@/utils/email-helper";
+import {render} from "@react-email/render";
+import {toast} from "sonner";
 import {Setting} from "@/db/schema/01_setting";
-import {EmailFormType} from "@/components/wrappers/dashboard/admin/admin-email-tab/email-form/email-form.schema";
+import {EmailFormType} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.schema";
+import TestEmailSettings from "../../../../../../../emails/TestEmailSettings";
 
 export type SettingsEmailTabProps = {
     settings: Setting;
@@ -47,14 +47,13 @@ export const SettingsEmailTab = (props: SettingsEmailTabProps) => {
                         onClick={async () => {
                             await handleSendMailTest();
                         }}
-                        icon={<Send />}
-                        text="Send email test"
+                        icon={<Send/>}
                         size="default"
-                    />
+                    >Send email test</ButtonWithLoading>
                 )}
             </div>
             <div className="mt-5">
-                <EmailForm defaultValues={props.settings.smtpFrom ? props.settings as EmailFormType  : undefined } />
+                <EmailForm defaultValues={props.settings.smtpFrom ? props.settings as EmailFormType : undefined}/>
             </div>
         </div>
     );

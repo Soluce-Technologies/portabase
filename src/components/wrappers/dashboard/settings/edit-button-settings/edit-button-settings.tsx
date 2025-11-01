@@ -10,7 +10,6 @@ export const EditButtonSettings= (props:EditButtonSettings) => {
 
     const pathname = usePathname();
 
-
     return(
         <Link className={buttonVariants({variant: "outline"})}
               href={`${pathname}/edit/`}

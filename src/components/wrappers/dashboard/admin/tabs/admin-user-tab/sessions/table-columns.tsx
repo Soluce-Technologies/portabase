@@ -73,7 +73,6 @@ export const sessionsColumns: ColumnDef<Session>[] = [
                     <ButtonWithLoading
                         variant="outline"
                         disabled={session?.session.id === row.original.id}
-                        text=""
                         icon={<Unlink color="red" size={15} />}
                         onClick={async () => {
                             await mutation.mutateAsync();

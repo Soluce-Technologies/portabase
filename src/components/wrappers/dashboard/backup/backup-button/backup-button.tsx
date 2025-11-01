@@ -38,12 +38,11 @@ export const BackupButton = (props: BackupButtonProps) => {
         <ButtonWithLoading
             icon={<DatabaseZap/>}
             disabled={props.disable}
-            text={isMobile ? "" : "Backup"}
             isPending={mutation.isPending}
             size={"default"}
             onClick={async () => {
                 await HandleAction();
             }}
-        />
+        >{isMobile ? "" : "Backup"}</ButtonWithLoading>
     );
 };

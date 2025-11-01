@@ -65,14 +65,13 @@ export const DatabaseRestoreList = (props: DatabaseRestoreListProps) => {
                             <DropdownMenuTrigger asChild>
                                 <ButtonWithLoading
                                     variant="outline"
-                                    text="Actions"
                                     onClick={() => {
                                     }}
                                     disabled={rows.length === 0 || mutationDeleteRestorations.isPending}
                                     icon={<MoreHorizontal/>}
                                     isPending={mutationDeleteRestorations.isPending}
                                     size="sm"
-                                />
+                                >Actions</ButtonWithLoading>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
                                 <DropdownMenuItem

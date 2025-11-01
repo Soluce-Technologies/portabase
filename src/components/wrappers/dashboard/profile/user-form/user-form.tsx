@@ -12,8 +12,8 @@ import { UserSchema, UserType } from "@/components/wrappers/dashboard/profile/us
 import { toast } from "sonner";
 import { updateUserAction } from "@/components/wrappers/dashboard/profile/user-form/user-form.action";
 import {DataTable} from "@/components/wrappers/common/table/data-table";
-import {sessionsColumns} from "@/components/wrappers/dashboard/admin/admin-user-tab/sessions/table-columns";
-import {accountsColumns} from "@/components/wrappers/dashboard/admin/admin-user-tab/accounts/table-columns";
+import {sessionsColumns} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/sessions/table-columns";
+import {accountsColumns} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/accounts/table-columns";
 import {Session} from "better-auth";
 
 export type UserFormProps = {

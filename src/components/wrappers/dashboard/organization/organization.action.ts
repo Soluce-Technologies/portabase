@@ -8,12 +8,11 @@ import {
     OrganizationFormSchema
 } from "@/components/wrappers/dashboard/organization/organization-form/organization-form.schema";
 import {db} from "@/db";
-import {and, eq, inArray} from "drizzle-orm";
-import {auth, checkSlugOrganization, createOrganization, deleteOrganization} from "@/lib/auth/auth";
+import {and, eq, inArray, or} from "drizzle-orm";
+import {auth, checkSlugOrganization, createOrganization} from "@/lib/auth/auth";
 import {slugify} from "@/utils/slugify";
 import {Organization} from "@/db/schema/03_organization";
 import * as drizzleDb from "@/db";
-import {headers} from "next/headers";
 
 export const createOrganizationAction = userAction.schema(OrganizationSchema).action(async ({parsedInput}): Promise<ServerActionResult<Organization>> => {
     try {
@@ -84,7 +83,6 @@ export const updateOrganizationAction = userAction
                 }
             });
 
-
             if (!organization) {
                 return {
                     success: false,
@@ -113,61 +111,11 @@ export const updateOrganizationAction = userAction
 
                     });
                 }
-
-                //
-                // await db
-                //     .insert(drizzleDb.schemas.member)
-                //     .values(
-                //         usersToAdd.map((userId) => ({
-                //             userId,
-                //             organizationId: organization.id,
-                //             role: "member",
-                //         }))
-                //     )
-                //     .execute();
             }
-
             if (usersToRemove.length > 0) {
                 await db.delete(drizzleDb.schemas.member).where(and(inArray(drizzleDb.schemas.member.userId, usersToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id))).execute();
-                // TODO : Do not delete, go permission error with better auth
-                // for (const userToRemove of usersToRemove) {
-                //
-                //     const memberToRemove = await db.query.member.findFirst({
-                //         where: and(eq(drizzleDb.schemas.member.userId, userToRemove), eq(drizzleDb.schemas.member.organizationId, organization.id)),
-                //         with: {
-                //             user: true
-                //         }
-                //     })
-                //     console.log(memberToRemove)
-                //
-                //     if (memberToRemove) {
-                //         console.log("ici")
-                //         await auth.api.removeMember({
-                //             body: {
-                //                 memberIdOrEmail: memberToRemove.user.email,
-                //                 organizationId: organization.id,
-                //             },
-                //             headers: await headers()
-                //         });
-                //     }
-                //
-                // }
-
 
             }
-
-            // const updatedOrganization = await auth.api.updateOrganization({
-            //     body: {
-            //         data: {
-            //             name: parsedInput.data.name,
-            //             slug: parsedInput.data.slug,
-            //         },
-            //         organizationId: organization.id,
-            //     },
-            //     headers: await headers(),
-            // });
-
-
             const updatedOrganization = await db
                 .update(drizzleDb.schemas.organization)
                 .set({
@@ -200,11 +148,24 @@ export const updateOrganizationAction = userAction
         }
     });
 
-export const deleteOrganizationAction = userAction.schema(z.string()).action(
+export const deleteOrganizationAction = userAction.schema(
+    z.object({
+        id: z.string().optional(),
+        slug: z.string().optional(),
+    })
+).action(
     async ({parsedInput, ctx}): Promise<ServerActionResult<Organization>> => {
         try {
+            const conditions = [];
+            if (parsedInput.id) {
+                conditions.push(eq(drizzleDb.schemas.organization.id, parsedInput.id));
+            }
+            if (parsedInput.slug) {
+                conditions.push(eq(drizzleDb.schemas.organization.slug, parsedInput.slug));
+            }
+
             const org = await db.query.organization.findFirst({
-                where: eq(drizzleDb.schemas.organization.slug, parsedInput),
+                where: or(...conditions),
             });
 
             if (!org) {
@@ -221,8 +182,6 @@ export const deleteOrganizationAction = userAction.schema(z.string()).action(
             let deletedOrganization: Organization;
 
             try {
-                // TODO : Improve with better auth, always getting 403 error
-                // deletedOrganization = await deleteOrganization(org.id) as Organization;
                 [deletedOrganization] = await db
                     .delete(drizzleDb.schemas.organization)
                     .where(eq(drizzleDb.schemas.organization.id, org.id))

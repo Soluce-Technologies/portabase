@@ -35,14 +35,12 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // Exclude `/api/auth` and its subpaths
     if (url.pathname.startsWith("/api/auth")) {
         return NextResponse.next();
     }
 
     if (url.pathname.startsWith("/api")) {
         const routeExists = checkRouteExists(url.pathname);
-        // If the route does not exist, return a 404 JSON response
         if (!routeExists) {
             return new NextResponse(JSON.stringify({ message: "This API route does not exist.", status: 404 }), {
                 status: 404,
@@ -56,15 +54,10 @@ export async function middleware(request: NextRequest) {
         errorHandler(err);
     }
 }
-// Function to check if the route exists (supports dynamic routes)
+
 function checkRouteExists(pathname: string) {
-    // Define static and dynamic routes with patterns
     const routePatterns = [
-        // Do not delete
-        // /^\/api\/auth\/\d+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
-        // /^\/api\/auth\/\w+$/,        // Dynamic route with a number as a parameter (e.g., /api/dynamic/123)
-        // /^\/api\/agent\/healthcheck\/\w+$/,           // Dynamic route with an alphanumeric parameter (e.g., /api/user/username)
-        /^\/api\/agent\/[^/]+\/status\/?$/, // Dynamic route for /api/agent/[id]/status
+        /^\/api\/agent\/[^/]+\/status\/?$/,
         /^\/api\/agent\/[^/]+\/backup\/?$/,
         /^\/api\/agent\/[^/]+\/restore\/?$/,
         /^\/api\/files\/[^/]+\/?$/,
