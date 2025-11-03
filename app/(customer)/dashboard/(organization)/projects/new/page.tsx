@@ -8,11 +8,12 @@ import {getOrganization} from "@/lib/auth/auth";
 import * as drizzleDb from "@/db";
 import {DatabaseWith} from "@/db/schema/07_database";
 
-export default async function RoutePage(props: PageParams<{  }>) {
+
+export default async function RoutePage(props: PageParams<{}>) {
 
     const organization = await getOrganization({});
 
-    if (!organization ) {
+    if (!organization) {
         notFound();
     }
 

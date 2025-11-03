@@ -274,56 +274,7 @@ export const unlinkAccount = async (provider: string, account: string) => {
     } catch (e) {
     }
 };
-//
-// export const getOrganization = async ({
-//                                           organizationId,
-//                                           organizationSlug,
-//                                       }: {
-//     organizationId?: string;
-//     organizationSlug?: string;
-// }) => {
-//     const query = organizationId
-//         ? {organizationId}
-//         : {organizationSlug};
-//
-//     console.log(query);
-//
-//     try {
-//         return await auth.api.getFullOrganization({
-//             headers: await headers(),
-//             // query,
-//         });
-//     } catch (e) {
-//         console.error(e);
-//         return null;
-//     }
-// };
-// export const getOrganization = async ({
-//                                           organizationId,
-//                                           organizationSlug,
-//                                       }: {
-//     organizationId?: string;
-//     organizationSlug?: string;
-// } = {}) => {
-//     const query =
-//         organizationId != null
-//             ? {organizationId}
-//             : organizationSlug != null
-//                 ? {organizationSlug}
-//                 : undefined;
-//
-//     console.log(query);
-//
-//     try {
-//         return await auth.api.getFullOrganization({
-//             headers: await headers(),
-//             ...(query ? {query} : {}),
-//         });
-//     } catch (e) {
-//         console.error(e);
-//         return null;
-//     }
-// };
+
 export const getOrganization = async ({
                                           organizationId,
                                           organizationSlug,

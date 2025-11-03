@@ -18,7 +18,6 @@ export default async function RoutePage(props: PageParams<{
         where: (fields) => isNull(fields.deletedAt)
     });
 
-
     if (!user || !users || !organization || organization.slug == "default") {
         notFound();
     }

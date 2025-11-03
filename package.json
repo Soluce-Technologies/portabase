@@ -13,6 +13,7 @@
     "db:drop": "drizzle-kit drop",
     "auth:generate": "npx @better-auth/cli generate --config ./src/lib/auth/auth.ts"
   },
+  "type": "module",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.10",
@@ -65,7 +66,7 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.510.0",
     "minio": "^8.0.5",
-    "next": "15.5.6",
+    "next": "16.0.1",
     "next-safe-action": "^7.10.8",
     "next-themes": "^0.4.6",
     "node-cron": "^4.2.1",
@@ -73,9 +74,9 @@
     "nodemailer": "^7.0.3",
     "npm-check-updates": "^18.0.1",
     "pg": "^8.16.0",
-    "react": "19.1.0",
+    "react": "19.2.0",
     "react-day-picker": "9.7.0",
-    "react-dom": "19.1.0",
+    "react-dom": "19.2.0",
     "react-dropzone": "^14.3.8",
     "react-email": "^4.0.13",
     "react-hook-form": "^7.56.3",
