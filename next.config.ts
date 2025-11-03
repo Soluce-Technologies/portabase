@@ -41,9 +41,6 @@ const nextConfig: NextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
-    experimental: {
-        turbopackFileSystemCacheForDev: true,
-    },
     async headers() {
         return [
             {
