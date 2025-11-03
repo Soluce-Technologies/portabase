@@ -15,10 +15,12 @@ import {SocialAuthButton, SocialProviderType} from "@/components/wrappers/auth/l
 import {signIn} from "@/lib/auth/auth-client";
 import {useRouter} from "next/navigation";
 import {Icon} from "@iconify/react";
-import {env} from "@/env.mjs";
+import {useEffect, useState} from "react";
 
 export type loginFormProps = {
     defaultValues?: LoginType;
+    authGoogleEnabled: boolean;
+
 };
 
 export const LoginForm = (props: loginFormProps) => {
@@ -28,14 +30,35 @@ export const LoginForm = (props: loginFormProps) => {
         schema: LoginSchema,
     });
 
+    const [urlParams, setUrlParams] = useState<URLSearchParams>();
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams);
+        setUrlParams(urlParams);
+        const error = urlParams.get("error");
+        console.log(urlParams.get("redirect"));
+        if (error?.includes("pending")) {
+            toast.error("Your account is not active.");
+            urlParams.delete("error");
+            window.history.replaceState({}, document.title, window.location.pathname + "?" + urlParams.toString());
+        }
+    }, []);
+
+
     const mutation = useMutation({
         mutationFn: async (values: LoginType) => {
-            const {error} = await signIn.email(values, {
-                onSuccess: () => {
-                    toast.success("Login success");
-                    router.push("/dashboard/profile");
-                },
-            });
+            const {error} = await signIn.email(
+                {
+                    password: values.password,
+                    email: values.email,
+                    callbackURL: urlParams?.get("redirect") ?? "/dashboard/profile",
+                }, {
+                    onSuccess: () => {
+                        toast.success("Login success");
+                        // router.push("/dashboard/profile");
+                    },
+                });
             if (error) {
                 toast.error(error.message);
             }
@@ -44,7 +67,7 @@ export const LoginForm = (props: loginFormProps) => {
 
     const availableProviders: SocialProviderType[] = [];
 
-    if (env.NEXT_PUBLIC_GOOGLE_AUTH) {
+    if (props.authGoogleEnabled) {
         availableProviders.push(
             {
                 id: "google",
@@ -115,7 +138,9 @@ export const LoginForm = (props: loginFormProps) => {
                             </Link>
                         </div>
                     </Form>
-                    <SocialAuthButton providers={availableProviders}/>
+                    <SocialAuthButton
+                        callBackURL={urlParams?.get("redirect") ?? "/dashboard/profile"}
+                        providers={availableProviders}/>
                 </CardContent>
             </Card>
         </TooltipProvider>

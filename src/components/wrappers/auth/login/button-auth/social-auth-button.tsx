@@ -1,10 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/auth/auth-client";
-import { JSX } from "react";
+import {Button} from "@/components/ui/button";
+import {signIn} from "@/lib/auth/auth-client";
+import {JSX} from "react";
 
 export type AuthButtonProps = {
     providers: SocialProviderType[];
+    callBackURL?: string;
 };
 
 export type SocialProviderType = {
@@ -41,7 +42,7 @@ export const SocialAuthButton = (props: AuthButtonProps): JSX.Element => {
                         e.preventDefault();
                         void signIn.social({
                             provider: provider.id,
-                            callbackURL: "/dashboard/profile",
+                            callbackURL: props.callBackURL ?? "/dashboard/profile",
                         });
                     }}
                 >

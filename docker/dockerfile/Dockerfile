@@ -94,9 +94,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --chown=nextjs:nodejs src/db ./src/db
 
-
-
-
 USER root
 
 COPY ./docker/entrypoints/app-prod-entrypoint.sh /app/app-prod-entrypoint.sh

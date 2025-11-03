@@ -1,7 +1,5 @@
 "use client"
 import React, {useEffect, useState} from "react";
-import {LayoutAdmin} from "@/components/layout";
-import Image from "next/image";
 import {env} from "@/env.mjs";
 import {useTheme} from "next-themes";
 import {useSession} from "@/lib/auth/auth-client";
