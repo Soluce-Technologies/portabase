@@ -64,8 +64,8 @@ export const ProjectForm = (props: projectFormProps) => {
             if (project && project.data) {
                 if (project.data.success) {
                     project.data.actionSuccess && toast.success(project.data.actionSuccess.message);
-                    router.push(`/dashboard/projects/${project.data.value!.id}`);
                     router.refresh();
+                    router.push(`/dashboard/projects/${project.data.value!.id}`);
                 } else {
                     project.data.actionError && toast.error(project.data.actionError.message || "Unknown error occurred.");
                     router.refresh();

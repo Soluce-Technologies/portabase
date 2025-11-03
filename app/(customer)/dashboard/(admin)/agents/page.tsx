@@ -12,7 +12,7 @@ import {and, eq, not} from "drizzle-orm";
 import {Plus} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function RoutePage(props: PageParams<{}>) {
 

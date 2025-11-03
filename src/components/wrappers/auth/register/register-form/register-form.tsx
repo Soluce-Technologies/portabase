@@ -30,8 +30,8 @@ export const RegisterForm = (props: registerFormProps) => {
             await signUp.email(values, {
                 onSuccess: () => {
                     toast.success(`Success`);
-                    router.push(`/login`);
                     router.refresh();
+                    router.push(`/login`);
                 },
                 onError: (error) => {
                     console.log(error);

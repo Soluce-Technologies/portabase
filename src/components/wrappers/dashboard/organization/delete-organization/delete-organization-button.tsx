@@ -23,10 +23,10 @@ export const DeleteOrganizationButton = (props: DeleteOrganizationButtonProps) =
                 await authClient.organization.setActive({
                     organizationSlug: "default",
                 });
-                router.push("/");
                 toast.success(result.data.actionSuccess?.message || "Organization deleted.");
                 router.refresh()
                 refetch()
+                router.push("/");
             } else {
                 // @ts-ignore
                 const errorMsg = result?.data?.actionError?.message || result?.data?.actionError?.messageParams?.message || "Failed to delete the organization.";

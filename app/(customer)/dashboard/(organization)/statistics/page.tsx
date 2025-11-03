@@ -10,6 +10,8 @@ import * as drizzleDb from "@/db";
 import {getOrganization} from "@/lib/auth/auth";
 import {Building2, DatabaseBackup, Folder, RefreshCcw} from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function RoutePage(props: PageParams<{}>) {
     const organization = await getOrganization({});
 
@@ -57,7 +59,6 @@ export default async function RoutePage(props: PageParams<{}>) {
         .orderBy(drizzleDb.schemas.backup.createdAt);
 
 
-
     const restorationsCountResult = await db
         .select({
             count: count(),
@@ -74,7 +75,7 @@ export default async function RoutePage(props: PageParams<{}>) {
         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
-    const Placeholder = ({text}: {text: string}) => (
+    const Placeholder = ({text}: { text: string }) => (
         <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">{text}</div>
     );
 
@@ -89,7 +90,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                     <Card className="w-full">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium">Projects</CardTitle>
-                            <Building2 className="h-4 w-4 text-muted-foreground" />
+                            <Building2 className="h-4 w-4 text-muted-foreground"/>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{projectsCount}</div>
@@ -100,7 +101,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                     <Card className="w-full">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium">Backups</CardTitle>
-                            <DatabaseBackup className="h-4 w-4 text-muted-foreground" />
+                            <DatabaseBackup className="h-4 w-4 text-muted-foreground"/>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{backupsEvolutionCount}</div>
@@ -111,7 +112,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                     <Card className="w-full">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium">Restorations</CardTitle>
-                            <RefreshCcw className="h-4 w-4 text-muted-foreground" />
+                            <RefreshCcw className="h-4 w-4 text-muted-foreground"/>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{restorationsCount}</div>
@@ -127,9 +128,9 @@ export default async function RoutePage(props: PageParams<{}>) {
                         </CardHeader>
                         <CardContent>
                             {sortedBackupsEvolution.length > 0 ? (
-                                <EvolutionLineChart data={sortedBackupsEvolution} />
+                                <EvolutionLineChart data={sortedBackupsEvolution}/>
                             ) : (
-                                <Placeholder text="No backup data available" />
+                                <Placeholder text="No backup data available"/>
                             )}
                         </CardContent>
                     </Card>
@@ -140,9 +141,9 @@ export default async function RoutePage(props: PageParams<{}>) {
                         </CardHeader>
                         <CardContent>
                             {backupsRate.length > 0 ? (
-                                <PercentageLineChart data={backupsRate} />
+                                <PercentageLineChart data={backupsRate}/>
                             ) : (
-                                <Placeholder text="No backup rate data available" />
+                                <Placeholder text="No backup rate data available"/>
                             )}
                         </CardContent>
                     </Card>

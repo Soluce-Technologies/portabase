@@ -54,8 +54,8 @@ export const UserForm = (props: UserFormProps) => {
             }
 
             toast.success(`Profile updated successfully.`);
-            router.push(`/dashboard/profile`);
             router.refresh();
+            router.push(`/dashboard/profile`);
         },
     });
 

@@ -52,10 +52,13 @@ export const AgentForm = (props: agentFormProps) => {
                 return;
             }
             toast.success(`Success ${isCreate ? "creating" : "updating"} agent`);
-            router.push(`/dashboard/agents/${data.id}`);
             router.refresh();
+            router.push(`/dashboard/agents/${data.id}`);
         },
     });
+
+
+
 
     return (
         <TooltipProvider>
