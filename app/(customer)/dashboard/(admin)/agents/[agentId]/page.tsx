@@ -10,17 +10,13 @@ import {DatabaseCard} from "@/components/wrappers/dashboard/projects/project-car
 import {AgentCardKey} from "@/components/wrappers/dashboard/agent/agent-card-key/agent-card-key";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
-import {and, eq} from "drizzle-orm";
+import {eq} from "drizzle-orm";
 import {notFound} from "next/navigation";
-import {
-    ButtonDeleteProject
-} from "@/components/wrappers/dashboard/projects/button-delete-project/button-delete-project";
 import {ButtonDeleteAgent} from "@/components/wrappers/dashboard/agent/button-delete-agent/button-delete-agent";
 import {capitalizeFirstLetter} from "@/utils/text";
 import {Server} from "lucide-react";
 import {generateEdgeKey} from "@/utils/edge_key";
 import {getServerUrl} from "@/utils/get-server-url";
-
 
 export default async function RoutePage(props: PageParams<{ agentId: string }>) {
 
@@ -32,7 +28,6 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
             databases: true
         }
     })
-
 
     if (!agent) {
         notFound()

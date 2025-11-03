@@ -12,7 +12,7 @@ export const env = createEnv({
         NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
         NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
         NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
-        PROJECT_SECRET: z.string(),
+        PROJECT_SECRET: z.string().optional(),
 
         SMTP_PASSWORD: z.string().optional(),
         SMTP_FROM: z.string().optional(),
@@ -22,7 +22,7 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: z.string().optional(),
         AUTH_GOOGLE_SECRET: z.string().optional(),
-        NEXT_PUBLIC_GOOGLE_AUTH:  z.boolean().default(false).optional(),
+        NEXT_PUBLIC_GOOGLE_AUTH: z.boolean().default(false).optional(),
 
         S3_ENDPOINT: z.string().optional(),
         S3_ACCESS_KEY: z.string().optional(),

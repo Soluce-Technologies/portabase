@@ -5,13 +5,11 @@ import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {and, eq} from "drizzle-orm";
 
-
 export type BodyResultRestore = {
     generatedId: string
     status: string
 }
 type RestorationStatus = 'waiting' | 'ongoing' | 'failed' | 'success';
-
 
 
 export async function POST(
@@ -26,7 +24,6 @@ export async function POST(
         const body: BodyResultRestore = await request.json();
 
         console.log(body)
-
 
         if (!isUuidv4(body.generatedId)) {
             return NextResponse.json(
@@ -71,10 +68,7 @@ export async function POST(
 
         eventEmitter.emit('modification', {update: true});
 
-
         return Response.json(response, {status: 200})
-
-
     } catch (error) {
         console.error('Error in POST handler:', error);
         return NextResponse.json(

@@ -71,7 +71,6 @@ function checkRouteExists(pathname: string) {
 export const config = {
     runtime: "nodejs",
     matcher: [
-        // '/api/agent/:path*',
         "/api/:path*",
         "/dashboard/:path*",
         "/dashboard",
