@@ -11,7 +11,6 @@ import {
     SettingsOrganizationMembersTable
 } from "@/components/wrappers/dashboard/settings/settings-organization-members-table";
 
-export const dynamic = 'force-dynamic';
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
     const organization = await getOrganization({});

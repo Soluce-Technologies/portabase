@@ -10,7 +10,6 @@ import * as drizzleDb from "@/db";
 import {getOrganization} from "@/lib/auth/auth";
 import {Building2, DatabaseBackup, Folder, RefreshCcw} from "lucide-react";
 
-export const dynamic = 'force-dynamic';
 
 export default async function RoutePage(props: PageParams<{}>) {
     const organization = await getOrganization({});

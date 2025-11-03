@@ -10,7 +10,6 @@ import {notFound} from "next/navigation";
 import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
 
-export const dynamic = 'force-dynamic';
 
 export default async function RoutePage(props: PageParams<{}>) {
 
