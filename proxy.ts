@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { signOut } from "@/lib/auth/auth-client";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     const redirectUrl = encodeURIComponent(request.nextUrl.pathname)
 
@@ -69,10 +69,9 @@ function checkRouteExists(pathname: string) {
 }
 
 export const config = {
-    runtime: "nodejs",
     matcher: [
         "/api/:path*",
         "/dashboard/:path*",
         "/dashboard",
-    ],
+    ]
 };
