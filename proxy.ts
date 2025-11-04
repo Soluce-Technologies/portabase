@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { loggingMiddleware } from "@/middleware/loggingMiddleware";
-import { errorHandler } from "@/middleware/errorHandler";
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
-import { signOut } from "@/lib/auth/auth-client";
+import {NextRequest, NextResponse} from "next/server";
+import {loggingMiddleware} from "@/middleware/loggingMiddleware";
+import {errorHandler} from "@/middleware/errorHandler";
+import {auth} from "@/lib/auth/auth";
+import {headers} from "next/headers";
 
 export async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
@@ -13,25 +12,20 @@ export async function proxy(request: NextRequest) {
         const session = await auth.api.getSession({
             headers: await headers(),
         });
-
         if (!session) {
             return NextResponse.redirect(new URL(`/login?redirect=${redirectUrl}`, request.url));
         }
-
         if (session.user.banned) {
-            signOut();
+            await auth.api.signOut({headers: await headers()});
             return NextResponse.redirect(new URL("/login?error=banned", request.url));
         }
-
         if (session.user.role === "pending") {
-            signOut();
+            await auth.api.signOut({headers: await headers()});
             return NextResponse.redirect(new URL(`/login?error=pending?redirect=${redirectUrl}`, request.url));
         }
-
         if (url.pathname === "/dashboard") {
             return NextResponse.redirect(new URL(`/dashboard/home`, request.url));
         }
-
         return NextResponse.next();
     }
 
@@ -42,9 +36,9 @@ export async function proxy(request: NextRequest) {
     if (url.pathname.startsWith("/api")) {
         const routeExists = checkRouteExists(url.pathname);
         if (!routeExists) {
-            return new NextResponse(JSON.stringify({ message: "This API route does not exist.", status: 404 }), {
+            return new NextResponse(JSON.stringify({message: "This API route does not exist.", status: 404}), {
                 status: 404,
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
             });
         }
     }

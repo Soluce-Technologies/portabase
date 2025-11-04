@@ -4,14 +4,11 @@ import {createAuthClient} from "better-auth/react";
 import {adminClient, inferAdditionalFields, organizationClient} from "better-auth/client/plugins";
 import {ac, user, admin as adminRole, pending, superadmin, orgAdmin, orgMember, orgOwner} from "./permissions";
 import {auth} from "@/lib/auth/auth";
+import {getServerUrl} from "@/utils/get-server-url";
 
-const baseURL =
-    typeof window === "undefined"
-        ? process.env.PROJECT_URL // server side
-        : "";
-
-const res = await fetch(`${baseURL}/api/config`);
-const { PROJECT_URL } = await res.json();
+const res = await fetch(`${getServerUrl()}/api/config`);
+const {PROJECT_URL} = await res.json();
+console.log(PROJECT_URL);
 
 export const authClient = createAuthClient({
     baseURL: PROJECT_URL,
