@@ -151,9 +151,9 @@ NODE_ENV=production
 DATABASE_URL=postgresql://devuser:changeme@db:5432/devdb?schema=public
 
 # Project Info
-NEXT_PUBLIC_PROJECT_NAME="Portabase"
-NEXT_PUBLIC_PROJECT_DESCRIPTION="Portabase is a powerful database manager"
-NEXT_PUBLIC_PROJECT_URL=http://app.portabase.io
+PROJECT_NAME="Portabase"
+PROJECT_DESCRIPTION="Portabase is a powerful database manager"
+PROJECT_URL=http://app.portabase.io
 PROJECT_SECRET=
 
 # SMTP (Email)
@@ -166,6 +166,8 @@ SMTP_FROM=
 # Google OAuth
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
+AUTH_GOOGLE_METHOD=
+
 
 # S3/MinIO Configuration
 S3_ENDPOINT=http://app.s3.portabase.io
