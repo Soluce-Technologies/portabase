@@ -6,9 +6,14 @@ import {cn} from "@/lib/utils";
 import {ConsoleSilencer} from "@/components/wrappers/common/console-silencer";
 import {inter} from "@/fonts/fonts";
 
+const title = process.env.PROJECT_NAME ?? "App Title";
+
 export const metadata: Metadata = {
-    title: process.env.NEXT_PUBLIC_PROJECT_NAME ?? "Portabase",
-    description: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION ?? undefined,
+    title: {
+        default: title,
+        template: `%s - ${title}`
+    },
+    description: process.env.PROJECT_DESCRIPTION ?? undefined,
 };
 
 export default function RootLayout({

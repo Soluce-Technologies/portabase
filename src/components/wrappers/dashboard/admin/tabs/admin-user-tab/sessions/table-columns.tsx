@@ -20,10 +20,6 @@ export const sessionsColumns: ColumnDef<Session>[] = [
         },
     },
     {
-        accessorKey: "ipAddress",
-        header: "IP Address",
-    },
-    {
         id: "device",
         header: "Device",
         cell: ({ row }) => {

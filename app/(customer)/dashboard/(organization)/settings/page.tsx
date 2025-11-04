@@ -10,7 +10,11 @@ import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/edit-
 import {
     SettingsOrganizationMembersTable
 } from "@/components/wrappers/dashboard/settings/settings-organization-members-table";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Settings",
+};
 
 export default async function RoutePage(props: PageParams<{ slug: string }>) {
     const organization = await getOrganization({});

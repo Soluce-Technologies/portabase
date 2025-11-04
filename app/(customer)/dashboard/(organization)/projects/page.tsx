@@ -9,7 +9,11 @@ import {db} from "@/db";
 import {notFound} from "next/navigation";
 import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Projects",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
 

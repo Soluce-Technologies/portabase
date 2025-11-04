@@ -10,15 +10,16 @@ import {SidebarMenuCustomMain} from "@/components/wrappers/dashboard/common/side
 import {SideBarFooterCredit} from "@/components/wrappers/dashboard/common/sidebar/side-bar-footer-credit";
 import {OrganizationCombobox} from "@/components/wrappers/dashboard/organization/organization-combobox";
 import {LoggedInButton} from "@/components/wrappers/dashboard/common/logged-in/logged-in-button";
+import {env} from "@/env.mjs";
 
 export function AppSidebar() {
-
+    const projectName = env.PROJECT_NAME;
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarLogo/>
+                        <SidebarLogo projectName={projectName ?? "Portabase"}/>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <OrganizationCombobox/>
@@ -32,10 +33,10 @@ export function AppSidebar() {
 
             <SidebarMenu className="mb-2">
                 <SidebarMenuItem>
-                    <LoggedInButton />
+                    <LoggedInButton/>
                 </SidebarMenuItem>
             </SidebarMenu>
-            <SideBarFooterCredit />
+            <SideBarFooterCredit/>
         </Sidebar>
     );
 }

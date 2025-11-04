@@ -1,6 +1,11 @@
-import { PageParams } from "@/types/next";
-import { Page, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
-import { AgentForm } from "@/components/wrappers/dashboard/agent/agent-form/agent-form";
+import {PageParams} from "@/types/next";
+import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {AgentForm} from "@/components/wrappers/dashboard/agent/agent-form/agent-form";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Create Agent",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
     return (
@@ -9,7 +14,7 @@ export default async function RoutePage(props: PageParams<{}>) {
                 <PageTitle>Create new agent</PageTitle>
             </PageHeader>
             <PageContent>
-                <AgentForm />
+                <AgentForm/>
             </PageContent>
         </Page>
     );

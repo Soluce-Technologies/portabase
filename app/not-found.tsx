@@ -1,3 +1,4 @@
+import BackButton from "@/components/wrappers/common/button/back-button";
 
 export default async function NotFound() {
     return(
@@ -7,6 +8,7 @@ export default async function NotFound() {
                     <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Not found</h1>
                     <p className="leading-7 [&:not(:first-child)]:mt-6">The content you are trying to view is not available.</p>
                 </div>
+                <BackButton>Go home</BackButton>
             </div>
         </div>
     )

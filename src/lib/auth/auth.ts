@@ -191,7 +191,7 @@ export const auth = betterAuth({
             },
         },
     },*/
-    trustedOrigins: [env.NEXT_PUBLIC_PROJECT_URL!, "http://app"],
+    trustedOrigins: [env.PROJECT_URL!, "http://app"],
 });
 
 /*export const signUpUser = async (email: string, password: string, name: string) => {

@@ -9,7 +9,11 @@ import {and, asc, count, eq, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {getOrganization} from "@/lib/auth/auth";
 import {Building2, DatabaseBackup, Folder, RefreshCcw} from "lucide-react";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Statistics",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
     const organization = await getOrganization({});

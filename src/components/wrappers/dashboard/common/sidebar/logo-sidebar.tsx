@@ -2,12 +2,13 @@
 
 import { useSidebar } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { env } from "@/env.mjs";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export const SidebarLogo = () => {
+export const SidebarLogo = ({projectName}: {
+    projectName: string;
+}) => {
     const { state, isMobile } = useSidebar();
     const { resolvedTheme } = useTheme();
 
@@ -28,7 +29,7 @@ export const SidebarLogo = () => {
                     <Image
                         loading="eager"
                         src={"/images/logo.png"}
-                        alt={`Logo ${env.NEXT_PUBLIC_PROJECT_NAME}`}
+                        alt={`Logo ${projectName}`}
                         className="h-10 w-10 object-contain"
                         height={10}
                         width={10}
@@ -38,7 +39,7 @@ export const SidebarLogo = () => {
                         <Image
                             loading="eager"
                             src={imageTheme}
-                            alt={`Logo ${env.NEXT_PUBLIC_PROJECT_NAME}`}
+                            alt={`Logo ${projectName}`}
                             className="object-contain"
                             width={190}
                             height={90}

@@ -1,18 +1,19 @@
-import { PageParams } from "@/types/next";
-import { AgentCard } from "@/components/wrappers/dashboard/agent/agent-card/agent-card";
-import { CardsWithPagination } from "@/components/wrappers/common/cards-with-pagination";
-import { Button } from "@/components/ui/button";
+import {PageParams} from "@/types/next";
+import {AgentCard} from "@/components/wrappers/dashboard/agent/agent-card/agent-card";
+import {CardsWithPagination} from "@/components/wrappers/common/cards-with-pagination";
+import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import { Page, PageActions, PageContent, PageHeader, PageTitle } from "@/features/layout/page";
-import { notFound } from "next/navigation";
-import { db } from "@/db";
+import {Page, PageActions, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
+import {notFound} from "next/navigation";
+import {db} from "@/db";
 import * as drizzleDb from "@/db";
-
-import {and, eq, not} from "drizzle-orm";
-import {Plus} from "lucide-react";
-import {cn} from "@/lib/utils";
+import {eq, not} from "drizzle-orm";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
-// export const dynamic = "force-dynamic";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Agents",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
 
@@ -39,7 +40,7 @@ export default async function RoutePage(props: PageParams<{}>) {
             </PageHeader>
             <PageContent>
                 {agents.length > 0 ? (
-                    <CardsWithPagination data={agents} cardItem={AgentCard} cardsPerPage={4} numberOfColumns={1} />
+                    <CardsWithPagination data={agents} cardItem={AgentCard} cardsPerPage={4} numberOfColumns={1}/>
                 ) : (
                     <EmptyStatePlaceholder
                         url={"/dashboard/agents/new"}

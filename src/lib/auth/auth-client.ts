@@ -1,12 +1,20 @@
+"use client"
 import {createAuthClient} from "better-auth/react";
 
 import {adminClient, inferAdditionalFields, organizationClient} from "better-auth/client/plugins";
-import {env} from "@/env.mjs";
 import {ac, user, admin as adminRole, pending, superadmin, orgAdmin, orgMember, orgOwner} from "./permissions";
 import {auth} from "@/lib/auth/auth";
 
+const baseURL =
+    typeof window === "undefined"
+        ? process.env.PROJECT_URL // server side
+        : "";
+
+const res = await fetch(`${baseURL}/api/config`);
+const { PROJECT_URL } = await res.json();
+
 export const authClient = createAuthClient({
-    baseURL: env.NEXT_PUBLIC_PROJECT_URL,
+    baseURL: PROJECT_URL,
     plugins: [
         organizationClient({
             ac,

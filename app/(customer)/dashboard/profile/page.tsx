@@ -7,6 +7,11 @@ import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/butto
 import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/avatar/avatar-with-upload";
 import {currentUser} from "@/lib/auth/current-user";
 import {getAccounts, getSessions} from "@/lib/auth/auth";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Profile",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
     const user = await currentUser();
@@ -39,11 +44,8 @@ export default async function RoutePage(props: PageParams<{}>) {
                     {user.name}
                     <Badge className="ml-3 hidden lg:block">{user.role}</Badge>
                 </PageTitle>
-                {/*<PageActions className="mt-2 hidden sm:block">*/}
-                {/*    <ButtonDeleteAccount text="Delete my account"/>*/}
-                {/*</PageActions>*/}
             </div>
-            <PageContent >
+            <PageContent>
                 <UserForm
                     userId={user.id}
                     sessions={sessions} accounts={accounts}
@@ -53,9 +55,6 @@ export default async function RoutePage(props: PageParams<{}>) {
                         role: user.role ?? undefined,
                     }}
                 />
-                {/*<div className="mt-4 sm:hidden ">*/}
-                {/*    <ButtonDeleteAccount  text="Delete my account"/>*/}
-                {/*</div>*/}
             </PageContent>
         </Page>
     );

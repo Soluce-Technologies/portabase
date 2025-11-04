@@ -8,6 +8,11 @@ import {db} from "@/db";
 import {asc, inArray} from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {listOrganizations} from "@/lib/auth/auth";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Home",
+};
 
 export default async function RoutePage(props: PageParams<{}>) {
 

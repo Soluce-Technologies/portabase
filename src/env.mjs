@@ -6,12 +6,15 @@ const {version} = packageJson;
 
 export const env = createEnv({
     server: {
-        NODE_ENV: z.enum(["development", "production"]).optional(),
-        DATABASE_URL: z.string().url().optional(),
-        NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
         NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
+
+        NODE_ENV: z.enum(["development", "production"]).optional(),
+
+        DATABASE_URL: z.string().url().optional(),
+
+        PROJECT_NAME: z.string().optional(),
+        PROJECT_DESCRIPTION: z.string().optional(),
+        PROJECT_URL: z.string().optional(),
         PROJECT_SECRET: z.string().optional(),
 
         SMTP_PASSWORD: z.string().optional(),
@@ -38,17 +41,15 @@ export const env = createEnv({
             .default(process.env.NODE_ENV === "production" ? "0 7 * * *" : "* * * * *"),
     },
     client: {
-        NEXT_PUBLIC_PROJECT_NAME: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_DESCRIPTION: z.string().optional(),
-        NEXT_PUBLIC_PROJECT_URL: z.string().optional(),
         NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),
 
     },
     runtimeEnv: {
-        NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
-        NEXT_PUBLIC_PROJECT_DESCRIPTION: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION,
-        NEXT_PUBLIC_PROJECT_URL: process.env.NEXT_PUBLIC_PROJECT_URL,
         NEXT_PUBLIC_PROJECT_VERSION: version || "Unknown Version",
+
+        PROJECT_NAME: process.env.PROJECT_NAME,
+        PROJECT_DESCRIPTION: process.env.PROJECT_DESCRIPTION,
+        PROJECT_URL: process.env.PROJECT_URL,
         PROJECT_SECRET: process.env.PROJECT_SECRET,
 
         DATABASE_URL: process.env.DATABASE_URL,
