@@ -8,7 +8,6 @@ import {getServerUrl} from "@/utils/get-server-url";
 
 const res = await fetch(`${getServerUrl()}/api/config`);
 const {PROJECT_URL} = await res.json();
-console.log(PROJECT_URL);
 
 export const authClient = createAuthClient({
     baseURL: PROJECT_URL,
