@@ -1,10 +1,10 @@
 import * as Minio from "minio";
 import {env} from "@/env.mjs";
 import internal from "node:stream";
-import {db} from "@/db";
-import * as drizzleDb from "@/db";
-import {eq} from "drizzle-orm";
 import stream from "node:stream";
+import * as drizzleDb from "@/db";
+import {db} from "@/db";
+import {eq} from "drizzle-orm";
 
 
 async function getS3Client() {
@@ -24,32 +24,17 @@ async function getS3Client() {
         secretKey: settings.s3SecretAccessKey ?? "",
     };
 
-    // const s3Client =
-    //     env.NODE_ENV === "production"
-    //         ? new Minio.Client({
-    //             ...baseConfig,
-    //             useSSL: env.S3_USE_SSL === "true",
-    //         })
-    //         : new Minio.Client({
-    //             ...baseConfig,
-    //             port: Number(env.S3_PORT ?? 0),
-    //             useSSL: env.S3_USE_SSL === "true",
-    //         });
-
-    const s3Client = new Minio.Client({
+    return new Minio.Client({
         ...baseConfig,
         port: Number(env.S3_PORT ?? 0),
         useSSL: env.S3_USE_SSL === "true",
-    })
-
-    return s3Client;
+    });
 }
 
 export async function checkMinioAlive() {
     try {
         console.log("Check MinioAlive");
         const s3Client = await getS3Client();
-        // Try to list buckets to check connectivity
         const buckets = await s3Client.listBuckets();
         console.log("MinIO is up and running. Buckets:", buckets);
         return {message: true};
@@ -106,9 +91,6 @@ export async function deleteFileFromBucket({
 }
 
 
-
-
-
 /**
  * Save file in S3 bucket
  * @param bucketName name of the bucket
@@ -120,45 +102,21 @@ export async function saveFileInBucket({bucketName, fileName, file}: {
     fileName: string;
     file: Buffer | internal.Readable
 }) {
-    // Check if Minio is Alive
     await checkMinioAlive();
-    // Create bucket if it doesn't exist
     await createBucketIfNotExists(bucketName);
-    // check if file exists - optional.
-    // Without this check, the file will be overwritten if it exists
     const fileExists = await checkFileExistsInBucket({
         bucketName,
         fileName,
     });
-
     console.log("File exists:", fileExists);
-
     if (fileExists) {
         throw new Error("File already exists");
     }
     const s3Client = await getS3Client();
 
-    // Upload image to S3 bucket
-    const result = await s3Client.putObject(bucketName, fileName, file);
-    return result;
+    return await s3Client.putObject(bucketName, fileName, file);
 }
 
-/**
- * Check if file exists in bucket
- * @param bucketName name of the bucket
- * @param fileName name of the file
- * @returns true if file exists, false if not
- */
-// export async function checkFileExistsInBucket({bucketName, fileName}: { bucketName: string; fileName: string }) {
-//     const s3Client = await getS3Client();
-//
-//     try {
-//         await s3Client.statObject(bucketName, fileName);
-//     } catch (error) {
-//         return false;
-//     }
-//     return true;
-// }
 
 export async function getObjectFromClient({
                                               bucketName,
@@ -188,8 +146,6 @@ export async function checkFileExistsInBucket({
         if (error.code === 'NoSuchKey' || error.message?.includes('not found')) {
             return false;
         }
-        // Instead of throwing, return false to prevent crashes
-        // console.error("Unexpected S3 statObject error:", error);
         return false;
     }
 }
@@ -280,7 +236,6 @@ export async function createPresignedUrlToDownload({
         }
         const presignedUrl = await s3Client.presignedGetObject(bucketName, fileName, expiry);
         console.debug("Generated pre signed URL:", presignedUrl);
-
         return {url: presignedUrl};
     } catch (err: any) {
         console.error("Error in createPreSignedUrlToDownload:", {
