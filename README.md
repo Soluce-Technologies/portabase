@@ -5,31 +5,37 @@
   </a>
 
   <h3 align="center">Portabase</h3>
-
-  <p align="center">
-    Easily backup and restore your database instances with Portabase
-    <br />
-    <a href="https://portabase.io"><strong>Explore the Docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://www.youtube.com/watch?v=D9uFrGxLc4s">View Demo</a>
-    ·
-    <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
- 
-  ![portabase-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/e3929e58-fefd-44cc-ab26-6f8e1a860c43)
-  
+  <p>
+    Free, open-source, and self-hosted solution for automated backup and restoration of your database instances.
   </p>
+
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+  [![Docker Pulls](https://img.shields.io/docker/pulls/solucetechnologies/portabase?color=brightgreen)](https://hub.docker.com/r/solucetechnologies/portabase)
+  [![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-lightgrey)](https://github.com/RostislavDugin/postgresus)
+
+  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+  [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+  [![MariaDB](https://img.shields.io/badge/MariaDB-003545?logo=mariadb&logoColor=white)](https://mariadb.org/)
+  [![Self Hosted](https://img.shields.io/badge/self--hosted-yes-brightgreen)](https://github.com/RostislavDugin/postgresus)
+
+  <p>
+    <strong>
+        <a href="https://portabase.io">Documentation</a> •
+        <a href="https://www.youtube.com/watch?v=D9uFrGxLc4s">Demo</a> •
+        <a href="#installation">Installation</a> •
+        <a href="#contributing">Contributing</a> •
+        <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=bug&template=bug-report---.md">Report Bug</a> •
+        <a href="https://github.com/Soluce-Technologies/portabase/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    </strong>
+  </p>
+
+  ![portabase-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/e3929e58-fefd-44cc-ab26-6f8e1a860c43)
+
 </div>
-
-
-
 
 ## 📚 Table of Contents
 
 - [About The Project](#about-the-project)
-    - [Built With](#built-with)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -44,17 +50,17 @@
 
 ## About The Project
 
-**Portabase** is a server dashboard tool designed to simplify the backup and restoration of your database instances. It integrates seamlessly with Portabase agents for managing operations securely and efficiently.
+**Portabase** is a server dashboard tool designed to simplify the backup and restoration of your database instances. It
+integrates seamlessly with Portabase agents for managing operations securely and efficiently.
 
 GitHub Repository: [Portabase](https://github.com/Soluce-Technologies/portabase)
 
 ### 🔧 Built With
 
-- [![NextJS][NextJS]][NextJS-url] (v15 with App Router)
+- [![NextJS][NextJS]][NextJS-url] (v16 with App Router)
 - [![Drizzle][Drizzle]][Drizzle-url]
 - [![ShadcnUI][ShadcnUI]][ShadcnUI-url]
-- BetterAuth
-- React Email
+- [![BetterAuth][BetterAuth]][BetterAuth-url]
 
 ---
 
@@ -147,29 +153,29 @@ Give the project a ⭐ if you like it!
 # Environment
 NODE_ENV=production
 
-# Database
+  # Database
 DATABASE_URL=postgresql://devuser:changeme@db:5432/devdb?schema=public
 
-# Project Info
+  # Project Info
 PROJECT_NAME="Portabase"
 PROJECT_DESCRIPTION="Portabase is a powerful database manager"
 PROJECT_URL=http://app.portabase.io
 PROJECT_SECRET=
 
-# SMTP (Email)
+  # SMTP (Email)
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASSWORD=
 SMTP_FROM=
 
-# Google OAuth
+  # Google OAuth
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
 AUTH_GOOGLE_METHOD=
 
 
-# S3/MinIO Configuration
+  # S3/MinIO Configuration
 S3_ENDPOINT=http://app.s3.portabase.io
 S3_ACCESS_KEY=
 S3_SECRET_KEY=
@@ -177,10 +183,10 @@ S3_BUCKET_NAME=portabase
 S3_PORT=9000
 S3_USE_SSL=true
 
-# Storage Backend: 'local' or 's3'
+  # Storage Backend: 'local' or 's3'
 STORAGE_TYPE=local
 
-# Retention
+  # Retention
 RETENTION_CRON="* * * * *"
 ```
 
@@ -219,8 +225,17 @@ Thanks to all contributors and the open-source community!
 ---
 
 [NextJS]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+
+[BetterAuth]: https://img.shields.io/badge/Better%20Auth-FFF?logo=betterauth&logoColor=000&style=for-the-badge
+
 [Drizzle]: https://img.shields.io/badge/Drizzle-111?style=for-the-badge&logo=Drizzle&logoColor=c5f74f
+
 [ShadcnUI]: https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcn/ui&logoColor=white
+
 [NextJS-url]: https://nextjs.org/
+
+[BetterAuth-url]: https://www.better-auth.com/
+
 [Drizzle-url]: https://orm.drizzle.team/
+
 [ShadcnUI-url]: https://ui.shadcn.com/

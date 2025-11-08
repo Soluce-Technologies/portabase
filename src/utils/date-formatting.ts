@@ -1,7 +1,29 @@
-import {format, formatDistanceToNow} from "date-fns";
+import {formatDistanceToNow} from "date-fns";
+
+/**
+ * Get user's locale and timezone from the browser
+ */
+const TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const LOCALE = Intl.DateTimeFormat().resolvedOptions().locale;
+
+/**
+ * Format a date in DD/MM/YYYY HH:mm 24-hour format
+ */
+export function formatLocalizedDate(date: string | number | Date) {
+    const d = new Date(date);
+    return new Intl.DateTimeFormat(LOCALE, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false, // 24-hour format
+        timeZone: TIMEZONE,
+    }).format(d);
+}
 
 export function humanReadableDate(rawDate: string | number | Date) {
-    return formatFrenchDate(rawDate);
+    return formatLocalizedDate(rawDate);
 }
 
 export function timeAgo(rawDate: string | number | Date) {
@@ -10,14 +32,7 @@ export function timeAgo(rawDate: string | number | Date) {
 }
 
 export function formatDateLastContact(lastContact: string | number | Date | null) {
-    console.log(lastContact)
     return lastContact
-        ? formatFrenchDate(lastContact)
-        : "Never connected."
-}
-
-export function formatFrenchDate(date: string | number | Date) {
-    return new Date(date).toLocaleString("fr-FR", {
-        timeZone: "Europe/Paris",
-    });
+        ? formatLocalizedDate(lastContact)
+        : "Never connected.";
 }

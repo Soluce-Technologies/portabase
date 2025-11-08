@@ -39,6 +39,7 @@ export const env = createEnv({
         RETENTION_CRON: z
             .string()
             .default(process.env.NODE_ENV === "production" ? "0 7 * * *" : "* * * * *"),
+
     },
     client: {
         NEXT_PUBLIC_PROJECT_VERSION: z.string().optional(),

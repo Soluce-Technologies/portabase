@@ -22,7 +22,6 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {StatusBadge} from "@/components/wrappers/common/status-badge";
 import {Backup, DatabaseWith} from "@/db/schema/07_database";
-import {formatFrenchDate} from "@/utils/date-formatting";
 import {TooltipCustom} from "@/components/wrappers/common/tooltip-custom";
 import {Setting} from "@/db/schema/01_setting";
 import {SafeActionResult} from "next-safe-action";
@@ -31,6 +30,7 @@ import {ServerActionResult} from "@/types/action-type";
 import {cn} from "@/lib/utils";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {MemberWithUser} from "@/db/schema/03_organization";
+import {formatLocalizedDate} from "@/utils/date-formatting";
 
 
 export function backupColumns(
@@ -52,7 +52,7 @@ export function backupColumns(
                             </TooltipTrigger>
                             {row.original.deletedAt != null && (
                                 <TooltipContent>
-                                    <p>{formatFrenchDate(row.original.deletedAt)}</p>
+                                    <p>{formatLocalizedDate(row.original.deletedAt)}</p>
                                 </TooltipContent>
                             )}
                         </Tooltip>
@@ -68,7 +68,7 @@ export function backupColumns(
             accessorKey: "createdAt",
             header: "Created At",
             cell: ({row}) => {
-                return formatFrenchDate(row.getValue("createdAt"))
+                return formatLocalizedDate(row.getValue("createdAt"))
             },
         },
         {

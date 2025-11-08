@@ -15,9 +15,9 @@ export function TablePagination(props: tablePaginationProps) {
     const { className, table, maxVisiblePages = 3, pageSizeOptions = [10, 20, 30, 40, 50] } = props;
 
     return (
-        <div className={cn("flex flex-col gap-x-4 sm:flex-row", className)}>
+        <div className={cn("flex gap-x-4 flex-row w-full", className)}>
             <TablePaginationSize table={table} pageSizeOptions={pageSizeOptions} />
-            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages} className="justify-end mt-5 sm:mt-0" />
+            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages} className="justify-end mt-0" />
         </div>
     );
 }

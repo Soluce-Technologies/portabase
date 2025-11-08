@@ -11,7 +11,6 @@ import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-d
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {UserWithAccounts} from "@/db/schema/02_user";
 import {authClient, useSession} from "@/lib/auth/auth-client";
-import {formatFrenchDate} from "@/utils/date-formatting";
 import {providerSwitch} from "@/components/wrappers/common/provider-switch";
 import {ButtonDeleteUser} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/button-delete-use";
 import {Organization} from "@/db/schema/03_organization";

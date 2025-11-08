@@ -3,6 +3,7 @@ FROM node:22-alpine AS base
 ENV YARN_VERSION=4.9.1
 
 RUN apk add --update --no-cache \
+    tzdata \
     build-base \
     libc6-compat \
     openssl \

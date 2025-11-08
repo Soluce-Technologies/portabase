@@ -50,10 +50,10 @@ export const AdminTabs = ({users, settings, organizations}: AdminTabsProps) => {
                     Storage
                 </TabsTrigger>
             </TabsList>
-            <TabsContent value="users">
+            <TabsContent className="h-full" value="users">
                 <AdminUsersTable users={users}/>
             </TabsContent>
-            <TabsContent value="organizations">
+            <TabsContent className="h-full" value="organizations">
                 <AdminOrganizationsTable organizations={organizations}/>
             </TabsContent>
             <TabsContent value="email">

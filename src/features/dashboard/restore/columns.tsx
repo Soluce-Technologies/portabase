@@ -13,11 +13,10 @@ import { Button } from "@/components/ui/button";
 import {MoreHorizontal, Trash2} from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { StatusBadge } from "@/components/wrappers/common/status-badge";
-import {Backup, Restoration} from "@/db/schema/07_database";
-import {formatFrenchDate} from "@/utils/date-formatting";
+import {Restoration} from "@/db/schema/07_database";
+import {formatLocalizedDate} from "@/utils/date-formatting";
 import {useMutation} from "@tanstack/react-query";
 import {
-    deleteBackupAction,
     deleteRestoreAction,
     rerunRestorationAction
 } from "@/features/dashboard/restore/restore.action";
@@ -40,7 +39,7 @@ export function restoreColumns(
         accessorKey: "createdAt",
         header: "Created At",
         cell: ({ row }) => {
-            return formatFrenchDate(row.getValue("createdAt"))
+            return formatLocalizedDate(row.getValue("createdAt"))
         },
     },
     {

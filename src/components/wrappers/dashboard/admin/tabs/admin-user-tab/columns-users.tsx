@@ -6,14 +6,11 @@ import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
-import {Trash2} from "lucide-react";
-import {deleteUserAction} from "@/components/wrappers/dashboard/profile/button-delete-account/delete-account.action";
-import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {UserWithAccounts} from "@/db/schema/02_user";
 import {authClient, useSession} from "@/lib/auth/auth-client";
-import {formatFrenchDate} from "@/utils/date-formatting";
 import {providerSwitch} from "@/components/wrappers/common/provider-switch";
 import {ButtonDeleteUser} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/button-delete-use";
+import {formatLocalizedDate} from "@/utils/date-formatting";
 
 export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
     {
@@ -88,7 +85,7 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
         accessorKey: "updatedAt",
         header: "Updated At",
         cell: ({row}) => {
-            return formatFrenchDate(row.getValue("updatedAt"))
+            return formatLocalizedDate(row.getValue("updatedAt"))
         },
     },
     {

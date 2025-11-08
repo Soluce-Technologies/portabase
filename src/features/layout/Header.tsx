@@ -5,6 +5,8 @@ import {ModeToggle} from "@/features/theme/ModeToggle";
 import {currentUser} from "@/lib/auth/current-user";
 import {LoggedInButton} from "@/components/wrappers/dashboard/common/logged-in/logged-in-button";
 import {BreadCrumbsWrapper} from "@/components/wrappers/common/bread-crumbs/bread-crumbs";
+import GitHubStarsButtonCustom from "@/components/wrappers/common/github/github-button";
+// import GitHubStarsButtonCustom from "@/components/wrappers/common/github-button";
 
 export const Header = async () => {
     const user = await currentUser();
@@ -19,6 +21,7 @@ export const Header = async () => {
             </div>
 
             <div className="flex items-center gap-2">
+                <GitHubStarsButtonCustom/>
                 <ModeToggle/>
                 <LoggedInButton/>
             </div>

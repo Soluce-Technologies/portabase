@@ -12,12 +12,12 @@ export const AdminUsersTable = (props: AdminUsersTableProps) => {
     const {users} = props;
     return (
         <div className="flex flex-col gap-y-4 h-full py-4">
-            <Card>
+            <Card className="h-full ">
                 <CardHeader>
                     <CardTitle>Active users</CardTitle>
                     <CardDescription>Manage your users</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="h-full">
                     <DataTable
                         enableSelect={false}
                         columns={usersColumnsAdmin}

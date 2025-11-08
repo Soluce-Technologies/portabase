@@ -1,21 +1,42 @@
 name: portabase-dev
 
 services:
-    db:
-        image: postgres:16-alpine
-        ports:
-            - "5433:5432"
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=devdb
-            - POSTGRES_USER=devuser
-            - POSTGRES_PASSWORD=changeme
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U devuser -d devdb"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+
+#  app:
+#    build:
+#      context: .
+#      dockerfile: docker/dockerfile/Dockerfile
+#      target: dev
+#    ports:
+#      - "8887:8887"
+#    environment:
+#      - TZ=Europe/Paris
+#      - NODE_ENV=development
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    volumes:
+#      - .:/app
+#      - /app/node_modules
+#    container_name: portabase-app
+
+
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U devuser -d devdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-    postgres-data:
+  postgres-data:

@@ -43,6 +43,7 @@ export const PORTABASE_DEFAULT_SETTINGS = {
                 "'self'",
                 "https://api.iconify.design",
                 "https://code.iconify.design",
+                "https://api.github.com",
 
             ],
             OBJECT_SRC: ["'none'"],

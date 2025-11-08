@@ -17,7 +17,7 @@ export const TablePaginationSize = (props: tablePaginationSizeProps) => {
 
     return (
         <div className={cn("flex items-center justify-end sm:justify-center space-x-2", className)}>
-            <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
+            <p className="whitespace-nowrap text-sm font-medium hidden md:block">Rows per page</p>
             <Select
                 value={`${table.getState().pagination.pageSize}`}
                 onValueChange={(value) => {
