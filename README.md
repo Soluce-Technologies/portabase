@@ -282,7 +282,6 @@ Distributed under the Apache License. See `LICENSE.txt` for more details.
 
 Thanks to all contributors and the open-source community!
 
----
 
 [NextJS]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [BetterAuth]: https://img.shields.io/badge/Better%20Auth-FFF?logo=betterauth&logoColor=000&style=for-the-badge
