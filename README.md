@@ -37,8 +37,6 @@
 
 - [About The Project](#about-the-project)
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -48,7 +46,7 @@
 
 ---
 
-## About The Project
+## ✨ About The Project
 
 **Portabase** is a server dashboard tool designed to simplify the backup and restoration of your database instances. It
 integrates seamlessly with Portabase agents for managing operations securely and efficiently.
@@ -66,13 +64,65 @@ GitHub Repository: [Portabase](https://github.com/Soluce-Technologies/portabase)
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Installation
 
 Ensure Docker is installed on your machine before getting started.
 
-### Installation
+### Option 1:  Docker Compose Setup
 
-To run Portabase locally:
+Create a `docker-compose.yml` file with the following configuration:
+
+```yaml
+name: portabase
+
+services:
+
+  portabase:
+    image: solucetechnologies/portabase:latest
+    env_file:
+      - .env
+    ports:
+      - '8887:80'
+    environment:
+      - TIME_ZONE="Europe/Paris"
+    volumes:
+      - portabase-private:/app/private
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: portabase-app
+
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=<your_database>
+      - POSTGRES_USER=<database_user>
+      - POSTGRES_PASSWORD=<database_password>
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U <database_user> -d <your_database>" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+  portabase-private:
+```
+
+
+Then run:
+
+```bash
+docker compose up -d
+```
+
+If you use reverse proxy like Traefik : [Check this link](https://portabase.io/docs/portabase/advanced-topics/reverse-proxy)
+
+### Option 2:  Locally (Development)
 
 1. Clone the repository:
     ```bash
@@ -83,18 +133,25 @@ To run Portabase locally:
     ```bash
     docker compose up
     ```
-
 ---
 
 ## 🛠️ Usage
 
-Portabase provides a dashboard to manage database instances and backups. It supports:
+Portabase provides a web dashboard to manage your database instances and backups.  
+It currently supports:
 
-- PostgreSQL (current)
-- MongoDB (coming soon)
-- MySQL (coming soon)
+- **PostgreSQL**
+- **MySQL**
 
-You can access the dashboard at `http://localhost:3000` after starting the project.
+### Process
+
+1. **Access the dashboard** – Open `http://localhost:8887` in your browser.
+2. **Sign up** – Register the first user, who will automatically have the **Admin** role in the default workspace.
+3. **Add your first agent** – Follow [this guide](https://github.com/Soluce-Technologies/agent-portabase) for setup instructions.
+4. **Create organizations and projects** – Link your databases to projects to enable backups and restores.
+5. **Configure backup policies** – Define schedules (hourly, daily, weekly, or monthly) and retention rules.
+6. **Choose a storage provider** – Select where backups will be stored (local, S3, etc.).
+7. **Save and start** – Portabase validates your configuration and starts automated backups based on your defined policies.
 
 ---
 
@@ -112,7 +169,9 @@ You can access the dashboard at `http://localhost:3000` after starting the proje
 - [ ] Extend multi-database support:
     - [x] PostgreSQL
     - [ ] MongoDB
-    - [ ] MySQL
+    - [x] MySQL
+    - [x] MariaDB
+
 
 Check out [open issues](https://github.com/Soluce-Technologies/portabase/issues) for more.
 
@@ -153,29 +212,28 @@ Give the project a ⭐ if you like it!
 # Environment
 NODE_ENV=production
 
-  # Database
+# Database
 DATABASE_URL=postgresql://devuser:changeme@db:5432/devdb?schema=public
 
-  # Project Info
+# Project Info
 PROJECT_NAME="Portabase"
 PROJECT_DESCRIPTION="Portabase is a powerful database manager"
 PROJECT_URL=http://app.portabase.io
 PROJECT_SECRET=
 
-  # SMTP (Email)
+# SMTP (Email)
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASSWORD=
 SMTP_FROM=
 
-  # Google OAuth
+# Google OAuth
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
 AUTH_GOOGLE_METHOD=
 
-
-  # S3/MinIO Configuration
+# S3/MinIO Configuration
 S3_ENDPOINT=http://app.s3.portabase.io
 S3_ACCESS_KEY=
 S3_SECRET_KEY=
@@ -183,12 +241,14 @@ S3_BUCKET_NAME=portabase
 S3_PORT=9000
 S3_USE_SSL=true
 
-  # Storage Backend: 'local' or 's3'
+# Storage Backend: 'local' or 's3'
 STORAGE_TYPE=local
 
-  # Retention
+# Retention
 RETENTION_CRON="* * * * *"
 ```
+
+To get more information about env variables, check that [link](https://portabase.io/docs/portabase/advanced-topics/environment)
 
 ### Semantic Versioning
 
@@ -225,17 +285,10 @@ Thanks to all contributors and the open-source community!
 ---
 
 [NextJS]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-
 [BetterAuth]: https://img.shields.io/badge/Better%20Auth-FFF?logo=betterauth&logoColor=000&style=for-the-badge
-
 [Drizzle]: https://img.shields.io/badge/Drizzle-111?style=for-the-badge&logo=Drizzle&logoColor=c5f74f
-
 [ShadcnUI]: https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcn/ui&logoColor=white
-
 [NextJS-url]: https://nextjs.org/
-
 [BetterAuth-url]: https://www.better-auth.com/
-
 [Drizzle-url]: https://orm.drizzle.team/
-
 [ShadcnUI-url]: https://ui.shadcn.com/
