@@ -8,6 +8,8 @@ import * as member from "./schema/05_invitation";
 import * as project from "./schema/06_project";
 import * as agent from "./schema/08_agent";
 import * as database from "./schema/07_database";
+import * as notificationChannel from "./schema/09_notification-channel";
+import * as organizationNotificationChannel from "./schema/09_notification-channel";
 
 
 import {Pool} from "pg";
@@ -32,7 +34,9 @@ export const schemas = {
     ...member,
     ...project,
     ...agent,
-    ...database
+    ...database,
+    ...notificationChannel,
+    ...organizationNotificationChannel
 };
 
 export const db = drizzle({

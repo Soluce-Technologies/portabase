@@ -1,0 +1,19 @@
+// export type ProviderKind = 'slack' | 'smtp';
+export type ProviderKind =  'smtp';
+
+export interface DispatchResult {
+    success: boolean;
+    channelId?: string;
+    provider: ProviderKind;
+    message?: string;
+    error?: string;
+    response?: any;
+}
+
+export interface EventPayload {
+    title: string;
+    message: string;
+    level: 'critical' | 'warning' | 'info';
+    timestamp?: Date;
+    data?: Record<string, any>;
+}

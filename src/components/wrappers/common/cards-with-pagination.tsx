@@ -9,15 +9,16 @@ interface CardsWithPaginationProps<T> {
     className?: string;
     data: any[];
     organizationSlug?: string;
-    cardItem: ComponentType<{ data: T; organizationSlug?: string; extendedProps?: any }>;
+    cardItem: ComponentType<{ data: T } & Record<string, any>>;
     cardsPerPage?: number;
     numberOfColumns?: number;
     maxVisiblePages?: number;
-    extendedProps?: any;
+    // extendedProps?: any;
+    [key: string]: any;
 }
 
 export function CardsWithPagination<T>(props: CardsWithPaginationProps<T>) {
-    const { className, organizationSlug, data, cardItem, cardsPerPage = 5, numberOfColumns = 1, maxVisiblePages = 3 } = props;
+    const { className, organizationSlug, data, cardItem, cardsPerPage = 5, numberOfColumns = 1, maxVisiblePages = 3, ...rest } = props;
 
     const CardItem = cardItem;
 
@@ -44,7 +45,7 @@ export function CardsWithPagination<T>(props: CardsWithPaginationProps<T>) {
         <div className={cn("flex flex-col h-full justify-between", className)}>
             <div className={cn(`grid h-max auto-rows-min gap-4 md:grid-cols-${numberOfColumns}`)}>
                 {currentCards.map((card, key) => (
-                    <CardItem key={key} data={card} organizationSlug={organizationSlug} extendedProps={props.extendedProps} />
+                    <CardItem key={key} data={card} organizationSlug={organizationSlug}  {...rest} />
                 ))}
             </div>
             <PaginationNavigation

@@ -50,6 +50,13 @@
       "when": 1762028639833,
       "tag": "0006_moaning_pete_wisdom",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1762685571404,
+      "tag": "0007_last_umar",
+      "breakpoints": true
     }
   ]
 }

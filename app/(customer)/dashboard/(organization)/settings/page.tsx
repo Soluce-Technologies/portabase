@@ -7,10 +7,9 @@ import {
     DeleteOrganizationButton
 } from "@/components/wrappers/dashboard/organization/delete-organization/delete-organization-button";
 import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/edit-button-settings/edit-button-settings";
-import {
-    SettingsOrganizationMembersTable
-} from "@/components/wrappers/dashboard/settings/settings-organization-members-table";
 import {Metadata} from "next";
+import {OrganizationTabs} from "@/components/wrappers/dashboard/organization/tabs/organization-tabs";
+import {getOrganizationChannels} from "@/db/services/notification-channel";
 
 export const metadata: Metadata = {
     title: "Settings",
@@ -24,6 +23,11 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     if (!organization) {
         notFound();
     }
+
+    const notificationChannels = await getOrganizationChannels(organization.id)
+
+    console.log("notificationChannels", notificationChannels);
+
 
     const isMember = activeMember?.role === "member";
     const isOwner = activeMember?.role === "owner";
@@ -44,7 +48,10 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
                 </PageActions>
             </PageHeader>
             <PageContent>
-                <SettingsOrganizationMembersTable organization={organization}/>
+                <OrganizationTabs
+                    organization={organization}
+                    notificationChannels={notificationChannels}
+                />
             </PageContent>
         </Page>
     )
