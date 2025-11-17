@@ -25,7 +25,7 @@ export const env = createEnv({
 
         AUTH_GOOGLE_ID: z.string().optional(),
         AUTH_GOOGLE_SECRET: z.string().optional(),
-        AUTH_GOOGLE_METHOD: z.boolean().default(false).optional(),
+        AUTH_GOOGLE_METHOD: z.boolean().default(false),
 
         S3_ENDPOINT: z.string().optional(),
         S3_ACCESS_KEY: z.string().optional(),
