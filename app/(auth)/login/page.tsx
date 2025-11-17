@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 
 export default async function SignInPage() {
     const authGoogleEnabled = env.AUTH_GOOGLE_METHOD;
-    if (!authGoogleEnabled) {
-        notFound()
-    }
+
     return (
         <div className="mx-auto grid w-full gap-6">
             <LoginForm authGoogleEnabled={authGoogleEnabled}/>
