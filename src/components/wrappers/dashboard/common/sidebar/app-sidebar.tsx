@@ -32,7 +32,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarMenu className="mb-2">
-                <SidebarMenuItem>
+                <SidebarMenuItem className="p-2">
                     <LoggedInButton/>
                 </SidebarMenuItem>
             </SidebarMenu>

@@ -52,7 +52,10 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
     });
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={(state) => {
+            form.reset()
+            onOpenChange(state)
+        }}>
             <DialogContent className="sm:max-w-[425px] w-full">
                 <DialogHeader>
                     <DialogTitle>Create a new organization</DialogTitle>

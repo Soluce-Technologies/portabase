@@ -6,78 +6,77 @@ import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {FormControl} from "@/components/ui/form";
 import {SidebarMenuButton} from "@/components/ui/sidebar";
 import {Separator} from "@/components/ui/separator";
-import {CreateOrganizationModal} from "@/components/wrappers/dashboard/organization/create-organisation-modal";
 
-export type comboBoxProps = {
-    values: Array<{ value: string; label: string }>;
-    defaultValue?: string;
-    onValueChange?: any;
+export type ComboBoxProps<T = string> = {
+    values: Array<{ value: T; label: string }>;
+    defaultValue?: T;
+    onValueChangeAction?: (value: T) => void;
     searchField?: boolean;
     sideBar?: boolean;
-    reload?: () => void;
-
+    onAddItemAction?: () => void;
+    addItemLabel?: string;
 };
 
-export function ComboBox(props: comboBoxProps) {
+export function ComboBox<T = string>(props: ComboBoxProps<T>) {
     const {
         values: choices,
-        defaultValue: defaultChoice = "",
-        onValueChange,
+        defaultValue,
+        onValueChangeAction,
         searchField = false,
-        sideBar = false
+        sideBar = false,
+        onAddItemAction,
+        addItemLabel = "Add item",
     } = props;
 
-    const [value, setValue] = useState<string>();
+    const [value, setValue] = useState<T | undefined>(defaultValue);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        setValue(defaultChoice);
-    }, [defaultChoice]);
-
-    const [open, setOpen] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+        setValue(defaultValue);
+    }, [defaultValue]);
 
     return (
         <div>
-            <CreateOrganizationModal
-                open={openModal}
-                onSuccess={() => {
-                    props.reload?.();
-                }}
-                onOpenChange={setOpenModal}
-            />
-
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     {sideBar ? (
                         <SidebarMenuButton>
-                            {value ? choices.find((choice) => choice.value === value)?.label : "Select choice..."}
+                            {value ? choices.find((c) => c.value === value)?.label : "Select choice..."}
                             <ChevronDown className="ml-auto"/>
                         </SidebarMenuButton>
                     ) : (
                         <Button variant="outline" role="combobox" aria-expanded={open}
                                 className="w-full justify-between">
-                            {value ? choices.find((choice) => choice.value === value)?.label : "Select choice..."}
+                            {value ? choices.find((c) => c.value === value)?.label : "Select choice..."}
                             <ChevronDown className="opacity-50"/>
                         </Button>
                     )}
                 </PopoverTrigger>
-                <PopoverContent className="p-0 popover-content-width-full">
+
+                <PopoverContent
+                    className="p-0"
+                    align="start"
+                    sideOffset={4}
+                    style={{ width: 'var(--radix-popover-trigger-width)' }}
+                >
                     <Command>
-                        {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
+                        {searchField && <CommandInput placeholder="Search choice..." className="h-9"/>}
                         <CommandList>
                             <CommandEmpty>No choice found.</CommandEmpty>
                             <CommandGroup>
                                 {choices.map((choice) => (
                                     <CommandItem
-                                        key={choice.value}
-                                        value={choice.value}
+                                        key={String(choice.value)}
+                                        value={String(choice.value)}
                                         onSelect={(currentValue) => {
-                                            setValue(currentValue);
-                                            onValueChange(currentValue);
-                                            setOpen(false);
+                                            const v = choices.find(c => String(c.value) === currentValue)?.value;
+                                            if (v !== undefined) {
+                                                setValue(v);
+                                                onValueChangeAction?.(v);
+                                                setOpen(false);
+                                            }
                                         }}
                                     >
                                         {choice.label}
@@ -88,66 +87,26 @@ export function ComboBox(props: comboBoxProps) {
                             </CommandGroup>
                         </CommandList>
                     </Command>
-                    <Separator/>
-                    {sideBar ? (
-                        <SidebarMenuButton onClick={() => {
-                            setOpen(false)
-                            setOpenModal(true)
-                        }
-                        }>+ Create new organization</SidebarMenuButton>
-                    ) : null}
+                    {onAddItemAction && (
+                        <>
+                            <Separator/>
+                            {sideBar ? (
+                                <SidebarMenuButton onClick={() => {
+                                    setOpen(false);
+                                    onAddItemAction();
+                                }}>
+                                    + {addItemLabel}
+                                </SidebarMenuButton>
+                            ) : (
+                                <Button variant="outline" className="w-full" onClick={onAddItemAction}>
+                                    + {addItemLabel}
+                                </Button>
+                            )}
+                        </>
+                    )}
                 </PopoverContent>
             </Popover>
         </div>
     );
 }
 
-export type comboBoxFormItemProps = comboBoxProps & {
-    value: any;
-    name: any;
-    onChange: any;
-};
-
-export function ComboBoxFormItem(props: comboBoxFormItemProps) {
-    const {values: choices, searchField = false, value, name, onChange} = props;
-
-    const [open, setOpen] = useState(false);
-
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <FormControl>
-                    <Button variant="outline" role="combobox" aria-expanded={open}
-                            className={cn("w-full justify-between", !value && "text-muted-foreground")}>
-                        {value ? choices.find((choice) => choice.value === value)?.label : `Select ${name}`}
-                        <ChevronDown className="opacity-50"/>
-                    </Button>
-                </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="p-0 popover-content-width-full">
-                <Command>
-                    {searchField ? <CommandInput placeholder="Search choice..." className="h-9"/> : null}
-                    <CommandList>
-                        <CommandEmpty>No {name} found.</CommandEmpty>
-                        <CommandGroup>
-                            {choices.map((choice) => (
-                                <CommandItem
-                                    value={choice.label}
-                                    key={choice.value}
-                                    onSelect={() => {
-                                        onChange(choice.value);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    {choice.label}
-                                    <Check
-                                        className={cn("ml-auto", choice.value === value ? "opacity-100" : "opacity-0")}/>
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
-}
