@@ -1,5 +1,5 @@
 "use client";
-import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {PasswordInput} from "@/components/ui/password-input";
 import {useState} from "react";
 import {CopyButton} from "@/components/wrappers/common/button/copy-button";
 

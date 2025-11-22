@@ -9,6 +9,9 @@ import {ac, admin, orgAdmin, orgMember, orgOwner, pending, superadmin, user} fro
 import {headers} from "next/headers";
 import {count, eq} from "drizzle-orm";
 import {MemberWithUser, OrganizationWithMembersAndUsers} from "@/db/schema/03_organization";
+import {sendEmail} from "@/lib/email/email-helper";
+import {render} from "@react-email/render";
+import EmailResetPassword from "@/components/emails/email-reset-password";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -19,15 +22,25 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: false,
-        /*async sendResetPassword(data, request) {
-            // Send an email to the user with a link to reset their password
+        sendResetPassword: async ({user, url, token}, request) => {
+            await sendEmail({
+                to: user.email,
+                subject: "Reset your password",
+                html: await render(EmailResetPassword({url: url})),
+            });
         },
+        onPasswordReset: async ({user}, request) => {
+            console.log(`Password for user ${user.email} has been reset.`);
+        },
+
+        /*
         async sendVerificationEmail(data, request) {
             // Send an email to the user with a link to verify their email
         },
         async verifyEmail(data, request) {
             // Verify the email address
         },*/
+
     },
     socialProviders: {
         google: {

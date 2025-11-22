@@ -2,12 +2,13 @@ import {EmailForm} from "@/components/wrappers/dashboard/admin/tabs/admin-email-
 import {Send} from "lucide-react";
 import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
 import {useMutation} from "@tanstack/react-query";
-import {sendEmail} from "@/utils/email-helper";
+import {sendEmail} from "@/lib/email/email-helper";
 import {render} from "@react-email/render";
 import {toast} from "sonner";
 import {Setting} from "@/db/schema/01_setting";
 import {EmailFormType} from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.schema";
-import TestEmailSettings from "../../../../../../../emails/TestEmailSettings";
+import TestEmailSettings from "@/components/emails/email-settings-test"
+
 
 export type SettingsEmailTabProps = {
     settings: Setting;

@@ -20,7 +20,7 @@ import {
     EmailFormSchema,
     EmailFormType
 } from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.schema";
-import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {PasswordInput} from "@/components/ui/password-input";
 import {
     updateEmailSettingsAction
 } from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.action";

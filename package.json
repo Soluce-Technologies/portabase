@@ -7,7 +7,7 @@
     "build": "next build --experimental-build-mode compile",
     "start": "next start",
     "lint": "next lint",
-    "email": "email dev",
+    "email": "email dev --dir ./src/components/emails",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:drop": "drizzle-kit drop",
@@ -95,6 +95,7 @@
   },
   "devDependencies": {
     "@iconify/react": "^6.0.0",
+    "@react-email/preview-server": "4.3.2",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
     "@types/node": "^22.15.18",

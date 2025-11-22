@@ -1,9 +1,8 @@
 import { Text } from "@react-email/components";
 import * as React from "react";
-import EmailLayout from "./EmailLayout";
-import { Button } from "@react-email/button";
+import EmailLayout from "./email-layout";
 
-export const TestEmailSettings = () => {
+export const EmailSettingsTest = () => {
     return (
         <EmailLayout preview="Email Setup">
             <Text className="text-base font-light leading-8 text-green-800 ">Hi, your email settings are setup !</Text>
@@ -13,4 +12,4 @@ export const TestEmailSettings = () => {
     );
 };
 
-export default TestEmailSettings;
+export default EmailSettingsTest;

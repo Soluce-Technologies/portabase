@@ -1,13 +1,13 @@
 "use server";
 
-import { db } from "@/db";
-import { eq } from "drizzle-orm";
+import {db} from "@/db";
+import {eq} from "drizzle-orm";
 import nodemailer from "nodemailer";
 import * as drizzleDb from "@/db";
 
 type Payload = {
     to: string;
-    from: string;
+    from?: string;
     subject: string;
     html: any;
 };

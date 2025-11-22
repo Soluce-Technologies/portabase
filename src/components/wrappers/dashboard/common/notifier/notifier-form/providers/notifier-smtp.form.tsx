@@ -2,7 +2,7 @@ import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/compon
 import {Input} from "@/components/ui/input";
 import {UseFormReturn} from "react-hook-form";
 import {Separator} from "@/components/ui/separator";
-import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {PasswordInput} from "@/components/ui/password-input";
 
 
 type NotifierSmtpFormProps = {

@@ -1,19 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Info } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import {useRouter} from "next/navigation";
+import {Info} from "lucide-react";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { RegisterSchema, RegisterType } from "@/components/wrappers/auth/register/register-form/register-form.schema";
-import { PasswordInput } from "@/components/wrappers/auth/password-input/password-input";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage, useZodForm} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Form} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {TooltipProvider, TooltipTrigger, Tooltip, TooltipContent} from "@/components/ui/tooltip";
+import {RegisterSchema, RegisterType} from "@/components/wrappers/auth/register/register-form/register-form.schema";
+import {PasswordInput} from "@/components/ui/password-input";
 import {signUp} from "@/lib/auth/auth-client";
+import Link from "next/link";
 
 export type registerFormProps = {
     defaultValues?: RegisterType;
@@ -29,7 +30,7 @@ export const RegisterForm = (props: registerFormProps) => {
         mutationFn: async (values: RegisterType) => {
             await signUp.email(values, {
                 onSuccess: () => {
-                    toast.success(`Success`);
+                    toast.success(`Account successfully created`);
                     router.refresh();
                     router.push(`/login`);
                 },
@@ -63,13 +64,13 @@ export const RegisterForm = (props: registerFormProps) => {
                             control={form.control}
                             name="name"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Your name" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -77,13 +78,13 @@ export const RegisterForm = (props: registerFormProps) => {
                             control={form.control}
                             name="email"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input placeholder="exemple@portabase.io" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -91,18 +92,19 @@ export const RegisterForm = (props: registerFormProps) => {
                             control={form.control}
                             name="password"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel className="flex">
                                         Password
                                         <TooltipProvider>
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
-                                                    <Info className="ml-3" size="15" />
+                                                    <Info className="ml-3" size="15"/>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <p>
-                                                        Min. 8 characters, 1 uppercase (A-Z), 1 lowercase (a-z), 1 number (0-9), 1 special character (!, @,
+                                                        Min. 8 characters, 1 uppercase (A-Z), 1 lowercase (a-z), 1
+                                                        number (0-9), 1 special character (!, @,
                                                         etc.)
                                                     </p>
                                                 </TooltipContent>
@@ -112,7 +114,7 @@ export const RegisterForm = (props: registerFormProps) => {
                                     <FormControl>
                                         <PasswordInput placeholder="Your password" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -120,17 +122,26 @@ export const RegisterForm = (props: registerFormProps) => {
                             control={form.control}
                             name="confirmPassword"
                             defaultValue=""
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Password Confirmation</FormLabel>
                                     <FormControl>
                                         <PasswordInput placeholder="Conform your password" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
-                        <Button>Sign up</Button>
+                        <Button type="submit" disabled={mutation.isPending}>
+                            Sign up
+                        </Button>
+                        <div className="mt-4 text-center text-sm">
+                            Already have an account ?{" "}
+                            <Link href="/login" className="underline">
+                                Sign in
+                            </Link>
+                        </div>
+
                     </Form>
                 </CardContent>
             </Card>

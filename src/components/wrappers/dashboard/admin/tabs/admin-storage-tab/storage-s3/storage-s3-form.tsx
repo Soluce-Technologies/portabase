@@ -12,7 +12,7 @@ import { S3FormSchema, S3FormType } from "@/components/wrappers/dashboard/admin/
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { updateS3SettingsAction } from "@/components/wrappers/dashboard/admin/tabs/admin-storage-tab/storage-s3/s3-form.action";
-import {PasswordInput} from "@/components/wrappers/auth/password-input/password-input";
+import {PasswordInput} from "@/components/ui/password-input";
 
 export type S3FormProps = {
     defaultValues?: S3FormType;

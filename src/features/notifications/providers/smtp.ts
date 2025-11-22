@@ -1,8 +1,7 @@
 "use server"
 import type {EventPayload, DispatchResult} from '../types';
 import nodemailer from 'nodemailer';
-import {render} from "@react-email/render";
-import TestEmailSettings from "../../../../emails/TestEmailSettings";
+import TestEmailSettings from "@/components/emails/email-settings-test"
 
 export async function sendSmtp(
     config: {
