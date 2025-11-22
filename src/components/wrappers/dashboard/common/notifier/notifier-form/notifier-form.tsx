@@ -45,7 +45,6 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
 
     });
 
-
     const mutationCreateOrganisation = useMutation({
         mutationFn: async (values: NotificationChannelFormType) => {
 
@@ -61,11 +60,11 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
 
             if (inner?.success) {
                 toast.success(inner.actionSuccess?.message);
-                // onSuccessAction?.();
+                onSuccessAction?.();
                 router.refresh();
             } else {
                 toast.error(inner?.actionError?.message);
-                // onSuccessAction?.();
+                onSuccessAction?.();
             }
         }
     });
@@ -134,7 +133,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
 
             <div className="flex gap-4 justify-end">
                 {defaultValues && (
-                    <NotifierTestChannelButton notificationChannel={defaultValues}  />
+                    <NotifierTestChannelButton notificationChannel={defaultValues}/>
                 )}
 
 

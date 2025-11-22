@@ -8,6 +8,7 @@ import {
     updateNotificationChannelAction
 } from "@/components/wrappers/dashboard/common/notifier/notifier-form/notifier-form.action";
 import {toast} from "sonner";
+import {useState} from "react";
 
 export type EditNotifierButtonProps = {
     notificationChannel: NotificationChannel;
@@ -15,6 +16,8 @@ export type EditNotifierButtonProps = {
 
 export const EditNotifierButton = ({notificationChannel}: EditNotifierButtonProps) => {
     const router = useRouter();
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
 
     const mutation = useMutation({
         mutationFn: async (value: boolean) => {
@@ -49,6 +52,8 @@ export const EditNotifierButton = ({notificationChannel}: EditNotifierButtonProp
             />
             <NotifierAddEditModal
                 notificationChannel={notificationChannel}
+                open={isAddModalOpen}
+                onOpenChangeAction={setIsAddModalOpen}
             />
         </>
     );

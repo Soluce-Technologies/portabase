@@ -14,17 +14,22 @@ import {NotificationChannel} from "@/db/schema/09_notification-channel";
 type OrganizationNotifierAddModalProps = {
     notificationChannel?: NotificationChannel
     organization?: OrganizationWithMembers;
+    open: boolean;
+    onOpenChangeAction: (open: boolean) => void;
 }
 
 
-export const NotifierAddEditModal = ({organization, notificationChannel}: OrganizationNotifierAddModalProps) => {
+export const NotifierAddEditModal = ({
+                                         organization,
+                                         notificationChannel,
+                                         open,
+                                         onOpenChangeAction
+                                     }: OrganizationNotifierAddModalProps) => {
 
     const isCreate = !Boolean(notificationChannel);
 
-    const [open, setOpen] = useState(false);
-
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={onOpenChangeAction}>
             <DialogTrigger asChild>
                 {isCreate ?
                     <Button>
@@ -49,7 +54,7 @@ export const NotifierAddEditModal = ({organization, notificationChannel}: Organi
                 <NotifierForm
                     defaultValues={notificationChannel}
                     organization={organization}
-                    onSuccessAction={() => setOpen(false)}
+                    onSuccessAction={() => onOpenChangeAction(false)}
                 />
             </DialogContent>
         </Dialog>
