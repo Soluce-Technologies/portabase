@@ -10,6 +10,8 @@ import * as agent from "./schema/08_agent";
 import * as database from "./schema/07_database";
 import * as notificationChannel from "./schema/09_notification-channel";
 import * as organizationNotificationChannel from "./schema/09_notification-channel";
+import * as alertPolicy from "./schema/10_alert-policy";
+import * as notificationLog from "./schema/11_notification-log";
 
 
 import {Pool} from "pg";
@@ -36,7 +38,9 @@ export const schemas = {
     ...agent,
     ...database,
     ...notificationChannel,
-    ...organizationNotificationChannel
+    ...organizationNotificationChannel,
+    ...alertPolicy,
+    ...notificationLog
 };
 
 export const db = drizzle({

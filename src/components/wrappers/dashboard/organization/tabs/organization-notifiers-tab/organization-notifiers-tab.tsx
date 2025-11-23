@@ -57,7 +57,6 @@ export const OrganizationNotifiersTab = ({
                                          }: OrganizationNotifiersTabProps) => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-    // const hasNotifiers = 0;
     const hasNotifiers = notificationChannels.length > 0;
 
     return (

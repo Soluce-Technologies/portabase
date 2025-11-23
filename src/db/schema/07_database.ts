@@ -6,6 +6,11 @@ import {dbmsEnum, statusEnum} from "./types";
 import {createSelectSchema} from "drizzle-zod";
 import {z} from "zod";
 import {timestamps} from "@/db/schema/00_common";
+import {member} from "@/db/schema/04_member";
+import {invitation} from "@/db/schema/05_invitation";
+import {organizationNotificationChannel} from "@/db/schema/09_notification-channel";
+import {organization} from "@/db/schema/03_organization";
+import {AlertPolicy, alertPolicy} from "@/db/schema/10_alert-policy";
 
 export const database = pgTable("databases", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -20,12 +25,12 @@ export const database = pgTable("databases", {
         .notNull()
         .references(() => agent.id, {onDelete: "cascade"}),
     lastContact: timestamp("last_contact"),
-
     projectId: uuid("project_id")
         .references(() => project.id),
     ...timestamps
 
 });
+
 
 export const backup = pgTable(
     "backups",
@@ -77,6 +82,7 @@ export const databaseRelations = relations(database, ({one, many}) => ({
     project: one(project, {fields: [database.projectId], references: [project.id]}),
     backups: many(backup),
     restorations: many(restoration),
+    alertPolicies: many(alertPolicy),
 }));
 
 export const backupRelations = relations(backup, ({one, many}) => ({
@@ -116,5 +122,6 @@ export type DatabaseWith = Database & {
     backups?: Backup[] | null;
     restorations?: Restoration[] | null;
     retentionPolicy?: RetentionPolicy | null;
+    alertPolicies?: AlertPolicy[] | null;
 };
 

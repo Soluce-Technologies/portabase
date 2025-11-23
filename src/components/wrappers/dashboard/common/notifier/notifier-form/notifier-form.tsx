@@ -131,25 +131,28 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
             )}
 
 
-            <div className="flex gap-4 justify-end">
-                {defaultValues && (
-                    <NotifierTestChannelButton notificationChannel={defaultValues}/>
-                )}
+            <div className="flex justify-between">
+                <div>
+                    {defaultValues && (
+                        <NotifierTestChannelButton notificationChannel={defaultValues}/>
+                    )}
+                </div>
+                <div className="flex gap-2 ">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                            onSuccessAction?.();
+                            form.reset();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <ButtonWithLoading isPending={mutationCreateOrganisation.isPending}>
+                        Add Channel
+                    </ButtonWithLoading>
+                </div>
 
-
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                        onSuccessAction?.();
-                        form.reset();
-                    }}
-                >
-                    Cancel
-                </Button>
-                <ButtonWithLoading isPending={mutationCreateOrganisation.isPending}>
-                    Add Channel
-                </ButtonWithLoading>
             </div>
         </Form>
     );

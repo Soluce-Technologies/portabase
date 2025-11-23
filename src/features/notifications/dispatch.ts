@@ -1,10 +1,11 @@
 "use server"
 // src/notifications/dispatch.ts
-import { eq } from 'drizzle-orm';
-import { dispatchViaProvider } from './providers';
-import type { EventPayload, DispatchResult } from './types';
+import {eq} from 'drizzle-orm';
+import {dispatchViaProvider} from './providers';
+import type {EventPayload, DispatchResult} from './types';
 import * as drizzleDb from "@/db";
 import {db} from "@/db";
+import {notificationLog} from "@/db/schema/11_notification-log";
 
 export async function dispatchNotification(
     payload: EventPayload,
@@ -44,29 +45,46 @@ export async function dispatchNotification(
     //     };
     // }
 
-    if (channelId){
+    if (channelId) {
         const channel = await db.query.notificationChannel.findFirst({
             where: eq(drizzleDb.schemas.notificationChannel.id, channelId),
         })
 
-        if (channel){
+        if (channel) {
             const config = channel.config;
 
             const result = await dispatchViaProvider(
                 channel.provider as any,
                 config,
-                { ...payload, timestamp: payload.timestamp || new Date() },
+                {...payload, timestamp: payload.timestamp || new Date()},
                 channel.id
             );
+
+
+            const [log] = await db
+                .insert(notificationLog)
+                .values({
+                    channelId: channel.id,
+                    // policyId: policy.id,
+                    // organizationId: organizationId || null,
+                    title: payload.title,
+                    message: payload.message,
+                    level: payload.level,
+                    payload: payload.data || null,
+                    success: result.success,
+                    error: result.success ? null : result.error,
+                    providerResponse: result.response || null,
+                })
+                .returning({id: notificationLog.id});
+
 
             return {
                 ...result,
                 channelId: channel.id,
             };
         }
-
-
     }
+
 
     return {
         success: false,
@@ -74,7 +92,6 @@ export async function dispatchNotification(
         provider: "smtp",
         error: 'Unknown error',
     };
-
 
 
 }

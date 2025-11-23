@@ -52,7 +52,8 @@ export async function sendSmtp(
     return {
         success: true,
         provider: 'smtp',
-        message: `Email sent: ${info.messageId}`,
+        // message: `Email sent: ${info.messageId}`,
+        message: `Email sent: ${config.to}`,
         response: info,
     };
 }

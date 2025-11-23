@@ -14,6 +14,8 @@ import {getOrganizationProjectDatabases} from "@/lib/services";
 import {getActiveMember, getOrganization} from "@/lib/auth/auth";
 import {RetentionPolicySheet} from "@/components/wrappers/dashboard/database/retention-policy/retention-policy-sheet";
 import {capitalizeFirstLetter} from "@/utils/text";
+import {AlertPolicyModal} from "@/components/wrappers/dashboard/database/alert-policy/alert-policy-modal";
+import {getOrganizationChannels} from "@/db/services/notification-channel";
 
 export default async function RoutePage(props: PageParams<{
     projectId: string;
@@ -37,7 +39,8 @@ export default async function RoutePage(props: PageParams<{
         where: and(inArray(drizzleDb.schemas.backup.id, databasesProject.ids ?? []), eq(drizzleDb.schemas.database.id, databaseId), eq(drizzleDb.schemas.database.projectId, projectId)),
         with: {
             project: true,
-            retentionPolicy: true
+            retentionPolicy: true,
+            alertPolicies: true
         }
     });
 
@@ -82,6 +85,9 @@ export default async function RoutePage(props: PageParams<{
         notFound();
     }
 
+    const organizationChannels = await getOrganizationChannels(organization.id);
+    console.log(organizationChannels);
+
     const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
     const isMember = activeMember?.role === "member";
@@ -101,6 +107,7 @@ export default async function RoutePage(props: PageParams<{
                                 {/*<EditButton/>*/}
                                 <RetentionPolicySheet database={dbItem}/>
                                 <CronButton database={dbItem}/>
+                                <AlertPolicyModal database={dbItem} notificationChannels={organizationChannels} organizationId={organization.id} />
                             </div>
                             <div className="flex items-center gap-2">
                                 <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>
@@ -114,9 +121,10 @@ export default async function RoutePage(props: PageParams<{
                 <PageDescription className="mt-5 sm:mt-0">{dbItem.description}</PageDescription>
             )}
             <PageContent className="flex flex-col w-full h-full">
-                <DatabaseKpi  successRate={successRate} database={dbItem} availableBackups={availableBackups}
+                <DatabaseKpi successRate={successRate} database={dbItem} availableBackups={availableBackups}
                              totalBackups={totalBackups}/>
-                <DatabaseTabs activeMember={activeMember}  settings={settings} database={dbItem} isAlreadyRestore={isAlreadyRestore}
+                <DatabaseTabs activeMember={activeMember} settings={settings} database={dbItem}
+                              isAlreadyRestore={isAlreadyRestore}
                               backups={backups}
                               restorations={restorations}/>
             </PageContent>
