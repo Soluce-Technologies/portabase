@@ -1,5 +1,5 @@
 "use client"
-import {Megaphone} from "lucide-react";
+import {Filter, Megaphone} from "lucide-react";
 
 import {useState} from "react";
 import {
@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {AlertPolicyForm} from "@/components/wrappers/dashboard/database/alert-policy/alert-policy-form";
-import {Database} from "@/db/schema/07_database";
+import {DatabaseWith} from "@/db/schema/07_database";
 import {NotificationChannel} from "@/db/schema/09_notification-channel";
 import {Separator} from "@/components/ui/separator";
+import {Badge} from "@/components/ui/badge";
 
 type AlertPolicyModalProps = {
-    database: Database;
+    database: DatabaseWith;
     notificationChannels: NotificationChannel[];
     organizationId: string;
 }
@@ -28,8 +29,15 @@ export const AlertPolicyModal = ({database, notificationChannels, organizationId
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => setOpen(true)} className="relative">
                     <Megaphone/>
+                    {database.alertPolicies && database.alertPolicies.length > 0 && (
+                        <Badge
+                            className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full p-0 text-[10px] flex items-center justify-center"
+                        >
+                            {database.alertPolicies.length}
+                        </Badge>
+                    )}
                 </Button>
             </DialogTrigger>
             <DialogContent>

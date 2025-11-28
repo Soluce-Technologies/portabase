@@ -110,15 +110,14 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
             selectedActions={(rows) => (
                 <>
 
-                        <div className="flex justify-start md:justify-between gap-3 md:gap-0 items-center w-full ml-0">
-                            <div className="flex gap-2">
-                                {!isMember && (
+                    <div className="flex justify-start md:justify-between gap-3 md:gap-0 items-center w-full ml-0">
+                        <div className="flex gap-2">
+                            {!isMember && (
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <ButtonWithLoading
                                             variant="outline"
                                             onClick={() => {
-
                                             }}
                                             disabled={rows.length === 0 || mutationDeleteBackups.isPending}
                                             icon={<MoreHorizontal/>}
@@ -139,15 +138,15 @@ export const DatabaseBackupList = (props: DatabaseBackupListProps) => {
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                )}
-                                <FiltersDropdown
-                                    items={items}
-                                    selectedItems={selectedFilters}
-                                    onSelect={handleSelectFilter}
-                                    clearFilters={clearFilters}
-                                />
-                            </div>
+                            )}
+                            <FiltersDropdown
+                                items={items}
+                                selectedItems={selectedFilters}
+                                onSelect={handleSelectFilter}
+                                clearFilters={clearFilters}
+                            />
                         </div>
+                    </div>
 
                 </>
             )}

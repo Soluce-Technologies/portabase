@@ -26,9 +26,6 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
 
     const notificationChannels = await getOrganizationChannels(organization.id)
 
-    console.log("notificationChannels", notificationChannels);
-
-
     const isMember = activeMember?.role === "member";
     const isOwner = activeMember?.role === "owner";
 

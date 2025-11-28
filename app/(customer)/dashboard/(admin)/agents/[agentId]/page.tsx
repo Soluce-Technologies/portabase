@@ -49,10 +49,12 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     <ButtonDeleteAgent agentId={agentId} text={"Delete Agent"}/>
                 </PageActions>
             </div>
-            <PageDescription className="mt-5 sm:mt-0">{agent.description}</PageDescription>
-            <PageContent className="flex flex-col w-full h-full">
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-8 mb-6">
 
+            {agent.description && (
+                <PageDescription className="mt-5 sm:mt-0">{agent.description}</PageDescription>
+            )}
+            <PageContent className="flex flex-col w-full h-full justify-between gap-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-6 ">
                     <Card className="w-full sm:w-auto flex-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Databases</CardTitle>
@@ -76,7 +78,7 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                     </Card>
 
                 </div>
-                <Card className="w-full sm:w-auto flex-1 mb-4">
+                <Card className="w-full sm:w-auto flex-1 ">
                     <CardHeader className="font-bold text-xl">
                         Edge Key
                     </CardHeader>
@@ -86,7 +88,8 @@ export default async function RoutePage(props: PageParams<{ agentId: string }>) 
                         />
                     </CardContent>
                 </Card>
-                <CardsWithPagination cardsPerPage={2} data={agent.databases} cardItem={DatabaseCard}/>
+                <CardsWithPagination cardsPerPage={4} numberOfColumns={2} data={agent.databases}
+                                     cardItem={DatabaseCard}/>
             </PageContent>
         </Page>
     )

@@ -3,7 +3,6 @@ import {Page, PageContent, PageTitle} from "@/features/layout/page";
 import {notFound} from "next/navigation";
 import {UserForm} from "@/components/wrappers/dashboard/profile/user-form/user-form";
 import {Badge} from "@/components/ui/badge";
-import {ButtonDeleteAccount} from "@/components/wrappers/dashboard/profile/button-delete-account/button-delete-account";
 import {AvatarWithUpload} from "@/components/wrappers/dashboard/profile/avatar/avatar-with-upload";
 import {currentUser} from "@/lib/auth/current-user";
 import {getAccounts, getSessions} from "@/lib/auth/auth";
@@ -25,6 +24,7 @@ export default async function RoutePage(props: PageParams<{}>) {
 
     const sessions = await getSessions();
     const accounts = await getAccounts();
+
 
     return (
         <Page>
@@ -48,7 +48,8 @@ export default async function RoutePage(props: PageParams<{}>) {
             <PageContent>
                 <UserForm
                     userId={user.id}
-                    sessions={sessions} accounts={accounts}
+                    sessions={sessions}
+                    accounts={accounts}
                     defaultValues={{
                         name: user.name,
                         email: user.email,

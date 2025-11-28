@@ -43,7 +43,7 @@ export const NotifierAddEditModal = ({
                     </Button>
                 }
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle> {isCreate ? "Add" : "Edit"} Notification Channel</DialogTitle>
                     <DialogDescription>

@@ -12,7 +12,7 @@ export const alertPolicy = pgTable('alert_policy', {
     id: uuid('id').defaultRandom().primaryKey(),
     notificationChannelId: uuid('notification_channel_id')
         .notNull()
-        .references(() => notificationChannel.id, {onDelete: 'restrict'}),
+        .references(() => notificationChannel.id, {onDelete: 'cascade'}),
     eventKinds: eventKindEnum("event_kind").array().notNull(),
     enabled: boolean('enabled').default(true).notNull(),
     databaseId: uuid('database_id')

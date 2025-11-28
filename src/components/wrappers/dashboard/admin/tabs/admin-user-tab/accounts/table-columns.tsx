@@ -6,22 +6,17 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {unlinkUserProviderAction} from "@/components/wrappers/dashboard/profile/user-form/user-form.action";
 import {providerSwitch} from "@/components/wrappers/common/provider-switch";
+import {Account} from "better-auth";
 
-export const accountsColumns: ColumnDef<{
-    id: string;
-    provider: string;
-    createdAt: Date;
-    updatedAt: Date;
-    accountId: string;
-    scopes: string[];
-}>[] = [
+
+export const accountsColumns: ColumnDef<Account>[] = [
     {
         id: "provider",
         header: "Provider",
         cell: ({row}) => {
             return (
                 <div>
-                    {providerSwitch(row.original.provider)}
+                    {providerSwitch(row.original.providerId)}
                 </div>
 
             )
@@ -36,7 +31,7 @@ export const accountsColumns: ColumnDef<{
 
             const mutation = useMutation({
                 mutationFn: async () => {
-                    if (row.original.provider === "credential") {
+                    if (row.original.providerId === "credential") {
                         toast.error(`This provider cannot be unlinked.`);
                         router.refresh();
                         return;
@@ -49,7 +44,7 @@ export const accountsColumns: ColumnDef<{
                     }
 
                     const status = await unlinkUserProviderAction({
-                        provider: row.original.provider,
+                        provider: row.original.providerId,
                         account: row.original.accountId,
                     });
 
@@ -66,7 +61,7 @@ export const accountsColumns: ColumnDef<{
                 <div className="flex items-center gap-2">
                     <ButtonWithLoading
                         variant="outline"
-                        disabled={row.original.provider === "credential" || table.getRowModel().rows.length <= 1}
+                        disabled={row.original.providerId === "credential" || table.getRowModel().rows.length <= 1}
                         icon={<Unlink color="red" size={15}/>}
                         onClick={async () => {
                             await mutation.mutateAsync();

@@ -61,7 +61,6 @@ export const OrganizationNotifiersTab = ({
 
     return (
         <div className="flex flex-col gap-y-6 h-full py-4">
-
             <div className="h-full flex flex-col gap-y-6">
                 <div className={cn("hidden flex-row justify-between items-start", hasNotifiers && "flex")}>
                     <div className="max-w-2xl">
@@ -74,6 +73,7 @@ export const OrganizationNotifiersTab = ({
                         </p>
                     </div>
                     <NotifierAddEditModal
+
                         organization={organization}
                         open={isAddModalOpen}
                         onOpenChangeAction={setIsAddModalOpen}

@@ -68,13 +68,13 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
     },
     {
         accessorKey: "accounts",
-        header: "Provider ID",
+        header: "Provider(s)",
         cell: ({row}) => {
             return (
-                <div>
+                <div className="flex flex-row items-center  gap-x-2">
                     {row.original.accounts.map((item) => (
                         <div key={item.id}>
-                            {providerSwitch(item.providerId)}
+                            {providerSwitch(item.providerId, true)}
                         </div>
                     ))}
                 </div>
@@ -93,8 +93,10 @@ export const usersColumnsAdmin: ColumnDef<UserWithAccounts>[] = [
         id: "actions",
         cell: ({row}) => {
             const router = useRouter();
-            const {data: session, isPending} = useSession();
+            const {data: session, isPending, error} = useSession();
             const isSuperAdmin = session?.user.role == "superadmin";
+
+            if (isPending || error) return null;
 
             return (
                 <ButtonDeleteUser

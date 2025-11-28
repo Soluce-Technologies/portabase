@@ -153,7 +153,7 @@ export const updateNotificationChannelAction = userAction.schema(
                 config: channel.config as JSON
             },
             actionSuccess: {
-                message: "Notification channel has been successfully updated.",
+                message: `Notification channel "${channel.name}" has been successfully updated.`,
                 messageParams: {notificationChannelId: channel.id},
             },
         };

@@ -14,20 +14,13 @@ import { updateUserAction } from "@/components/wrappers/dashboard/profile/user-f
 import {DataTable} from "@/components/wrappers/common/table/data-table";
 import {sessionsColumns} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/sessions/table-columns";
 import {accountsColumns} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/accounts/table-columns";
-import {Session} from "better-auth";
+import {Account, Session} from "better-auth";
 
 export type UserFormProps = {
     defaultValues?: UserType;
     userId?: string;
     sessions: Session[];
-    accounts: {
-        id: string;
-        provider: string;
-        createdAt: Date;
-        updatedAt: Date;
-        accountId: string;
-        scopes: string[];
-    }[];
+    accounts?: Account[];
 };
 
 export const UserForm = (props: UserFormProps) => {
@@ -120,7 +113,7 @@ export const UserForm = (props: UserFormProps) => {
                     <CardDescription>Manage your active auth providers</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <DataTable columns={accountsColumns} data={props.accounts} enableSelect={false}/>
+                    <DataTable columns={accountsColumns} data={props.accounts ?? []} enableSelect={false}/>
                 </CardContent>
             </Card>
         </TooltipProvider>

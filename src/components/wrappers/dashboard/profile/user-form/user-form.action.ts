@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import * as drizzleDb from "@/db";
 import {revokeSession, unlinkAccount} from "@/lib/auth/auth";
+import {withUpdatedAt} from "@/db/utils";
 
 export const updateUserAction = userAction
     .schema(
@@ -15,7 +16,7 @@ export const updateUserAction = userAction
         })
     )
     .action(async ({ parsedInput }) => {
-        const [updatedUser] = await db.update(drizzleDb.schemas.user).set(parsedInput.data).where(eq(drizzleDb.schemas.user.id, parsedInput.id)).returning();
+        const [updatedUser] = await db.update(drizzleDb.schemas.user).set(withUpdatedAt(parsedInput.data)).where(eq(drizzleDb.schemas.user.id, parsedInput.id)).returning();
         return {
             data: updatedUser,
         };

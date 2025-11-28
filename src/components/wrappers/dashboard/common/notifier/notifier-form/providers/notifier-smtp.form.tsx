@@ -13,7 +13,7 @@ type NotifierSmtpFormProps = {
 export const NotifierSmtpForm = ({form}: NotifierSmtpFormProps) => {
     return (
         <>
-            <Separator className="my-4"/>
+            <Separator className="my-1"/>
             <FormField
                 control={form.control}
                 name="config.host"

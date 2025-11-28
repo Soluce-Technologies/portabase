@@ -2,6 +2,7 @@
 import {UseFormReturn} from "react-hook-form";
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
+import {Separator} from "@/components/ui/separator";
 
 
 type NotifierSmtpFormProps = {
@@ -11,6 +12,7 @@ type NotifierSmtpFormProps = {
 export const NotifierSlackForm = ({form}: NotifierSmtpFormProps) => {
     return(
         <>
+            <Separator className="my-1"/>
             <FormField
                 control={form.control}
                 name="config.slackWebhook"

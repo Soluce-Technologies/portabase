@@ -33,7 +33,7 @@ export const DeleteNotifierButton = ({notificationChannelId, organizationId}: De
     return (
         <ButtonWithConfirm
             title="Delete Notifier"
-            description="Are you sure you want to remove this notifier? This action cannot be undone."
+            description="Are you sure you want to remove this notifier ? This action cannot be undone and will delete all alert policies related to this channel !"
             button={{
                 main: {
                     size: "icon",

@@ -25,6 +25,7 @@ import {NotificationChannel} from "@/db/schema/09_notification-channel";
 import {
     NotifierTestChannelButton
 } from "@/components/wrappers/dashboard/common/notifier/notifier-form/notifier-test-channel-button";
+import {useEffect} from "react";
 
 type NotifierFormProps = {
     onSuccessAction?: () => void;
@@ -35,15 +36,16 @@ type NotifierFormProps = {
 export const NotifierForm = ({onSuccessAction, organization, defaultValues}: NotifierFormProps) => {
 
     const isCreate = !Boolean(defaultValues);
-
     const router = useRouter();
-
     const form = useZodForm({
         schema: NotificationChannelFormSchema,
         // @ts-ignore
         defaultValues: {...defaultValues},
-
     });
+
+    useEffect(() => {
+        form.reset(defaultValues ? {...defaultValues} : {});
+    }, [defaultValues]);
 
     const mutationCreateOrganisation = useMutation({
         mutationFn: async (values: NotificationChannelFormType) => {
@@ -60,11 +62,11 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
 
             if (inner?.success) {
                 toast.success(inner.actionSuccess?.message);
-                onSuccessAction?.();
+                isCreate && onSuccessAction?.();
                 router.refresh();
             } else {
                 toast.error(inner?.actionError?.message);
-                onSuccessAction?.();
+                isCreate && onSuccessAction?.();
             }
         }
     });
@@ -112,8 +114,8 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
                                 <SelectContent>
                                     <SelectItem value="smtp">SMTP (Email)</SelectItem>
                                     <SelectItem value="slack">Slack</SelectItem>
-                                    <SelectItem value="curl">Curl</SelectItem>
-                                    <SelectItem value="webhook">Webhook</SelectItem>
+                                    {/*<SelectItem value="curl">Curl</SelectItem>*/}
+                                    {/*<SelectItem value="webhook">Webhook</SelectItem>*/}
                                 </SelectContent>
                             </Select>
                         </FormControl>
@@ -137,7 +139,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
                         <NotifierTestChannelButton notificationChannel={defaultValues}/>
                     )}
                 </div>
-                <div className="flex gap-2 ">
+                <div className="flex gap-2">
                     <Button
                         type="button"
                         variant="outline"
@@ -149,7 +151,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
                         Cancel
                     </Button>
                     <ButtonWithLoading isPending={mutationCreateOrganisation.isPending}>
-                        Add Channel
+                        {isCreate ? "Add" : "Save"} Channel
                     </ButtonWithLoading>
                 </div>
 
