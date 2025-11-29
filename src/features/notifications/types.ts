@@ -1,5 +1,4 @@
-// export type ProviderKind = 'slack' | 'smtp';
-export type ProviderKind =  'smtp';
+export type ProviderKind = 'slack' | 'smtp';
 
 export interface DispatchResult {
     success: boolean;

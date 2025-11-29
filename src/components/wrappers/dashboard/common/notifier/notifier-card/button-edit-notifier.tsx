@@ -9,12 +9,14 @@ import {
 } from "@/components/wrappers/dashboard/common/notifier/notifier-form/notifier-form.action";
 import {toast} from "sonner";
 import {useState} from "react";
+import {Organization, OrganizationWithMembers} from "@/db/schema/03_organization";
 
 export type EditNotifierButtonProps = {
     notificationChannel: NotificationChannel;
+    organization? : OrganizationWithMembers;
 };
 
-export const EditNotifierButton = ({notificationChannel}: EditNotifierButtonProps) => {
+export const EditNotifierButton = ({notificationChannel, organization}: EditNotifierButtonProps) => {
     const router = useRouter();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -51,6 +53,7 @@ export const EditNotifierButton = ({notificationChannel}: EditNotifierButtonProp
             }}
             />
             <NotifierAddEditModal
+                organization={organization}
                 notificationChannel={notificationChannel}
                 open={isAddModalOpen}
                 onOpenChangeAction={setIsAddModalOpen}

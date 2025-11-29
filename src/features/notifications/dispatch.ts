@@ -11,7 +11,9 @@ export async function dispatchNotification(
     payload: EventPayload,
     policyId?: string,
     channelId?: string,
+    organizationId?: string,
 ): Promise<DispatchResult> {
+
 
     // // 1. Get policy + channel
     // const policy = await db
@@ -66,7 +68,7 @@ export async function dispatchNotification(
                 .values({
                     channelId: channel.id,
                     // policyId: policy.id,
-                    // organizationId: organizationId || null,
+                    organizationId: organizationId || null,
                     title: payload.title,
                     message: payload.message,
                     level: payload.level,
@@ -74,6 +76,7 @@ export async function dispatchNotification(
                     success: result.success,
                     error: result.success ? null : result.error,
                     providerResponse: result.response || null,
+
                 })
                 .returning({id: notificationLog.id});
 

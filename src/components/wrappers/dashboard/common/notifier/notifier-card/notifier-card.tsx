@@ -9,11 +9,11 @@ import {
     DeleteNotifierButton
 } from "@/components/wrappers/dashboard/common/notifier/notifier-card/button-delete-notifier";
 import {EditNotifierButton} from "@/components/wrappers/dashboard/common/notifier/notifier-card/button-edit-notifier";
-import {Organization} from "@/db/schema/03_organization";
+import {Organization, OrganizationWithMembers} from "@/db/schema/03_organization";
 
 export type NotifierCardProps = {
     data: NotificationChannel;
-    organization?: Organization;
+    organization?: OrganizationWithMembers;
 };
 
 export const NotifierCard = (props: NotifierCardProps) => {
@@ -40,7 +40,9 @@ export const NotifierCard = (props: NotifierCardProps) => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <EditNotifierButton notificationChannel={data}/>
+                    <EditNotifierButton
+                        organization={organization}
+                        notificationChannel={data}/>
                     <DeleteNotifierButton
                         organizationId={organization?.id}
                         notificationChannelId={data.id}

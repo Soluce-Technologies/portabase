@@ -63,17 +63,16 @@ export const OrganizationNotifiersTab = ({
         <div className="flex flex-col gap-y-6 h-full py-4">
             <div className="h-full flex flex-col gap-y-6">
                 <div className={cn("hidden flex-row justify-between items-start", hasNotifiers && "flex")}>
-                    <div className="max-w-2xl">
+                    <div className="max-w-2xl ">
                         <h3 className="text-xl font-semibold text-balance mb-1">
                             Notification Settings
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-muted-foreground leading-relaxed ">
                             Configure how and when you receive alerts about your services and
                             infrastructure.
                         </p>
                     </div>
                     <NotifierAddEditModal
-
                         organization={organization}
                         open={isAddModalOpen}
                         onOpenChangeAction={setIsAddModalOpen}

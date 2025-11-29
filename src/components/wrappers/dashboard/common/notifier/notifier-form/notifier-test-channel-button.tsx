@@ -6,13 +6,17 @@ import {dispatchNotification} from "@/features/notifications/dispatch";
 import {EventPayload} from "@/features/notifications/types";
 import {Send} from "lucide-react";
 import {toast} from "sonner";
+import {useIsMobile} from "@/hooks/use-mobile";
+import {cn} from "@/lib/utils";
 
 type NotifierTestChannelButtonProps = {
     notificationChannel: NotificationChannel;
+    organizationId?: string;
 }
 
-export const NotifierTestChannelButton = ({notificationChannel}: NotifierTestChannelButtonProps) => {
+export const NotifierTestChannelButton = ({notificationChannel, organizationId}: NotifierTestChannelButtonProps) => {
 
+    const isMobile = useIsMobile()
     const mutation = useMutation({
         mutationFn: async () => {
 
@@ -23,6 +27,8 @@ export const NotifierTestChannelButton = ({notificationChannel}: NotifierTestCha
             //     data: {host: 'db-prod-01', error: 'connection timeout'},
             // };
 
+            console.log("organizationId ici", organizationId);
+
             const payload: EventPayload = {
                 title: 'Test Channel',
                 message: `We are testing channel ${notificationChannel.name}`,
@@ -30,7 +36,7 @@ export const NotifierTestChannelButton = ({notificationChannel}: NotifierTestCha
                 // data: {host: 'db-prod-01', error: 'connection timeout'},
             };
 
-            const result = await dispatchNotification(payload, undefined, notificationChannel.id);
+            const result = await dispatchNotification(payload, undefined, notificationChannel.id, organizationId);
 
             if (result.success) {
                 toast.success(result.message);
@@ -51,14 +57,13 @@ export const NotifierTestChannelButton = ({notificationChannel}: NotifierTestCha
         >
             {mutation.isPending ? (
                 <>
-                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"/>
-                    Sending...
+                    <div className={cn(" h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white", !isMobile && "mr-2")}/>
+                    {!isMobile && `Sending...`}
                 </>
             ) : (
-                <>
-                    <Send className="mr-2 h-4 w-4"/>
-                    Test Channel
-                </>
+                <div className="flex flex-row justify-center items-center">
+                    <Send className={cn("h-4 w-4", !isMobile && "mr-2")}/>{!isMobile && ` Test Channel`}
+                </div>
             )}
         </Button>
     )

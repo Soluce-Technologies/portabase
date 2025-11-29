@@ -136,7 +136,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
             <div className="flex justify-between">
                 <div>
                     {defaultValues && (
-                        <NotifierTestChannelButton notificationChannel={defaultValues}/>
+                        <NotifierTestChannelButton organizationId={organization?.id} notificationChannel={defaultValues}/>
                     )}
                 </div>
                 <div className="flex gap-2">

@@ -1,13 +1,13 @@
 "use server"
-import type { ProviderKind, EventPayload, DispatchResult } from '../types';
-// import { sendSlack } from './slack';
-import { sendSmtp } from './smtp';
+import type {ProviderKind, EventPayload, DispatchResult} from '../types';
+import {sendSlack} from './slack';
+import {sendSmtp} from './smtp';
 
 const handlers: Record<
     ProviderKind,
     (config: any, payload: EventPayload) => Promise<DispatchResult>
 > = {
-    // slack: sendSlack,
+    slack: sendSlack,
     smtp: sendSmtp,
 };
 

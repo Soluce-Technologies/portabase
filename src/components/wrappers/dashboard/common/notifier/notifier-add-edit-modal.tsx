@@ -9,6 +9,7 @@ import {Button} from "@/components/ui/button";
 import {NotifierForm} from "@/components/wrappers/dashboard/common/notifier/notifier-form/notifier-form";
 import {OrganizationWithMembers} from "@/db/schema/03_organization";
 import {NotificationChannel} from "@/db/schema/09_notification-channel";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 type OrganizationNotifierAddModalProps = {
     notificationChannel?: NotificationChannel
@@ -24,6 +25,7 @@ export const NotifierAddEditModal = ({
                                          open,
                                          onOpenChangeAction
                                      }: OrganizationNotifierAddModalProps) => {
+    const isMobile = useIsMobile();
 
     const isCreate = !Boolean(notificationChannel);
 
@@ -32,7 +34,7 @@ export const NotifierAddEditModal = ({
             <DialogTrigger asChild>
                 {isCreate ?
                     <Button>
-                        <Plus/> Add notification channel
+                        <Plus/>{!isMobile && `Add notification channel` }
                     </Button>
                     :
                     <Button
