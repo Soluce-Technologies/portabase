@@ -1,10 +1,10 @@
 "use server";
 
 import {userAction} from "@/lib/safe-actions/actions";
-import { ProjectSchema } from "@/components/wrappers/dashboard/projects/project-form/project-form.schema";
-import { z } from "zod";
-import { ServerActionResult } from "@/types/action-type";
-import { db } from "@/db";
+import {ProjectSchema} from "@/components/wrappers/dashboard/projects/project-form/project-form.schema";
+import {z} from "zod";
+import {ServerActionResult} from "@/types/action-type";
+import {db} from "@/db";
 import {and, eq, inArray} from "drizzle-orm";
 import {Project} from "@/db/schema/06_project";
 import * as drizzleDb from "@/db";
@@ -18,12 +18,12 @@ export const createProjectAction = userAction
             organizationId: z.string(),
         })
     )
-    .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
+    .action(async ({parsedInput}): Promise<ServerActionResult<Project>> => {
         try {
             const slug = slugify(parsedInput.data.name);
 
             const existingProject = await db.query.project.findFirst({
-                where: and(eq(drizzleDb.schemas.project.name, parsedInput.data.name) ),
+                where: and(eq(drizzleDb.schemas.project.name, parsedInput.data.name)),
             })
 
             if (existingProject) {
@@ -32,7 +32,7 @@ export const createProjectAction = userAction
                     actionError: {
                         message: "A project with this name already exists.",
                         status: 400,
-                        messageParams: { projectName: parsedInput.data.name },
+                        messageParams: {projectName: parsedInput.data.name},
                     },
                 };
             }
@@ -49,7 +49,7 @@ export const createProjectAction = userAction
             if (parsedInput.data.databases.length > 0) {
                 await db
                     .update(drizzleDb.schemas.database)
-                    .set({ projectId: createdProject.id })
+                    .set({projectId: createdProject.id})
                     .where(inArray(drizzleDb.schemas.database.id, parsedInput.data.databases));
             }
 
@@ -58,7 +58,7 @@ export const createProjectAction = userAction
                 value: createdProject,
                 actionSuccess: {
                     message: "Project has been successfully created.",
-                    messageParams: { projectName: parsedInput.data.name },
+                    messageParams: {projectName: parsedInput.data.name},
                 },
             };
         } catch (error) {
@@ -69,13 +69,11 @@ export const createProjectAction = userAction
                     message: "Failed to create project.",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: { projectName: parsedInput.data.name },
+                    messageParams: {projectName: parsedInput.data.name},
                 },
             };
         }
     });
-
-
 
 
 export const updateProjectAction = userAction
@@ -86,7 +84,7 @@ export const updateProjectAction = userAction
             projectId: z.string(),
         })
     )
-    .action(async ({ parsedInput }): Promise<ServerActionResult<Project>> => {
+    .action(async ({parsedInput}): Promise<ServerActionResult<Project>> => {
         try {
             const existing = await db.query.project.findFirst({
                 where: eq(drizzleDb.schemas.project.id, parsedInput.projectId),
@@ -106,11 +104,18 @@ export const updateProjectAction = userAction
             const databasesToRemove = existingDbIds.filter((id: string) => !newDbIds.includes(id));
 
             if (databasesToAdd.length > 0) {
-                await db.update(drizzleDb.schemas.database).set({ projectId: parsedInput.projectId }).where(inArray(drizzleDb.schemas.database.id, databasesToAdd));
+                await db.update(drizzleDb.schemas.database).set({projectId: parsedInput.projectId}).where(inArray(drizzleDb.schemas.database.id, databasesToAdd));
             }
 
             if (databasesToRemove.length > 0) {
-                await db.update(drizzleDb.schemas.database).set({ projectId: null }).where(inArray(drizzleDb.schemas.database.id, databasesToRemove));
+                await db.update(drizzleDb.schemas.database).set({
+                    projectId: null,
+                    backupPolicy: null
+                }).where(inArray(drizzleDb.schemas.database.id, databasesToRemove));
+
+                await db.delete(drizzleDb.schemas.retentionPolicy)
+                    .where(inArray(drizzleDb.schemas.retentionPolicy.databaseId, databasesToRemove)).execute();
+
             }
             // const slug = slugify(parsedInput.data.name);
 
@@ -128,7 +133,7 @@ export const updateProjectAction = userAction
                 value: updatedProject,
                 actionSuccess: {
                     message: "Project has been successfully updated.",
-                    messageParams: { projectName: parsedInput.data.name },
+                    messageParams: {projectName: parsedInput.data.name},
                 },
             };
         } catch (error) {
@@ -138,7 +143,7 @@ export const updateProjectAction = userAction
                     message: "Failed to update project.",
                     status: 500,
                     cause: error instanceof Error ? error.message : "Unknown error",
-                    messageParams: { projectName: parsedInput.data.name },
+                    messageParams: {projectName: parsedInput.data.name},
                 },
             };
         }

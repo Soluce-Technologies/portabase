@@ -5,6 +5,7 @@ export const AlertPolicySchema =
     z.object({
             notificationChannelId: z.string().min(1, "Please select a notification channel"),
             eventKinds: z.enum(['error_backup', 'error_restore', 'success_restore', 'success_backup', 'weekly_report']).array().nonempty(),
+            enabled: z.boolean().default(true),
         }
     )
 

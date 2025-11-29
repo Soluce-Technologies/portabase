@@ -1,8 +1,8 @@
 "use client";
 
-import { TablePaginationNavigation } from "@/components/wrappers/common/table/table-pagination-navigation";
-import { TablePaginationSize } from "@/components/wrappers/common/table/table-pagination-size";
-import { cn } from "@/lib/utils";
+import {TablePaginationNavigation} from "@/components/wrappers/common/table/table-pagination-navigation";
+import {TablePaginationSize} from "@/components/wrappers/common/table/table-pagination-size";
+import {cn} from "@/lib/utils";
 
 interface tablePaginationProps {
     className?: string;
@@ -12,12 +12,14 @@ interface tablePaginationProps {
 }
 
 export function TablePagination(props: tablePaginationProps) {
-    const { className, table, maxVisiblePages = 3, pageSizeOptions = [10, 20, 30, 40, 50] } = props;
+    const {className, table, maxVisiblePages = 3, pageSizeOptions = [10, 20, 30, 40, 50]} = props;
 
     return (
-        <div className={cn("flex gap-x-4 flex-row w-full", className)}>
-            <TablePaginationSize table={table} pageSizeOptions={pageSizeOptions} />
-            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages} className="justify-end mt-0" />
+        <div
+            className={cn("flex gap-x-4", className)}
+        >
+            <TablePaginationSize table={table} pageSizeOptions={pageSizeOptions}/>
+            <TablePaginationNavigation table={table} maxVisiblePages={maxVisiblePages} className="justify-end mt-0"/>
         </div>
     );
 }

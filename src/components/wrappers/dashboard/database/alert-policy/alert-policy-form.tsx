@@ -1,9 +1,8 @@
 import {Form, FormControl, FormField, FormItem, FormMessage, useZodForm} from "@/components/ui/form";
-import {Plus, Trash2} from "lucide-react";
+import {InfoIcon, Plus, Trash2} from "lucide-react";
 import {useFieldArray} from "react-hook-form";
-
 import {
-    AlertPoliciesSchema, AlertPoliciesType, AlertPolicySchema, AlertPolicyType,
+    AlertPoliciesSchema, AlertPoliciesType, AlertPolicyType,
     EVENT_KIND_OPTIONS
 } from "@/components/wrappers/dashboard/database/alert-policy/alert-policy.schema";
 import {DatabaseWith} from "@/db/schema/07_database";
@@ -16,13 +15,14 @@ import {Separator} from "@/components/ui/separator";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {MultiSelect} from "@/components/wrappers/common/multiselect/multi-select";
 import {useMutation} from "@tanstack/react-query";
-import {deleteBackupAction} from "@/features/dashboard/restore/restore.action";
 import {toast} from "sonner";
 import {
     createAlertPoliciesAction, deleteAlertPoliciesAction,
     updateAlertPoliciesAction
 } from "@/components/wrappers/dashboard/database/alert-policy/alert-policy.action";
 import {useRouter} from "next/navigation";
+import {Switch} from "@/components/ui/switch";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 type AlertPolicyFormProps = {
     onSuccess?: () => void;
@@ -33,13 +33,13 @@ type AlertPolicyFormProps = {
 
 export const AlertPolicyForm = ({database, notificationChannels, organizationId, onSuccess}: AlertPolicyFormProps) => {
     const router = useRouter()
-    console.log("database",database)
     const organizationNotificationChannels = notificationChannels.map(channel => channel.id) ?? [];
 
     const formattedAlertPoliciesList = (alertPolicies: AlertPolicy[]) => {
         return alertPolicies.map((alertPolicy) => ({
             notificationChannelId: alertPolicy.notificationChannelId,
-            eventKinds: alertPolicy.eventKinds
+            eventKinds: alertPolicy.eventKinds,
+            enabled: alertPolicy.enabled
         }));
     };
 
@@ -49,6 +49,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
             alertPolicies: database.alertPolicies && database.alertPolicies.length > 0 ? formattedAlertPoliciesList(database.alertPolicies) : [{
                 notificationChannelId: "",
                 eventKinds: [],
+                enabled: true,
             }],
         },
     });
@@ -60,7 +61,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
 
 
     const addAlertPolicy = () => {
-        append({id: "", eventKinds: []})
+        append({id: "", eventKinds: [], enabled: true});
     }
 
     const removeAlertPolicy = (index: number) => {
@@ -75,6 +76,9 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
 
     const mutation = useMutation({
         mutationFn: async ({alertPolicies}: AlertPoliciesType) => {
+
+
+
 
             console.log(alertPolicies)
 
@@ -138,7 +142,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                 );
 
 
-            console.log("failedActions",failedActions);
+            console.log("failedActions", failedActions);
             if (failedActions.length > 0) {
                 const firstError = failedActions[0].data.actionError;
                 const message = firstError?.message || "One or more operations failed";
@@ -149,7 +153,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
         },
         onSuccess: () => {
             toast.success("Alert policies saved successfully");
-            onSuccess?.();
+            // onSuccess?.();
             router.refresh();
         },
         onError: (error: any) => {
@@ -199,8 +203,6 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                                             control={form.control}
                                             name={`alertPolicies.${index}.notificationChannelId`}
                                             render={({field}) => {
-
-
                                                 const selectedIds = form
                                                     .watch("alertPolicies")
                                                     .map((a: AlertPolicyType) => a.notificationChannelId)
@@ -219,7 +221,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                                                         >
 
                                                             <FormControl>
-                                                                <SelectTrigger className="h-10 w-full">
+                                                                <SelectTrigger className="h-10 w-full ">
                                                                     <SelectValue
                                                                         placeholder="Select notification channel"/>
                                                                 </SelectTrigger>
@@ -239,6 +241,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                                             }}
                                         />
 
+
                                         <FormField
                                             control={form.control}
                                             name={`alertPolicies.${index}.eventKinds`}
@@ -251,19 +254,58 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                                                             defaultValue={field.value ?? []}
                                                             placeholder="Select event kinds"
                                                             variant="inverted"
-                                                            animation={2}
+                                                            animation={0}
                                                         />
                                                     </FormControl>
                                                 </FormItem>
                                             )}
                                         />
+
+
                                     </div>
 
-                                    <div>
+                                    <div className="flex flex-col gap-3 justify-between items-center ">
                                         <Button type="button" variant="outline"
                                                 onClick={() => removeAlertPolicy(index)}>
                                             <Trash2 className="w-4 h-4"/>
                                         </Button>
+                                        <div className="flex h-full justify-center items-center">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div tabIndex={0} className="inline-flex rounded-md">
+                                                        {/*<Switch*/}
+                                                        {/*    checked={true}*/}
+                                                        {/*    onCheckedChange={async () => {*/}
+                                                        {/*    }}*/}
+                                                        {/*/>*/}
+
+
+                                                        <FormField
+                                                            control={form.control}
+                                                            name={`alertPolicies.${index}.enabled`}
+                                                            render={({field}) => (
+                                                                <FormItem>
+                                                                    <FormControl>
+                                                                        <Switch
+                                                                            checked={field.value}
+                                                                            onCheckedChange={field.onChange}
+                                                                        />
+                                                                    </FormControl>
+                                                                </FormItem>
+                                                            )}
+                                                        />
+
+
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="max-w-64 text-pretty">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <InfoIcon className="size-4"/>
+                                                        <p>This is for activating the alert policy</p>
+                                                    </div>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -279,7 +321,7 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                     Cancel
                 </ButtonWithLoading>
                 <ButtonWithLoading isPending={false}>
-                    Submit
+                    Save
                 </ButtonWithLoading>
             </div>
         </Form>

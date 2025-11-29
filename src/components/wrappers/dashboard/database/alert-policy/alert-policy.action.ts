@@ -27,6 +27,7 @@ export const createAlertPoliciesAction = userAction
                 databaseId: parsedInput.databaseId,
                 notificationChannelId: policy.notificationChannelId,
                 eventKinds: policy.eventKinds,
+                enabled: policy.enabled,
             }));
 
             const insertedPolicies = await db

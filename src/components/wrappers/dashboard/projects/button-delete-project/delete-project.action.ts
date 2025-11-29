@@ -4,19 +4,28 @@ import {userAction} from "@/lib/safe-actions/actions";
 import {z} from "zod";
 import {v4 as uuidv4} from "uuid";
 import {ServerActionResult} from "@/types/action-type";
-import {and, eq} from "drizzle-orm";
+import {and, eq, inArray} from "drizzle-orm";
 import {db} from "@/db";
 import * as drizzleDb from "@/db";
 
 export const deleteProjectAction = userAction.schema(z.string()).action(async ({parsedInput}): Promise<ServerActionResult<typeof drizzleDb.schemas.project.$inferSelect>> => {
     try {
         const uuid = uuidv4();
-        await db
+        const databasesUpdated = await db
             .update(drizzleDb.schemas.database)
             .set({
                 projectId: null,
+                backupPolicy: null
             })
-            .where(eq(drizzleDb.schemas.database.projectId, parsedInput));
+            .where(eq(drizzleDb.schemas.database.projectId, parsedInput)).returning();
+
+
+        const databasesToRemove = databasesUpdated.map((db) => db.id);
+        console.log(databasesUpdated);
+        console.log(databasesToRemove);
+
+        await db.delete(drizzleDb.schemas.retentionPolicy)
+            .where(inArray(drizzleDb.schemas.retentionPolicy.databaseId, databasesToRemove)).execute();
 
         const updatedProjects = await db
             .update(drizzleDb.schemas.project)
