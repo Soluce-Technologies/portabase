@@ -3,7 +3,7 @@ export type ProviderKind = 'slack' | 'smtp';
 export interface DispatchResult {
     success: boolean;
     channelId?: string;
-    provider: ProviderKind;
+    provider: ProviderKind | null;
     message?: string;
     error?: string;
     response?: any;

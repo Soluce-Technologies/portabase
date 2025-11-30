@@ -6,11 +6,11 @@ export async function sendSlack(
 ): Promise<DispatchResult> {
     const {slackWebhook: webhookUrl} = config;
 
-    const text = `*${payload.title}*\n${payload.message}`;
+    const text = `*[${payload.level}] ${payload.title}*\n${payload.message}`;
     const blocks = [
         {
             type: 'section',
-            text: {type: 'mrkdwn', text: `*${payload.title}*`},
+            text: {type: 'mrkdwn', text: `*[${payload.level.toUpperCase()}] ${payload.title}*`},
         },
         {type: 'section', text: {type: 'mrkdwn', text: payload.message}},
         payload.data

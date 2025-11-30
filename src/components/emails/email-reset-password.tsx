@@ -9,8 +9,8 @@ export interface EmailResetPasswordProps {
 export const EmailResetPassword = ({url}: EmailResetPasswordProps) => {
     return (
         <EmailLayout preview="Email for password reset of your Portabase account">
-            <Text className="text-base  text-green-800 font-bold ">Hello !</Text>
-            <Text className="text-base font-light  text-green-800 ">You are receiving this email because we
+            <Text className="text-base   font-bold ">Hello !</Text>
+            <Text className="text-base font-light  ">You are receiving this email because we
                 received a password reset request for your account.</Text>{" "}
             <Section className="mt-[32px] mb-[32px] text-center">
                 <Button
@@ -20,9 +20,9 @@ export const EmailResetPassword = ({url}: EmailResetPasswordProps) => {
                     Reset Password
                 </Button>
             </Section>
-            <Text className="text-base font-light text-green-800 ">If you did not request a password reset, no
+            <Text className="text-base font-light  ">If you did not request a password reset, no
                 further action is required.</Text>
-            <Text className="text-base font-light text-green-800 ">Regards,<br/>Portabase</Text>
+            <Text className="text-base font-light  ">Regards,<br/>Portabase</Text>
         </EmailLayout>
     );
 };

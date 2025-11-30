@@ -1,100 +1,114 @@
-"use server"
-// src/notifications/dispatch.ts
-import {eq} from 'drizzle-orm';
-import {dispatchViaProvider} from './providers';
-import type {EventPayload, DispatchResult} from './types';
+"use server";
+import { eq } from "drizzle-orm";
+import { dispatchViaProvider } from "./providers";
+import type {EventPayload, DispatchResult} from "./types";
 import * as drizzleDb from "@/db";
-import {db} from "@/db";
-import {notificationLog} from "@/db/schema/11_notification-log";
+import { db } from "@/db";
+import { notificationLog } from "@/db/schema/11_notification-log";
+import {NotificationChannel} from "@/db/schema/09_notification-channel";
+import {Json} from "drizzle-zod";
 
 export async function dispatchNotification(
     payload: EventPayload,
     policyId?: string,
     channelId?: string,
-    organizationId?: string,
+    organizationId?: string
 ): Promise<DispatchResult> {
+    try {
+        let channel: NotificationChannel | null = null;
 
+        if (policyId) {
+            const policy = await db.query.alertPolicy.findFirst({
+                where: eq(drizzleDb.schemas.alertPolicy.id, policyId),
+                with: {
+                    notificationChannel: true
+                },
+            });
 
-    // // 1. Get policy + channel
-    // const policy = await db
-    //     .select({
-    //         policy: alertPolicies,
-    //         channel: notificationChannels,
-    //     })
-    //     .from(alertPolicies)
-    //     .innerJoin(
-    //         notificationChannels,
-    //         eq(alertPolicies.notificationChannelId, notificationChannels.id)
-    //     )
-    //     .where(eq(alertPolicies.id, policyId))
-    //     .then((rows) => rows[0]);
-    //
-    // if (!policy) {
-    //     return {
-    //         success: false,
-    //         channelId: '',
-    //         provider: 'unknown' as any,
-    //         error: 'Policy or channel not found',
-    //     };
-    // }
-    //
-    // if (!policy.policy.enabled || !policy.channel.enabled) {
-    //     return {
-    //         success: false,
-    //         channelId: policy.channel.id,
-    //         provider: policy.channel.provider as any,
-    //         error: 'Policy or channel is disabled',
-    //     };
-    // }
+            if (!policy || !policy.notificationChannel) {
+                return {
+                    success: false,
+                    channelId: "",
+                    provider: null,
+                    error: "Policy or associated channel not found",
+                };
+            }
 
-    if (channelId) {
-        const channel = await db.query.notificationChannel.findFirst({
-            where: eq(drizzleDb.schemas.notificationChannel.id, channelId),
-        })
+            if (!policy.enabled || !policy.notificationChannel.enabled) {
+                return {
+                    success: false,
+                    channelId: policy.notificationChannel.id,
+                    provider: policy.notificationChannel.provider as any,
+                    error: "Policy or channel is disabled",
+                };
+            }
 
-        if (channel) {
-            const config = channel.config;
-
-            const result = await dispatchViaProvider(
-                channel.provider as any,
-                config,
-                {...payload, timestamp: payload.timestamp || new Date()},
-                channel.id
-            );
-
-
-            const [log] = await db
-                .insert(notificationLog)
-                .values({
-                    channelId: channel.id,
-                    // policyId: policy.id,
-                    organizationId: organizationId || null,
-                    title: payload.title,
-                    message: payload.message,
-                    level: payload.level,
-                    payload: payload.data || null,
-                    success: result.success,
-                    error: result.success ? null : result.error,
-                    providerResponse: result.response || null,
-
-                })
-                .returning({id: notificationLog.id});
-
-
-            return {
-                ...result,
-                channelId: channel.id,
+            channel = {
+                ...policy.notificationChannel,
+                config : policy.notificationChannel.config as Json,
             };
         }
+
+        if (channelId) {
+            const fetchedChannel = await db.query.notificationChannel.findFirst({
+                where: eq(drizzleDb.schemas.notificationChannel.id, channelId),
+            });
+
+            if (!fetchedChannel) {
+                return {
+                    success: false,
+                    channelId: channelId,
+                    provider: null,
+                    error: "Channel not found",
+                };
+            }
+
+            channel = {
+                ...fetchedChannel,
+                config : fetchedChannel.config as Json,
+            };
+        }
+
+        if (!channel) {
+            return {
+                success: false,
+                channelId: channelId || "",
+                provider: null,
+                error: "No valid channel to dispatch notification",
+            };
+        }
+
+        const result = await dispatchViaProvider(
+            channel.provider,
+            channel.config,
+            { ...payload, timestamp: payload.timestamp || new Date() },
+            channel.id
+        );
+
+        const [log] = await db
+            .insert(notificationLog)
+            .values({
+                channelId: channel.id,
+                policyId: policyId || null,
+                organizationId: organizationId || null,
+                title: payload.title,
+                message: payload.message,
+                level: payload.level,
+                payload: payload.data || null,
+                success: result.success,
+                error: result.success ? null : result.error,
+                providerResponse: result.response || null,
+            })
+            .returning({ id: notificationLog.id });
+
+        return { ...result, channelId: channel.id };
+
+    } catch (err: any) {
+        return {
+            success: false,
+            channelId: channelId || "",
+            provider: null,
+            error: err?.message || "Unexpected error during dispatch",
+        };
     }
-
-
-    return {
-        success: false,
-        channelId,
-        provider: "smtp",
-        error: 'Unknown error',
-    };
-
-
 }

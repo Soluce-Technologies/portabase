@@ -6,7 +6,7 @@ import {createSelectSchema} from "drizzle-zod";
 import {z} from "zod";
 
 
-export const providerKindEnum = pgEnum('provider_kind', ['curl', 'slack', 'smtp', 'webhook']);
+export const providerKindEnum = pgEnum('provider_kind', ['slack', 'smtp']);
 
 export const notificationChannel = pgTable('notification_channel', {
     id: uuid("id").defaultRandom().primaryKey(),

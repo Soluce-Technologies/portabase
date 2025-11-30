@@ -10,6 +10,7 @@ import {and, eq} from "drizzle-orm";
 import {env} from "@/env.mjs";
 import {withUpdatedAt} from "@/db/utils";
 import {decryptedDump, getFileExtension} from "./helpers";
+import {sendNotificationsBackupRestore} from "@/features/notifications/helpers";
 
 export async function POST(
     request: Request,
@@ -54,7 +55,8 @@ export async function POST(
         const database = await db.query.database.findFirst({
             where: eq(drizzleDb.schemas.database.agentDatabaseId, generatedId),
             with: {
-                project: true
+                project: true,
+                alertPolicies: true
             }
         });
 
@@ -153,6 +155,8 @@ export async function POST(
 
             eventEmitter.emit('modification', {update: true});
 
+            await sendNotificationsBackupRestore(database, "success_backup");
+
             return NextResponse.json(
                 {
                     message: "Backup successfully uploaded",
@@ -167,6 +171,9 @@ export async function POST(
                 .where(eq(drizzleDb.schemas.backup.id, backup.id));
 
             eventEmitter.emit('modification', {update: true});
+
+            await sendNotificationsBackupRestore(database, "error_backup");
+
 
             return NextResponse.json(
                 {

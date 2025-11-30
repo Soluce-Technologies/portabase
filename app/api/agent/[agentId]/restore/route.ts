@@ -4,6 +4,7 @@ import {eventEmitter} from "../../../events/route";
 import * as drizzleDb from "@/db";
 import {db} from "@/db";
 import {and, eq} from "drizzle-orm";
+import {sendNotificationsBackupRestore} from "@/features/notifications/helpers";
 
 export type BodyResultRestore = {
     generatedId: string
@@ -40,8 +41,10 @@ export async function POST(
         }
 
         const database = await db.query.database.findFirst({
-            where: eq(drizzleDb.schemas.database.agentDatabaseId, body.generatedId)
-
+            where: eq(drizzleDb.schemas.database.agentDatabaseId, body.generatedId),
+            with: {
+                alertPolicies: true
+            }
         })
 
         if (!database) {
@@ -56,10 +59,14 @@ export async function POST(
             return NextResponse.json({error: "Unable to fin the corresponding restoration"}, {status: 404})
         }
 
+
         await db
             .update(drizzleDb.schemas.restoration)
-            .set({ status: body.status as RestorationStatus })
+            .set({status: body.status as RestorationStatus})
             .where(eq(drizzleDb.schemas.restoration.id, restoration.id));
+
+
+        await sendNotificationsBackupRestore(database, body.status == "error" ? "error_restore" : "success_restore");
 
         const response = {
             message: true,
