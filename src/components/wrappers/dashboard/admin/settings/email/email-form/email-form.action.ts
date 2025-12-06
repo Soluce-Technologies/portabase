@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { EmailFormSchema } from "@/components/wrappers/dashboard/admin/tabs/admin-email-tab/email-form/email-form.schema";
+import { EmailFormSchema } from "@/components/wrappers/dashboard/admin/settings/email/email-form/email-form.schema";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import * as drizzleDb from "@/db";

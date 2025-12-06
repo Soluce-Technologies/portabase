@@ -1,8 +1,11 @@
 import {pgTable, uuid, timestamp, jsonb, varchar, boolean, text, pgEnum} from 'drizzle-orm/pg-core';
-import {notificationChannel, providerKindEnum} from "@/db/schema/09_notification-channel";
+import {notificationChannel} from "@/db/schema/09_notification-channel";
 import {alertPolicy} from "@/db/schema/10_alert-policy";
 import {organization} from "@/db/schema/03_organization";
 import {timestamps} from "@/db/schema/00_common";
+import {createSelectSchema} from "drizzle-zod";
+import {z} from "zod";
+
 
 export const levelEnum = pgEnum('level', ['critical', 'warning', 'info']);
 
@@ -12,16 +15,17 @@ export const notificationLog = pgTable('notification_log', {
 
     channelId: uuid('channel_id')
         .notNull()
-        .references(() => notificationChannel.id, { onDelete: 'restrict' }),
+        .references(() => notificationChannel.id, {onDelete: 'restrict'}),
     policyId: uuid('policy_id')
-        .references(() => alertPolicy.id, { onDelete: 'restrict' }),
+        .references(() => alertPolicy.id, {onDelete: 'restrict'}),
     organizationId: uuid('organization_id')
-        .references(() => organization.id, { onDelete: 'set null' }),
+        .references(() => organization.id, {onDelete: 'set null'}),
 
-    title: varchar('title', { length: 255 }).notNull(),
+    title: varchar('title', {length: 255}).notNull(),
     message: text('message').notNull(),
     level: levelEnum('level').notNull(),
     payload: jsonb('payload'),
+
 
     success: boolean('success').notNull(),
     error: text('error'),
@@ -30,3 +34,8 @@ export const notificationLog = pgTable('notification_log', {
 
     ...timestamps
 });
+
+export const notificationLogSchema = createSelectSchema(notificationLog);
+export type NotificationLog = z.infer<typeof notificationLogSchema>;
+
+export type NotificationLevel = (typeof levelEnum.enumValues)[number];

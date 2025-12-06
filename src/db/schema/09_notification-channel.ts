@@ -1,9 +1,10 @@
 import {boolean, jsonb, pgEnum, pgTable, primaryKey, unique, uuid, varchar} from "drizzle-orm/pg-core";
 import {timestamps} from "@/db/schema/00_common";
-import {organization} from "@/db/schema/03_organization";
+import {MemberWithUser, Organization, organization} from "@/db/schema/03_organization";
 import {relations} from "drizzle-orm";
 import {createSelectSchema} from "drizzle-zod";
 import {z} from "zod";
+import {OrganizationInvitation} from "@/db/schema/05_invitation";
 
 
 export const providerKindEnum = pgEnum('provider_kind', ['slack', 'smtp']);
@@ -48,3 +49,11 @@ export const organizationNotificationChannelRelations = relations(organizationNo
 
 export const notificationChannelSchema = createSelectSchema(notificationChannel);
 export type NotificationChannel = z.infer<typeof notificationChannelSchema>;
+
+
+export type NotificationChannelWith = NotificationChannel & {
+    organizations: {
+        organizationId: string;
+        notificationChannelId: string;
+    }[];
+};

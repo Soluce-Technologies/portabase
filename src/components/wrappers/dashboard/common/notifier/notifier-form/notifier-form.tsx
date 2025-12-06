@@ -21,7 +21,7 @@ import {
     NotifierSlackForm
 } from "@/components/wrappers/dashboard/common/notifier/notifier-form/providers/notifier-slack.form";
 import {Button} from "@/components/ui/button";
-import {NotificationChannel} from "@/db/schema/09_notification-channel";
+import {NotificationChannel, NotificationChannelWith} from "@/db/schema/09_notification-channel";
 import {
     NotifierTestChannelButton
 } from "@/components/wrappers/dashboard/common/notifier/notifier-form/notifier-test-channel-button";
@@ -30,13 +30,16 @@ import {useEffect} from "react";
 type NotifierFormProps = {
     onSuccessAction?: () => void;
     organization?: OrganizationWithMembers;
-    defaultValues?: NotificationChannel
+    defaultValues?: NotificationChannelWith
+    adminView?: boolean
 };
 
-export const NotifierForm = ({onSuccessAction, organization, defaultValues}: NotifierFormProps) => {
+export const NotifierForm = ({onSuccessAction, organization, defaultValues, adminView}: NotifierFormProps) => {
 
-    const isCreate = !Boolean(defaultValues);
     const router = useRouter();
+    const isCreate = !Boolean(defaultValues);
+
+
     const form = useZodForm({
         schema: NotificationChannelFormSchema,
         // @ts-ignore
@@ -47,7 +50,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
         form.reset(defaultValues ? {...defaultValues} : {});
     }, [defaultValues]);
 
-    const mutationCreateOrganisation = useMutation({
+    const mutationAddNotificationChannel = useMutation({
         mutationFn: async (values: NotificationChannelFormType) => {
 
             const payload = {
@@ -73,12 +76,14 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
 
     const provider = form.watch("provider");
 
+
     return (
+
         <Form
             form={form}
             className="flex flex-col gap-4"
             onSubmit={async (values) => {
-                await mutationCreateOrganisation.mutateAsync(values);
+                await mutationAddNotificationChannel.mutateAsync(values);
             }}
         >
             <FormField
@@ -136,7 +141,8 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
             <div className="flex justify-between">
                 <div>
                     {defaultValues && (
-                        <NotifierTestChannelButton organizationId={organization?.id} notificationChannel={defaultValues}/>
+                        <NotifierTestChannelButton organizationId={organization?.id}
+                                                   notificationChannel={defaultValues}/>
                     )}
                 </div>
                 <div className="flex gap-2">
@@ -150,7 +156,7 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
                     >
                         Cancel
                     </Button>
-                    <ButtonWithLoading isPending={mutationCreateOrganisation.isPending}>
+                    <ButtonWithLoading isPending={mutationAddNotificationChannel.isPending}>
                         {isCreate ? "Add" : "Save"} Channel
                     </ButtonWithLoading>
                 </div>
@@ -159,7 +165,3 @@ export const NotifierForm = ({onSuccessAction, organization, defaultValues}: Not
         </Form>
     );
 };
-
-
-
-

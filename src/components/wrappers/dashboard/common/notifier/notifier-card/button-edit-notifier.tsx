@@ -2,7 +2,7 @@
 import {useMutation} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 import {NotifierAddEditModal} from "@/components/wrappers/dashboard/common/notifier/notifier-add-edit-modal";
-import {NotificationChannel} from "@/db/schema/09_notification-channel";
+import {NotificationChannel, NotificationChannelWith} from "@/db/schema/09_notification-channel";
 import {Switch} from "@/components/ui/switch";
 import {
     updateNotificationChannelAction
@@ -12,11 +12,18 @@ import {useState} from "react";
 import {Organization, OrganizationWithMembers} from "@/db/schema/03_organization";
 
 export type EditNotifierButtonProps = {
-    notificationChannel: NotificationChannel;
-    organization? : OrganizationWithMembers;
+    notificationChannel: NotificationChannelWith;
+    organization?: OrganizationWithMembers;
+    organizations?: OrganizationWithMembers[];
+    adminView?: boolean;
 };
 
-export const EditNotifierButton = ({notificationChannel, organization}: EditNotifierButtonProps) => {
+export const EditNotifierButton = ({
+                                       organizations,
+                                       adminView = false,
+                                       notificationChannel,
+                                       organization
+                                   }: EditNotifierButtonProps) => {
     const router = useRouter();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -53,6 +60,8 @@ export const EditNotifierButton = ({notificationChannel, organization}: EditNoti
             }}
             />
             <NotifierAddEditModal
+                organizations={organizations}
+                adminView={adminView}
                 organization={organization}
                 notificationChannel={notificationChannel}
                 open={isAddModalOpen}

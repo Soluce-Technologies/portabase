@@ -13,7 +13,6 @@ interface CardsWithPaginationProps<T> {
     cardsPerPage?: number;
     numberOfColumns?: number;
     maxVisiblePages?: number;
-    // extendedProps?: any;
     [key: string]: any;
 }
 

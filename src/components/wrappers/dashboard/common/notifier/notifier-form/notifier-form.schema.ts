@@ -7,7 +7,7 @@ export const NotificationChannelFormSchema = z.object({
         .min(5, "Name must be at least 5 characters long")
         .max(40, "Name must be at most 40 characters long"),
 
-    provider: z.enum(["curl", "slack", "smtp", "webhook"], {
+    provider: z.enum(["slack", "smtp"], {
         required_error: "Provider is required",
     }),
 

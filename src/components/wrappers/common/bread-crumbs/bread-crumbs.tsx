@@ -44,7 +44,7 @@ export function BreadCrumbsWrapper() {
     )
 }
 
-const FORBIDDEN_LINKS = ["organization", "dashboard", "database"];
+const FORBIDDEN_LINKS = ["organization", "dashboard", "database", "admin", "settings", "notifications"];
 
 
 export function BreadCrumbs({}: BreadCrumbsProps) {

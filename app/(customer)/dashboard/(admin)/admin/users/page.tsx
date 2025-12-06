@@ -2,7 +2,7 @@ import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {db} from "@/db";
 import {DataTable} from "@/components/wrappers/common/table/data-table";
-import {usersColumnsAdmin} from "@/components/wrappers/dashboard/admin/tabs/admin-user-tab/columns-users";
+import {usersColumnsAdmin} from "@/components/wrappers/dashboard/admin/users/columns-users";
 import {isNull} from "drizzle-orm";
 
 export default async function RoutePage(props: PageParams<{}>) {

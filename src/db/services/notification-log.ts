@@ -1,24 +1,45 @@
-import {desc, eq, and, gte, lte} from 'drizzle-orm';
-import {
-    notificationLog
-} from "@/db/schema/11_notification-log";
-import {
-    notificationChannel,
-} from "@/db/schema/09_notification-channel";
+import {and, desc, eq, gte, lte} from 'drizzle-orm';
+import {NotificationLevel, notificationLog} from "@/db/schema/11_notification-log";
+import {notificationChannel} from "@/db/schema/09_notification-channel";
 import {db} from "@/db";
 import {alertPolicy} from "@/db/schema/10_alert-policy";
+import {Json} from "drizzle-zod";
 
+export type NotificationLogWithRelations = {
+    id: string;
+    title: string;
+    level: NotificationLevel;
+    success: boolean;
+    error: string | null;
+    sentAt: Date;
+    payload: Json | null;
+    content: {
+        title: string;
+        message: string;
+    },
+    channel: {
+        id: string;
+        name: string;
+        provider: string;
+    } | null;
+    policy: {
+        id: string;
+        eventKinds: string[];
+    } | null;
+};
 
-export async function getNotificationHistory(filters?: {
-    channelId?: string;
-    policyId?: string;
-    organizationId?: string;
-    level?: string;
-    success?: boolean;
-    from?: Date;
-    to?: Date;
-    limit?: number;
-}) {
+export async function getNotificationHistory(
+    filters?: {
+        channelId?: string;
+        policyId?: string;
+        organizationId?: string;
+        level?: NotificationLevel;
+        success?: boolean;
+        from?: Date;
+        to?: Date;
+        limit?: number;
+    }
+): Promise<NotificationLogWithRelations[]> {
     const where = [];
     if (filters?.channelId) where.push(eq(notificationLog.channelId, filters.channelId));
     if (filters?.policyId) where.push(eq(notificationLog.policyId, filters.policyId));
@@ -28,7 +49,7 @@ export async function getNotificationHistory(filters?: {
     if (filters?.from) where.push(gte(notificationLog.sentAt, filters.from));
     if (filters?.to) where.push(lte(notificationLog.sentAt, filters.to));
 
-    return await db
+    const rows = await db
         .select({
             id: notificationLog.id,
             title: notificationLog.title,
@@ -36,14 +57,19 @@ export async function getNotificationHistory(filters?: {
             success: notificationLog.success,
             error: notificationLog.error,
             sentAt: notificationLog.sentAt,
+            payload: notificationLog.payload,
+            content: {
+                title: notificationLog.title,
+                message: notificationLog.message,
+            },
             channel: {
-                id: notificationLog.id,
+                id: notificationChannel.id,
                 name: notificationChannel.name,
                 provider: notificationChannel.provider,
             },
             policy: {
                 id: alertPolicy.id,
-                eventKind: alertPolicy.eventKind,
+                eventKinds: alertPolicy.eventKinds,
             },
         })
         .from(notificationLog)
@@ -52,4 +78,9 @@ export async function getNotificationHistory(filters?: {
         .where(and(...where))
         .orderBy(desc(notificationLog.sentAt))
         .limit(filters?.limit || 100);
+
+    return rows.map(row => ({
+        ...row,
+        payload: row.payload as Json,
+    }));
 }
