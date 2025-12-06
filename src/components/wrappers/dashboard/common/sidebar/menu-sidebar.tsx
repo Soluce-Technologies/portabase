@@ -10,27 +10,15 @@ import {
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
-    SidebarMenuSubItem
+    SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import {
-    ChevronDown,
-    MoreHorizontal
-} from "lucide-react";
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger
-} from "@radix-ui/react-collapsible";
+import { ChevronRight, ChevronDown, MoreHorizontal } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
 
 export type SidebarItem = {
@@ -42,6 +30,7 @@ export type SidebarItem = {
     dropdown?: SidebarItem[];
     submenu?: SidebarItem[];
     details?: boolean;
+    type: "item" | "collapse";
 };
 
 export type SidebarGroupItem = {
@@ -64,140 +53,134 @@ export const SidebarMenuCustomBase = ({ baseUrl, items }: SidebarMenuCustomBaseP
 
         const findActiveUrl = () => {
             const normalizedPathname = normalize(pathname);
-            console.log(normalizedPathname);
             for (const group of items) {
                 for (const item of group.group_content) {
-                    const itemUrl = normalize(item.url);
-
-                    const fullUrl = item.not_from_base_url
-                        ? itemUrl
-                        : normalize(`${baseUrl}${itemUrl}`);
-
-                    if (
-                        normalizedPathname === fullUrl ||
-                        (item.details && normalizedPathname.startsWith(`${fullUrl}/`))
-                    ) {
-                        return itemUrl;
-                    }
-
                     if (item.submenu) {
                         for (const subItem of item.submenu) {
                             const subItemUrl = normalize(subItem.url);
                             const subFullUrl = normalize(`${baseUrl}${subItemUrl}`);
 
-                            if (
-                                normalizedPathname === subFullUrl ||
-                                (subItem.details && normalizedPathname.startsWith(`${subFullUrl}/`))
-                            ) {
+                            if (normalizedPathname === subFullUrl || (subItem.details && normalizedPathname.startsWith(`${subFullUrl}/`))) {
                                 return subItemUrl;
                             }
                         }
                     }
+
+                    const itemUrl = normalize(item.url);
+                    const fullUrl = item.not_from_base_url ? itemUrl : normalize(`${baseUrl}${itemUrl}`);
+
+                    if (normalizedPathname === fullUrl || (item.details && normalizedPathname.startsWith(`${fullUrl}/`))) {
+                        return itemUrl;
+                    }
                 }
             }
-
             return "";
         };
 
-        const activeUrl = findActiveUrl();
-        setActiveItem(activeUrl);
+        setActiveItem(findActiveUrl());
     }, [pathname, baseUrl, items]);
+
+    const isSubActive = (item: SidebarItem) => {
+        if (!item.submenu) return false;
+        return item.submenu.some((sub) => sub.url === activeItem);
+    };
 
     return (
         <SidebarMenu>
             {items.map((group, index) => (
-                <Collapsible key={index} defaultOpen disabled={group.type === "list"}>
+                <Collapsible key={index} defaultOpen className="group/group-collapsible">
                     <SidebarGroup>
                         <SidebarGroupLabel asChild>
-                            <CollapsibleTrigger>
-                                {group.label ?? "Missing label"}
+                            <CollapsibleTrigger className="flex w-full items-center text-sm font-medium text-sidebar-foreground/70">
+                                {group.label}
                                 {group.type === "collapse" && (
-                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                    <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/group-collapsible:rotate-180" />
                                 )}
                             </CollapsibleTrigger>
                         </SidebarGroupLabel>
                         <CollapsibleContent>
                             <SidebarGroupContent>
-                                {group.group_content.map((item, index) => (
-                                    <SidebarMenuItem key={index} className="mb-1">
-                                        <SidebarMenuButton asChild>
-                                            <Link
-                                                href={
-                                                    item.redirect || item.not_from_base_url
-                                                        ? item.url
-                                                        : `${baseUrl}${item.url}`
-                                                }
-                                                target={item.redirect ? "_blank" : ""}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        size: "lg",
-                                                        variant: activeItem === item.url ? "secondary" : "ghost"
-                                                    }),
-                                                    "justify-start p-0",
-                                                    "hover:bg-gray-700"
-                                                )}
-                                                onClick={() => setActiveItem(item.url)}
-                                            >
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
+                                {group.group_content.map((item, idx) => {
+                                    if (item.type === "collapse" && item.submenu) {
+                                        const isChildActive = isSubActive(item);
 
-                                        {item.submenu && (
-                                            <SidebarMenuSub>
-                                                {item.submenu.map((sub, idx) => (
-                                                    <SidebarMenuSubItem key={idx}>
-                                                        <SidebarMenuSubButton asChild>
-                                                            <Link
-                                                                href={`${baseUrl}${sub.url}`}
-                                                                className={cn(
-                                                                    buttonVariants({
-                                                                        size: "lg",
-                                                                        variant: activeItem === sub.url ? "secondary" : "ghost"
-                                                                    }),
-                                                                    "justify-start p-0",
-                                                                    "hover:bg-gray-700"
-                                                                )}
-                                                                onClick={() => setActiveItem(sub.url)}
-                                                            >
-                                                                <sub.icon />
-                                                                {sub.title}
-                                                            </Link>
-                                                        </SidebarMenuSubButton>
-                                                    </SidebarMenuSubItem>
-                                                ))}
-                                            </SidebarMenuSub>
-                                        )}
+                                        return (
+                                            <Collapsible key={idx} asChild defaultOpen={isChildActive} className="group/collapsible">
+                                                <SidebarMenuItem>
+                                                    <CollapsibleTrigger asChild>
+                                                        <SidebarMenuButton className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "justify-between")}>
+                                                            <item.icon />
+                                                            <span>{item.title}</span>
+                                                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                                        </SidebarMenuButton>
+                                                    </CollapsibleTrigger>
+                                                    <CollapsibleContent>
+                                                        <SidebarMenuSub>
+                                                            {item.submenu.map((sub, subIdx) => (
+                                                                <SidebarMenuSubItem key={subIdx}>
+                                                                    <SidebarMenuSubButton asChild isActive={activeItem === sub.url}>
+                                                                        <Link
+                                                                            className={cn(
+                                                                                buttonVariants({ variant: "ghost", size: "sm" }),
+                                                                                "w-full justify-start"
+                                                                            )}
+                                                                            href={`${baseUrl}${sub.url}`}
+                                                                            onClick={() => setActiveItem(sub.url)}
+                                                                        >
+                                                                            <sub.icon />
+                                                                            <span>{sub.title}</span>
+                                                                        </Link>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            ))}
+                                                        </SidebarMenuSub>
+                                                    </CollapsibleContent>
+                                                </SidebarMenuItem>
+                                            </Collapsible>
+                                        );
+                                    }
 
-                                        {item.dropdown && (
-                                            <SidebarMenuAction>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <MoreHorizontal />
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent side="right" align="start">
-                                                        {item.dropdown.map((dropdown, idx) => (
-                                                            <DropdownMenuItem key={idx} asChild>
-                                                                <Link
-                                                                    href={
-                                                                        dropdown.redirect || dropdown.not_from_base_url
-                                                                            ? dropdown.url
-                                                                            : `${baseUrl}${dropdown.url}`
-                                                                    }
-                                                                    className="justify-start p-0"
-                                                                    target={dropdown.redirect ? "_blank" : ""}
-                                                                    onClick={() => setActiveItem(dropdown.url)}
-                                                                >
-                                                                    <span>{dropdown.title}</span>
-                                                                </Link>
-                                                            </DropdownMenuItem>
-                                                        ))}
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </SidebarMenuAction>
-                                        )}
-                                    </SidebarMenuItem>
-                                ))}
+                                    return (
+                                        <SidebarMenuItem key={idx}>
+                                            <SidebarMenuButton asChild isActive={activeItem === item.url} tooltip={item.title}>
+                                                <Link
+                                                    href={item.redirect || item.not_from_base_url ? item.url : `${baseUrl}${item.url}`}
+                                                    target={item.redirect ? "_blank" : ""}
+                                                    onClick={() => setActiveItem(item.url)}
+                                                    className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "justify-start")}
+                                                >
+                                                    <item.icon />
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                            {item.dropdown && (
+                                                <SidebarMenuAction showOnHover>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <MoreHorizontal />
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent side="right" align="start">
+                                                            {item.dropdown.map((dropdown, dIdx) => (
+                                                                <DropdownMenuItem key={dIdx} asChild>
+                                                                    <Link
+                                                                        href={
+                                                                            dropdown.redirect || dropdown.not_from_base_url
+                                                                                ? dropdown.url
+                                                                                : `${baseUrl}${dropdown.url}`
+                                                                        }
+                                                                        target={dropdown.redirect ? "_blank" : ""}
+                                                                    >
+                                                                        <span>{dropdown.title}</span>
+                                                                    </Link>
+                                                                </DropdownMenuItem>
+                                                            ))}
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </SidebarMenuAction>
+                                            )}
+                                        </SidebarMenuItem>
+                                    );
+                                })}
                             </SidebarGroupContent>
                         </CollapsibleContent>
                     </SidebarGroup>

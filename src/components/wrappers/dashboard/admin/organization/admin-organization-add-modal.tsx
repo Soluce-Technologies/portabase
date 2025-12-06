@@ -1,38 +1,49 @@
 "use client"
 
+import {CreateOrganizationModal} from "@/components/wrappers/dashboard/organization/create-organisation-modal";
+import {useRouter} from "next/navigation";
+import {authClient} from "@/lib/auth/auth-client";
 import {useState} from "react";
-import {Plus} from "lucide-react";
-
-import {
-    Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger
-} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
-import {AdminOrganizationForm} from "@/components/wrappers/dashboard/admin/organization/admin-organization-form";
+import {Plus} from "lucide-react";
 
 type AdminOrganizationAddModalProps = {}
 
 
 export const AdminOrganizationAddModal = (props: AdminOrganizationAddModalProps) => {
+    const router = useRouter();
+    const {data: organizations, refetch} = authClient.useListOrganizations();
+    const {data: activeOrganization, refetch: refetchActiveOrga} = authClient.useActiveOrganization();
+    const [openModal, setOpenModal] = useState(false);
+
+    if (!organizations) return null;
 
 
-    const [open, setOpen] = useState(false);
+    const handleReload = () => {
+        refetch();
+        refetchActiveOrga();
+        router.refresh();
+    };
+
+    const handleOpen = () => {
+        setOpenModal(true);
+    }
+
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button>
-                    <Plus/> add
-                </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>add organization</DialogTitle>
-                    <DialogDescription>
-                        your description
-                    </DialogDescription>
-                    <AdminOrganizationForm onSuccess={() => setOpen(false)}/>
-                </DialogHeader>
-            </DialogContent>
-        </Dialog>
+        <>
+
+            <Button onClick={handleOpen}>
+                <Plus/> Create a new organization
+            </Button>
+            <CreateOrganizationModal
+                redirect={"/dashboard/admin/organizations"}
+                open={openModal}
+                onSuccess={handleReload}
+                onOpenChange={setOpenModal}
+            />
+        </>
     )
 }
+
+

@@ -1,6 +1,14 @@
 "use client"
 
-import {Home, Settings, Target, Users, Pickaxe, Euro, BanknoteX, Layers, ChartArea, ShieldHalf} from "lucide-react";
+import {
+    Home,
+    Settings,
+    Users,
+    Layers,
+    ChartArea,
+    ShieldHalf,
+    Building, UserRoundCog, Mail, PackageOpen
+} from "lucide-react";
 import {SidebarGroupItem, SidebarMenuCustomBase} from "@/components/wrappers/dashboard/common/sidebar/menu-sidebar";
 import {authClient, useSession} from "@/lib/auth/auth-client";
 
@@ -9,11 +17,10 @@ export const SidebarMenuCustomMain = () => {
 
     const BASE_URL = `/dashboard`;
 
-    const { data: activeOrganization } = authClient.useActiveOrganization();
-    const { data: organizations } = authClient.useListOrganizations();
+    const {data: activeOrganization} = authClient.useActiveOrganization();
+    const {data: organizations} = authClient.useListOrganizations();
     const {data: session, isPending, error} = authClient.useSession();
     const member = authClient.useActiveMember();
-
 
 
     if (isPending) return null;
@@ -23,13 +30,13 @@ export const SidebarMenuCustomMain = () => {
     }
 
     const groupContentApplication: SidebarGroupItem["group_content"] = [
-        { title: "Dashboard", url: "/home", icon: Home },
+        {title: "Dashboard", url: "/home", icon: Home, type: "item"},
     ];
 
     const groupContent: SidebarGroupItem["group_content"] = [
-        { title: "Projects", url: "/projects", icon: Layers, details:true },
-        { title: "Statistics", url: "/statistics", icon: ChartArea },
-        { title: "Settings", url: "/settings", icon: Settings, details:true }
+        {title: "Projects", url: "/projects", icon: Layers, details: true, type: "item"},
+        {title: "Statistics", url: "/statistics", icon: ChartArea, type: "item"},
+        {title: "Settings", url: "/settings", icon: Settings, details: true, type: "item"}
     ];
 
     // if (activeOrganization && (member?.data?.role === "admin" || member?.data?.role === "owner")) {
@@ -55,10 +62,37 @@ export const SidebarMenuCustomMain = () => {
             label: "Administration",
             type: "list",
             group_content: [
-                {title: "Agents", url: "/agents", icon: ShieldHalf, details: true},
-                {title: "Administration panel", url: "/admin", icon: Settings, details: true},
-            ]
-        })
+                {
+                    title: "Agents",
+                    url: "/agents",
+                    icon: ShieldHalf,
+                    details: true,
+                    type: "item"
+                },
+                {
+                    title: "Access management",
+                    url: "/admin",
+                    icon: UserRoundCog,
+                    details: true,
+                    type: "collapse",
+                    submenu: [
+                        {title: "Users", url: "/admin/users", icon: Users, type: "item"},
+                        {title: "Organizations", url: "/admin/organizations", icon: Building, type: "item"},
+                    ],
+                },
+                {
+                    title: "Settings",
+                    url: "/admin/settings",
+                    icon: Settings,
+                    details: true,
+                    type: "collapse",
+                    submenu: [
+                        {title: "Email", url: "/admin/settings/email", icon: Mail, type: "item"},
+                        {title: "Storage", url: "/admin/settings/storage", icon: PackageOpen, type: "item"},
+                    ],
+                },
+            ],
+        });
     }
 
 

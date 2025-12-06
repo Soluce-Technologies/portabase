@@ -1,5 +1,5 @@
 "use client"
-import {Filter, Megaphone} from "lucide-react";
+import {Megaphone} from "lucide-react";
 
 import {useState} from "react";
 import {
@@ -26,16 +26,18 @@ type AlertPolicyModalProps = {
 export const AlertPolicyModal = ({database, notificationChannels, organizationId}: AlertPolicyModalProps) => {
     const [open, setOpen] = useState(false);
 
+    const notificationsChannelsIds = notificationChannels.map(channel => channel.id);
+    const activePolicies = database.alertPolicies?.filter((policy) => notificationsChannelsIds.some(()=> policy.notificationChannelId));
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" onClick={() => setOpen(true)} className="relative">
                     <Megaphone/>
-                    {database.alertPolicies && database.alertPolicies.length > 0 && (
+                    { activePolicies && activePolicies.length > 0 && (
                         <Badge
                             className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full p-0 text-[10px] flex items-center justify-center"
                         >
-                            {database.alertPolicies.length}
+                            {activePolicies.length}
                         </Badge>
                     )}
                 </Button>

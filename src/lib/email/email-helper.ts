@@ -41,6 +41,10 @@ export const sendEmail = async (data: Payload) => {
         throw new Error("SMTP system settings not found.");
     }
 
+    const emailsArray = data.to.split(",")
+        .map(email => email.trim());
+
+
     const transporter = nodemailer.createTransport({
         pool: true,
         host: settings.smtpHost ?? "",
@@ -54,6 +58,7 @@ export const sendEmail = async (data: Payload) => {
 
     return await transporter.sendMail({
         ...data,
+        to: emailsArray,
         from: settings.smtpFrom ?? undefined,
     });
 };

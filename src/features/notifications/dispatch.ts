@@ -78,6 +78,16 @@ export async function dispatchNotification(
             };
         }
 
+
+        if (!channel.enabled) {
+            return {
+                success: false,
+                channelId: channelId || "",
+                provider: null,
+                error: "Channel not active¬",
+            };
+        }
+
         const result = await dispatchViaProvider(
             channel.provider,
             channel.config,

@@ -116,6 +116,9 @@ export const updateProjectAction = userAction
                 await db.delete(drizzleDb.schemas.retentionPolicy)
                     .where(inArray(drizzleDb.schemas.retentionPolicy.databaseId, databasesToRemove)).execute();
 
+                await db.delete(drizzleDb.schemas.alertPolicy)
+                    .where(inArray(drizzleDb.schemas.alertPolicy.databaseId, databasesToRemove)).execute();
+
             }
             // const slug = slugify(parsedInput.data.name);
 

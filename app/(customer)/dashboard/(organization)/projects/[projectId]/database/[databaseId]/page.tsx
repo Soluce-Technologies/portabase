@@ -86,7 +86,7 @@ export default async function RoutePage(props: PageParams<{
     }
 
     const organizationChannels = await getOrganizationChannels(organization.id);
-    console.log(organizationChannels);
+    const activeOrganizationChannels = organizationChannels.filter(channel => channel.enabled);
 
     const successRate = totalBackups > 0 ? (successfulBackups / totalBackups) * 100 : null;
 
@@ -107,7 +107,7 @@ export default async function RoutePage(props: PageParams<{
                                 {/*<EditButton/>*/}
                                 <RetentionPolicySheet database={dbItem}/>
                                 <CronButton database={dbItem}/>
-                                <AlertPolicyModal database={dbItem} notificationChannels={organizationChannels} organizationId={organization.id} />
+                                <AlertPolicyModal database={dbItem} notificationChannels={activeOrganizationChannels} organizationId={organization.id} />
                             </div>
                             <div className="flex items-center gap-2">
                                 <BackupButton disable={isAlreadyBackup} databaseId={databaseId}/>

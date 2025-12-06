@@ -32,7 +32,7 @@ export function organizationsListColumns(): ColumnDef<OrganizationWithMembers>[]
                             <ButtonDeleteOrganization organisationId={row.original.id}/>
                         )}
                         <Link className={buttonVariants({variant: "outline"})}
-                              href={`admin/organization/${row.original.id}`}>
+                              href={`organizations/${row.original.id}`}>
                             <Settings/>
                         </Link>
                     </div>

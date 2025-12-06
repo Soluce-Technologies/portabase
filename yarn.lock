@@ -760,9 +760,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@better-auth/core@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@better-auth/core@npm:1.4.0"
+"@better-auth/core@npm:1.4.2":
+  version: 1.4.2
+  resolution: "@better-auth/core@npm:1.4.2"
   dependencies:
     "@standard-schema/spec": "npm:^1.0.0"
     zod: "npm:^4.1.12"
@@ -773,19 +773,19 @@ __metadata:
     jose: ^6.1.0
     kysely: ^0.28.5
     nanostores: ^1.0.1
-  checksum: 10c0/002d850e64df468cb4cbab33893a766ed2c681232fcdcbba5ed9b837aa780f869a65456c53707f20bda7348731e61d67862bb066d30bebf2d8892807a6330013
+  checksum: 10c0/2a0cc9461b251a29e0488d4fe398440ff25a6d4df8a5d1a4943244af4244835de6c004cac222e973d6f1670eebe3b4dfe0adf9fc1ee2b696b27d3e1620f994d0
   languageName: node
   linkType: hard
 
-"@better-auth/telemetry@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@better-auth/telemetry@npm:1.4.0"
+"@better-auth/telemetry@npm:1.4.2":
+  version: 1.4.2
+  resolution: "@better-auth/telemetry@npm:1.4.2"
   dependencies:
     "@better-auth/utils": "npm:0.3.0"
     "@better-fetch/fetch": "npm:1.1.18"
   peerDependencies:
-    "@better-auth/core": 1.4.0
-  checksum: 10c0/c2c5572b34340875f3887a9bb3f2d8facfde8b3dce5b32dc8da41e4217e29821f6fe3ee373a45e5d62a7225056b2598906c3ddbf47b9f8f5fd8130ca3953b3d2
+    "@better-auth/core": 1.4.2
+  checksum: 10c0/29990e7ffcc9c64347c614e12afe63f57780ac6b6ef0e32782d7c6e72e3c097bf76f980ceb943b6674fd56d17f3dfb1c0f391e76ca91f37740b71e47df6d78e9
   languageName: node
   linkType: hard
 
@@ -2399,10 +2399,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/env@npm:16.0.5"
-  checksum: 10c0/e40f587f282e58096bed617fdaa14929c3eb88183f9240f932494b75e54887861b73cb0e05c16f7da8624c5489b2b6ce00db1398dc1125e55650111b52c5da54
+"@next/env@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/env@npm:16.0.7"
+  checksum: 10c0/5bbb4360ae6b0753de83f70700295c09427f5414f6765c7371fee0894de2a614364a2e9b4ec7b7e3451d56334026bafec6d28a21222a2fa7ecaa27f0a9421cc7
   languageName: node
   linkType: hard
 
@@ -2422,9 +2422,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-darwin-arm64@npm:16.0.5"
+"@next/swc-darwin-arm64@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-darwin-arm64@npm:16.0.7"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -2436,9 +2436,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-darwin-x64@npm:16.0.5"
+"@next/swc-darwin-x64@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-darwin-x64@npm:16.0.7"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -2450,9 +2450,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-linux-arm64-gnu@npm:16.0.5"
+"@next/swc-linux-arm64-gnu@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-linux-arm64-gnu@npm:16.0.7"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
@@ -2464,9 +2464,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-linux-arm64-musl@npm:16.0.5"
+"@next/swc-linux-arm64-musl@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-linux-arm64-musl@npm:16.0.7"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
@@ -2478,9 +2478,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-linux-x64-gnu@npm:16.0.5"
+"@next/swc-linux-x64-gnu@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-linux-x64-gnu@npm:16.0.7"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
@@ -2492,9 +2492,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-linux-x64-musl@npm:16.0.5"
+"@next/swc-linux-x64-musl@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-linux-x64-musl@npm:16.0.7"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
@@ -2506,9 +2506,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-win32-arm64-msvc@npm:16.0.5"
+"@next/swc-win32-arm64-msvc@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-win32-arm64-msvc@npm:16.0.7"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -2520,9 +2520,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:16.0.5":
-  version: 16.0.5
-  resolution: "@next/swc-win32-x64-msvc@npm:16.0.5"
+"@next/swc-win32-x64-msvc@npm:16.0.7":
+  version: 16.0.7
+  resolution: "@next/swc-win32-x64-msvc@npm:16.0.7"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -6610,12 +6610,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"better-auth@npm:1.4.0":
-  version: 1.4.0
-  resolution: "better-auth@npm:1.4.0"
+"better-auth@npm:1.4.2":
+  version: 1.4.2
+  resolution: "better-auth@npm:1.4.2"
   dependencies:
-    "@better-auth/core": "npm:1.4.0"
-    "@better-auth/telemetry": "npm:1.4.0"
+    "@better-auth/core": "npm:1.4.2"
+    "@better-auth/telemetry": "npm:1.4.2"
     "@better-auth/utils": "npm:0.3.0"
     "@better-fetch/fetch": "npm:1.1.18"
     "@noble/ciphers": "npm:^2.0.0"
@@ -6644,7 +6644,7 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 10c0/9d4f5084dc09a4fd71edb360143698a4dbd4af58cbc48de1c0688c3977b887e94538777f0cc8bcdbb106dcc9eb59d61ac8a98cb3b76b825599dfc5e22c4b0a9d
+  checksum: 10c0/7b4c37bd74eaa3cb46c647d3504945a9062f389807a1779aa3e1254a512139c2d63afc31547cfe9f5a06972557fe5ba53297a77aed79f93d932ac3c548cf54c6
   languageName: node
   linkType: hard
 
@@ -11054,19 +11054,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:16.0.5":
-  version: 16.0.5
-  resolution: "next@npm:16.0.5"
+"next@npm:16.0.7":
+  version: 16.0.7
+  resolution: "next@npm:16.0.7"
   dependencies:
-    "@next/env": "npm:16.0.5"
-    "@next/swc-darwin-arm64": "npm:16.0.5"
-    "@next/swc-darwin-x64": "npm:16.0.5"
-    "@next/swc-linux-arm64-gnu": "npm:16.0.5"
-    "@next/swc-linux-arm64-musl": "npm:16.0.5"
-    "@next/swc-linux-x64-gnu": "npm:16.0.5"
-    "@next/swc-linux-x64-musl": "npm:16.0.5"
-    "@next/swc-win32-arm64-msvc": "npm:16.0.5"
-    "@next/swc-win32-x64-msvc": "npm:16.0.5"
+    "@next/env": "npm:16.0.7"
+    "@next/swc-darwin-arm64": "npm:16.0.7"
+    "@next/swc-darwin-x64": "npm:16.0.7"
+    "@next/swc-linux-arm64-gnu": "npm:16.0.7"
+    "@next/swc-linux-arm64-musl": "npm:16.0.7"
+    "@next/swc-linux-x64-gnu": "npm:16.0.7"
+    "@next/swc-linux-x64-musl": "npm:16.0.7"
+    "@next/swc-win32-arm64-msvc": "npm:16.0.7"
+    "@next/swc-win32-x64-msvc": "npm:16.0.7"
     "@swc/helpers": "npm:0.5.15"
     caniuse-lite: "npm:^1.0.30001579"
     postcss: "npm:8.4.31"
@@ -11109,7 +11109,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 10c0/d3b3a1be6e003ec2ede3535903716fe9d9d6eb6485f5f09f1c5de070b64fc636ea2316e868260fee272a74373e6296a5ab4db645d7ec89c845ac6eb9ccbad601
+  checksum: 10c0/72003fed0f5b690c91ae1a0cc59317691ca1976b46809557a93e00a43e55d4158a256b1a46da6cd7506e699d74aa0cf4e973ec5a35ceabbdd9a1955b507ec85d
   languageName: node
   linkType: hard
 
@@ -11813,7 +11813,7 @@ __metadata:
     argon2: "npm:^0.43.0"
     baseline-browser-mapping: "npm:^2.8.32"
     bcrypt: "npm:^6.0.0"
-    better-auth: "npm:1.4.0"
+    better-auth: "npm:1.4.2"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     cmdk: "npm:^1.1.1"
@@ -11831,7 +11831,7 @@ __metadata:
     lucide-react: "npm:^0.553.0"
     minio: "npm:^8.0.5"
     motion: "npm:^12.23.24"
-    next: "npm:16.0.5"
+    next: "npm:16.0.7"
     next-safe-action: "npm:^7.10.8"
     next-themes: "npm:^0.4.6"
     node-cron: "npm:^4.2.1"

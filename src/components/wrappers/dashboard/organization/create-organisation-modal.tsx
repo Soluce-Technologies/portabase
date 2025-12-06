@@ -17,10 +17,16 @@ export type createOrganizationModalProps = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSuccess?: () => void;
+    redirect?: string;
 
 };
 
-export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createOrganizationModalProps) {
+export function CreateOrganizationModal({
+                                            open,
+                                            onOpenChange,
+                                            onSuccess,
+                                            redirect = "/dashboard/home"
+                                        }: createOrganizationModalProps) {
 
 
     const router = useRouter();
@@ -41,7 +47,8 @@ export function CreateOrganizationModal({open, onOpenChange, onSuccess}: createO
                 await authClient.organization.setActive({organizationSlug: result.data.value.slug});
                 onSuccess?.();
                 toast.success(result.data.actionSuccess?.message || "Organization Created.");
-                router.replace(`/dashboard/home`);
+                form.reset()
+                router.replace(redirect);
             } else {
                 // @ts-ignore
                 const errorMsg = result?.data?.actionError?.message || result?.data?.actionError?.messageParams?.message || "Failed to create the organization.";
