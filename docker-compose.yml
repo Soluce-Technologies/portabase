@@ -1,27 +1,6 @@
 name: portabase-dev
 
 services:
-
-#  app:
-#    build:
-#      context: .
-#      dockerfile: docker/dockerfile/Dockerfile
-#      target: dev
-#    ports:
-#      - "8887:8887"
-#    environment:
-#      - TZ=Europe/Paris
-#      - NODE_ENV=development
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#    volumes:
-#      - .:/app
-#      - /app/node_modules
-#    container_name: portabase-app
-
-
-
   db:
     image: postgres:16-alpine
     ports:
