@@ -29,18 +29,18 @@ export const LoggedInDropdown = (props: LoggedInDropdownProps) => {
                         <span>Account</span>
                     </div>
                 </DropdownMenuItem>
-                {(props.user.role === "superadmin" || props.user.role === "admin") && (
-                    <DropdownMenuItem
-                        onClick={() => {
-                            redirect("/dashboard/admin");
-                        }}
-                    >
-                        <div className="flex justify-start items-center gap-2">
-                            <ShieldHalf size={16} />
-                            <span>Administration Panel</span>
-                        </div>
-                    </DropdownMenuItem>
-                )}
+                {/*{(props.user.role === "superadmin" || props.user.role === "admin") && (*/}
+                {/*    <DropdownMenuItem*/}
+                {/*        onClick={() => {*/}
+                {/*            redirect("/dashboard/admin");*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <div className="flex justify-start items-center gap-2">*/}
+                {/*            <ShieldHalf size={16} />*/}
+                {/*            <span>Administration Panel</span>*/}
+                {/*        </div>*/}
+                {/*    </DropdownMenuItem>*/}
+                {/*)}*/}
                 <DropdownMenuItem
                     onClick={async () => {
                         await signOut({
