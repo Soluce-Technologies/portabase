@@ -5,6 +5,7 @@ import {NotifierCard} from "@/components/wrappers/dashboard/common/notifier/noti
 import {useState} from "react";
 import {EmptyStatePlaceholder} from "@/components/wrappers/common/empty-state-placeholder";
 import {OrganizationWithMembers} from "@/db/schema/03_organization";
+import {NotifierAddEditModal} from "@/components/wrappers/dashboard/common/notifier/notifier-add-edit-modal";
 
 type NotificationChannelsSectionProps = {
     notificationChannels: NotificationChannelWith[]
@@ -22,8 +23,10 @@ export const NotificationChannelsSection = ({
 
     return (
         <div className="h-full">
+            <NotifierAddEditModal open={isAddModalOpen} onOpenChangeAction={setIsAddModalOpen} adminView={false} trigger={false}/>
             {hasNotifiers ? (
                 <div className="h-full">
+
                     <CardsWithPagination
                         data={notificationChannels}
                         cardItem={NotifierCard}
@@ -36,7 +39,9 @@ export const NotificationChannelsSection = ({
             ) : (
                 <EmptyStatePlaceholder
                     text="No notification channels configured yet"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={() => {
+                        setIsAddModalOpen(true)
+                    }}
                     className="h-full"
                 />
             )}

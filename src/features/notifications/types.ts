@@ -14,5 +14,8 @@ export interface EventPayload {
     message: string;
     level: 'critical' | 'warning' | 'info';
     timestamp?: Date;
+    event?: EventKind
     data?: Record<string, any>;
 }
+
+export type EventKind = ("error_backup" | "error_restore" | "success_restore" | "success_backup" | "weekly_report")

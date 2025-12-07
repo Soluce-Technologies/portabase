@@ -1,12 +1,13 @@
 "use server";
-import { eq } from "drizzle-orm";
-import { dispatchViaProvider } from "./providers";
-import type {EventPayload, DispatchResult} from "./types";
+import {eq} from "drizzle-orm";
+import {dispatchViaProvider} from "./providers";
+import type {EventPayload, DispatchResult, EventKind} from "./types";
 import * as drizzleDb from "@/db";
-import { db } from "@/db";
-import { notificationLog } from "@/db/schema/11_notification-log";
+import {db} from "@/db";
+import {notificationLog} from "@/db/schema/11_notification-log";
 import {NotificationChannel} from "@/db/schema/09_notification-channel";
 import {Json} from "drizzle-zod";
+import {AlertPolicy} from "@/db/schema/10_alert-policy";
 
 export async function dispatchNotification(
     payload: EventPayload,
@@ -18,14 +19,14 @@ export async function dispatchNotification(
         let channel: NotificationChannel | null = null;
 
         if (policyId) {
-            const policy = await db.query.alertPolicy.findFirst({
+            const policyDb = await db.query.alertPolicy.findFirst({
                 where: eq(drizzleDb.schemas.alertPolicy.id, policyId),
                 with: {
                     notificationChannel: true
                 },
             });
 
-            if (!policy || !policy.notificationChannel) {
+            if (!policyDb || !policyDb.notificationChannel) {
                 return {
                     success: false,
                     channelId: "",
@@ -34,18 +35,18 @@ export async function dispatchNotification(
                 };
             }
 
-            if (!policy.enabled || !policy.notificationChannel.enabled) {
+            if (!policyDb.enabled || !policyDb.notificationChannel.enabled) {
                 return {
                     success: false,
-                    channelId: policy.notificationChannel.id,
-                    provider: policy.notificationChannel.provider as any,
+                    channelId: policyDb.notificationChannel.id,
+                    provider: policyDb.notificationChannel.provider as any,
                     error: "Policy or channel is disabled",
                 };
             }
 
             channel = {
-                ...policy.notificationChannel,
-                config : policy.notificationChannel.config as Json,
+                ...policyDb.notificationChannel,
+                config: policyDb.notificationChannel.config as Json,
             };
         }
 
@@ -65,7 +66,7 @@ export async function dispatchNotification(
 
             channel = {
                 ...fetchedChannel,
-                config : fetchedChannel.config as Json,
+                config: fetchedChannel.config as Json,
             };
         }
 
@@ -91,7 +92,7 @@ export async function dispatchNotification(
         const result = await dispatchViaProvider(
             channel.provider,
             channel.config,
-            { ...payload, timestamp: payload.timestamp || new Date() },
+            {...payload, timestamp: payload.timestamp || new Date()},
             channel.id
         );
 
@@ -101,6 +102,11 @@ export async function dispatchNotification(
                 channelId: channel.id,
                 policyId: policyId || null,
                 organizationId: organizationId || null,
+
+                provider: channel.provider,
+                providerName: channel.name,
+                event: payload.event as EventKind,
+
                 title: payload.title,
                 message: payload.message,
                 level: payload.level,
@@ -109,9 +115,9 @@ export async function dispatchNotification(
                 error: result.success ? null : result.error,
                 providerResponse: result.response || null,
             })
-            .returning({ id: notificationLog.id });
+            .returning({id: notificationLog.id});
 
-        return { ...result, channelId: channel.id };
+        return {...result, channelId: channel.id};
 
     } catch (err: any) {
         return {

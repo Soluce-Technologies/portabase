@@ -2,7 +2,6 @@ import {and, desc, eq, gte, lte} from 'drizzle-orm';
 import {NotificationLevel, notificationLog} from "@/db/schema/11_notification-log";
 import {notificationChannel} from "@/db/schema/09_notification-channel";
 import {db} from "@/db";
-import {alertPolicy} from "@/db/schema/10_alert-policy";
 import {Json} from "drizzle-zod";
 
 export type NotificationLogWithRelations = {
@@ -18,13 +17,11 @@ export type NotificationLogWithRelations = {
         message: string;
     },
     channel: {
-        id: string;
         name: string;
         provider: string;
     } | null;
     policy: {
-        id: string;
-        eventKinds: string[];
+        event: string | null;
     } | null;
 };
 
@@ -63,18 +60,16 @@ export async function getNotificationHistory(
                 message: notificationLog.message,
             },
             channel: {
-                id: notificationChannel.id,
-                name: notificationChannel.name,
-                provider: notificationChannel.provider,
+                name: notificationLog.providerName,
+                provider: notificationLog.provider,
             },
             policy: {
-                id: alertPolicy.id,
-                eventKinds: alertPolicy.eventKinds,
+                event: notificationLog.event,
             },
         })
         .from(notificationLog)
         .leftJoin(notificationChannel, eq(notificationLog.channelId, notificationChannel.id))
-        .leftJoin(alertPolicy, eq(notificationLog.policyId, alertPolicy.id))
+        // .leftJoin(alertPolicy, eq(notificationLog.policyId, alertPolicy.id))
         .where(and(...where))
         .orderBy(desc(notificationLog.sentAt))
         .limit(filters?.limit || 100);

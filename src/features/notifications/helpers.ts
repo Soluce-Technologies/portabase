@@ -1,9 +1,7 @@
 import {DatabaseWith} from "@/db/schema/07_database";
-import {EventPayload} from "@/features/notifications/types";
+import {EventKind, EventPayload} from "@/features/notifications/types";
 import {dispatchNotification} from "@/features/notifications/dispatch";
 
-
-type EventKind = ("error_backup" | "error_restore" | "success_restore" | "success_backup" | "weekly_report")
 
 export async function sendNotificationsBackupRestore(database: DatabaseWith, event: EventKind) {
 
@@ -52,6 +50,7 @@ export async function sendNotificationsBackupRestore(database: DatabaseWith, eve
                         title: titleMap[event],
                         message,
                         level: level,
+                        event: event,
                         data: {
                             host: database.name,
                             id: database.id,

@@ -35,8 +35,10 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
     const router = useRouter()
     const organizationNotificationChannels = notificationChannels.map(channel => channel.id) ?? [];
 
+
+
     const formattedAlertPoliciesList = (alertPolicies: AlertPolicy[]) => {
-        return alertPolicies.map((alertPolicy) => ({
+        return alertPolicies.filter((alertPolicy)=> organizationNotificationChannels.includes(alertPolicy.notificationChannelId)).map((alertPolicy) => ({
             notificationChannelId: alertPolicy.notificationChannelId,
             eventKinds: alertPolicy.eventKinds,
             enabled: alertPolicy.enabled
@@ -273,11 +275,6 @@ export const AlertPolicyForm = ({database, notificationChannels, organizationId,
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
                                                     <div tabIndex={0} className="inline-flex rounded-md">
-                                                        {/*<Switch*/}
-                                                        {/*    checked={true}*/}
-                                                        {/*    onCheckedChange={async () => {*/}
-                                                        {/*    }}*/}
-                                                        {/*/>*/}
 
 
                                                         <FormField

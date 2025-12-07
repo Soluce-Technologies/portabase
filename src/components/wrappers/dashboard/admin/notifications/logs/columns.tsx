@@ -54,16 +54,21 @@ export function notificationLogsColumns(): ColumnDef<NotificationLogWithRelation
         },
         {
             accessorKey: "policy",
-            header: "Event Kinds",
-            cell: ({row}) => {
-                const eventKinds = row.original.policy?.eventKinds ?? [];
+            header: "Event Kind",
+            cell: ({ row }) => {
+                const eventKind = row.original.policy?.event;
+
+                if (!eventKind) {
+                    return (
+                        <div className="text-muted-foreground italic">
+                            No event
+                        </div>
+                    );
+                }
+
                 return (
-                    <div>
-                        {eventKinds.map((eventKind, idx) => (
-                            <div key={idx} className="flex items-center gap-2">
-                                <Badge>{eventKind}</Badge>
-                            </div>
-                        ))}
+                    <div className="flex items-center gap-2">
+                        <Badge>{eventKind}</Badge>
                     </div>
                 );
             }

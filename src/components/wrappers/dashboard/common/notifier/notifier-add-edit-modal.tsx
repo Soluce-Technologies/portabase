@@ -10,7 +10,7 @@ import {NotifierForm} from "@/components/wrappers/dashboard/common/notifier/noti
 import {OrganizationWithMembers} from "@/db/schema/03_organization";
 import {NotificationChannel, NotificationChannelWith} from "@/db/schema/09_notification-channel";
 import {useIsMobile} from "@/hooks/use-mobile";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
     NotifierChannelOrganisationForm
@@ -23,6 +23,7 @@ type OrganizationNotifierAddModalProps = {
     onOpenChangeAction?: (open: boolean) => void;
     adminView?: boolean;
     organizations?: OrganizationWithMembers[]
+    trigger?: boolean;
 }
 
 
@@ -32,12 +33,17 @@ export const NotifierAddEditModal = ({
                                          open = false,
                                          onOpenChangeAction,
                                          adminView,
-                                         organizations
+                                         organizations ,
+                                        trigger= true
                                      }: OrganizationNotifierAddModalProps) => {
     const isMobile = useIsMobile();
     const [openInternal, setOpen] = useState(open);
 
     const isCreate = !Boolean(notificationChannel);
+
+    useEffect(() => {
+        setOpen(open);
+    },[open])
 
 
     return (
@@ -45,20 +51,23 @@ export const NotifierAddEditModal = ({
             onOpenChangeAction?.(state);
             setOpen(state);
         }}>
-            <DialogTrigger asChild>
-                {isCreate ?
-                    <Button>
-                        <Plus/>{!isMobile && `Add notification channel`}
-                    </Button>
-                    :
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                    >
-                        <Pencil className="h-4 w-4"/>
-                    </Button>
-                }
-            </DialogTrigger>
+            {trigger && (
+                <DialogTrigger asChild>
+                    {isCreate ?
+                        <Button>
+                            <Plus/>{!isMobile && `Add notification channel`}
+                        </Button>
+                        :
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                        >
+                            <Pencil className="h-4 w-4"/>
+                        </Button>
+                    }
+                </DialogTrigger>
+            )}
+
             <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle> {isCreate ? "Add" : "Edit"} Notification Channel</DialogTitle>

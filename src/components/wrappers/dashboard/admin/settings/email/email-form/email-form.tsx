@@ -14,7 +14,7 @@ import {Input} from "@/components/ui/input";
 import {Form} from "@/components/ui/form";
 import {Button} from "@/components/ui/button";
 import {useMutation} from "@tanstack/react-query";
-import {TooltipProvider} from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 import {
     EmailFormSchema,
@@ -26,6 +26,11 @@ import {
 } from "@/components/wrappers/dashboard/admin/settings/email/email-form/email-form.action";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {sendEmail} from "@/lib/email/email-helper";
+import {render} from "@react-email/components";
+import EmailSettingsTest from "@/components/emails/email-settings-test";
+import {ButtonWithLoading} from "@/components/wrappers/common/button/button-with-loading";
+import {Send} from "lucide-react";
 
 export type EmailFormProps = {
     defaultValues?: EmailFormType;
@@ -36,6 +41,8 @@ export const EmailForm = (props: EmailFormProps) => {
         schema: EmailFormSchema,
         defaultValues: props.defaultValues,
     });
+    const isDirty = form.formState.isDirty;
+
     const router = useRouter();
 
     const mutation = useMutation({
@@ -47,9 +54,44 @@ export const EmailForm = (props: EmailFormProps) => {
                 return;
             }
             toast.success(`Success updating email informations`);
+            form.reset(data);
             router.refresh();
         },
     });
+
+    const mutationSendEmailTest = useMutation({
+        mutationFn: async () => {
+            if (!props.defaultValues?.smtpUser || !props.defaultValues?.smtpFrom) {
+                toast.error("SMTP is not configured");
+                return;
+            }
+
+
+            try {
+                const email = await sendEmail({
+                    to: props.defaultValues.smtpUser,
+                    subject: "Portabase",
+                    html: await render(EmailSettingsTest(), {}),
+                    from: props.defaultValues.smtpFrom,
+                });
+
+                if (email?.response) {
+                    toast.success("Test Email successfully sent!");
+                }
+
+                return email;
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    toast.error(`Email sending failed: ${error.message}`);
+                } else {
+                    toast.error("Unknown error while sending test email");
+                }
+
+                throw error;
+            }
+        },
+    });
+
 
     return (
         <TooltipProvider>
@@ -139,8 +181,56 @@ export const EmailForm = (props: EmailFormProps) => {
                                 </FormItem>
                             )}
                         />
-                        <div className="flex justify-end gap-4">
-                            <Button>Save</Button>
+                        <div className="flex justify-between gap-4">
+
+                            {/*{props.defaultValues?.smtpFrom && (*/}
+                            {/*    <ButtonWithLoading*/}
+                            {/*        type="button"*/}
+                            {/*        isPending={mutationSendEmailTest.isPending}*/}
+                            {/*        onClick={async () => {*/}
+                            {/*            await mutationSendEmailTest.mutateAsync();*/}
+                            {/*        }}*/}
+                            {/*        icon={<Send/>}*/}
+                            {/*        size="default"*/}
+                            {/*        className="bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-all"*/}
+
+                            {/*    >Send email test</ButtonWithLoading>*/}
+                            {/*)}*/}
+
+
+
+                            {props.defaultValues?.smtpFrom && (
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div>
+                                            <ButtonWithLoading
+                                                type="button"
+                                                disabled={isDirty || mutationSendEmailTest.isPending}
+                                                isPending={mutationSendEmailTest.isPending}
+                                                onClick={async () => {
+                                                    await mutationSendEmailTest.mutateAsync();
+                                                }}
+                                                icon={<Send />}
+                                                size="default"
+                                                className="bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-all"
+
+                                            >
+                                                Send email test
+                                            </ButtonWithLoading>
+                                        </div>
+                                    </TooltipTrigger>
+
+                                    {isDirty && (
+                                        <TooltipContent>
+                                            You must save changes before testing the email settings.
+                                        </TooltipContent>
+                                    )}
+                                </Tooltip>
+                            )}
+
+                            <Button
+                                type="submit"
+                            >Save</Button>
                         </div>
                     </Form>
                 </CardContent>
