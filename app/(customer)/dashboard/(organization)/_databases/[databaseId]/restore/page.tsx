@@ -1,7 +1,7 @@
 import {PageParams} from "@/types/next";
 import {Page, PageContent, PageHeader, PageTitle} from "@/features/layout/page";
 import {notFound} from "next/navigation";
-import {RestoreForm} from "@/components/wrappers/dashboard/database/restore-form";
+// import {RestoreForm} from "@/components/wrappers/dashboard/database/restore-form";
 import {currentUser} from "@/lib/auth/current-user";
 
 import {db} from "@/db";
@@ -34,7 +34,7 @@ export default async function RoutePage(
                 <PageTitle>Restore {dbToRestore.name}</PageTitle>
             </PageHeader>
             <PageContent>
-                <RestoreForm databaseToRestore={dbToRestore} databases={dbsOfSameType} backups={successfulBackups}/>
+                {/*<RestoreForm databaseToRestore={dbToRestore} databases={dbsOfSameType} backups={successfulBackups}/>*/}
             </PageContent>
         </Page>
     );

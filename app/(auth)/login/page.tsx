@@ -1,4 +1,3 @@
-import {notFound} from "next/navigation";
 import {env} from "@/env.mjs";
 import {LoginForm} from "@/components/wrappers/auth/login/login-form/login-form";
 import {Metadata} from "next";
