@@ -110,3 +110,4 @@ USER nextjs
 
 ENTRYPOINT ["sh","/app/app-prod-entrypoint.sh"]
 
+

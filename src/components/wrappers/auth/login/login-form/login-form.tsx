@@ -150,11 +150,13 @@ export const LoginForm = (props: loginFormProps) => {
                         </Button>
                     </Form>
 
-                    <div className="relative my-4 flex items-center justify-center overflow-hidden">
-                        <Separator/>
-                        <div className="px-2 text-center bg-card text-sm">OR</div>
-                        <Separator/>
-                    </div>
+                    {availableProviders.length > 0 && (
+                        <div className="relative my-4 flex items-center justify-center overflow-hidden">
+                            <Separator/>
+                            <div className="px-2 text-center bg-card text-sm">OR</div>
+                            <Separator/>
+                        </div>
+                    )}
 
                     <SocialAuthButton
                         callBackURL={urlParams.get("redirect") ?? "/dashboard/profile"}
