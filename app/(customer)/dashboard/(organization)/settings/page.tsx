@@ -10,6 +10,7 @@ import {EditButtonSettings} from "@/components/wrappers/dashboard/settings/edit-
 import {Metadata} from "next";
 import {OrganizationTabs} from "@/components/wrappers/dashboard/organization/tabs/organization-tabs";
 import {getOrganizationChannels} from "@/db/services/notification-channel";
+import {computeOrganizationPermissions} from "@/lib/acl/organization-acl";
 
 export const metadata: Metadata = {
     title: "Settings",
@@ -20,32 +21,34 @@ export default async function RoutePage(props: PageParams<{ slug: string }>) {
     const user = await currentUser();
     const activeMember = await getActiveMember()
 
-    if (!organization) {
+    if (!organization || !activeMember) {
         notFound();
     }
 
     const notificationChannels = await getOrganizationChannels(organization.id)
 
-    const isMember = activeMember?.role === "member";
-    const isOwner = activeMember?.role === "owner";
+    const permissions = computeOrganizationPermissions(activeMember);
+
 
     return (
         <Page>
             <PageHeader>
                 <PageTitle className="flex items-center">
                     Organization settings
-                    {!isMember && organization.slug !== "default" && (
+                    {permissions.canManageSettings && organization.slug !== "default" && (
                         <EditButtonSettings/>
                     )}
                 </PageTitle>
+
                 <PageActions>
-                    {isOwner && organization.slug !== "default" && (
+                    {permissions.canManageDangerZone && organization.slug !== "default" && (
                         <DeleteOrganizationButton organizationSlug={organization.slug}/>
                     )}
                 </PageActions>
             </PageHeader>
             <PageContent>
                 <OrganizationTabs
+                    activeMember={activeMember}
                     organization={organization}
                     notificationChannels={notificationChannels}
                 />
