@@ -82,7 +82,7 @@ export const auth = betterAuth({
         },
         additionalFields: {
             deletedAt: {
-                type: "number", //pg timestamp
+                type: "number",
                 nullable: true,
                 required: false,
             },
