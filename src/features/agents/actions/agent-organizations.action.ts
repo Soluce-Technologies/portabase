@@ -54,22 +54,26 @@ export async function detachAgentFromOrganizationsService(
 
     if (projectIds.length > 0) {
         const databases = await db.query.database.findMany({
-            where: (database, { inArray, and, isNull }) => and(inArray(database.projectId, projectIds), isNull(database.deletedAt)),
+            where: (database, { inArray, and, eq, isNull }) => and(
+                eq(database.agentId, agentId),
+                inArray(database.projectId, projectIds),
+                isNull(database.deletedAt)
+            ),
             columns: { id: true }
         });
 
         const databaseIds = databases.map(d => d.id);
 
-        await db
-            .update(drizzleDb.schemas.database)
-            .set(withUpdatedAt({
-                backupPolicy: null,
-                projectId: null
-            }))
-            .where(inArray(drizzleDb.schemas.database.projectId, projectIds))
-            .execute();
-
         if (databaseIds.length > 0) {
+            await db
+                .update(drizzleDb.schemas.database)
+                .set(withUpdatedAt({
+                    backupPolicy: null,
+                    projectId: null
+                }))
+                .where(inArray(drizzleDb.schemas.database.id, databaseIds))
+                .execute();
+
             await db.delete(drizzleDb.schemas.retentionPolicy)
                 .where(inArray(drizzleDb.schemas.retentionPolicy.databaseId, databaseIds))
                 .execute();
