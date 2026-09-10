@@ -8,6 +8,7 @@ export const storageProviders: ProviderIconTypes[] = [
     {value: "google-drive", label: "Google Drive", icon: GoogleDriveIcon},
     {value: "blob", label: "Azure Blob Storage", icon: BlobIcon},
     {value: "google-cloud-storage", label: "Google Cloud Storage", icon: GCSIcon},
+    {value: "rclone", label: "rclone (any backend)", icon: RcloneIcon},
 ]
 
 export function S3Icon(props: SVGProps<SVGSVGElement>) {
@@ -71,6 +72,23 @@ export function GCSIcon(props: SVGProps<SVGSVGElement>) {
                 <circle fill="#ea4335" cx="349" cy="144.4" r="37"/>
                 <circle fill="#4285f4" cx="349" cy="367.9" r="37"/>
             </g>
+        </svg>
+    );
+}
+
+export function RcloneIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={256}
+            height={256}
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                fill="currentColor"
+                d="M12 2a1 1 0 0 1 .87.5l3.46 6a1 1 0 0 1 0 1l-3.46 6a1 1 0 0 1-1.74 0l-3.46-6a1 1 0 0 1 0-1l3.46-6A1 1 0 0 1 12 2m0 3.5L9.7 9.5l2.3 4l2.3-4zM4.5 15h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2m11 0h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2M7 19h10a1 1 0 0 1 0 2H7a1 1 0 0 1 0-2"
+            />
         </svg>
     );
 }
