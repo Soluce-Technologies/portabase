@@ -39,7 +39,11 @@ export const RcloneChannelConfigSchema = z
             ctx.addIssue({
                 code: "custom",
                 path: ["configText"],
-                message: `Backend type "${blocked.type}" is not allowed (remote "${blocked.remote}").`,
+                message:
+                    `Backend type "${blocked.type}" is not allowed (remote "${blocked.remote}"). ` +
+                    "Wrapping backends such as crypt, chunker and union need a second remote, " +
+                    "and a channel holds only one section; memory, http and googlephotos cannot " +
+                    "store a backup.",
             });
         }
 

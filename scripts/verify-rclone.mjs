@@ -87,11 +87,36 @@ check("findBlockedBackend: catches alias", () => {
 });
 
 check("findBlockedBackend: catches a blocked backend in a section that is not the named one", () => {
-    // The chosen remote ("secret") is fine on its own, but wraps a blocked
-    // "disk" remote. findBlockedBackend must scan every section, not just
-    // the one the channel names.
-    const cfg = "[secret]\ntype = crypt\nremote = disk:vault\n\n[disk]\ntype = local\n";
+    // The chosen remote is a plain s3 section, but a second section declares a
+    // local backend. findBlockedBackend must scan every section, not just the
+    // one the channel names.
+    const cfg = `${S3_SECTION}\n[disk]\ntype = local\n`;
     assert.deepStrictEqual(findBlockedBackend(cfg), {remote: "disk", type: "local"});
+});
+
+check("findBlockedBackend: catches a wrapping backend pointing at a bare local path", () => {
+    // The escape that the "local" entry alone does not catch: no section
+    // declares type = local, but rclone would still read and write the
+    // container filesystem through the wrapping backend.
+    for (const backend of ["crypt", "chunker", "compress", "union", "combine", "hasher"]) {
+        const cfg = `[sneaky]\ntype = ${backend}\nremote = /etc\n`;
+        assert.deepStrictEqual(
+            findBlockedBackend(cfg),
+            {remote: "sneaky", type: backend},
+            `${backend} must be rejected`,
+        );
+    }
+});
+
+check("findBlockedBackend: catches backends that cannot hold a backup", () => {
+    for (const backend of ["memory", "http", "googlephotos"]) {
+        const cfg = `[nope]\ntype = ${backend}\n`;
+        assert.deepStrictEqual(
+            findBlockedBackend(cfg),
+            {remote: "nope", type: backend},
+            `${backend} must be rejected`,
+        );
+    }
 });
 
 check("findBlockedBackend: null for a clean s3 config", () => {

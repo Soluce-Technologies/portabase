@@ -1,9 +1,34 @@
 /**
- * Backends that would give a storage channel read/write access to the container
- * filesystem outside the intended paths. The agent enforces the same list on its
- * side, because it receives this config over the wire.
+ * Backend types a storage channel may not use.
+ *
+ * Kept in lockstep with `BLOCKED_BACKEND_TYPES` in the agent's
+ * `src/services/storage/providers/rclone/helpers.rs`. Enforced on both sides,
+ * because the agent receives this config over the wire and must not trust it.
+ *
+ * Three groups:
+ *  - `local` / `alias` reach the container filesystem directly.
+ *  - The wrapping ("virtual") backends each need a second remote to wrap, which
+ *    a single-section channel config cannot supply — and several of them accept
+ *    a bare local path as that remote, which would otherwise walk straight past
+ *    the `local` entry above.
+ *  - `memory`, `http` and `googlephotos` cannot hold a backup: in-RAM and lost
+ *    on exit, read-only, and media-only-with-rewriting respectively.
  */
-export const BLOCKED_BACKEND_TYPES = ["local", "alias"] as const;
+export const BLOCKED_BACKEND_TYPES = [
+    "local",
+    "alias",
+    "crypt",
+    "chunker",
+    "compress",
+    "union",
+    "combine",
+    "hasher",
+    "archive",
+    "cache",
+    "memory",
+    "http",
+    "googlephotos",
+] as const;
 
 type Section = { name: string; type: string | null };
 
