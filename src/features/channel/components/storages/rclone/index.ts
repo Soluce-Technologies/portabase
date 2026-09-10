@@ -89,7 +89,8 @@ function statFound(stat: RunResult, remotePath: string): boolean {
 
     if (typeof parsed !== "object" || parsed === null) return false;
     const {IsDir, Name} = parsed as { IsDir?: unknown; Name?: unknown };
-    return IsDir === false && Name === path.basename(remotePath);
+    const expected = path.basename(remotePath.split(":").pop() ?? remotePath);
+    return IsDir === false && Name === expected;
 }
 
 /** Runs rclone and removes the temp config afterwards, whatever happens. */
@@ -139,10 +140,16 @@ export async function getRclone(
     // from a zero-byte backup.
     const {dir, file} = await writeConfig(config);
 
-    const stat = await run(file, ["lsjson", "--stat", remote]);
+    let stat: RunResult;
+    try {
+        stat = await run(file, ["lsjson", "--stat", remote]);
+    } catch (err) {
+        await rm(dir, {recursive: true, force: true});
+        throw err;
+    }
     if (!statFound(stat, remote)) {
         await rm(dir, {recursive: true, force: true});
-        return {success: false, provider: PROVIDER, error: "File not found"};
+        return {success: false, provider: PROVIDER, error: stat.stderr || "File not found"};
     }
 
     const child = spawn("rclone", ["--config", file, "cat", remote], {
