@@ -19,6 +19,8 @@ export type SettingsTabsProps = {
 };
 
 export const SettingsTabs = ({ settings, storageChannels, notificationChannels }: SettingsTabsProps) => {
+    const {isDemoEnabled} = useAcl();
+
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -59,6 +61,20 @@ export const SettingsTabs = ({ settings, storageChannels, notificationChannels }
             content: <SettingsNotificationSection notificationChannels={notificationChannels} settings={settings} />,
         },
     ];
+
+    if (isDemoEnabled) {
+        return (
+            <div className="h-full mt-3">
+                <Alert variant="default">
+                    <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5"/>
+                    <AlertDescription>
+                        System settings are not available in demo mode.
+                    </AlertDescription>
+                </Alert>
+            </div>
+        );
+    }
+
 
     return (
         <div className="h-full mt-3">

@@ -7,14 +7,15 @@ import SetPasswordForm from "./set-password-form";
 type SetPasswordModalProps = {
     onOpenChange: (open: boolean) => void;
     open: boolean;
+    disabled?: boolean;
 };
 
-export function SetPasswordProfileProviderModal({ onOpenChange, open }: SetPasswordModalProps) {
+export function SetPasswordProfileProviderModal({ onOpenChange, open, disabled }: SetPasswordModalProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <Button variant="default" size="sm">
+            <DialogTrigger asChild disabled={disabled}>
+                <Button variant="default" size="sm" disabled={disabled}>
                     Set Password
                 </Button>
             </DialogTrigger>

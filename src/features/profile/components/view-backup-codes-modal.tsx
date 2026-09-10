@@ -23,9 +23,10 @@ type Password = z.infer<typeof PasswordSchema>;
 type ViewBackupCodesModalProps = {
     onOpenChange: (open: boolean) => void;
     open: boolean;
+    disabled?: boolean;
 };
 
-export function ViewBackupCodesModal({ onOpenChange, open }: ViewBackupCodesModalProps) {
+export function ViewBackupCodesModal({ onOpenChange, open, disabled }: ViewBackupCodesModalProps) {
 
 
     const [step, setStep] = useState<"PASSWORD" | "CODES">("PASSWORD");
@@ -66,8 +67,8 @@ export function ViewBackupCodesModal({ onOpenChange, open }: ViewBackupCodesModa
 
     return (
         <Dialog open={open} onOpenChange={(v) => (!v ? handleClose() : onOpenChange(v))}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+            <DialogTrigger asChild disabled={disabled}>
+                <Button variant="outline" size="sm" className="w-full" disabled={disabled}>
                     <FileKey2 className="w-4 h-4 mr-2" />
                     Regenerate Backup Codes
                 </Button>

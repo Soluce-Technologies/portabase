@@ -7,14 +7,15 @@ import ResetPasswordForm from "./profile-reset-password-form";
 type ResetPasswordModalProps = {
     onOpenChange: (open: boolean) => void;
     open: boolean;
+    disabled?: boolean;
 };
 
-export function ResetPasswordProfileProviderModal({ onOpenChange, open }: ResetPasswordModalProps) {
+export function ResetPasswordProfileProviderModal({ onOpenChange, open, disabled }: ResetPasswordModalProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
+            <DialogTrigger asChild disabled={disabled}>
+                <Button variant="outline" size="sm" disabled={disabled}>
                     Reset Password
                 </Button>
             </DialogTrigger>

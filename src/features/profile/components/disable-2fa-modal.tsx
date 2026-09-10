@@ -24,9 +24,10 @@ type Password = z.infer<typeof PasswordSchema>;
 type Disable2FAModalProps = {
     onOpenChange: (open: boolean) => void;
     open: boolean;
+    disabled?: boolean;
 };
 
-export function Disable2FAProfileProviderModal({ onOpenChange, open }: Disable2FAModalProps) {
+export function Disable2FAProfileProviderModal({ onOpenChange, open, disabled }: Disable2FAModalProps) {
 
     const router = useRouter();
     const [step, setStep] = useState<"OTP" | "PASSWORD">("OTP");
@@ -67,8 +68,8 @@ export function Disable2FAProfileProviderModal({ onOpenChange, open }: Disable2F
 
     return (
         <Dialog open={open} onOpenChange={(v) => (!v ? handleClose() : onOpenChange(v))}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+            <DialogTrigger asChild disabled={disabled}>
+                <Button variant="outline" size="sm" className="w-full" disabled={disabled}>
                     <ShieldX className="w-4 h-4 mr-2" />
                     Disable Two-Factor
                 </Button>

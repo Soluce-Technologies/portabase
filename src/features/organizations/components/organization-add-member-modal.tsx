@@ -20,14 +20,15 @@ import {User} from "@/db/schema/02_user";
 type OrganizationAddMemberModalProps = {
     users: User[];
     organization: OrganizationWithMembersAndUsers;
+    disabled?: boolean;
 };
 
-export const OrganizationAddMemberModal = ({users, organization}: OrganizationAddMemberModalProps) => {
+export const OrganizationAddMemberModal = ({users, organization, disabled}: OrganizationAddMemberModalProps) => {
     const [open, setOpen] = useState(false);
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button>
+            <DialogTrigger asChild disabled={disabled}>
+                <Button disabled={disabled}>
                     <UserPlus className="w-4 h-4 mr-2"/>
                     Add member
                 </Button>

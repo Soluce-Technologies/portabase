@@ -20,6 +20,7 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {updateProfileSettingsAction} from "../actions/profile.action";
 import {User} from "@/db/schema/02_user";
+import {useAcl} from "@/lib/acl/acl-context";
 import {ProfileSchema, ProfileSchemaType} from "../schemas/general.schema";
 import {AvatarWithUpload} from "@/features/profile/components/avatar-with-upload";
 
@@ -30,6 +31,7 @@ interface ProfileGeneralProps {
 
 export function ProfileGeneral({user, avatarUrl}: ProfileGeneralProps) {
     const router = useRouter();
+    const {isSuperAdminAndDemo} = useAcl()
 
     const profileForm = useZodForm({
         schema: ProfileSchema,
@@ -63,13 +65,14 @@ export function ProfileGeneral({user, avatarUrl}: ProfileGeneralProps) {
             <div className="flex flex-col sm:flex-row gap-8 items-start">
                 <div className="flex flex-col items-center gap-2">
                     <AvatarWithUpload
+                        disabled={isSuperAdminAndDemo}
                         user={user}
                         avatarUrl={avatarUrl}
                     />
                 </div>
 
                 <div className="flex-1 w-full max-w-lg">
-                    <Form form={profileForm} onSubmit={(values) => updateProfile(values)}>
+                    <Form disabled={isSuperAdminAndDemo} form={profileForm} onSubmit={(values) => updateProfile(values)}>
                         <div className="space-y-6">
                             <FormField
                                 control={profileForm.control}
@@ -121,9 +124,7 @@ export function ProfileGeneral({user, avatarUrl}: ProfileGeneralProps) {
 }
 
 function RoleBadge({role}: { role: string }) {
-
     const variant = role === "admin" ? "default" : "secondary";
-
     return (
         <Badge variant={variant} className="capitalize px-2 py-0.5 text-xs">
             {role}

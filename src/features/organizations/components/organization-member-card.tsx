@@ -24,9 +24,10 @@ import {formatDayOnly} from "@/utils/date-formatting";
 type OrganizationMemberCardProps = {
     member: MemberWithUser;
     organization: OrganizationWithMembersAndUsers;
+    disabled?: boolean;
 };
 
-export const OrganizationMemberCard = ({member, organization}: OrganizationMemberCardProps) => {
+export const OrganizationMemberCard = ({member, organization, disabled}: OrganizationMemberCardProps) => {
 
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [isModalRoleOpen, setIsModalRoleOpen] = useState(false);
@@ -63,8 +64,8 @@ export const OrganizationMemberCard = ({member, organization}: OrganizationMembe
             <div className="flex items-center space-x-2 mt-4 md:mt-0">
                 <Badge variant={getRoleBadgeVariant(member.role)}>{member.role}</Badge>
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                        <DropdownMenuTrigger asChild disabled={disabled}>
+                            <Button variant="ghost" size="icon" disabled={disabled}>
                                 <MoreHorizontal className="w-4 h-4"/>
                             </Button>
                         </DropdownMenuTrigger>
