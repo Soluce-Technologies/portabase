@@ -25,13 +25,13 @@ type StorageRcloneFormProps = {
     form: UseFormReturn<any, any, any>;
 };
 
-const CONFIG_PLACEHOLDER = `[ovhcloud-rbx]
+const CONFIG_PLACEHOLDER = `[my-remote]
 type = s3
-provider = OVHcloud
-access_key_id = my_access
-secret_access_key = my_secret
-region = rbx
-endpoint = s3.rbx.io.cloud.ovh.net
+provider = Other
+access_key_id = ACCESS_KEY_ID
+secret_access_key = SECRET_ACCESS_KEY
+region = us-east-1
+endpoint = https://s3.example.com
 acl = private`;
 
 export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
@@ -39,11 +39,7 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
     const remoteName: string = form.watch("config.remoteName") ?? "";
     const remotes = parseRemoteNames(configText);
 
-    // Exactly one section is allowed, so the remote name is derived from the
-    // header rather than chosen. Mirror it into form state, and clear it when
-    // the paste is not a single valid section so no stale name is submitted.
     const soleRemote = remotes.length === 1 ? remotes[0] : "";
-    // Shown inside the remote-path tooltip examples.
     const remote = remoteName || "remote";
     useEffect(() => {
         if (remoteName !== soleRemote) {
