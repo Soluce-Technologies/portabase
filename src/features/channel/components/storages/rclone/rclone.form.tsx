@@ -15,8 +15,11 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {Info} from "lucide-react";
-import {parseRemoteNames} from "@/features/channel/components/storages/rclone/rclone.parse";
+import {ExternalLink, Info} from "lucide-react";
+import {
+    BLOCKED_BACKEND_TYPES,
+    parseRemoteNames,
+} from "@/features/channel/components/storages/rclone/rclone.parse";
 
 type StorageRcloneFormProps = {
     form: UseFormReturn<any, any, any>;
@@ -56,7 +59,40 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                 name="config.configText"
                 render={({field}) => (
                     <FormItem className="min-w-0">
-                        <FormLabel>rclone config *</FormLabel>
+                        <FormLabel className="flex items-center gap-1.5">
+                            rclone config *
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        type="button"
+                                        aria-label="Which backend types are not supported"
+                                        className="text-muted-foreground hover:text-foreground focus-visible:outline-none"
+                                    >
+                                        <Info className="h-3.5 w-3.5"/>
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                    side="right"
+                                    className="max-w-xs space-y-1.5 text-xs text-left"
+                                >
+                                    <p>These backend types are rejected:</p>
+                                    <p className="font-mono break-words">
+                                        {BLOCKED_BACKEND_TYPES.join(", ")}
+                                    </p>
+                                    <p>
+                                        Wrapping backends need a second remote to wrap, and a
+                                        channel holds a single section.{" "}
+                                        <code className="break-all">local</code> and{" "}
+                                        <code className="break-all">alias</code> would reach the
+                                        container filesystem.{" "}
+                                        <code className="break-all">memory</code>,{" "}
+                                        <code className="break-all">http</code> and{" "}
+                                        <code className="break-all">googlephotos</code> cannot
+                                        store a backup.
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </FormLabel>
                         <FormControl>
                             <Textarea
                                 {...field}
@@ -70,6 +106,15 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                             Paste exactly one <code className="break-all">[section]</code> from your rclone.conf.
                             The section header names the remote.
                         </p>
+                        <a
+                            href="https://rclone.org/#providers"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground w-fit"
+                        >
+                            Rclone provider list
+                            <ExternalLink className="h-3 w-3"/>
+                        </a>
                         {soleRemote ? (
                             <p className="text-xs text-muted-foreground break-words">
                                 Remote detected: <code className="break-all">{soleRemote}</code>
