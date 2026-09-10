@@ -202,10 +202,6 @@ export async function handleDatabases(body: Body, agent: Agent, lastContact: Dat
                     const result = await dispatchStorage(input, undefined, restoration.backupStorage.storageChannelId);
                     const resultMeta = await dispatchStorage(inputMeta, undefined, restoration.backupStorage.storageChannelId);
 
-                    // Only the signed URL is used here; nothing reads the stream. Left
-                    // undestroyed, a provider like rclone that returns a live child
-                    // process stream (result.file) would block forever on a full stdout
-                    // pipe and never clean up its temp credential file.
                     if (result.file && typeof (result.file as any).destroy === "function") {
                         (result.file as any).destroy();
                     }

@@ -21,9 +21,6 @@ export async function GET(
         return NextResponse.json({error: "Missing search params"}, {status: 404})
     }
 
-    // Validate the signed token/expiry before dispatching to the storage
-    // provider — a replayed or expired URL must be rejected without ever
-    // spawning a provider process (e.g. rclone) that would then be abandoned.
     const fileName = path.basename(pathFromUrl);
 
     const crypto = require('crypto');

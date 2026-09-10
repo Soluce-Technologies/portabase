@@ -17,7 +17,6 @@ import {
 
 const PROVIDER = "rclone" as const;
 
-/** Owner-only config in an owner-only directory. Caller removes `dir`. */
 async function writeConfig(config: RcloneConfig): Promise<{ dir: string; file: string }> {
     const dir = await mkdtemp(path.join(tmpdir(), "portabase-rclone-"));
     try {
@@ -40,11 +39,7 @@ function target(config: RcloneConfig, filePath: string): string {
 
 type RunResult = { code: number; stdout: Buffer; stderr: string };
 
-/**
- * Runs rclone to completion, buffering stdout. stdin, when given, is piped in.
- * Never rejects on a non-zero exit — callers decide what an exit code means
- * (`check` treats a failure as not-found, the rest treat it as an error).
- */
+
 function run(configFile: string, args: string[], stdin?: Readable): Promise<RunResult> {
     return new Promise((resolve, reject) => {
         const child = spawn("rclone", ["--config", configFile, ...args], {
@@ -54,7 +49,6 @@ function run(configFile: string, args: string[], stdin?: Readable): Promise<RunR
         const stdout: Buffer[] = [];
         let stderr = "";
 
-        // Non-null by construction — stdio above always pipes both. TS types them nullable.
         child.stdout!.on("data", (c: Buffer) => stdout.push(c));
         child.stderr!.on("data", (c: Buffer) => {
             stderr += c.toString();
@@ -67,21 +61,12 @@ function run(configFile: string, args: string[], stdin?: Readable): Promise<RunR
 
         if (stdin) {
             stdin.pipe(child.stdin!);
-            // rclone exiting early closes stdin under us; the exit code carries
-            // the real reason, so a broken pipe here must not mask it.
             child.stdin!.on("error", () => {});
         }
     });
 }
 
-/**
- * `lsjson --stat` on a missing object still exits 0 and prints a populated,
- * root-like object (`IsDir: true`, empty `Name`/`Path` — the nearest existing
- * ancestor), never `null` and never a non-zero exit. So a hit is trustworthy
- * only when the result is a file (`IsDir === false`) whose `Name` matches the
- * basename of the path we asked for — that rejects the root-fallback
- * response regardless of rclone's choice of placeholder values.
- */
+
 function statFound(stat: RunResult, remotePath: string): boolean {
     if (stat.code !== 0) return false;
 
@@ -98,7 +83,6 @@ function statFound(stat: RunResult, remotePath: string): boolean {
     return IsDir === false && Name === expected;
 }
 
-/** Runs rclone and removes the temp config afterwards, whatever happens. */
 async function withConfig(
     config: RcloneConfig,
     fn: (file: string) => Promise<StorageResult>,
@@ -140,9 +124,6 @@ export async function getRclone(
 ): Promise<StorageResult> {
     const remote = target(config, input.data.path);
 
-    // Stat first, like getGoogleCloudStorage does. A missing object must be a
-    // clean "File not found", not an empty stream the caller cannot distinguish
-    // from a zero-byte backup.
     const {dir, file} = await writeConfig(config);
 
     let stat: RunResult;
@@ -161,7 +142,6 @@ export async function getRclone(
         stdio: ["ignore", "pipe", "pipe"],
     });
 
-    // Non-null by construction — stdio above pipes both. TS types them nullable.
     const stdout = child.stdout!;
 
     let stderr = "";
@@ -169,8 +149,6 @@ export async function getRclone(
         stderr += c.toString();
     });
 
-    // The config must outlive the stream. Unlinking in a finally here would
-    // truncate every restore.
     let cleaned = false;
     const cleanup = () => {
         if (cleaned) return;
@@ -190,8 +168,6 @@ export async function getRclone(
     });
     stdout.on("close", cleanup);
 
-    // rclone has no generic presigned URL, so restores go through the dashboard
-    // proxy route, exactly as they do for the local provider.
     const url = input.data.signedUrl ? await generateFileUrl(input) : undefined;
 
     if (input.data.signedUrl && !url) {
@@ -203,7 +179,6 @@ export async function getRclone(
     return {
         success: true,
         provider: PROVIDER,
-        // Same cast getGoogleCloudStorage uses for its read stream.
         file: stdout as unknown as Buffer | Readable,
         url: url ?? undefined,
     };
@@ -262,8 +237,6 @@ export async function pingRclone(config: RcloneConfig): Promise<StorageResult> {
     return withConfig(config, async (file) => {
         const probe = target(config, "backups/portabase-ping.txt");
 
-        // Write / read / delete, matching pingGoogleCloudStorage. A bare listing
-        // would pass on a read-only remote that cannot actually take backups.
         const write = await run(file, ["rcat", probe], Readable.from(Buffer.from("ping")));
         if (write.code !== 0) {
             return {success: false, provider: PROVIDER, response: write.stderr || "rclone write failed"};

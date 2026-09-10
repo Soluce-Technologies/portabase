@@ -1,20 +1,8 @@
 #!/usr/bin/env node
-// Ad-hoc assertion checks for the rclone dashboard provider. Not a test
-// framework, no new dependency — plain `node scripts/verify-rclone.mjs`.
-//
-// `statFound` gates both restore and backup-presence checking and has
-// already shipped one wrong version plus one hardening; this file exists so
-// its behaviour (and the config parser's) is pinned to something runnable
-// instead of re-verified ad hoc each time.
-
 import assert from "node:assert";
 import path from "node:path";
 import {spawnSync} from "node:child_process";
 
-// `rclone.parse.ts` has no non-type-only TS syntax, so Node can import it
-// directly once type stripping is enabled. Re-exec once with the flag so
-// `node scripts/verify-rclone.mjs` (no flags) keeps working, and so this
-// script imports the real exported functions instead of copying them.
 if (!process.execArgv.includes("--experimental-strip-types") && !process.env.VERIFY_RCLONE_RESPAWNED) {
     const result = spawnSync(
         process.execPath,
@@ -28,12 +16,7 @@ const {parseRemoteNames, findBlockedBackend} = await import(
     "../src/features/channel/components/storages/rclone/rclone.parse.ts"
 );
 
-// --- Mirrors of module-private helpers from rclone/index.ts -----------------
-// `target` and `findRemoteBasename`/`statFound` are not exported. These are
-// plain copies of their logic and MUST be kept in sync with
-// src/features/channel/components/storages/rclone/index.ts by hand.
 
-/** Mirrors `target()` in rclone/index.ts. */
 function target(config, filePath) {
     const base = (config.remotePath ?? "").trim().replace(/^\/+|\/+$/g, "");
     return base
@@ -41,7 +24,6 @@ function target(config, filePath) {
         : `${config.remoteName}:${filePath}`;
 }
 
-/** Mirrors `statFound()` in rclone/index.ts. */
 function statFound(stat, remotePath) {
     if (stat.code !== 0) return false;
 
@@ -58,7 +40,6 @@ function statFound(stat, remotePath) {
     return IsDir === false && Name === expected;
 }
 
-// --- Checks ------------------------------------------------------------
 
 const checks = [];
 function check(name, fn) {
@@ -87,17 +68,11 @@ check("findBlockedBackend: catches alias", () => {
 });
 
 check("findBlockedBackend: catches a blocked backend in a section that is not the named one", () => {
-    // The chosen remote is a plain s3 section, but a second section declares a
-    // local backend. findBlockedBackend must scan every section, not just the
-    // one the channel names.
     const cfg = `${S3_SECTION}\n[disk]\ntype = local\n`;
     assert.deepStrictEqual(findBlockedBackend(cfg), {remote: "disk", type: "local"});
 });
 
 check("findBlockedBackend: catches a wrapping backend pointing at a bare local path", () => {
-    // The escape that the "local" entry alone does not catch: no section
-    // declares type = local, but rclone would still read and write the
-    // container filesystem through the wrapping backend.
     for (const backend of ["crypt", "chunker", "compress", "union", "combine", "hasher"]) {
         const cfg = `[sneaky]\ntype = ${backend}\nremote = /etc\n`;
         assert.deepStrictEqual(

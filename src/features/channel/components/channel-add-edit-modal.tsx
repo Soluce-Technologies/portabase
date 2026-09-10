@@ -83,10 +83,6 @@ export const ChannelAddEditModal = ({
                         Configure your {channelText.toLowerCase()} channel preferences.
                     </DialogDescription>
                 </DialogHeader>
-                {/* Direct grid child of DialogContent: grid items default to
-                    min-width:auto, so an unbreakable token in any channel form
-                    (a long API key or secret) would size the track and widen
-                    the whole dialog. min-w-0 lets it shrink and scroll/wrap. */}
                 <div className="min-w-0">
                     <>
                         {!isLocalSystem ? (
@@ -133,9 +129,7 @@ export const ChannelAddEditModal = ({
                                     }
                                 </>
                             )
-
                             :
-
                             <>
                                 <ChannelOrganisationForm
                                     defaultValues={channel}
@@ -144,8 +138,6 @@ export const ChannelAddEditModal = ({
                                 />
                             </>
                         }
-
-
                     </>
                 </div>
             </DialogContent>
