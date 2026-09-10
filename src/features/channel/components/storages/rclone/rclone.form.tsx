@@ -47,24 +47,24 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                 control={form.control}
                 name="config.configText"
                 render={({field}) => (
-                    <FormItem>
+                    <FormItem className="min-w-0">
                         <FormLabel>rclone config *</FormLabel>
                         <FormControl>
                             <Textarea
                                 {...field}
                                 value={field.value ?? ""}
                                 rows={10}
-                                className="font-mono text-xs"
+                                className="font-mono text-xs w-full break-all"
                                 placeholder={CONFIG_PLACEHOLDER}
                             />
                         </FormControl>
-                        <p className="text-xs text-muted-foreground">
-                            Paste exactly one <code>[section]</code> from your rclone.conf.
+                        <p className="text-xs text-muted-foreground break-words">
+                            Paste exactly one <code className="break-all">[section]</code> from your rclone.conf.
                             The section header names the remote.
                         </p>
                         {soleRemote ? (
-                            <p className="text-xs text-muted-foreground">
-                                Remote detected: <code>{soleRemote}</code>
+                            <p className="text-xs text-muted-foreground break-words">
+                                Remote detected: <code className="break-all">{soleRemote}</code>
                             </p>
                         ) : null}
                         <FormMessage/>
@@ -75,7 +75,7 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                 control={form.control}
                 name="config.remotePath"
                 render={({field}) => (
-                    <FormItem>
+                    <FormItem className="min-w-0">
                         <FormLabel>Remote path</FormLabel>
                         <FormControl>
                             <Input
@@ -84,16 +84,16 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                                 placeholder="e.g. my-bucket"
                             />
                         </FormControl>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground break-words">
                             Optional prefix, so you can point at storage already used for
                             other things. Backups always go under{" "}
-                            <code>backups/YYYY-MM-DD/</code> beneath it —{" "}
-                            <code>my-bucket</code> becomes{" "}
-                            <code>{`${remoteName || "remote"}:my-bucket/backups/…`}</code>,
+                            <code className="break-all">backups/YYYY-MM-DD/</code> beneath it —{" "}
+                            <code className="break-all">my-bucket</code> becomes{" "}
+                            <code className="break-all">{`${remoteName || "remote"}:my-bucket/backups/…`}</code>,
                             empty becomes{" "}
-                            <code>{`${remoteName || "remote"}:backups/…`}</code>. On S3-style
+                            <code className="break-all">{`${remoteName || "remote"}:backups/…`}</code>. On S3-style
                             remotes the first segment is the <strong>bucket</strong>, so leaving
-                            this empty targets a bucket named <code>backups</code>.
+                            this empty targets a bucket named <code className="break-all">backups</code>.
                         </p>
                         <FormMessage/>
                     </FormItem>
