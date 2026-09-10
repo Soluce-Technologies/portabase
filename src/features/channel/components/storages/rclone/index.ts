@@ -20,9 +20,14 @@ const PROVIDER = "rclone" as const;
 /** Owner-only config in an owner-only directory. Caller removes `dir`. */
 async function writeConfig(config: RcloneConfig): Promise<{ dir: string; file: string }> {
     const dir = await mkdtemp(path.join(tmpdir(), "portabase-rclone-"));
-    const file = path.join(dir, "rclone.conf");
-    await writeFile(file, config.configText, {mode: 0o600});
-    return {dir, file};
+    try {
+        const file = path.join(dir, "rclone.conf");
+        await writeFile(file, config.configText, {mode: 0o600});
+        return {dir, file};
+    } catch (err) {
+        await rm(dir, {recursive: true, force: true});
+        throw err;
+    }
 }
 
 /** `<remote>:<remotePath>/<filePath>`, collapsing an empty remotePath. */
@@ -107,7 +112,7 @@ async function withConfig(
 }
 
 function toReadable(file: StorageUploadInput["file"]): Readable | null {
-    if (Buffer.isBuffer(file) || file instanceof Uint8Array) return Readable.from(file);
+    if (Buffer.isBuffer(file) || file instanceof Uint8Array) return Readable.from(Buffer.from(file));
     if ((file as Readable)?.pipe) return file as Readable;
     return null;
 }
@@ -231,7 +236,7 @@ export async function checkRclone(
         return {
             success: false,
             provider: PROVIDER,
-            notFound: true,
+            notFound: stat.code === 0,
             error: stat.stderr || "File not found",
         };
     });
@@ -255,7 +260,7 @@ export async function copyRclone(
 
 export async function pingRclone(config: RcloneConfig): Promise<StorageResult> {
     return withConfig(config, async (file) => {
-        const probe = target(config, "portabase-ping.txt");
+        const probe = target(config, "backups/portabase-ping.txt");
 
         // Write / read / delete, matching pingGoogleCloudStorage. A bare listing
         // would pass on a read-only remote that cannot actually take backups.
