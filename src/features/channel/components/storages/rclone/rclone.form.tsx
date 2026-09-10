@@ -10,6 +10,12 @@ import {
 import {Input} from "@/components/ui/input";
 import {Separator} from "@/components/ui/separator";
 import {Textarea} from "@/components/ui/textarea";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {Info} from "lucide-react";
 import {parseRemoteNames} from "@/features/channel/components/storages/rclone/rclone.parse";
 
 type StorageRcloneFormProps = {
@@ -34,6 +40,8 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
     // header rather than chosen. Mirror it into form state, and clear it when
     // the paste is not a single valid section so no stale name is submitted.
     const soleRemote = remotes.length === 1 ? remotes[0] : "";
+    // Shown inside the remote-path tooltip examples.
+    const remote = remoteName || "remote";
     useEffect(() => {
         if (remoteName !== soleRemote) {
             form.setValue("config.remoteName", soleRemote, {shouldValidate: true});
@@ -76,7 +84,43 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                 name="config.remotePath"
                 render={({field}) => (
                     <FormItem className="min-w-0">
-                        <FormLabel>Remote path</FormLabel>
+                        <FormLabel className="flex items-center gap-1.5">
+                            Remote path
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        type="button"
+                                        aria-label="About the remote path"
+                                        className="text-muted-foreground hover:text-foreground focus-visible:outline-none"
+                                    >
+                                        <Info className="h-3.5 w-3.5"/>
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                    side="right"
+                                    className="max-w-xs space-y-1.5 text-xs text-left"
+                                >
+                                    <p>
+                                        Optional prefix, so you can point at storage already
+                                        used for other things.
+                                    </p>
+                                    <p>
+                                        Backups always go under{" "}
+                                        <code className="break-all">backups/YYYY-MM-DD/</code>{" "}
+                                        beneath it — <code className="break-all">my-bucket</code>{" "}
+                                        becomes{" "}
+                                        <code className="break-all">{`${remote}:my-bucket/backups/…`}</code>,
+                                        empty becomes{" "}
+                                        <code className="break-all">{`${remote}:backups/…`}</code>.
+                                    </p>
+                                    <p>
+                                        On S3-style remotes the first segment is the{" "}
+                                        <strong>bucket</strong>, so leaving this empty targets a
+                                        bucket named <code className="break-all">backups</code>.
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </FormLabel>
                         <FormControl>
                             <Input
                                 {...field}
@@ -84,17 +128,6 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                                 placeholder="e.g. my-bucket"
                             />
                         </FormControl>
-                        <p className="text-xs text-muted-foreground break-words">
-                            Optional prefix, so you can point at storage already used for
-                            other things. Backups always go under{" "}
-                            <code className="break-all">backups/YYYY-MM-DD/</code> beneath it —{" "}
-                            <code className="break-all">my-bucket</code> becomes{" "}
-                            <code className="break-all">{`${remoteName || "remote"}:my-bucket/backups/…`}</code>,
-                            empty becomes{" "}
-                            <code className="break-all">{`${remoteName || "remote"}:backups/…`}</code>. On S3-style
-                            remotes the first segment is the <strong>bucket</strong>, so leaving
-                            this empty targets a bucket named <code className="break-all">backups</code>.
-                        </p>
                         <FormMessage/>
                     </FormItem>
                 )}
