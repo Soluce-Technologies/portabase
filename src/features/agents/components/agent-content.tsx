@@ -21,6 +21,19 @@ import {CardsWithPagination} from "@/components/common/cards-with-pagination";
 import {AgentDatabaseCard} from "@/features/agents/components/agent-database-card";
 import {HealthCheckGraph} from "@/features/database/components/health-grid";
 import {HealthcheckLog} from "@/db/schema/15_healthcheck-log";
+import { DatabaseConfigModal } from "@/features/database/components/database-config-modal";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+    agentSupportsDatabaseConfig,
+    MIN_DATABASE_CONFIG_AGENT_VERSION,
+} from "@/features/agents/utils/version";
 
 type AgentContentPageProps = {
     edgeKey: string;
@@ -47,6 +60,8 @@ export const AgentContentPage = ({edgeKey, agent: initialAgent, canDeleteDatabas
 
     const agent = data?.data ?? initialAgent;
     const agentHealthLogs: HealthcheckLog[] = data?.health ?? [];
+    const supportsDatabaseConfig = agentSupportsDatabaseConfig(agent.version);
+    const unsupportedVersionHint = `Requires agent version ${MIN_DATABASE_CONFIG_AGENT_VERSION} or newer.`;
 
     const { data: edgeKeyValue } = useQuery({
         queryKey: ["edge-key", agent.id, agent.overrideUrl],
@@ -118,17 +133,46 @@ export const AgentContentPage = ({edgeKey, agent: initialAgent, canDeleteDatabas
                 </Accordion>
             </div>
 
-            {agent.databases.length > 0 && (
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between px-1">
-                        <div className="space-y-1">
-                            <h2 className="text-2xl font-bold tracking-tight">Managed Databases</h2>
-                            <p className="text-sm text-muted-foreground">
-                                Resources currently connected to this agent.
-                            </p>
-                        </div>
+            <div className="space-y-6">
+                <div className="flex items-center justify-between px-1">
+                    <div className="space-y-1">
+                        <h2 className="text-2xl font-bold tracking-tight">Managed Databases</h2>
+                        <p className="text-sm text-muted-foreground">
+                            Resources currently connected to this agent.
+                        </p>
                     </div>
-                    <Separator className="opacity-50"/>
+                    {canDeleteDatabases && (
+                        supportsDatabaseConfig ? (
+                            <DatabaseConfigModal
+                                agentId={agent.id}
+                                trigger={
+                                    <Button>
+                                        <Plus className="h-4 w-4 mr-2" />
+                                        Add database
+                                    </Button>
+                                }
+                            />
+                        ) : (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div>
+                                            <Button disabled>
+                                                <Plus className="h-4 w-4 mr-2" />
+                                                Add database
+                                            </Button>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{unsupportedVersionHint}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )
+                    )}
+                </div>
+                <Separator className="opacity-50"/>
+                {agent.databases.length > 0 ? (
                     <CardsWithPagination
                         cardsPerPage={4}
                         numberOfColumns={2}
@@ -137,10 +181,13 @@ export const AgentContentPage = ({edgeKey, agent: initialAgent, canDeleteDatabas
                         )}
                         cardItem={AgentDatabaseCard}
                         canDeleteDatabases={canDeleteDatabases}
+                        canConfigureDatabases={supportsDatabaseConfig}
                         agentLastContact={agent.lastContact}
                     />
-                </div>
-            )}
+                ) : (
+                    <p className="text-sm text-muted-foreground px-1">No databases yet. Add one to push its config to the agent.</p>
+                )}
+            </div>
         </div>
     )
 }
