@@ -10,13 +10,6 @@ import {
 import {Input} from "@/components/ui/input";
 import {Separator} from "@/components/ui/separator";
 import {Textarea} from "@/components/ui/textarea";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import {parseRemoteNames} from "@/features/channel/components/storages/rclone/rclone.parse";
 
 type StorageRcloneFormProps = {
@@ -37,12 +30,12 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
     const remoteName: string = form.watch("config.remoteName") ?? "";
     const remotes = parseRemoteNames(configText);
 
-    // The [section] header is the remote name, and most pastes define exactly
-    // one. Fill it in rather than making the user pick from a list of one; the
-    // dropdown below only earns its keep for chained configs.
-    const soleRemote = remotes.length === 1 ? remotes[0] : null;
+    // Exactly one section is allowed, so the remote name is derived from the
+    // header rather than chosen. Mirror it into form state, and clear it when
+    // the paste is not a single valid section so no stale name is submitted.
+    const soleRemote = remotes.length === 1 ? remotes[0] : "";
     useEffect(() => {
-        if (soleRemote && remoteName !== soleRemote) {
+        if (remoteName !== soleRemote) {
             form.setValue("config.remoteName", soleRemote, {shouldValidate: true});
         }
     }, [soleRemote, remoteName, form]);
@@ -66,47 +59,14 @@ export const StorageRcloneForm = ({form}: StorageRcloneFormProps) => {
                             />
                         </FormControl>
                         <p className="text-xs text-muted-foreground">
-                            Paste one or more sections from your rclone.conf. Chained remotes
-                            (crypt over s3, for example) work — include every section they need.
+                            Paste exactly one <code>[section]</code> from your rclone.conf.
+                            The section header names the remote.
                         </p>
-                        <FormMessage/>
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="config.remoteName"
-                render={({field}) => (
-                    <FormItem>
-                        <FormLabel>Remote *</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            value={field.value ?? ""}
-                            disabled={remotes.length === 0}
-                        >
-                            <FormControl>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue
-                                        placeholder={
-                                            remotes.length === 0
-                                                ? "Paste a config first"
-                                                : "Select a remote"
-                                        }
-                                    />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                {remotes.map((remote) => (
-                                    <SelectItem key={remote} value={remote}>
-                                        {remote}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground">
-                            The <code>[section]</code> header to upload to. Filled in
-                            automatically when the config defines only one.
-                        </p>
+                        {soleRemote ? (
+                            <p className="text-xs text-muted-foreground">
+                                Remote detected: <code>{soleRemote}</code>
+                            </p>
+                        ) : null}
                         <FormMessage/>
                     </FormItem>
                 )}
